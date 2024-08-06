@@ -69,6 +69,6 @@ When you run ./callmessage, it will:
     Call the show_message function with the argument "Hello, World!".
     Print "Hello, World!" to the terminal
 
-![image](https://github.com/user-attachments/assets/053535ef-eb9d-4812-a502-d58b427ed950)
+![image](https://github.com/user-attachments/assets/14316bd3-4821-4ce7-9424-5d9f241da626)
 
     
