@@ -1,4 +1,4 @@
 ---
-_ Title _: A Diary of IT Projects
+** Title **: A Diary of IT Projects
 ---
 
