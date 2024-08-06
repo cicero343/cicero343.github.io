@@ -51,7 +51,8 @@ Title: A Diary of IT Projects
 
 <br>
 
-<img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
+<img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="115" height="115" style="border-radius: 20px;">
+<script src="https://tryhackme.com/badge/2125035"></script>
 
 <html lang="en">
 <head>
@@ -98,5 +99,3 @@ Title: A Diary of IT Projects
     </div>
 </body>
 </html>
-
-<script src="https://tryhackme.com/badge/2125035"></script>
