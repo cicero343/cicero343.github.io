@@ -3,7 +3,6 @@ Title: A Diary of IT Projects
 ---
 <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,11 +27,10 @@ Title: A Diary of IT Projects
             color: var(--txt-color);
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
-    <h1>Hello World!</h1>
-    <p>This is a paragraph with dark mode support.</p>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
