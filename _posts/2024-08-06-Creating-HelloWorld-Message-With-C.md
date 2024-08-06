@@ -1,5 +1,5 @@
 ---
-title: "Intro to C: Creating a 'Hello World' Message (in WSL)"
+title: "Intro to C language: Creating a 'Hello World' Message (in WSL)"
 date: 2024-08-06
 ---
 
