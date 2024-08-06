@@ -1,43 +1,6 @@
 ---
 Title: A Diary of IT Projects
 ---
-<img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clickable Links</title>
-    <style>
-        .link-list {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 10px;
-        }
-
-        .link-list a {
-            text-decoration: none;
-            color: #007bff;
-            font-size: 14px; /* Adjust the size here */
-        }
-
-        .link-list a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <ul class="link-list">
-        <li><a href="https://www.linkedin.com/in/yourprofile" target="_blank">LinkedIn</a></li>
-        <li><a href="https://github.com/yourusername" target="_blank">GitHub</a></li>
-        <li><a href="https://twitter.com/yourusername" target="_blank">Twitter</a></li>
-    </ul>
-</body>
-</html>
-
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -83,5 +46,40 @@ Title: A Diary of IT Projects
             });
         });
     </script>
+</body>
+</html>
+
+<img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickable Links</title>
+    <style>
+        .link-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .link-list a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px; /* Adjust the size here */
+        }
+
+        .link-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <ul class="link-list">
+        <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank">LinkedIn</a></li>
+        <li><a href="https://github.com/cicero343" target="_blank">GitHub</a></li>
+        <li><a href="https://tryhackme.com/p/bdonovan343" target="_blank">TryHackMe</a></li>
+    </ul>
 </body>
 </html>
