@@ -3,8 +3,8 @@ Title: A Diary of IT Projects
 ---
 <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
 
-<span style="background-image: url('https://avatars.githubusercontent.com/u/175522457?v=4'); background-size: cover; font-size: 20pt; color: white; padding: 10px;"></span>
-
+<span style="background-image: url('https://avatars.githubusercontent.com/u/175522457?v=4'); font-size: 40pt"></span>
+ 
 .scrolling-text {
   white-space: nowrap;
   overflow: hidden;
