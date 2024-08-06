@@ -3,49 +3,8 @@ Title: A Diary of IT Projects
 ---
 <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <style>
-    main {
-      padding: 20px;
-      display: block;
-      min-height: 100vh;
-      min-width: 100vh;
-    }
-    h2 {
-      text-align: center;
-      color: #004aad;
-    }
-    .comment-section {
-      max-height: 50vh;
-      max-width: 100%;
-      background-color: #004aad;
-      overflow-y: scroll;
-    }
-    .comment {
-     height: 10%;
-      padding: 2%;
-      margin: 2%;
-      background-color: #ffff;
-      color: black;
-    }
-  </style>
-  <body>
-    <h2>Scrollable HTML Comment Box Code</h2>
-    <main>
-      <div class="comment-section">
-        <div class="comment">This is first comment.</div>
-        <div class="comment">This is second comment.</div>
-        <div class="comment">This is third comment.</div>
-        <div class="comment">This is fourth comment.</div>
-        <div class="comment">This is fifth comment.</div>
-        <div class="comment">This is sixth comment.</div>
-    </div>
-    </main>
-  </body>
-</html>
+<span style="background-color: #004aad> highlighted text.</span>
+
+<span style="background-image: url(https://i0.wp.com/www.learnically.com/wp-content/uploads/2023/05/html-strucher.jpg resize=768%2C432&ssl=1);  font-size: 20pt; ">Learnically presents...</span>
+
+<marquee>I wanna scroll with it</marquee>
