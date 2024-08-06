@@ -1,5 +1,5 @@
 ---
-title: "Creating a 'Hello World' Message with C in WSL"
+title: "Intro to C: Creating a 'Hello World' Message (in WSL)"
 date: 2024-08-06
 ---
 
@@ -7,30 +7,31 @@ Windows .dll (dynamic link library) files and UNIX .so files (or shared object f
 
 Essentially, .dll and .so files are 'shared libraries' which contain reusable code that can be dynamically loaded and used by other programs during runtime.
 
-I wanted to create a basic example to represent how they work, so here's a quick guide on **Creating a 'Hello World' Message with C in Windows Subsystem for Linux (WSL)**. My WSL was not playing nicely with X11 libraries, so this is going to be very basic.
+I wanted to create a basic example to help me understand how they work, so here's a quick guide on **Creating a 'Hello World' Message with C in Windows Subsystem for Linux (WSL)**. My WSL was not playing nicely with X11 libraries, so this is going to be very basic.
 
 **Step 1: Create a C file called 'message.c'**
-sudo nano message.c
 
-#include <stdio.h>
+    sudo nano message.c
 
-void show_message(const char *message) {
+    #include <stdio.h>
+
+    void show_message(const char *message) {
     printf("%s\n", message);
-}
+    }
 
 **Step 2: Compile the Shared Library**
 
-gcc -fPIC -shared -o libmessage.so message.c
+    gcc -fPIC -shared -o libmessage.so message.c
 
 
 **Step 3: Create a C file called 'callmessage.c'**
 
-sudo nano callmessage.c
+    sudo nano callmessage.c
 
-#include <stdio.h>
-#include <dlfcn.h>
+    #include <stdio.h>
+    #include <dlfcn.h>
 
-int main() {
+    int main() {
     void *handle;
     void (*show_message)(const char *);
 
@@ -51,24 +52,24 @@ int main() {
 
     dlclose(handle);
     return 0;
-}
+    }
 
 **Step 4: Compile the 'callmessage' Program**
 
-gcc -o callmessage callmessage.c -ldl
+    gcc -o callmessage callmessage.c -ldl
 
 **Step 5: Run the Executable**
 
-./callmessage
+    ./callmessage
 
 
 When you run ./callmessage, it will:
 
-    Load libmessage.so.
-    Look up the show_message function in the shared library.
-    Call the show_message function with the argument "Hello, World!".
-    Print "Hello, World!" to the terminal
+• Load libmessage.so.
+• Look up the show_message function in the shared library.
+• Call the show_message function with the argument "Hello, World!".
+• Print "Hello, World!" to the terminal
 
 ![image](https://github.com/user-attachments/assets/14316bd3-4821-4ce7-9424-5d9f241da626)
 
-    
+    You'll see from the image above that 
