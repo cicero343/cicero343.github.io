@@ -3,28 +3,18 @@ Title: A Diary of IT Projects
 ---
 <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
 
-<select name="clr" onchange="document.bgColor=this.options[this.selectedIndex].value" size="1">
-    <br>
-    <option value="black">black
-        <option value="orange">orange
-            <option value="flamingred">fuschia
-                <option value="lightyellow">light yellow
-                    <option value="green">green
-                        <option value="cyan">cyan
-                            <option value="yellow">yellow
-                                <option value="red">red
-                                    <option value="white">white</option>
-</select>&nbsp;&nbsp;Background Color
+html {
+    color-scheme: light dark;
+}
 
-<br>
-<select name="clr" onchange="document.fgColor=this.options[this.selectedIndex].value" size="1">
-    <br>
-    <option value="black">black
-        <option value="orange">orange
-            <option value="flamingred">fuschia
-                <option value="lightyellow">light yellow
-                    <option value="cyan">cyan
-                        <option value="yellow">yellow
-                            <option value="red">red
-                                <option value="white">white</option>
-</select>&nbsp;&nbsp;Text Color
+html {
+    --bg-color: #ffffff;
+    --txt-color: #000000;
+}
+
+@supports (background-color: Canvas) and (color: CanvasText) {
+    :root {
+        --bg-color: Canvas;
+        --txt-color: CanvasText;
+    }
+}
