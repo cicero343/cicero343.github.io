@@ -30,8 +30,8 @@ Title: A Diary of IT Projects
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
-    <h1>Hello World!</h1>
-    <p>This is a paragraph with dark mode support.</p>
+
+ 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
