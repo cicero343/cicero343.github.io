@@ -98,3 +98,5 @@ Title: A Diary of IT Projects
     </div>
 </body>
 </html>
+
+<script src="https://tryhackme.com/badge/2125035"></script>
