@@ -49,6 +49,8 @@ Title: A Diary of IT Projects
 </body>
 </html>
 
+<br>
+
 <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="125" height="125" style="border-radius: 20px;">
 
 <html lang="en">
@@ -57,9 +59,20 @@ Title: A Diary of IT Projects
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clickable Links</title>
     <style>
+        body {
+            margin: 0; /* Ensure no default margin */
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .link-container {
+            padding: 20px; /* Add padding to the container for spacing */
+        }
+
         .link-list {
             list-style: none;
             padding: 0;
+            margin: 0; /* Ensure no default margin */
             display: flex;
             gap: 10px;
         }
@@ -76,10 +89,12 @@ Title: A Diary of IT Projects
     </style>
 </head>
 <body>
-    <ul class="link-list">
-        <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank">LinkedIn</a></li>
-        <li><a href="https://github.com/cicero343" target="_blank">GitHub</a></li>
-        <li><a href="https://tryhackme.com/p/bdonovan343" target="_blank">TryHackMe</a></li>
-    </ul>
+    <div class="link-container">
+        <ul class="link-list">
+            <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank">LinkedIn</a></li>
+            <li><a href="https://github.com/cicero343" target="_blank">GitHub</a></li>
+            <li><a href="https://tryhackme.com/p/bdonovan343" target="_blank">TryHackMe</a></li>
+        </ul>
+    </div>
 </body>
 </html>
