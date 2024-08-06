@@ -9,9 +9,11 @@ Essentially, .dll and .so files are 'shared libraries' which contain reusable co
 
 I wanted to create a basic example to help me understand how they work, so here's a quick guide on **Creating a 'Hello World' Message with C in Windows Subsystem for Linux (WSL)**. My WSL was not playing nicely with X11 libraries, so this is going to be very basic.
 
-_Step 1: Create a C file called 'message.c'_
+__Step 1: Create a C file called 'message.c'__
 
     sudo nano message.c
+
+<br>
 
     #include <stdio.h>
 
