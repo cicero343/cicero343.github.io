@@ -1,4 +1,4 @@
 ---
-title: A Diary of IT Projects
+**__Title__**: A Diary of IT Projects
 ---
 
