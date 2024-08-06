@@ -9,12 +9,45 @@ Title: A Diary of IT Projects
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Default light mode settings */
+        :root {
+            --bg-color: #ffffff;
+            --txt-color: #000000;
+        }
+
+        /* Dark mode settings */
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --txt-color: #ffffff;
+        }
+
+        /* Apply the variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--txt-color);
+        }
+    </style>
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
     <h1>Hello World!</h1>
     <p>This is a paragraph with dark mode support.</p>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+            }
+
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        });
+    </script>
 </body>
 </html>
