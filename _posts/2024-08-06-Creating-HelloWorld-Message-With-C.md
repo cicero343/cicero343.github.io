@@ -12,7 +12,6 @@ I wanted to create a basic example to help me understand how they work, so here'
 **Step 1: Create a C file called 'message.c'**
 
     sudo nano message.c
-
 <br>
 
     #include <stdio.h>
@@ -29,7 +28,6 @@ I wanted to create a basic example to help me understand how they work, so here'
 **Step 3: Create a C file called 'callmessage.c'**
 
     sudo nano callmessage.c
-
 <br>
 
     #include <stdio.h>
@@ -65,16 +63,19 @@ I wanted to create a basic example to help me understand how they work, so here'
 **Step 5: Run the Executable**
 
     ./callmessage
-
-
+<br>
 When you run ./callmessage, it will:
 
 • Load libmessage.so.
+<br>
 • Look up the show_message function in the shared library.
+<br>
 • Call the show_message function with the argument "Hello, World!".
+<br>
 • Print "Hello, World!" to the terminal
 
 ![image](https://github.com/user-attachments/assets/14316bd3-4821-4ce7-9424-5d9f241da626)
 
-You'll see in the image above that both the .so file and the executable 'callmessage' file are identified as both being ELF files (Executable and Linkable Format). 
+You'll see in the image above that both the .so file and the executable 'callmessage' file are identified as both being ELF files (Executable and Linkable Format).
+<br>
 ELF format is used for both types of files in Unix-like systems, but the 'callmessage' file is a standalone program that can be run by the OS.
