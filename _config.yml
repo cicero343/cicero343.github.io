@@ -1,3 +1,11 @@
 theme: minima
 title: A Diary of IT Projects
 author: cicero343
+
+social_links:
+  - name: LinkedIn
+    url: https://www.linkedin.com/in/benedict-c-donovan/
+  - name: GitHub
+    url: https://github.com/cicero343
+  - name: TryHackMe
+    url:  https://tryhackme.com/p/bdonovan343
