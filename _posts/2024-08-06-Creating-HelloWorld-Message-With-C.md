@@ -5,7 +5,7 @@ date: 2024-08-07
 
 Windows .dll (dynamic link library) files and UNIX-like .so files (or shared object files) were quite hard for me to wrap my head around as I'm not from a Comp Sci or Programmer background.
 
-Essentially, .dll and .so files are 'shared libraries' which contain reusable code that can be dynamically loaded and used by other programs during runtime.
+Essentially, .dll and .so files are 'shared libraries' which contain reusable code that can be dynamically loaded and used by other programs during runtime. You've probably seen them on Windows in some of these areas:
 
 ![Github post 1](https://github.com/user-attachments/assets/537e933a-dd85-4134-97b0-f7eff6300a0c)
 
@@ -83,6 +83,7 @@ When you run ./callmessage, it will:
 - Print "Hello, World!" to the terminal
 
 ![image](https://github.com/user-attachments/assets/cd927d40-a891-4d82-88a6-a0b72605d059)
+
 
 You'll see in the image above that both the .so file and the executable 'callmessage' file are identified as being ELF files (Executable and Linkable Format).
 
