@@ -1,3 +1,12 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import
+  "minima/skins/{{ site.minima.skin | default: 'classic' }}",
+  "minima/initialize";
+
+
 /* Default light mode settings */
 :root {
     --bg-color: #ffffff;
@@ -14,33 +23,4 @@
 body {
     background-color: var(--bg-color);
     color: var(--txt-color);
-}
-
-
-body {
-    margin: 0; /* Ensure no default margin */
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
-.link-container {
-    padding: 20px; /* Add padding to the container for spacing */
-}
-
-.link-list {
-    list-style: none;
-    padding: 0;
-    margin: 0; /* Ensure no default margin */
-    display: flex;
-    gap: 10px;
-}
-
-.link-list a {
-    text-decoration: none;
-    color: #007bff;
-    font-size: 14px; /* Adjust the size here */
-}
-
-.link-list a:hover {
-    text-decoration: underline;
 }
