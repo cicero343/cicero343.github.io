@@ -1,6 +1,7 @@
 ---
 Title: A Diary of IT Projects
 ---
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
