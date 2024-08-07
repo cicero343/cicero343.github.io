@@ -72,13 +72,13 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 When you run ./callmessage, it will:
 
-• Load libmessage.so.
+- Load libmessage.so.
 <br>
-• Look up the show_message function in the shared library.
+- Look up the show_message function in the shared library.
 <br>
-• Call the show_message function with the argument "Hello, World!".
+- Call the show_message function with the argument "Hello, World!".
 <br>
-• Print "Hello, World!" to the terminal
+- Print "Hello, World!" to the terminal
 
 ![image](https://github.com/user-attachments/assets/14316bd3-4821-4ce7-9424-5d9f241da626)
 
