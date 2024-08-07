@@ -5,22 +5,3 @@
 @import
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
-
-
-/* Default light mode settings */
-:root {
-    --bg-color: #ffffff;
-    --txt-color: #000000;
-}
-
-/* Dark mode settings */
-[data-theme="dark"] {
-    --bg-color: #000000;
-    --txt-color: #ffffff;
-}
-
-/* Apply the variables to the body */
-body {
-    background-color: var(--bg-color);
-    color: var(--txt-color);
-}
