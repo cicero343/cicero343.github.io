@@ -1,6 +1,6 @@
 ---
 title: "Intro to C language: Creating a 'Hello World' Message (in WSL)"
-date: 2024-08-06
+date: 2024-08-07
 ---
 
 Windows .dll (dynamic link library) files and UNIX-like .so files (or shared object files) were quite hard for me to wrap my head around as I'm not from a Comp Sci or Programmer background.
