@@ -84,6 +84,7 @@ When you run ./callmessage, it will:
 
 ![image](https://github.com/user-attachments/assets/cd927d40-a891-4d82-88a6-a0b72605d059)
 
+<br>
 
 You'll see in the image above that both the .so file and the executable 'callmessage' file are identified as being ELF files (Executable and Linkable Format).
 
