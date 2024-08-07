@@ -13,10 +13,6 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 **Step 1: Create a C file called 'message.c'**
 
-```html
-sudo nano message.c
-```
-
     sudo nano message.c
     
 <br>
