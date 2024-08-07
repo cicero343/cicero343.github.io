@@ -11,7 +11,7 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 <br>
 
-**Step 1: Create a C file called 'message.c'** (h3)
+**Step 1: Create a C file called 'message.c'**
 
     sudo nano message.c
     
@@ -23,12 +23,12 @@ I wanted to create a basic example to help me understand how they work, so here'
     printf("%s\n", message);
     }
 
-**Step 2: Compile the Shared Library** (h3)
+**Step 2: Compile the Shared Library**
 
     gcc -fPIC -shared -o libmessage.so message.c
 
 
-**Step 3: Create a C file called 'callmessage.c'** (h3)
+**Step 3: Create a C file called 'callmessage.c'**
 
     sudo nano callmessage.c
     
@@ -60,11 +60,11 @@ I wanted to create a basic example to help me understand how they work, so here'
     return 0;
     }
 
-**Step 4: Compile the 'callmessage' Program** (h3)
+**Step 4: Compile the 'callmessage' Program**
 
     gcc -o callmessage callmessage.c -ldl
 
-**Step 5: Run the Executable** (h3)
+**Step 5: Run the Executable**
 
     ./callmessage
     
