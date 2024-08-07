@@ -11,7 +11,7 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 <br>
 
-**Step 1: Create a C file called 'message.c'**
+**Step 1: Create a C file called 'message.c'** (h3)
 
     sudo nano message.c
     
@@ -23,12 +23,12 @@ I wanted to create a basic example to help me understand how they work, so here'
     printf("%s\n", message);
     }
 
-**Step 2: Compile the Shared Library**
+**Step 2: Compile the Shared Library** (h3)
 
     gcc -fPIC -shared -o libmessage.so message.c
 
 
-**Step 3: Create a C file called 'callmessage.c'**
+**Step 3: Create a C file called 'callmessage.c'** (h3)
 
     sudo nano callmessage.c
     
@@ -60,11 +60,11 @@ I wanted to create a basic example to help me understand how they work, so here'
     return 0;
     }
 
-**Step 4: Compile the 'callmessage' Program**
+**Step 4: Compile the 'callmessage' Program** (h3)
 
     gcc -o callmessage callmessage.c -ldl
 
-**Step 5: Run the Executable**
+**Step 5: Run the Executable** (h3)
 
     ./callmessage
     
@@ -72,15 +72,15 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 When you run ./callmessage, it will:
 
-• Load libmessage.so.
+- Load libmessage.so.
 <br>
-• Look up the show_message function in the shared library.
+- Look up the show_message function in the shared library.
 <br>
-• Call the show_message function with the argument "Hello, World!".
+- Call the show_message function with the argument "Hello, World!".
 <br>
-• Print "Hello, World!" to the terminal
+- Print "Hello, World!" to the terminal
 
-![image](https://github.com/user-attachments/assets/14316bd3-4821-4ce7-9424-5d9f241da626)
+![image](https://github.com/user-attachments/assets/cd927d40-a891-4d82-88a6-a0b72605d059)
 
 You'll see in the image above that both the .so file and the executable 'callmessage' file are identified as being ELF files (Executable and Linkable Format).
 
