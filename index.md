@@ -4,6 +4,13 @@ Title: A Diary of IT Projects
 
 <title>A Diary of IT Projects</title>
 
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
+  <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
+</head>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
