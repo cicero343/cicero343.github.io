@@ -2,8 +2,8 @@
 Title: A Diary of IT Projects
 ---
 
-<html lang="en">
-<head>
+    <html lang="en">
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
@@ -26,8 +26,8 @@ Title: A Diary of IT Projects
             color: var(--txt-color);
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
 
  
@@ -47,16 +47,16 @@ Title: A Diary of IT Projects
             });
         });
     </script>
-</body>
-</html>
+    </body>
+    </html>
 
-<br>
+    <br>
 
-<img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="115" height="115" style="border-radius: 20px;">
-<script src="https://tryhackme.com/badge/2125035"></script>
+    <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="115" height="115" style="border-radius: 20px;">
+    <script src="https://tryhackme.com/badge/2125035"></script>
 
-<html lang="en">
-<head>
+    <html lang="en">
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clickable Links</title>
@@ -89,8 +89,8 @@ Title: A Diary of IT Projects
             text-decoration: underline;
         }
     </style>
-</head>
-<body>
+    </head>
+    <body>
     <div class="link-container">
         <ul class="link-list">
             <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank">LinkedIn</a></li>
@@ -98,5 +98,5 @@ Title: A Diary of IT Projects
             <li><a href="https://tryhackme.com/p/bdonovan343" target="_blank">TryHackMe</a></li>
         </ul>
     </div>
-</body>
-</html>
+    </body>
+    </html>
