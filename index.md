@@ -2,8 +2,6 @@
 Title: A Diary of IT Projects
 ---
 
-<title>A Diary of IT Projects</title>
-
 <head>
   <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
   <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
