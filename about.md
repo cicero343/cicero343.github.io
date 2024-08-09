@@ -73,16 +73,21 @@ permalink: /about/
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copy Text Example</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
         .copy-container {
             margin: 20px;
         }
-        .text-box {
-            background-color: #f0f0f0; /* Light background color */
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
             padding: 10px;
-            border: 1px solid #ccc; /* Border around the text box */
             border-radius: 5px;
-            white-space: pre-wrap; /* Preserve whitespace and line breaks */
-            font-family: monospace; /* Optional: gives a terminal-like look */
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
         }
         .copy-button {
             margin-top: 10px;
@@ -100,17 +105,14 @@ permalink: /about/
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="text-box">
-            This is the text you want to copy. You can put any length of text here.
-        </div>
+        <div id="text-to-copy" class="terminal">This is the text you want to copy. You can put any length of text here.</div>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
     </div>
 
     <script>
         function copyText() {
-            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText;
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
