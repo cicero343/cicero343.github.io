@@ -60,70 +60,12 @@ permalink: /about/
 </body>
 </html>
 
+<br>
 
+Hello and welcome to my site, I'm so happy you're here! 🥳
 
+I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.
 
+Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!
 
-
-
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .copy-container {
-            margin: 20px;
-        }
-        .terminal {
-            background-color: #000; /* Black background for terminal look */
-            color: #0f0; /* Green text color */
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
-            overflow: auto; /* Scroll if the content is too large */
-            display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="copy-container">
-        <div id="text-to-copy" class="terminal">This is the text you want to copy. You can put any length of text here.</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText() {
-            var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
-        }
-    </script>
-</body>
-</html>
+![nyan-cat](https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035)
