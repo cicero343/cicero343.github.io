@@ -10,8 +10,6 @@ permalink: /about/
   <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
 </head>
 
-
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
