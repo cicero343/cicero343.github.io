@@ -195,7 +195,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal"sudo nano callmessage.c</div>
+    <div class="terminal">sudo nano callmessage.c</div>
 </body>
 </html>
 
@@ -226,40 +226,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal"sudo nano callmessage.c</div>
-</body>
-</html>
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal-like Text Box</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .terminal {
-            background-color: #000; /* Black background for terminal look */
-            color: #0f0; /* Green text color */
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace; /* Terminal-like font */
-            white-space: pre-wrap; /* Preserve whitespace and line breaks */
-            overflow: auto; /* Scroll if the content is too large */
-            display: inline-block; /* Make the terminal block inline to avoid extra margins */
-            width: 100%; /* Make the terminal box full-width */
-            box-sizing: border-box; /* Include padding in width calculation */
-        }
-    </style>
-</head>
-<body>
-    <div class="terminal">
-        #include &lt;stdio.h&gt;<br>
-        #include &lt;dlfcn.h&gt;<br><br>
-
-        int main() {<br>
+    <div class="terminal">#include &lt;stdio.h&gt;<br>#include &lt;dlfcn.h&gt;<br><br>int main() {<br>
         &nbsp;&nbsp;&nbsp;&nbsp;void *handle;<br>
         &nbsp;&nbsp;&nbsp;&nbsp;void (*show_message)(const char *);<br><br>
 
@@ -313,9 +280,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal">
-        gcc -o callmessage callmessage.c -ldl
-    </div>
+    <div class="terminal">gcc -o callmessage callmessage.c -ldl</div>
 </body>
 </html>
 
