@@ -176,9 +176,8 @@ I wanted to create a basic example to help me understand how they work, so here'
 <body>
     <div class="copy-container">
         <div id="text-to-copy" class="terminal">#include <stdio.h>
-
-    void show_message(const char *message) {
-    printf("%s\n", message);
+void show_message(const char *message) {
+printf("%s\n", message);
 }</div>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
     </div>
