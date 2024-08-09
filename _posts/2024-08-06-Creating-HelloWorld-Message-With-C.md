@@ -116,11 +116,6 @@ I wanted to create a basic example to help me understand how they work, so here'
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
     <script>
         function copyText(button) {
             // Find the closest .terminal element to the clicked button
@@ -146,8 +141,6 @@ I wanted to create a basic example to help me understand how they work, so here'
 </html>
     
 <br>
-
-
 
 <html lang="en">
 <head>
@@ -195,11 +188,6 @@ printf("%s\n", message);
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
     <script>
         function copyText(button) {
             // Find the closest .terminal element to the clicked button
@@ -223,6 +211,8 @@ printf("%s\n", message);
     </script>
 </body>
 </html>
+
+<br>
 
 **Step 2: Compile the Shared Library**
 
