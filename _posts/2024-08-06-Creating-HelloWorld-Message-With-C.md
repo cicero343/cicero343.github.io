@@ -130,7 +130,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal">#include &lt;stdio.h&gt;<br><br>void show_message(const char *message) {<br>&nbsp;&nbsp;&nbsp;&nbsp;printf("%s\n", message);<br>}</div>
+    <div class="terminal">#include &lt;stdio.h&gt;<br><br>void show_message(const char *message) {<br>printf("%s\n", message);<br>}</div>
 </body>
 </html>
 
@@ -142,12 +142,10 @@ I wanted to create a basic example to help me understand how they work, so here'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-        .copy-container {
             margin: 20px;
         }
         .terminal {
@@ -156,66 +154,30 @@ I wanted to create a basic example to help me understand how they work, so here'
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
     </style>
 </head>
 <body>
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="gcc -fPIC -shared -o libmessage.so message.c">gcc -fPIC -shared -o libmessage.so message.c</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
-        }
-    </script>
+    <div class="terminal">gcc -fPIC -shared -o libmessage.so message.c</div>
 </body>
 </html>
 
 **Step 3: Create a C file called 'callmessage.c'**
 
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-        .copy-container {
             margin: 20px;
         }
         .terminal {
@@ -224,51 +186,16 @@ I wanted to create a basic example to help me understand how they work, so here'
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
     </style>
 </head>
 <body>
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano callmessage.c">sudo nano callmessage.c</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
-        }
-    </script>
+    <div class="terminal"sudo nano callmessage.c</div>
 </body>
 </html>
 
@@ -278,12 +205,10 @@ I wanted to create a basic example to help me understand how they work, so here'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-        .copy-container {
             margin: 20px;
         }
         .terminal {
@@ -292,75 +217,71 @@ I wanted to create a basic example to help me understand how they work, so here'
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
     </style>
 </head>
 <body>
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">#include <stdio.h>
-#include <dlfcn.h>
+    <div class="terminal"sudo nano callmessage.c</div>
+</body>
+</html>
 
-int main() {
-void *handle;
-void (*show_message)(const char *);
-
-handle = dlopen("./libmessage.so", RTLD_LAZY);
-if (!handle) {
-    fprintf(stderr, "%s\n", dlerror());
-    return 1;
-}
-
-dlerror(); // Clear any existing error
-show_message = (void (*)(const char *))dlsym(handle, "show_message");
-if (dlerror() != NULL) {
-    fprintf(stderr, "%s\n", dlerror());
-    return 1;
-}
-
-show_message("Hello, World!");
-
-dlclose(handle);
-return 0;
-}</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal-like Text Box</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
-    </script>
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        #include &lt;stdio.h&gt;<br>
+        #include &lt;dlfcn.h&gt;<br><br>
+
+        int main() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;void *handle;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;void (*show_message)(const char *);<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;handle = dlopen("./libmessage.so", RTLD_LAZY);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;if (!handle) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr, "%s\n", dlerror());<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;dlerror(); // Clear any existing error<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;show_message = (void (*)(const char *))dlsym(handle, "show_message");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;if (dlerror() != NULL) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr, "%s\n", dlerror());<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;show_message("Hello, World!");<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;dlclose(handle);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;return 0;<br>
+        }
+    </div>
 </body>
 </html>
 
@@ -371,12 +292,10 @@ return 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-        .copy-container {
             margin: 20px;
         }
         .terminal {
@@ -385,51 +304,18 @@ return 0;
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
     </style>
 </head>
 <body>
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="gcc -o callmessage callmessage.c -ldl">gcc -o callmessage callmessage.c -ldl</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    <div class="terminal">
+        gcc -o callmessage callmessage.c -ldl
     </div>
-
-    <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
-        }
-    </script>
 </body>
 </html>
 
@@ -439,12 +325,10 @@ return 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-        .copy-container {
             margin: 20px;
         }
         .terminal {
@@ -453,51 +337,16 @@ return 0;
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
     </style>
 </head>
 <body>
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="./callmessage">./callmessage</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
-        }
-    </script>
+    <div class="terminal">./callmessage</div>
 </body>
 </html>
     
