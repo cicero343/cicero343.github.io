@@ -85,8 +85,9 @@ permalink: /test/
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            white-space: pre; /* Preserve whitespace without extra spaces */
             overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
         }
         .copy-button {
             margin-top: 10px;
@@ -112,9 +113,8 @@ permalink: /test/
 
     <script>
         function copyText() {
-            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText;
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
