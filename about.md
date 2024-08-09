@@ -69,15 +69,16 @@ Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed
 ![nyan-cat](https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035)
 
 
-<div id="top"></div>
 
-As stated at the top of this Article, the Latin maxim *nemo dat quod non habet*—one cannot give what they do not have (or, you have to have it to give it)<a href="#ref4" class="reference">[4]</a>—holds a special place in our law. The *nemo dat* principle is so strong that it has broad applications associated with the transfer of most assets, not just real property<a href="#ref5" class="reference">[5]</a>.
+
+As stated at the top of this Article, the Latin maxim *nemo dat quod non habet*—one cannot give what they do not have (or, you have to have it to give it)<a href="#ref4" id="back4" class="reference">[4]</a>—holds a special place in our law. The *nemo dat* principle is so strong that it has broad applications associated with the transfer of most assets, not just real property<a href="#ref5" id="back5" class="reference">[5]</a>.
 
 <div id="references">
     <h2>References</h2>
-    <p id="ref4">4. See BLACK’S LAW DICTIONARY 1933 (10th ed. 2014) (“No one gives what he does not have . . . .”); Kevin E. Davis, The Effects of Forfeiture on Third Parties, 48 MCGILL L.J. 183, 196–97 (2003) (articulating the “common law rule of *nemo dat quod non habet* (‘he who hath not cannot give’)”). <a href="#top" class="back-to-top">[Return to text]</a></p>
-    <p id="ref5">5. See, e.g., Stephen T. Black, Psst! Wanna Buy a Bridge? IP Transfers of Non-Existent Property, 31 GA. ST. U. L. REV. 523, 529–30 (2015) (discussing the broader applications of *nemo dat*-like norms); Adam J. Levitin, Finding Nemo: Rediscovering the Virtues of Negotiability in the Wake of Enron, 2007 COLUM. BUS. L. REV. 83, 90 (2007) (defining “the commercial law principle of *nemo dat quod non habet*—you can transfer only what you have”) (emphasis added); Carl S. Bjerre, Secured Transactions Inside Out: Negative Pledge Covenants, Property and Perfection, 84 CORNELL L. REV. 305, 333 (1999) (“[I]f the owner grants a security interest to one lender, the *nemo dat* principle standing alone would dictate that the owner..."). <a href="#top" class="back-to-top">[Return to text]</a></p>
+    <p id="ref4">4. See BLACK’S LAW DICTIONARY 1933 (10th ed. 2014) (“No one gives what he does not have . . . .”); Kevin E. Davis, The Effects of Forfeiture on Third Parties, 48 MCGILL L.J. 183, 196–97 (2003) (articulating the “common law rule of *nemo dat quod non habet* (‘he who hath not cannot give’)”). <a href="#back4" class="back-to-ref">[Return to reference]</a></p>
+    <p id="ref5">5. See, e.g., Stephen T. Black, Psst! Wanna Buy a Bridge? IP Transfers of Non-Existent Property, 31 GA. ST. U. L. REV. 523, 529–30 (2015) (discussing the broader applications of *nemo dat*-like norms); Adam J. Levitin, Finding Nemo: Rediscovering the Virtues of Negotiability in the Wake of Enron, 2007 COLUM. BUS. L. REV. 83, 90 (2007) (defining “the commercial law principle of *nemo dat quod non habet*—you can transfer only what you have”) (emphasis added); Carl S. Bjerre, Secured Transactions Inside Out: Negative Pledge Covenants, Property and Perfection, 84 CORNELL L. REV. 305, 333 (1999) (“[I]f the owner grants a security interest to one lender, the *nemo dat* principle standing alone would dictate that the owner..."). <a href="#back5" class="back-to-ref">[Return to reference]</a></p>
 </div>
+
 
 
 
