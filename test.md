@@ -64,13 +64,12 @@ permalink: /test/
 
 
 
+<canvas></canvas>
 
-    HTML CSS JS 
+body {
+  text-align: center;
+}
 
-    Result
-    Skip Results Iframe
-
-EDIT ON
 
 // Global Variables
 var DIRECTION = {
