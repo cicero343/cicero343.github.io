@@ -226,12 +226,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal">#include &lt;stdio.h&gt;<br>#include &lt;dlfcn.h&gt;<br><br>int main() {<br>void *handle;<br>void (*show_message)(const char *);<br><br>handle = dlopen("./libmessage.so", RTLD_LAZY);<br>if (!handle) {<br>  fprintf(stderr, "%s\n", dlerror());<br>  return 1;<br>;}<br><br>dlerror(); // Clear any existing error<br>
-        show_message = (void (*)(const char *))dlsym(handle, "show_message");<br>
-        if (dlerror() != NULL) {<br>
-        fprintf(stderr, "%s\n", dlerror());<br>
-        return 1;<br>
-        }<br><br>show_message("Hello, World!");<br><br>dlclose(handle);<br>return 0;<br>}</div>
+    <div class="terminal">#include &lt;stdio.h&gt;<br>#include &lt;dlfcn.h&gt;<br><br>int main() {<br>void *handle;<br>void (*show_message)(const char *);<br><br>handle = dlopen("./libmessage.so", RTLD_LAZY);<br>if (!handle) {<br>    fprintf(stderr, "%s\n", dlerror());<br>    return 1;<br>}<br><br>dlerror(); // Clear any existing error<br>show_message = (void (*)(const char *))dlsym(handle, "show_message");<br>if (dlerror() != NULL) {<br>    fprintf(stderr, "%s\n", dlerror());<br>    return 1;<br>}<br><br>show_message("Hello, World!");<br><br>dlclose(handle);<br>return 0;<br>}</div>
 </body>
 </html>
 
