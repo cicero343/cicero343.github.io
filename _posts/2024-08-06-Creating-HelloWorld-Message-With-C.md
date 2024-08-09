@@ -256,12 +256,7 @@ void show_message(const char *message) {
 </head>
 <body>
     <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">gcc -fPIC -shared -o libmessage.so message.c</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <div class="terminal" data-copy-text="gcc -fPIC -shared -o libmessage.so message.c">gcc -fPIC -shared -o libmessage.so message.c</div>
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
@@ -329,12 +324,7 @@ void show_message(const char *message) {
 </head>
 <body>
     <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">sudo nano callmessage.c</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <div class="terminal" data-copy-text="sudo nano callmessage.c">sudo nano callmessage.c</div>
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
