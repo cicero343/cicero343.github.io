@@ -74,84 +74,15 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 **Step 1: Create a C file called 'message.c'**
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-        .copy-container {
-            margin: 20px;
-        }
-        .terminal {
-            background-color: #000; /* Black background for terminal look */
-            color: #0f0; /* Green text color */
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
-            overflow: auto; /* Scroll if the content is too large */
-            display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">sudo nano message.c</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                });
-            document.body.removeChild(textArea);
-        }
-    </script>
-</body>
-</html>
-    
-<br>
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .copy-container {
             margin: 20px;
         }
         .terminal {
@@ -163,57 +94,51 @@ I wanted to create a basic example to help me understand how they work, so here'
             white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
     </style>
 </head>
 <body>
-    <div class="copy-container">
-        <div id="text-to-copy" class="terminal">
-#include <stdio.h>
-
-void show_message(const char *message) {
-    printf("%s\n", message);
-}
-        </div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    <div class="terminal">
+        sudo nano message.c
     </div>
+</body>
+</html>
+    
+<br>
 
-    <script>
-        function copyText() {
-            var textBox = document.getElementById('text-to-copy');
-            
-            // Create a temporary textarea to hold the text
-            var tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textBox.innerText; // Use innerText to get the displayed text
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            
-            // Copy the text to clipboard
-            navigator.clipboard.writeText(tempTextArea.value)
-                .then(() => {
-                    alert('Text copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Error copying text: ', err);
-                    alert('Failed to copy text. Please try again.');
-                });
-
-            // Clean up
-            document.body.removeChild(tempTextArea);
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal-like Text Box</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
-    </script>
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+            width: 100%; /* Make the terminal box full-width */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        #include &lt;stdio.h&gt;<br><br>
+        void show_message(const char *message) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;printf("%s\n", message);<br>
+        }
+    </div>
 </body>
 </html>
 
