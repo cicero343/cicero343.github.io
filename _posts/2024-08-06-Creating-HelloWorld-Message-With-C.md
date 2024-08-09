@@ -74,7 +74,6 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 **Step 1: Create a C file called 'message.c'**
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -100,9 +99,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal">
-        sudo nano message.c
-    </div>
+    <div class="terminal">sudo nano message.c</div>
 </body>
 </html>
     
@@ -133,12 +130,7 @@ I wanted to create a basic example to help me understand how they work, so here'
     </style>
 </head>
 <body>
-    <div class="terminal">
-        #include &lt;stdio.h&gt;<br><br>
-        void show_message(const char *message) {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;printf("%s\n", message);<br>
-        }
-    </div>
+    <div class="terminal">#include &lt;stdio.h&gt;<br><br>void show_message(const char *message) {<br>&nbsp;&nbsp;&nbsp;&nbsp;printf("%s\n", message);<br>}</div>
 </body>
 </html>
 
