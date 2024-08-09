@@ -167,6 +167,8 @@ I wanted to create a basic example to help me understand how they work, so here'
 </body>
 </html>
 
+<br>
+
 **Step 3: Create a C file called 'callmessage.c'**
 
 
@@ -230,6 +232,7 @@ I wanted to create a basic example to help me understand how they work, so here'
 </body>
 </html>
 
+<br>
 
 **Step 4: Compile the 'callmessage' Program**
 
@@ -261,6 +264,8 @@ I wanted to create a basic example to help me understand how they work, so here'
     <div class="terminal">gcc -o callmessage callmessage.c -ldl</div>
 </body>
 </html>
+
+<br>
 
 **Step 5: Run the Executable**
 
@@ -304,8 +309,9 @@ When you run ./callmessage, it will:
 - Call the show_message function with the argument "Hello, World!".
 <br>
 - Print "Hello, World!" to the terminal
-<br>
 
+<br>
+  
 ![image](https://github.com/user-attachments/assets/cd927d40-a891-4d82-88a6-a0b72605d059)
 
 You'll see in the image above that both the .so file and the executable 'callmessage' file are identified as being ELF files (Executable and Linkable Format).
