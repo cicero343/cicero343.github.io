@@ -1,6 +1,5 @@
 ---
 title: test
-permalink:
 ---
 
 <head>
