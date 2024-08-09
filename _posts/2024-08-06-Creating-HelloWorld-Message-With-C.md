@@ -74,60 +74,472 @@ I wanted to create a basic example to help me understand how they work, so here'
 
 **Step 1: Create a C file called 'message.c'**
 
-    sudo nano message.c
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">sudo nano message.c</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
     
 <br>
 
-    #include <stdio.h>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">#include <stdio.h>
 
     void show_message(const char *message) {
     printf("%s\n", message);
-    }
+}</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
 
 **Step 2: Compile the Shared Library**
 
-    gcc -fPIC -shared -o libmessage.so message.c
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">gcc -fPIC -shared -o libmessage.so message.c</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
 
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
 
 **Step 3: Create a C file called 'callmessage.c'**
 
-    sudo nano callmessage.c
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">sudo nano callmessage.c</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
     
 <br>
 
-    #include <stdio.h>
-    #include <dlfcn.h>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">#include <stdio.h>
+#include <dlfcn.h>
 
-    int main() {
-    void *handle;
-    void (*show_message)(const char *);
+int main() {
+void *handle;
+void (*show_message)(const char *);
 
-    handle = dlopen("./libmessage.so", RTLD_LAZY);
-    if (!handle) {
-        fprintf(stderr, "%s\n", dlerror());
-        return 1;
-    }
+handle = dlopen("./libmessage.so", RTLD_LAZY);
+if (!handle) {
+    fprintf(stderr, "%s\n", dlerror());
+    return 1;
+}
 
-    dlerror(); // Clear any existing error
-    show_message = (void (*)(const char *))dlsym(handle, "show_message");
-    if (dlerror() != NULL) {
-        fprintf(stderr, "%s\n", dlerror());
-        return 1;
-    }
+dlerror(); // Clear any existing error
+show_message = (void (*)(const char *))dlsym(handle, "show_message");
+if (dlerror() != NULL) {
+    fprintf(stderr, "%s\n", dlerror());
+    return 1;
+}
 
-    show_message("Hello, World!");
+show_message("Hello, World!");
 
-    dlclose(handle);
-    return 0;
-    }
+dlclose(handle);
+return 0;
+}</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
 
 **Step 4: Compile the 'callmessage' Program**
 
-    gcc -o callmessage callmessage.c -ldl
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">gcc -o callmessage callmessage.c -ldl</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
 
 **Step 5: Run the Executable**
 
-    ./callmessage
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .copy-container {
+            margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre; /* Preserve whitespace without extra spaces */
+            overflow: auto; /* Scroll if the content is too large */
+            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <div id="text-to-copy" class="terminal">./callmessage</div>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
     
 <br>
 
