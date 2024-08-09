@@ -180,33 +180,35 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <pre class="terminal">#include <stdio.h>
+        <pre class="terminal" id="text-to-copy">#include &lt;stdio.h&gt;
 
 void show_message(const char *message) {
     printf("%s\n", message);
 }</pre>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
     </div>
 
     <script>
-        function copyText(button) {
-            // Find the closest .terminal element to the clicked button
-            var textBox = button.previousElementSibling;
-            var text = textBox.innerText.trim();
-
-            // Create a temporary textarea to copy the text
-            var textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            navigator.clipboard.writeText(textArea.value)
+        function copyText() {
+            var textBox = document.getElementById('text-to-copy');
+            
+            // Create a temporary textarea to hold the text
+            var tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textBox.textContent; // Use textContent to get the actual text
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            // Copy the text to clipboard
+            navigator.clipboard.writeText(tempTextArea.value)
                 .then(() => {
                     alert('Text copied to clipboard!');
                 })
                 .catch(err => {
                     console.error('Error copying text: ', err);
                 });
-            document.body.removeChild(textArea);
+
+            // Clean up
+            document.body.removeChild(tempTextArea);
         }
     </script>
 </body>
