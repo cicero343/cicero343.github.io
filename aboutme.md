@@ -1,6 +1,6 @@
 ---
 title: About me
-permalink: /test/
+permalink: /aboutme
 ---
 
 <head>
@@ -79,15 +79,12 @@ permalink: /test/
         .copy-container {
             margin: 20px;
         }
-        .terminal {
-            background-color: #000; /* Black background for terminal look */
-            color: #0f0; /* Green text color */
+        .text-box {
+            background-color: #f0f0f0; /* Light background color */
             padding: 10px;
+            border: 1px solid #ccc; /* Border around the text box */
             border-radius: 5px;
-            font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
-            overflow: auto; /* Scroll if the content is too large */
-            display: inline-block; /* Make the terminal block inline to avoid extra margins */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
         }
         .copy-button {
             margin-top: 10px;
@@ -105,7 +102,7 @@ permalink: /test/
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">
+        <div id="text-to-copy" class="text-box">
             This is the text you want to copy. You can put any length of text here.
         </div>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
@@ -113,8 +110,9 @@ permalink: /test/
 
     <script>
         function copyText() {
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = document.getElementById('text-to-copy').innerText;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
