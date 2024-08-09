@@ -3,6 +3,55 @@ title: "Intro to C language: Creating a 'Hello World' Message (in WSL)"
 date: 2024-08-07
 ---
 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Dark Mode</title>
+    <style>
+        /* Default light mode settings */
+        :root {
+            --bg-color: #ffffff;
+            --txt-color: #000000;
+        }
+
+        /* Dark mode settings */
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --txt-color: #ffffff;
+        }
+
+        /* Apply the variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--txt-color);
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle">Toggle Dark Mode</button>
+
+ 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+            }
+
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        });
+    </script>
+</body>
+</html>
+
+
 Windows .dll (dynamic link library) files and UNIX-like .so files (or shared object files) were quite hard for me to wrap my head around as I'm not from a Comp Sci or Programmer background.
 
 Essentially, .dll and .so files are 'shared libraries' which contain reusable code that can be dynamically loaded and used by other programs during runtime. You've probably seen them on Windows in some of these areas:
