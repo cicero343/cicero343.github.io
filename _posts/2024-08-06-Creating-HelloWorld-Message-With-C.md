@@ -112,14 +112,24 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">sudo nano message.c</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <div class="terminal" data-copy-text="sudo nano message.c">sudo nano message.c</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
@@ -136,6 +146,8 @@ I wanted to create a basic example to help me understand how they work, so here'
 </html>
     
 <br>
+
+
 
 <html lang="en">
 <head>
@@ -175,17 +187,28 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">#include <stdio.h>
+        <div class="terminal" data-copy-text="sudo nano message.c">#include <stdio.h>
+
 void show_message(const char *message) {
 printf("%s\n", message);
 }</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
@@ -241,14 +264,24 @@ printf("%s\n", message);
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">gcc -fPIC -shared -o libmessage.so message.c</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <div class="terminal" data-copy-text="sudo nano message.c">gcc -fPIC -shared -o libmessage.so message.c</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
@@ -304,14 +337,24 @@ printf("%s\n", message);
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">sudo nano callmessage.c</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <div class="terminal" data-copy-text="sudo nano message.c">sudo nano callmessage.c</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
@@ -326,7 +369,7 @@ printf("%s\n", message);
     </script>
 </body>
 </html>
-    
+
 <br>
 
 <html lang="en">
@@ -367,7 +410,7 @@ printf("%s\n", message);
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">#include <stdio.h>
+        <div class="terminal" data-copy-text="sudo nano message.c">#include <stdio.h>
 #include <dlfcn.h>
 
 int main() {
@@ -392,13 +435,23 @@ show_message("Hello, World!");
 dlclose(handle);
 return 0;
 }</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
@@ -413,6 +466,7 @@ return 0;
     </script>
 </body>
 </html>
+
 
 **Step 4: Compile the 'callmessage' Program**
 
@@ -454,14 +508,24 @@ return 0;
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">gcc -o callmessage callmessage.c -ldl</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <div class="terminal" data-copy-text="sudo nano message.c">gcc -o callmessage callmessage.c -ldl</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
@@ -517,14 +581,24 @@ return 0;
 </head>
 <body>
     <div class="copy-container">
-        <div id="text-to-copy" class="terminal">./callmessage</div>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
+        <div class="terminal" data-copy-text="sudo nano message.c">./callmessage</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
+    </div>
+
+    <div class="copy-container">
+        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
     <script>
-        function copyText() {
+        function copyText(button) {
+            // Find the closest .terminal element to the clicked button
+            var textBox = button.previousElementSibling;
+            var text = textBox.getAttribute('data-copy-text');
+
+            // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
-            textArea.value = document.getElementById('text-to-copy').innerText.trim();
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
