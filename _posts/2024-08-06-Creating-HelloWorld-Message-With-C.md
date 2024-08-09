@@ -51,6 +51,7 @@ date: 2024-08-07
 </body>
 </html>
 
+<br>
 
 Windows .dll (dynamic link library) files and UNIX-like .so files (or shared object files) were quite hard for me to wrap my head around as I'm not from a Comp Sci or Programmer background.
 
