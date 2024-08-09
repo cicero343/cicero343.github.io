@@ -68,14 +68,27 @@ permalink: /test/
 
 
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copy Text Example</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
         .copy-container {
             margin: 20px;
+        }
+        .terminal {
+            background-color: #000; /* Black background for terminal look */
+            color: #0f0; /* Green text color */
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace; /* Terminal-like font */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            overflow: auto; /* Scroll if the content is too large */
         }
         .copy-button {
             margin-top: 10px;
@@ -89,24 +102,22 @@ permalink: /test/
         .copy-button:hover {
             background-color: #0056b3;
         }
-        /* Hide the textarea */
-        #text-to-copy {
-            position: absolute;
-            left: -9999px;
-        }
     </style>
 </head>
 <body>
     <div class="copy-container">
-        <textarea id="text-to-copy" readonly>
-This is the text you want to copy. You can put any length of text here.
-        </textarea>
+        <div id="text-to-copy" class="terminal">
+            This is the text you want to copy. You can put any length of text here.
+        </div>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
     </div>
 
     <script>
         function copyText() {
-            var textArea = document.getElementById('text-to-copy');
+            // Create a temporary textarea to copy the text
+            var textArea = document.createElement('textarea');
+            textArea.value = document.getElementById('text-to-copy').innerText;
+            document.body.appendChild(textArea);
             textArea.select();
             navigator.clipboard.writeText(textArea.value)
                 .then(() => {
@@ -115,6 +126,7 @@ This is the text you want to copy. You can put any length of text here.
                 .catch(err => {
                     console.error('Error copying text: ', err);
                 });
+            document.body.removeChild(textArea);
         }
     </script>
 </body>
