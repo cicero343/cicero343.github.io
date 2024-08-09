@@ -100,46 +100,6 @@ permalink: /test/
 
 
 
-<div class="drag-container">
-  <div class="drag-item" draggable="true">Item 1</div>
-  <div class="drag-item" draggable="true">Item 2</div>
-  <div class="drag-item" draggable="true">Item 3</div>
-</div>
-
-<style>
-  .drag-container {
-    display: flex;
-  }
-
-  .drag-item {
-    width: 100px;
-    height: 100px;
-    background-color: #f7b841;
-    margin-right: 10px;
-    cursor: grab;
-  }
-
-  .drag-item:active {
-    cursor: grabbing;
-  }
-</style>
-
-<script>
-  // JavaScript code to handle drag-and-drop functionality
-  var dragItems = document.querySelectorAll('.drag-item');
-
-  dragItems.forEach(function(item) {
-    item.addEventListener('dragstart', function(event) {
-      event.dataTransfer.setData('text/plain', event.target.id);
-    });
-  });
-</script>
-
-
-
-
-
-
 
  <button class="animateFromCenter">Click Me!</button>
     <button class="animateFromLeft">Click Me!</button>
