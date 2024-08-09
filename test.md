@@ -62,7 +62,7 @@ permalink: /test/
 
 
 
-<div class="slider">
+<!-- <div class="slider">
   <img src="/assets/favicon-16x16.png">
   <img src="/assets/favicon-32x32.png">
   <img src="image3.jpg">
@@ -97,6 +97,6 @@ permalink: /test/
     currentImage = (currentImage + 1) % images.length;
     images[currentImage].classList.add('active');
   }, 2000);
-</script>
+</script> --> 
 
 
