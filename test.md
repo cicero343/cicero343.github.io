@@ -61,42 +61,6 @@ permalink: /test/
 <br>
 
 
-<div id="chat"></div>
-
-<script>
-  // JavaScript code to handle real-time chat functionality
-  var chat = document.getElementById('chat');
-
-  function addMessage(message) {
-    var p = document.createElement('p');
-    p.textContent = message;
-    chat.appendChild(p);
-  }
-
-  // WebSocket code to connect to the server and receive messages
-  var socket = new WebSocket('ws://localhost:3000');
-
-  socket.addEventListener('message', function(event) {
-    addMessage(event.data);
-  });
-
-  // JavaScript code to send messages to the server
-  var form = document.querySelector('form');
-  var input = document.querySelector('input');
-
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    var message = input.value;
-    socket.send(message);
-    input.value = '';
-    addMessage('You: ' + message);
-  });
-</script>
-
-
-
-
-
 
 
 
@@ -181,8 +145,8 @@ button:active::after{
 
 
 <div class="slider">
-  <img src="image1.jpg">
-  <img src="image2.jpg">
+  <img src="/assets/favicon-16x16.png">
+  <img src="/assets/favicon-32x32.png">
   <img src="image3.jpg">
 </div>
 
