@@ -71,12 +71,13 @@ Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed
 
 
 
-As stated at the top of this Article, the Latin maxim *nemo dat quod non habet*—one cannot give what they do not have (or, you have to have it to give it)<a href="#ref4" id="back4" class="reference">[4]</a>—holds a special place in our law. The *nemo dat* principle is so strong that it has broad applications associated with the transfer of most assets, not just real property<a href="#ref5" id="back5" class="reference">[5]</a>.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fermentum ex sit amet tincidunt consectetur. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.<a href="#ref4" id="back4" class="reference">[4]</a> Sed cursus nunc sagittis orci ornare porta. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus at pellentesque arcu, ac pulvinar libero.<a href="#ref5" id="back5" class="reference">[5]</a>.
+
 
 <div id="references">
     <h2>References</h2>
-    <p id="ref4">4. See BLACK’S LAW DICTIONARY 1933 (10th ed. 2014) (“No one gives what he does not have . . . .”); Kevin E. Davis, The Effects of Forfeiture on Third Parties, 48 MCGILL L.J. 183, 196–97 (2003) (articulating the “common law rule of *nemo dat quod non habet* (‘he who hath not cannot give’)”). <a href="#back4" class="back-to-ref">[Return to reference]</a></p>
-    <p id="ref5">5. See, e.g., Stephen T. Black, Psst! Wanna Buy a Bridge? IP Transfers of Non-Existent Property, 31 GA. ST. U. L. REV. 523, 529–30 (2015) (discussing the broader applications of *nemo dat*-like norms); Adam J. Levitin, Finding Nemo: Rediscovering the Virtues of Negotiability in the Wake of Enron, 2007 COLUM. BUS. L. REV. 83, 90 (2007) (defining “the commercial law principle of *nemo dat quod non habet*—you can transfer only what you have”) (emphasis added); Carl S. Bjerre, Secured Transactions Inside Out: Negative Pledge Covenants, Property and Perfection, 84 CORNELL L. REV. 305, 333 (1999) (“[I]f the owner grants a security interest to one lender, the *nemo dat* principle standing alone would dictate that the owner..."). <a href="#back5" class="back-to-ref">[Return to reference]</a></p>
+    <p id="ref4">4. See Suspendisse nisl augue, hendrerit eu urna eu, fermentum accumsan mi. Donec orci ipsum, luctus et quam a, feugiat vulputate magna. Sed non efficitur risus. <a href="#back4" class="back-to-ref">[4]</a></p>
+    <p id="ref5">5. See, e.g., Curabitur maximus aliquam vestibulum. Sed orci enim, tincidunt nec libero a, hendrerit imperdiet diam (1999). <a href="#back5" class="back-to-ref">[5]</a></p>
 </div>
 
 
