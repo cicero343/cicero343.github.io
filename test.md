@@ -20,17 +20,19 @@ permalink: /test/
     <style>
         .image-container {
             display: flex; /* Use flexbox to place items side by side */
-            gap: 10px; /* Optional: Adds space between the images */
+            gap: 10px; /* Optional: Adds space between the items */
         }
-        .image-container img {
-            border-radius: 20px;
+        .profile-image {
+            border-radius: 20px; /* Apply border radius to profile image */
         }
     </style>
 </head>
 <body>
     <div class="image-container">
-        <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="100" height="100" alt="Profile Image">
-        <img src="https://tryhackme.com/badge/2125035" width="100" height="100" alt="TryHackMe Badge">
+        <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="100" height="100" alt="Profile Image" class="profile-image">
+        <div class="tryhackme-badge">
+            <script src="https://tryhackme.com/badge/2125035"></script>
+        </div>
     </div>
 </body>
 </html>
