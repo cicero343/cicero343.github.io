@@ -180,13 +180,13 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <pre id="text-to-copy" class="terminal">
-#include &lt;stdio.h&gt;
+        <div id="text-to-copy" class="terminal">
+#include <stdio.h>
 
 void show_message(const char *message) {
     printf("%s\n", message);
 }
-        </pre>
+        </div>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
     </div>
 
@@ -196,7 +196,7 @@ void show_message(const char *message) {
             
             // Create a temporary textarea to hold the text
             var tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textBox.textContent; // Use textContent to get the actual text
+            tempTextArea.value = textBox.innerText; // Use innerText to get the displayed text
             document.body.appendChild(tempTextArea);
             tempTextArea.select();
             
@@ -207,6 +207,7 @@ void show_message(const char *message) {
                 })
                 .catch(err => {
                     console.error('Error copying text: ', err);
+                    alert('Failed to copy text. Please try again.');
                 });
 
             // Clean up
