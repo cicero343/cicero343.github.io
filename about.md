@@ -73,9 +73,6 @@ permalink: /about/
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Copy Text Example</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         .copy-container {
             margin: 20px;
         }
@@ -85,6 +82,7 @@ permalink: /about/
             border: 1px solid #ccc; /* Border around the text box */
             border-radius: 5px;
             white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            font-family: monospace; /* Optional: gives a terminal-like look */
         }
         .copy-button {
             margin-top: 10px;
