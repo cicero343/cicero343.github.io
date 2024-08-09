@@ -68,8 +68,6 @@ permalink: /test/
 
 
 
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -91,66 +89,16 @@ permalink: /test/
         .copy-button:hover {
             background-color: #0056b3;
         }
-    </style>
-</head>
-<body>
-    <div class="copy-container">
-        <p id="text-to-copy">
-            This is the text you want to copy. You can put any length of text here.
-        </p>
-        <button class="copy-button" onclick="copyText()">Copy Text</button>
-    </div>
-
-    <script>
-        function copyText() {
-            var text = document.getElementById('text-to-copy').innerText;
-            navigator.clipboard.writeText(text).then(function() {
-                alert('Text copied to clipboard!');
-            }).catch(function(err) {
-                console.error('Error copying text: ', err);
-            });
-        }
-    </script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Text Example</title>
-    <style>
-        .copy-container {
-            margin: 20px;
-        }
-        .copy-button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
+        /* Hide the textarea */
+        #text-to-copy {
+            position: absolute;
+            left: -9999px;
         }
     </style>
 </head>
 <body>
     <div class="copy-container">
-        <textarea id="text-to-copy" rows="4" cols="50" readonly>
+        <textarea id="text-to-copy" readonly>
 This is the text you want to copy. You can put any length of text here.
         </textarea>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
@@ -160,10 +108,14 @@ This is the text you want to copy. You can put any length of text here.
         function copyText() {
             var textArea = document.getElementById('text-to-copy');
             textArea.select();
-            document.execCommand('copy');
-            alert('Text copied to clipboard!');
+            navigator.clipboard.writeText(textArea.value)
+                .then(() => {
+                    alert('Text copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Error copying text: ', err);
+                });
         }
     </script>
 </body>
 </html>
-
