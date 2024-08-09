@@ -160,7 +160,7 @@ I wanted to create a basic example to help me understand how they work, so here'
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace without extra spaces */
+            white-space: pre; /* Preserve whitespace */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
         }
@@ -180,11 +180,11 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">#include <stdio.h>
+        <pre class="terminal">#include &lt;stdio.h&gt;
 
 void show_message(const char *message) {
-printf("%s\n", message);
-}</div>
+    printf("%s\n", message);
+}</pre>
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
@@ -192,7 +192,7 @@ printf("%s\n", message);
         function copyText(button) {
             // Find the closest .terminal element to the clicked button
             var textBox = button.previousElementSibling;
-            var text = textBox.getAttribute('data-copy-text');
+            var text = textBox.innerText.trim();
 
             // Create a temporary textarea to copy the text
             var textArea = document.createElement('textarea');
