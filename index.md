@@ -82,7 +82,7 @@ Title: A Diary of IT Projects
         </div>
     </div>
 </body>
-</html
+</html>
 
 
 <html lang="en">
