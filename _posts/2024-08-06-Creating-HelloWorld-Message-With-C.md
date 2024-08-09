@@ -227,8 +227,8 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="terminal">#include &lt;stdio.h&gt;<br>#include &lt;dlfcn.h&gt;<br><br>int main() {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;void *handle;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;void (*show_message)(const char *);<br><br>
+        void *handle;<br>
+        void (*show_message)(const char *);<br><br>
 
         &nbsp;&nbsp;&nbsp;&nbsp;handle = dlopen("./libmessage.so", RTLD_LAZY);<br>
         &nbsp;&nbsp;&nbsp;&nbsp;if (!handle) {<br>
