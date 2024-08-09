@@ -55,3 +55,57 @@ permalink: /test/
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Text Example</title>
+    <style>
+        .copy-container {
+            margin: 20px;
+        }
+        .copy-button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-container">
+        <textarea id="text-to-copy" rows="4" cols="50" readonly>
+This is the text you want to copy. You can put any length of text here.
+        </textarea>
+        <button class="copy-button" onclick="copyText()">Copy Text</button>
+    </div>
+
+    <script>
+        function copyText() {
+            var textArea = document.getElementById('text-to-copy');
+            textArea.select();
+            document.execCommand('copy');
+            alert('Text copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
+
