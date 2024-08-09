@@ -180,7 +180,7 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <pre class="terminal">#include &lt;stdio.h&gt;
+        <pre class="terminal">#include <stdio.h>
 
 void show_message(const char *message) {
     printf("%s\n", message);
@@ -192,26 +192,21 @@ void show_message(const char *message) {
         function copyText(button) {
             // Find the closest .terminal element to the clicked button
             var textBox = button.previousElementSibling;
-            var text = textBox.innerText;
-
-            // Decode HTML entities
-            var textarea = document.createElement('textarea');
-            textarea.innerHTML = text;
-            text = textarea.value;
+            var text = textBox.innerText.trim();
 
             // Create a temporary textarea to copy the text
-            var tempTextArea = document.createElement('textarea');
-            tempTextArea.value = text;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            navigator.clipboard.writeText(tempTextArea.value)
+            var textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            navigator.clipboard.writeText(textArea.value)
                 .then(() => {
                     alert('Text copied to clipboard!');
                 })
                 .catch(err => {
                     console.error('Error copying text: ', err);
                 });
-            document.body.removeChild(tempTextArea);
+            document.body.removeChild(textArea);
         }
     </script>
 </body>
