@@ -420,11 +420,6 @@ return 0;
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
     <script>
         function copyText(button) {
             // Find the closest .terminal element to the clicked button
@@ -490,12 +485,7 @@ return 0;
 </head>
 <body>
     <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">gcc -o callmessage callmessage.c -ldl</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <div class="terminal" data-copy-text="gcc -o callmessage callmessage.c -ldl">gcc -o callmessage callmessage.c -ldl</div>
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
@@ -563,12 +553,7 @@ return 0;
 </head>
 <body>
     <div class="copy-container">
-        <div class="terminal" data-copy-text="sudo nano message.c">./callmessage</div>
-        <button class="copy-button" onclick="copyText(this)">Copy Text</button>
-    </div>
-
-    <div class="copy-container">
-        <div class="terminal" data-copy-text="ls -la">ls -la</div>
+        <div class="terminal" data-copy-text="./callmessage">./callmessage</div>
         <button class="copy-button" onclick="copyText(this)">Copy Text</button>
     </div>
 
