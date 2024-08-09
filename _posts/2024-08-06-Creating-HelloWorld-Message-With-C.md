@@ -160,7 +160,7 @@ I wanted to create a basic example to help me understand how they work, so here'
             padding: 10px;
             border-radius: 5px;
             font-family: monospace; /* Terminal-like font */
-            white-space: pre; /* Preserve whitespace */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
             overflow: auto; /* Scroll if the content is too large */
             display: inline-block; /* Make the terminal block inline to avoid extra margins */
         }
@@ -180,11 +180,13 @@ I wanted to create a basic example to help me understand how they work, so here'
 </head>
 <body>
     <div class="copy-container">
-        <pre class="terminal" id="text-to-copy">#include &lt;stdio.h&gt;
+        <pre id="text-to-copy" class="terminal">
+#include &lt;stdio.h&gt;
 
 void show_message(const char *message) {
     printf("%s\n", message);
-}</pre>
+}
+        </pre>
         <button class="copy-button" onclick="copyText()">Copy Text</button>
     </div>
 
