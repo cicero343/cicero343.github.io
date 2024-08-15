@@ -72,13 +72,13 @@ There are many pre-stage tests one must do before asking whether copyright has b
 
 Computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
 
-Even computer-generated works could be protected<a href="#ref5" id="back5" class="reference"> [5]</a>
+- Even computer-generated works could be protected<a href="#ref5" id="back5" class="reference"> [5]</a>
 
 <h3>CDPA 1988, s. 17 - Infringement by Copying</h3>
 
 e.g. IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd  (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
 
-Right-holder needs to prove defendant is not simply emulating the function of the program<a href="#ref7" id="back7" class="reference"> [7]</a>
+- Right-holder needs to prove defendant is not simply emulating the function of the program<a href="#ref7" id="back7" class="reference"> [7]</a>
 
 Includes copies which are transient or are incidental to some other use of the work.<a href="#ref8" id="back8" class="reference"> [8]</a>
 
@@ -88,27 +88,27 @@ Person will infringe (absent a defence) where e.g. they store work (or other sub
 
 Infringing person(s) need to make infringing subject matter 'available to the public'.<a href="#ref10" id="back10" class="reference"> [10]</a>
 
-Includes uploading material onto publicly accessible web.<a href="#ref11" id="back11" class="reference"> [11]</a>
+- Includes uploading material onto publicly accessible web.<a href="#ref11" id="back11" class="reference"> [11]</a>
 
-Includes installing peer-to-peer software that allows third parties to access works from the installer’s computer.<a href="#ref12" id="back12" class="reference"> [12]</a>
+- Includes installing peer-to-peer software that allows third parties to access works from the installer’s computer.<a href="#ref12" id="back12" class="reference"> [12]</a>
 
-Does not apply if work is already publicly available?<a href="#ref13" id="back13" class="reference"> [13]</a>
+- Does not apply if work is already publicly available?<a href="#ref13" id="back13" class="reference"> [13]</a>
 
 e.g. Ziggo case<a href="#ref14" id="back14" class="reference"> [14]</a>
 
 - Concerned notorious torrent site ‘The Pirate Bay’  
 
-various acts of indexing and classifying of the torrent files made them readily accessible to users. 
+- various acts of indexing and classifying of the torrent files made them 'readily accessible' to users. 
 
-Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
+- Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
 
 <h3>CDPA 1988, s. 28A - Making of temporary copies</h3>
 
 No copyright liability for making temporary copies if:
 
-Copies are transient/incidental e.g. caching websites<a href="#ref16" id="back16" class="reference"> [16]</a>
+- Copies are transient/incidental e.g. caching websites<a href="#ref16" id="back16" class="reference"> [16]</a>
 
-Copies are ‘essential part of a technological process’, ‘no independent economic significance’<a href="#ref17" id="back17" class="reference"> [17]</a>
+- Copies are ‘essential part of a technological process’, ‘no independent economic significance’<a href="#ref17" id="back17" class="reference"> [17]</a>
 
 Doesn't include unauthorised streams<a href="#ref18" id="back18" class="reference"> [18]</a>
 
@@ -116,49 +116,49 @@ Doesn't include unauthorised streams<a href="#ref18" id="back18" class="referenc
 
 **Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
 
-But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
+- But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
 
 **Decompilation<a href="#ref21" id="back21" class="reference"> [21]</a>**
 
-In order to help producers in making systems which are compatible/interoperable<a href="#ref22" id="back22" class="reference"> [22]</a>
+Suggested that this defence helps producers in making systems which are compatible/interoperable<a href="#ref22" id="back22" class="reference"> [22]</a>
 
-Not allowed to decompile for research or study<a href="#ref23" id="back23" class="reference"> [23]</a>
+- Not allowed to decompile for research or study<a href="#ref23" id="back23" class="reference"> [23]</a>
 
-Not allowed if information already readily available<a href="#ref24" id="back24" class="reference"> [24]</a>
+- Not allowed if information already readily available<a href="#ref24" id="back24" class="reference"> [24]</a>
 
-Not allowed if decompilation not confined to acts necessary to achieve the permitted objective<a href="#ref25" id="back25" class="reference"> [25]</a>
+- Not allowed if decompilation not confined to acts necessary to achieve the permitted objective<a href="#ref25" id="back25" class="reference"> [25]</a>
 
-Not allowed if attempting to create a program that is substantially similar in its expression to the program decompiled, or to do any act restricted by copyright.<a href="#ref26" id="back26" class="reference"> [26]</a>
+- Not allowed if attempting to create a program that is substantially similar in its expression to the program decompiled, or to do any act restricted by copyright.<a href="#ref26" id="back26" class="reference"> [26]</a>
 
-**Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>
-**
+**Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>**
 
-Not if breach of license terms?<a href="#ref28" id="back28" class="reference"> [28]</a>
+- Not permissible if doing so would breach license terms<a href="#ref28" id="back28" class="reference"> [28]</a>
   
-**Other acts permitted to lawful users **
+**Other acts permitted to lawful users**
 
-Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
+- Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
 
 <h3>CDPA 1988, s. 56 - Transfers of copies of works in electronic form.</h3>
 
-Transfer is allowed (even if perpetual license instead of a sale), provided the seller destroys their own copy.<a href="#ref31" id="back31" class="reference"> [31]</a>
+- Transfer is allowed (even if perpetual license instead of a sale), provided the seller destroys their own copy.<a href="#ref31" id="back31" class="reference"> [31]</a>
 
 <h3>CDPA 1988, s. 97A - Injunctions against service providers</h3>
 
 EMI Records Ltd v. British Sky Broadcasting Ltd<a href="#ref32" id="back32" class="reference"> [32]</a>
 
-Website indexing BitTorrent files 
-Operators ‘authorising’ infringements of the users 
+- Website indexing BitTorrent files
+  
+- Operators ‘authorising’ infringements of the users 
 
 Newzbin<a href="#ref33" id="back33" class="reference"> [33]</a>
 
-Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
+- Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
 
-Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
+- Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
 
 Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [36]</a>
 
-Website which allowed peer-to-peer users to watch unauthorised streams of films. 
+- Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
 <br>
 <h3>Electronic Commerce (EC Directive) Regulations 2002</h3>
@@ -167,46 +167,47 @@ The idea that ISPs will only be found liable where they have active involvement 
 
 regs 17, 18, and 19 allow providers 3 actions where they will have immunity from copyright<a href="#ref38" id="back38" class="reference"> [38]</a>
 
-‘mere conduits’, ‘caching’, and ‘hosting’
+- ‘mere conduits’, ‘caching’, and ‘hosting’
 
 They also compel providers to act expeditiously to remove infringing content once they obtain knowledge of its existence<a href="#ref39" id="back39" class="reference"> [39]</a>
 
-But immunity is forfeited if ISP plays an ‘active role' allowing it to be aware of the infringing material.<a href="#ref40" id="back40" class="reference"> [40]</a>
+- But immunity is forfeited if ISP plays an ‘active role' allowing it to be aware of the infringing material.<a href="#ref40" id="back40" class="reference"> [40]</a>
 
 It is suggested that this immunity 'shields' cloud providers, such as Microsoft’s OneDrive, DropBox, and iCloud<a href="#ref41" id="back41" class="reference"> [41]</a>
 
 <h3>Digital Economy Act 2010</h3>
 
-Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
-It also compels providers to give copyright infringement reports at the request of copyright owners.<a href="#ref43" id="back43" class="reference"> [43]</a>
+- Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
+
+- It also compels providers to give copyright infringement reports at the request of copyright owners.<a href="#ref43" id="back43" class="reference"> [43]</a>
 
 <h3>CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.</h3>
 
-‘Technical devices are those intended to restrict acts that are not authorised by the copyright owner of that computer program and are restricted by copyright’<a href="#ref44" id="back44" class="reference"> [44]</a> 
+- ‘Technical devices are those intended to restrict acts that are not authorised by the copyright owner of that computer program and are restricted by copyright’<a href="#ref44" id="back44" class="reference"> [44]</a> 
 
-296ZA-ZE applies to technological measures for **non-computer programs**
+**296ZA-ZE applies to technological measures for **non-computer programs****
 
 Sony Entertainment v. Ball<a href="#ref45" id="back45" class="reference"> [45]</a> 
 
-Defendants designed and marketed a ‘mod-chip’ for PS2, which bypassed the copy-protection system. 
+- Defendants designed and marketed a ‘mod-chip’ for PS2, which bypassed the copy-protection system. 
 
 Nintendo v. PC Box<a href="#ref46" id="back46" class="reference"> [46]</a> 
 
-The right holder must not deploy technological measures that disproportionately inhibit lawful activities of third parties.<a href="#ref47" id="back47" class="reference"> [47]</a> 
+- The right holder must not deploy technological measures that disproportionately inhibit lawful activities of third parties.<a href="#ref47" id="back47" class="reference"> [47]</a> 
 
-296ZB applies to technological measures for **computer programs**
+**296ZB applies to technological measures for **computer programs****
 
-296ZG – DRM/ERM – allows copyright owner to prevent removal of rights management information (e.g. metadata) and the further circulation of copies from which such information has been removed. 
+**296ZG – DRM/ERM – allows copyright owner to prevent removal of rights management information (e.g. metadata) and the further circulation of copies from which such information has been removed.**
 
 <br>
 
-It is suggested that encrypted information, which has been made available in the public domain, tends not to be protected.
+<h4>Encrypted information, which has been made available in the public domain, tends not to be protected.</h4>
 
 e.g.
 
 Mars v. Teknowledge<a href="#ref48" id="back48" class="reference"> [48]</a> 
 
-'Anyone with the necessary skill to de-crypt had access to the information', 'mere fact of encryption' does not imply information is confidential.<a href="#ref49" id="back49" class="reference"> [49]</a> 
+- 'Anyone with the necessary skill to de-crypt had access to the information', 'mere fact of encryption' does not imply information is confidential.<a href="#ref49" id="back49" class="reference"> [49]</a> 
 
 But, if information has been obtained by illegitimate means, it will be protected.<a href="#ref50" id="back50" class="reference"> [50]</a> 
 
@@ -219,15 +220,15 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 Jadebay v. Clarke-Coles Ltd<a href="#ref51" id="back51" class="reference"> [51]</a> 
 
-Use of a sign similar to the claimant’s mark as part of Amazon product listings was an actionable misrepresentation.
+- Use of a sign similar to the claimant’s mark as part of Amazon product listings was an actionable misrepresentation.
 
 Louis Vuitton v. Google France<a href="#ref52" id="back52" class="reference"> [52]</a> 
 
-Google did not use the mark ‘in its own commercial communication’ - just generating adverts in response to keyword - no infringement - the competing business simply won a bid on the key word 
+- Google did not use the mark ‘in its own commercial communication’ - just generating adverts in response to keyword - no infringement - the competing business simply won a bid on the key word 
 
 L’Oréal SA v. eBay International AG<a href="#ref53" id="back53" class="reference"> [53]</a> 
 
-can the ‘average consumer...ascertain whether the goods or services originate from the proprietor of the trade mark or an undertaking economically connected to it?'<a href="#ref54" id="back54" class="reference"> [54]</a> 
+- can the ‘average consumer...ascertain whether the goods or services originate from the proprietor of the trade mark or an undertaking economically connected to it?'<a href="#ref54" id="back54" class="reference"> [54]</a> 
 
 <br>
 
@@ -235,21 +236,21 @@ can the ‘average consumer...ascertain whether the goods or services originate 
 
 British Telecommunications v. One in a Million<a href="#ref55" id="back55" class="reference"> [55]</a> 
 
-defendant registered domain names such as ‘virgin.com' without the consent of the organisation that owned the goodwill in the names – defendant's aim was to make a profit 
+- defendant registered domain names such as ‘virgin.com' without the consent of the organisation that owned the goodwill in the names – defendant's aim was to make a profit 
 
-HELD: act of registering names amounted to an actionable misrepresentation. Injunction given 
+- HELD: act of registering names amounted to an actionable misrepresentation. Injunction given 
 
-any ‘realistic use of them as domain names would result in passing off’<a href="#ref56" id="back56" class="reference"> [56]</a> 
+- any ‘realistic use of them as domain names would result in passing off’<a href="#ref56" id="back56" class="reference"> [56]</a> 
 
 French Connection v. Sutton<a href="#ref57" id="back57" class="reference"> [57]</a> 
 
-Compare with 'One in a Million' case - Defendant registered ‘fcuk.com’ 
+- Compare with 'One in a Million' case - Defendant registered ‘fcuk.com’ 
 
-Held: defendant had not registered domain name with a view to passing off. 
+- Held: defendant had not registered domain name with a view to passing off. 
 
 Easyjet Airline Co. v. Dainty<a href="#ref58" id="back58" class="reference"> [58]</a> 
 
-Court may order transfer of domain name if you are found to be passing off a domain name. 
+- Court may order transfer of domain name if you are found to be passing off a domain name. 
 
 <div id="references">
     <h2>References</h2>
