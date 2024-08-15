@@ -92,8 +92,21 @@ Includes installing peer-to-peer software that allows third parties to access wo
 
 Does not apply if work is already publicly available?<a href="#ref13" id="back13" class="reference"> [13]</a>
 
- 
+e.g. Ziggo case<a href="#ref14" id="back14" class="reference"> [14]</a> 
+    Concerned notorious torrent site ‘The Pirate Bay’  
+    various acts of indexing and classifying of the torrent files made them readily accessible to users. 
+    Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
 
+**CDPA 1988, s. 28A - Making of temporary copies**
+
+No copyright liability for making temporary copies if:
+
+Copies are transient/incidental e.g. caching websites<a href="#ref16" id="back16" class="reference"> [16]</a>
+
+Copies are ‘essential part of a technological process’, ‘no independent economic significance’<a href="#ref17" id="back17" class="reference"> [17]</a>
+
+Doesn't include unauthorised streams<a href="#ref18" id="back18" class="reference"> [18]</a>
+    
 <div id="references">
     <h2>References</h2>
     <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44.  <a href="#back1" class="back-to-ref">[1]</a></p>
@@ -109,6 +122,11 @@ Does not apply if work is already publicly available?<a href="#ref13" id="back13
     <p id="ref11">11. Public Relations Consultants Association v. NLA, Case C-360/13, EU:C:2014:1195, [57].<a href="#back11" class="back-to-ref">[11]</a></p>
     <p id="ref12">12. Dramatico Entertainment v. British Sky Broadcasting [2012] EWHC 268 (Ch), [2012] RPC (27) 665, [69] (Arnold J).<a href="#back12" class="back-to-ref">[12]</a></p>
     <p id="ref13">13. GS Media BV v. Sanoma Media Netherlands BV et al., Case C-160/15, EU:C:2016:221 [AG54] (AG Wathelet), [48]; (hyperlinks leading to protected works that were freely accessible on another website); see also Svensson v. Retriever Sverige AB, Case C-466/12, EU:C:2014:76 (ECJ), [24]-[30].<a href="#back13" class="back-to-ref">[13]</a></p>
+    <p id="ref14">14.  Stichting Brein v. Ziggo BV, Case C-610/15, EU:C:2017:456, [38], [45] (ECJ).<a href="#back14" class="back-to-ref">[14]</a></p>
+    <p id="ref15">15. Ibid, [26]-[36], (ECJ); [AG50] (AG Szpunar); see also Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300 (ECJ) (structured menu of hyperlinks on multimedia player helped users to access unauthorised streams.); EMI Records Ltd v. British Sky Broadcasting Ltd [2013] EWHC 379 (Ch), [45]-[46], [52]-[70].<a href="#back15" class="back-to-ref">[15]</a></p>
+    <p id="ref16">16. Info. Soc. Dir., Recital 33; see also Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 236.<a href="#back16" class="back-to-ref">[16]</a></p>
+    <p id="ref17">17. FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber), [175]-[177] (copies created in the buffer of a broadcast receiver); Newspaper Licensing Agency (NLA) v. Public Relations Consultants Association (PRCA) [2013] UKSC 18; see also Infopaq I, [2009] ECR I-6569; Infopaq International A/S v. Danske Dagblades Forening, Case C-302/10, EU:C:2012:16 (’Infopaq II’); FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber).<a href="#back17" class="back-to-ref">[17]</a></p>
+    <p id="ref18">18. Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300, [69]-[72] (ECJ) (multimedia device which produced transient and unlawful copies of stream)<a href="#back18" class="back-to-ref">[18]</a></p>
 
   
 </div>
