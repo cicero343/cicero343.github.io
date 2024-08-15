@@ -70,6 +70,8 @@ PREFACE: This post is only discussing cases related to tech in respect of Copyri
 
 There are many pre-stage tests one must do before asking whether copyright has been infringed. For example, one must first ask whether the subject matter in question is 'original' enough to be protected (the ‘skill, labour and judgement’ test).<a href="#ref2" id="back2" class="reference"> [2]</a> One must also ask if a 'substantial part' of the work has been copied to amount to infringement.<a href="#ref3" id="back3" class="reference"> [3]</a> For the sake of keeping this blog post as short and sweet as possible. We will be glossing over these details to focus on the cases and juicy bits. 
 
+<br>
+
 <h3>CDPA 1988, s. 3(1)(b)</h3>
 
 Computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
@@ -156,7 +158,7 @@ Suggested that this defence helps producers in making systems which are compatib
 
 - Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
 
-- **Newzbin** enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
+- Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
 
 **Twentieth Century Fox v. Sky UK**<a href="#ref36" id="back36" class="reference"> [36]</a>
 
@@ -259,61 +261,61 @@ But, if information has been obtained by illegitimate means, it will be protecte
 <div id="references">
     <h2>References</h2>
     <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44. <a href="#back1" class="back-to-ref">[1]</a></p>
-    <p id="ref2">2. Ladbroke v William Hill [1964] 1 All ER 465; see also Infopaq case (2009)<a href="#back2" class="back-to-ref">[2]</a></p>
+    <p id="ref2">2. Ladbroke v William Hill [1964] 1 All ER 465; see also Infopaq case (2009) <a href="#back2" class="back-to-ref">[2]</a></p>
     <p id="ref3">3. Copyright, Designs and Patents Act (CDPA) 1988, s 16(3) <a href="#back3" class="back-to-ref">[3]</a></p>
-    <p id="ref4">4. see also Trips, Art. 10(1); Software Dir., Art. 1; IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd , [1994] FSR 275; Sega Enterprises v Richards [1983] FSR 73 <a href="#back4" class="back-to-ref">[4]</a></p>
-    <p id="ref5">5. CDPA 1988, ss. 9(3), 12(7), 178<a href="#back5" class="back-to-ref">[5]</a></p>
-    <p id="ref6">6. [1994] FSR 275<a href="#back6" class="back-to-ref">[6]</a></p>
-    <p id="ref7">7. Navitaire Inc v easyJet Airline Company [2006] RPC 3; see also Nova Productions Ltd v Mazooma Games Ltd . [2007] RPC 25<a href="#back6" class="back-to-ref">[7]</a></p>
+    <p id="ref4">4. see also Trips, Art. 10(1); Software Dir., Art. 1; IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd, [1994] FSR 275; Sega Enterprises v Richards [1983] FSR 73 <a href="#back4" class="back-to-ref">[4]</a></p>
+    <p id="ref5">5. CDPA 1988, ss. 9(3), 12(7), 178 <a href="#back5" class="back-to-ref">[5]</a></p>
+    <p id="ref6">6. [1994] FSR 275 <a href="#back6" class="back-to-ref">[6]</a></p>
+    <p id="ref7">7. Navitaire Inc v easyJet Airline Company [2006] RPC 3; see also Nova Productions Ltd v Mazooma Games Ltd . [2007] RPC 25 <a href="#back6" class="back-to-ref">[7]</a></p>
     <p id="ref8">8. CDPA 1988, s. 17(6); But, note CDPA 1988, s. 28A (transient copies allowed if temporary copy). <a href="#back8" class="back-to-ref">[8]</a></p>
-    <p id="ref9">9. Technische Universität Darnstadt v. Eugen Ulmer KG, Case C-117/13, EU:C:2014:2196, [37], [52] (ECJ).<a href="#back9" class="back-to-ref">[9]</a></p>
-    <p id="ref10">10. CDPA 1988, s. 20(2)<a href="#back10" class="back-to-ref">[10]</a></p>
-    <p id="ref11">11. Public Relations Consultants Association v. NLA, Case C-360/13, EU:C:2014:1195, [57].<a href="#back11" class="back-to-ref">[11]</a></p>
-    <p id="ref12">12. Dramatico Entertainment v. British Sky Broadcasting [2012] EWHC 268 (Ch), [2012] RPC (27) 665, [69] (Arnold J).<a href="#back12" class="back-to-ref">[12]</a></p>
-    <p id="ref13">13. GS Media BV v. Sanoma Media Netherlands BV et al., Case C-160/15, EU:C:2016:221 [AG54] (AG Wathelet), [48]; (hyperlinks leading to protected works that were freely accessible on another website); see also Svensson v. Retriever Sverige AB, Case C-466/12, EU:C:2014:76 (ECJ), [24]-[30].<a href="#back13" class="back-to-ref">[13]</a></p>
-    <p id="ref14">14.  Stichting Brein v. Ziggo BV, Case C-610/15, EU:C:2017:456, [38], [45] (ECJ).<a href="#back14" class="back-to-ref">[14]</a></p>
-    <p id="ref15">15. Ibid, [26]-[36], (ECJ); [AG50] (AG Szpunar); see also Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300 (ECJ) (structured menu of hyperlinks on multimedia player helped users to access unauthorised streams.); EMI Records Ltd v. British Sky Broadcasting Ltd [2013] EWHC 379 (Ch), [45]-[46], [52]-[70].<a href="#back15" class="back-to-ref">[15]</a></p>
-    <p id="ref16">16. Info. Soc. Dir., Recital 33; see also Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 236.<a href="#back16" class="back-to-ref">[16]</a></p>
-    <p id="ref17">17. FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber), [175]-[177] (copies created in the buffer of a broadcast receiver); Newspaper Licensing Agency (NLA) v. Public Relations Consultants Association (PRCA) [2013] UKSC 18; see also Infopaq I, [2009] ECR I-6569; Infopaq International A/S v. Danske Dagblades Forening, Case C-302/10, EU:C:2012:16 (’Infopaq II’); FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber).<a href="#back17" class="back-to-ref">[17]</a></p>
-    <p id="ref18">18. Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300, [69]-[72] (ECJ) (multimedia device which produced transient and unlawful copies of stream)<a href="#back18" class="back-to-ref">[18]</a></p>
-    <p id="ref19">19. CDPA 1988, ss 50A<a href="#back19" class="back-to-ref">[19]</a></p>
-    <p id="ref20">20. Sony Computer Entertainment Inc. v. Owen [2002] EMLR (34) 742; EWHC 742 (defendant reverse engineered Japanese PS2 game to be compatible with region specific PS2).<a href="#back20" class="back-to-ref">[20]</a></p>
-    <p id="ref21">21. CDPA 1988, ss 50B<a href="#back21" class="back-to-ref">[21]</a></p>
-    <p id="ref22">22. CDPA 1988, s. 50B(2); see also Page 274 IP book; CDPA 1988, s. 81(2) also exempts computer programs from the right to integrity.<a href="#back22" class="back-to-ref">[22]</a></p>
-    <p id="ref23">23. CDPA 1988, s. 29(4).<a href="#back23" class="back-to-ref">[23]</a></p>
-    <p id="ref24">24. CDPA 1988, s. 50B(3)<a href="#back24" class="back-to-ref">[24]</a></p>    
-    <p id="ref25">25. CDPA 1988, s. 50B(3)(b)<a href="#back25" class="back-to-ref">[25]</a></p>    
-    <p id="ref26">26. CDPA 1988, s. 50B(3)(d)<a href="#back26" class="back-to-ref">[26]</a></p>   
-    <p id="ref27">27. CDPA 1988, ss 50BA<a href="#back27" class="back-to-ref">[27]</a></p> 
-    <p id="ref28">28. SAS Institute v. World Programming (WPL) [2010] EWHC 1829 (Ch), [290].<a href="#back28" class="back-to-ref">[28]</a></p>
-    <p id="ref29">29. CDPA 1988, s 50C(1)<a href="#back29" class="back-to-ref">[29]</a></p> 
-    <p id="ref30">30. CDPA 1988, s 50C(2)<a href="#back30" class="back-to-ref">[30]</a></p>
-    <p id="ref31">31. UsedSoft GmbH v. Oracle, Case C-128/11, EU:C:2012:407, [78], [87]. See also CDPA 1988, s. 56(2)-(3) ‘any copy, adaptation or copy of an adaptation made by the purchaser which is not also transferred shall be treated as an infringing copy for all purposes after the transfer.’<a href="#back31" class="back-to-ref">[31]</a></p>
+    <p id="ref9">9. Technische Universität Darnstadt v. Eugen Ulmer KG, Case C-117/13, EU:C:2014:2196, [37], [52] (ECJ). <a href="#back9" class="back-to-ref">[9]</a></p>
+    <p id="ref10">10. CDPA 1988, s. 20(2) <a href="#back10" class="back-to-ref">[10]</a></p>
+    <p id="ref11">11. Public Relations Consultants Association v. NLA, Case C-360/13, EU:C:2014:1195, [57]. <a href="#back11" class="back-to-ref">[11]</a></p>
+    <p id="ref12">12. Dramatico Entertainment v. British Sky Broadcasting [2012] EWHC 268 (Ch), [2012] RPC (27) 665, [69] (Arnold J). <a href="#back12" class="back-to-ref">[12]</a></p>
+    <p id="ref13">13. GS Media BV v. Sanoma Media Netherlands BV et al., Case C-160/15, EU:C:2016:221 [AG54] (AG Wathelet), [48]; (hyperlinks leading to protected works that were freely accessible on another website); see also Svensson v. Retriever Sverige AB, Case C-466/12, EU:C:2014:76 (ECJ), [24]-[30]. <a href="#back13" class="back-to-ref">[13]</a></p>
+    <p id="ref14">14.  Stichting Brein v. Ziggo BV, Case C-610/15, EU:C:2017:456, [38], [45] (ECJ). <a href="#back14" class="back-to-ref">[14]</a></p>
+    <p id="ref15">15. Ibid, [26]-[36], (ECJ); [AG50] (AG Szpunar); see also Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300 (ECJ) (structured menu of hyperlinks on multimedia player helped users to access unauthorised streams.); EMI Records Ltd v. British Sky Broadcasting Ltd [2013] EWHC 379 (Ch), [45]-[46], [52]-[70]. <a href="#back15" class="back-to-ref">[15]</a></p>
+    <p id="ref16">16. Info. Soc. Dir., Recital 33; see also Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 236. <a href="#back16" class="back-to-ref">[16]</a></p>
+    <p id="ref17">17. FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber), [175]-[177] (copies created in the buffer of a broadcast receiver); Newspaper Licensing Agency (NLA) v. Public Relations Consultants Association (PRCA) [2013] UKSC 18; see also Infopaq I, [2009] ECR I-6569; Infopaq International A/S v. Danske Dagblades Forening, Case C-302/10, EU:C:2012:16 (’Infopaq II’); FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber). <a href="#back17" class="back-to-ref">[17]</a></p>
+    <p id="ref18">18. Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300, [69]-[72] (ECJ) (multimedia device which produced transient and unlawful copies of stream) <a href="#back18" class="back-to-ref">[18]</a></p>
+    <p id="ref19">19. CDPA 1988, ss 50A <a href="#back19" class="back-to-ref">[19]</a></p>
+    <p id="ref20">20. Sony Computer Entertainment Inc. v. Owen [2002] EMLR (34) 742; EWHC 742 (defendant reverse engineered Japanese PS2 game to be compatible with region specific PS2). <a href="#back20" class="back-to-ref">[20]</a></p>
+    <p id="ref21">21. CDPA 1988, ss 50B <a href="#back21" class="back-to-ref">[21]</a></p>
+    <p id="ref22">22. CDPA 1988, s. 50B(2); see also Page 274 IP book; CDPA 1988, s. 81(2) also exempts computer programs from the right to integrity. <a href="#back22" class="back-to-ref">[22]</a></p>
+    <p id="ref23">23. CDPA 1988, s. 29(4) <a href="#back23" class="back-to-ref">[23]</a></p>
+    <p id="ref24">24. CDPA 1988, s. 50B(3) <a href="#back24" class="back-to-ref">[24]</a></p>    
+    <p id="ref25">25. CDPA 1988, s. 50B(3)(b) <a href="#back25" class="back-to-ref">[25]</a></p>    
+    <p id="ref26">26. CDPA 1988, s. 50B(3)(d) <a href="#back26" class="back-to-ref">[26]</a></p>   
+    <p id="ref27">27. CDPA 1988, ss 50BA <a href="#back27" class="back-to-ref">[27]</a></p> 
+    <p id="ref28">28. SAS Institute v. World Programming (WPL) [2010] EWHC 1829 (Ch), [290]. <a href="#back28" class="back-to-ref">[28]</a></p>
+    <p id="ref29">29. CDPA 1988, s 50C(1) <a href="#back29" class="back-to-ref">[29]</a></p> 
+    <p id="ref30">30. CDPA 1988, s 50C(2) <a href="#back30" class="back-to-ref">[30]</a></p>
+    <p id="ref31">31. UsedSoft GmbH v. Oracle, Case C-128/11, EU:C:2012:407, [78], [87]. See also CDPA 1988, s. 56(2)-(3) ‘any copy, adaptation or copy of an adaptation made by the purchaser which is not also transferred shall be treated as an infringing copy for all purposes after the transfer.’ <a href="#back31" class="back-to-ref">[31]</a></p>
     <p id="ref32">32. [2013] EWHC 379 (Ch), [45]-[46], [52]-[70] <a href="#back32" class="back-to-ref">[32]</a></p> 
     <p id="ref33">33. Twentieth Century Fox Film v. Newzbin [2010] EWHC 608 (Ch), [46], [78], [102]. <a href="#back33" class="back-to-ref">[33]</a></p>
-    <p id="ref34">34. For more discussion on what amounts to active involvement, see Football Association Premier League v. British Sky Broadcasting [2013] EWHC 2058 (Ch), [2013] ECDR (14) 377, [39]-[42]; for other cases involving s97A see Paramount Home Entertainment International v. British Sky Broadcasting [2014] EWHC 937 (Ch) (Viooz website).<a href="#back34" class="back-to-ref">[34]</a></p> 
-    <p id="ref35">35. See also Metro-Goldwyn-Mayer Studios Inc v. Grokster, 545 US 913, 125 S. Ct. 2764 (2005); A & M Records, Inc. v. Napster, Inc 239 F.3d 1004 (Court of Appeals, 9th Circuit 2001)<a href="#back35" class="back-to-ref">[35]</a></p> 
-    <p id="ref36">36. [2015] EWHC 1082 (Ch).<a href="#back36" class="back-to-ref">[36]</a></p> 
-    <p id="ref37">37. e-Commerce Regs, SI 2002/2013.<a href="#back37" class="back-to-ref">[37]</a></p> 
-    <p id="ref38">38. Ibid, regs. 17, 18, 19<a href="#back38" class="back-to-ref">[38]</a></p> 
-    <p id="ref39">39. Ibid, regs. 18(b)(v), 19(ii)<a href="#back39" class="back-to-ref">[39]</a></p> 
-    <p id="ref40">40. L’Oréal SA v. eBay International AG, Case C-324/09 [2011] ECR I-6011, EU:C:2011:474, [123] (ECJ, Grand Chamber).<a href="#back40" class="back-to-ref">[40]</a></p> 
+    <p id="ref34">34. For more discussion on what amounts to active involvement, see Football Association Premier League v. British Sky Broadcasting [2013] EWHC 2058 (Ch), [2013] ECDR (14) 377, [39]-[42]; for other cases involving s97A see Paramount Home Entertainment International v. British Sky Broadcasting [2014] EWHC 937 (Ch) (Viooz website). <a href="#back34" class="back-to-ref">[34]</a></p> 
+    <p id="ref35">35. See also Metro-Goldwyn-Mayer Studios Inc v. Grokster, 545 US 913, 125 S. Ct. 2764 (2005); A & M Records, Inc. v. Napster, Inc 239 F.3d 1004 (Court of Appeals, 9th Circuit 2001) <a href="#back35" class="back-to-ref">[35]</a></p> 
+    <p id="ref36">36. [2015] EWHC 1082 (Ch). <a href="#back36" class="back-to-ref">[36]</a></p> 
+    <p id="ref37">37. e-Commerce Regs, SI 2002/2013. <a href="#back37" class="back-to-ref">[37]</a></p> 
+    <p id="ref38">38. Ibid, regs. 17, 18, 19 <a href="#back38" class="back-to-ref">[38]</a></p> 
+    <p id="ref39">39. Ibid, regs. 18(b)(v), 19(ii) <a href="#back39" class="back-to-ref">[39]</a></p> 
+    <p id="ref40">40. L’Oréal SA v. eBay International AG, Case C-324/09 [2011] ECR I-6011, EU:C:2011:474, [123] (ECJ, Grand Chamber). <a href="#back40" class="back-to-ref">[40]</a></p> 
     <p id="ref41">41. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 1291. <a href="#back41" class="back-to-ref">[41]</a></p>    
-    <p id="ref42">42. Digital Economy Act 2010, s. 3<a href="#back42" class="back-to-ref">[42]</a></p>
+    <p id="ref42">42. Digital Economy Act 2010, s. 3 <a href="#back42" class="back-to-ref">[42]</a></p>
     <p id="ref43">43. for Norwich Pharmacal orders, see Golden Eye International Ltd v. Telefónica UK Ltd [2012] RPC (28) 698 (in this case, although information disclosed was regulated by the Court, O2 was forced to disclose information related to 9,000 of its customers who were allegedly infringing copyright via peer-to-peer sharing.); Rugby Football Union v. Viagogo Ltd [2012] 1 WLR 3333, [45] (Lord Kerr of Tonaghmore JSC). <a href="#back43" class="back-to-ref">[43]</a></p>
-    <p id="ref44">44. CDPA 1988, s. 296(6)<a href="#back44" class="back-to-ref">[44]</a></p>
-    <p id="ref45">45. [2004] ECDR (33) 323<a href="#back45" class="back-to-ref">[45]</a></p>
-    <p id="ref46">46. Case C-355/12, EU:C:2014:25 (ECJ). (non computer program, console itself)<a href="#back46" class="back-to-ref">[46]</a></p> 
-    <p id="ref47">47. Ibid, [32]-[33].<a href="#back47" class="back-to-ref">[47]</a></p>
-    <p id="ref48">48. [2000] FSR 138<a href="#back48" class="back-to-ref">[48]</a></p>
-    <p id="ref49">49. Ibid, 149-150<a href="#back49" class="back-to-ref">[49]</a></p> 
-    <p id="ref50">50. Volkswagen Aktiengesellschaft v. Flavio D Garcia and ors [2014] FSR 12, [38]<a href="#back50" class="back-to-ref">[50]</a></p>
-    <p id="ref51">51. [2017] EWHC 1400 (IPEC); see also Cosmetic Warriors Ltd v. Amazon.co.uk Ltd [2014] EWHC 181 (Ch); Victoria Plum Ltd v. Victorian Plumbing Ltd [2016] EWHC 2911 (Ch)<a href="#back51" class="back-to-ref">[51]</a></p>
-    <p id="ref52">52. Cases C-236/08-238/08 [2010] ECR I-2417 (ECJ, Grand Chamber)<a href="#back52" class="back-to-ref">[52]</a></p> 
-    <p id="ref53">53. Case C-324/09 [2011] ECR I-6011 (ECJ, Grand Chamber)<a href="#back53" class="back-to-ref">[53]</a></p>
-    <p id="ref54">54. Ibid, [94]-[104].<a href="#back54" class="back-to-ref">[54]</a></p>
-    <p id="ref55">55. [1998] 4 All ER 476<a href="#back55" class="back-to-ref">[55]</a></p>
-    <p id="ref56">56. Ibid, 497; see also Phones4U Ltd v. Phone4u.co.uk Internet Ltd [2006] EWCA Civ 244, [2007] RPC 5 (defendant’s misrepresentation is deceptive, passing off); Tesco Stores Ltd v. Elogicom Ltd [2006] EWHC 403 (Ch), [2007] FSR (4) 83 (injunction).<a href="#back56" class="back-to-ref">[56]</a></p>
-    <p id="ref57">57. [2000] ETMR 341<a href="#back57" class="back-to-ref">[57]</a></p>
-    <p id="ref58">58. [2002] FSR 6<a href="#back58" class="back-to-ref">[58]</a></p>
+    <p id="ref44">44. CDPA 1988, s. 296(6) <a href="#back44" class="back-to-ref">[44]</a></p>
+    <p id="ref45">45. [2004] ECDR (33) 323 <a href="#back45" class="back-to-ref">[45]</a></p>
+    <p id="ref46">46. Case C-355/12, EU:C:2014:25 (ECJ). (non computer program, console itself) <a href="#back46" class="back-to-ref">[46]</a></p> 
+    <p id="ref47">47. Ibid, [32]-[33]. <a href="#back47" class="back-to-ref">[47]</a></p>
+    <p id="ref48">48. [2000] FSR 138 <a href="#back48" class="back-to-ref">[48]</a></p>
+    <p id="ref49">49. Ibid, 149-150 <a href="#back49" class="back-to-ref">[49]</a></p> 
+    <p id="ref50">50. Volkswagen Aktiengesellschaft v. Flavio D Garcia and ors [2014] FSR 12, [38] <a href="#back50" class="back-to-ref">[50]</a></p>
+    <p id="ref51">51. [2017] EWHC 1400 (IPEC); see also Cosmetic Warriors Ltd v. Amazon.co.uk Ltd [2014] EWHC 181 (Ch); Victoria Plum Ltd v. Victorian Plumbing Ltd [2016] EWHC 2911 (Ch) <a href="#back51" class="back-to-ref">[51]</a></p>
+    <p id="ref52">52. Cases C-236/08-238/08 [2010] ECR I-2417 (ECJ, Grand Chamber) <a href="#back52" class="back-to-ref">[52]</a></p> 
+    <p id="ref53">53. Case C-324/09 [2011] ECR I-6011 (ECJ, Grand Chamber) <a href="#back53" class="back-to-ref">[53]</a></p>
+    <p id="ref54">54. Ibid, [94]-[104]. <a href="#back54" class="back-to-ref">[54]</a></p>
+    <p id="ref55">55. [1998] 4 All ER 476 <a href="#back55" class="back-to-ref">[55]</a></p>
+    <p id="ref56">56. Ibid, 497; see also Phones4U Ltd v. Phone4u.co.uk Internet Ltd [2006] EWCA Civ 244, [2007] RPC 5 (defendant’s misrepresentation is deceptive, passing off); Tesco Stores Ltd v. Elogicom Ltd [2006] EWHC 403 (Ch), [2007] FSR (4) 83 (injunction). <a href="#back56" class="back-to-ref">[56]</a></p>
+    <p id="ref57">57. [2000] ETMR 341 <a href="#back57" class="back-to-ref">[57]</a></p>
+    <p id="ref58">58. [2002] FSR 6 <a href="#back58" class="back-to-ref">[58]</a></p>
 </div>
