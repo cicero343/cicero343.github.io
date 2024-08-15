@@ -148,18 +148,24 @@ Website indexing BitTorrent files
 Operators ‘authorising’ infringements of the users 
 
 Newzbin<a href="#ref33" id="back33" class="reference"> [33]</a>
+
 Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
+
 Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
 
 Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [36]</a>
+
 Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
 <br>
 **Electronic Commerce (EC Directive) Regulations 2002**
 
 The idea that ISPs will only be found liable where they have active involvement is reflected in the Electronic Commerce (EC Directive) Regulations 2002<a href="#ref37" id="back37" class="reference"> [37]</a>
+
 regs 17, 18, and 19 allow providers 3 actions where they will have immunity from copyright<a href="#ref38" id="back38" class="reference"> [38]</a>
+
 ‘mere conduits’, ‘caching’, and ‘hosting’
+
 They also compel providers to act expeditiously to remove infringing content once they obtain knowledge of its existence<a href="#ref39" id="back39" class="reference"> [39]</a>
 
 But immunity is forfeited if ISP plays an ‘active role' allowing it to be aware of the infringing material.<a href="#ref40" id="back40" class="reference"> [40]</a>
