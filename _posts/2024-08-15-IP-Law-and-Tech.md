@@ -60,4 +60,13 @@ date: 2024-08-15
 
 <br>
 
-“One of the constant themes in the history of British copyright law is that it has been influenced by foreign and international trends and developments” 1 
+“One of the constant themes in the history of British copyright law is that it has been influenced by foreign and international trends and developments”<a href="#ref1" id="back1" class="reference"> [1]</a> 
+
+
+
+
+<div id="references">
+    <h2>References</h2>
+    <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, _Intellectual Property Law_ (5th edn, OUP, 2018), 44.  <a href="#back4" class="back-to-ref">[1]</a></p>
+    <p id="ref2">2. <a href="#back5" class="back-to-ref">[2]</a></p>
+</div>
