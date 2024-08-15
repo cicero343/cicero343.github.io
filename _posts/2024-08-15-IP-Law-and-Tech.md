@@ -288,7 +288,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
     <p id="ref19">19. CDPA 1988, ss 50A <a href="#back19" class="back-to-ref">[19]</a></p>
     <p id="ref20">20. Sony Computer Entertainment Inc. v. Owen [2002] EMLR (34) 742; EWHC 742 (defendant reverse engineered Japanese PS2 game to be compatible with region specific PS2). <a href="#back20" class="back-to-ref">[20]</a></p>
     <p id="ref21">21. CDPA 1988, ss 50B <a href="#back21" class="back-to-ref">[21]</a></p>
-    <p id="ref22">22. CDPA 1988, s. 50B(2); see also Page 274 IP book; CDPA 1988, s. 81(2) also exempts computer programs from the right to integrity. <a href="#back22" class="back-to-ref">[22]</a></p>
+    <p id="ref22">22. CDPA 1988, s. 50B(2); see also Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 274; CDPA 1988, s. 81(2) also exempts computer programs from the right to integrity. <a href="#back22" class="back-to-ref">[22]</a></p>
     <p id="ref23">23. CDPA 1988, s. 29(4) <a href="#back23" class="back-to-ref">[23]</a></p>
     <p id="ref24">24. CDPA 1988, s. 50B(3) <a href="#back24" class="back-to-ref">[24]</a></p>    
     <p id="ref25">25. CDPA 1988, s. 50B(3)(b) <a href="#back25" class="back-to-ref">[25]</a></p>    
