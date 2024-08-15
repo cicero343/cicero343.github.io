@@ -114,7 +114,7 @@ Doesn't include unauthorised streams<a href="#ref18" id="back18" class="referenc
 
 <h3>CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</h3>
 
-**Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
+<h6>Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a></h6>
 
 - But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
 
@@ -251,6 +251,8 @@ French Connection v. Sutton<a href="#ref57" id="back57" class="reference"> [57]<
 Easyjet Airline Co. v. Dainty<a href="#ref58" id="back58" class="reference"> [58]</a> 
 
 - Court may order transfer of domain name if you are found to be passing off a domain name. 
+
+<br>
 
 <div id="references">
     <h2>References</h2>
