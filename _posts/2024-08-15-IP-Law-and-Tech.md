@@ -177,6 +177,35 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
 It also compels providers to give copyright infringement reports at the request of copyright owners.<a href="#ref43" id="back43" class="reference"> [43]</a>
 
+**CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.**
+
+‘Technical devices are those intended to restrict acts that are not authorised by the copyright owner of that computer program and are restricted by copyright’<a href="#ref44" id="back44" class="reference"> [44]</a> 
+
+296ZA-ZE applies to technological measures for **non-computer programs**
+
+Sony Entertainment v. Ball<a href="#ref45" id="back45" class="reference"> [45]</a> 
+
+Defendants designed and marketed a ‘mod-chip’ for PS2, which bypassed the copy-protection system. 
+
+Nintendo v. PC Box<a href="#ref46" id="back46" class="reference"> [46]</a> 
+
+The right holder must not deploy technological measures that disproportionately inhibit lawful activities of third parties.<a href="#ref47" id="back47" class="reference"> [47]</a> 
+
+296ZB applies to technological measures for **computer programs**
+
+296ZG – DRM/ERM – allows copyright owner to prevent removal of rights management information (e.g. metadata) and the further circulation of copies from which such information has been removed. 
+
+<br>
+
+It is suggested that encrypted information, which has been made available in the public domain, tends not to be protected.
+
+e.g.
+
+Mars v. Teknowledge<a href="#ref48" id="back48" class="reference"> [48]</a> 
+
+'Anyone with the necessary skill to de-crypt had access to the information', 'mere fact of encryption' does not imply information is confidential.<a href="#ref49" id="back49" class="reference"> [49]</a> 
+
+But, if information has been obtained by illegitimate means, it will be protected.<a href="#ref50" id="back50" class="reference"> [50]</a> 
 
 <div id="references">
     <h2>References</h2>
@@ -223,6 +252,14 @@ It also compels providers to give copyright infringement reports at the request 
     <p id="ref41">41. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 1291. <a href="#back41" class="back-to-ref">[41]</a></p>    
     <p id="ref42">42. Digital Economy Act 2010, s. 3<a href="#back42" class="back-to-ref">[42]</a></p>
     <p id="ref43">43. for Norwich Pharmacal orders, see Golden Eye International Ltd v. Telefónica UK Ltd [2012] RPC (28) 698 (in this case, although information disclosed was regulated by the Court, O2 was forced to disclose information related to 9,000 of its customers who were allegedly infringing copyright via peer-to-peer sharing.); Rugby Football Union v. Viagogo Ltd [2012] 1 WLR 3333, [45] (Lord Kerr of Tonaghmore JSC). <a href="#back43" class="back-to-ref">[43]</a></p>
+    <p id="ref44">44. CDPA 1988, s. 296(6)<a href="#back44" class="back-to-ref">[44]</a></p>
+    <p id="ref45">45. [2004] ECDR (33) 323<a href="#back45" class="back-to-ref">[45]</a></p>
+    <p id="ref46">46. Case C-355/12, EU:C:2014:25 (ECJ). (non computer program, console itself)<a href="#back46" class="back-to-ref">[46]</a></p> 
+    <p id="ref47">47. Ibid, [32]-[33].<a href="#back47" class="back-to-ref">[47]</a></p>
+    <p id="ref48">48. [2000] FSR 138<a href="#back48" class="back-to-ref">[48]</a></p>
+    <p id="ref49">49. Ibid, 149-150<a href="#back49" class="back-to-ref">[49]</a></p> 
+    <p id="ref50">50. Volkswagen Aktiengesellschaft v. Flavio D Garcia and ors [2014] FSR 12, [38]<a href="#back50" class="back-to-ref">[50]</a></p> 
+
 
 
   
