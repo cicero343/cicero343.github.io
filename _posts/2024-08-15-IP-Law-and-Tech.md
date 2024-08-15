@@ -136,6 +136,9 @@ Other acts permitted to lawful users
 
 Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
 
+**CDPA 1988, s. 56 - Transfers of copies of works in electronic form.**
+
+Transfer is allowed (even if perpetual license instead of a sale), provided the seller destroys their own copy.<a href="#ref31" id="back31" class="reference"> [31]</a>
 
 <div id="references">
     <h2>References</h2>
@@ -169,6 +172,6 @@ Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="ref
     <p id="ref28">28. SAS Institute v. World Programming (WPL) [2010] EWHC 1829 (Ch), [290].<a href="#back28" class="back-to-ref">[28]</a></p>
     <p id="ref29">29. CDPA 1988, s 50C(1)<a href="#back29" class="back-to-ref">[29]</a></p> 
     <p id="ref30">30. CDPA 1988, s 50C(2)<a href="#back30" class="back-to-ref">[30]</a></p>
-
+    <p id="ref31">31. UsedSoft GmbH v. Oracle, Case C-128/11, EU:C:2012:407, [78], [87]. See also CDPA 1988, s. 56(2)-(3) ‘any copy, adaptation or copy of an adaptation made by the purchaser which is not also transferred shall be treated as an infringing copy for all purposes after the transfer.’<a href="#back31" class="back-to-ref">[31]</a></p>
   
 </div>
