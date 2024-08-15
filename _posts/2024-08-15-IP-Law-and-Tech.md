@@ -151,19 +151,20 @@ Suggested that this defence helps producers in making systems which are compatib
 
 <h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/97A">CDPA 1988, s. 97A - Injunctions against service providers</a></h3>
 
-**EMI Records Ltd v. British Sky Broadcasting Ltd**<a href="#ref32" id="back32" class="reference"> [32]</a>
+<a href="https://www.casemine.com/judgement/uk/5a8ff76f60d03e7f57eac6ec">**EMI Records Ltd v. British Sky Broadcasting Ltd**</a><a href="#ref32" id="back32" class="reference"> [32]</a>
+
 
 - Website indexing BitTorrent files
   
 - Operators ‘authorising’ infringements of the users 
 
-**Newzbin**<a href="#ref33" id="back33" class="reference"> [33]</a>
+<a href="https://www.casemine.com/judgement/uk/5a8ff7c060d03e7f57eb1c9e">**Newzbin**</a><a href="#ref33" id="back33" class="reference"> [33]</a>
 
 - Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
 
 - Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
 
-**Twentieth Century Fox v. Sky UK**<a href="#ref36" id="back36" class="reference"> [36]</a>
+<a href="https://www.casemine.com/judgement/uk/5a8ff75960d03e7f57eab91e">**Twentieth Century Fox v. Sky UK**</a><a href="#ref36" id="back36" class="reference"> [36]</a>
 
 - Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
@@ -198,11 +199,11 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 
 **1) 296ZA-ZE applies to technological measures for **non-computer programs****
 
-**Sony Entertainment v. Ball**<a href="#ref45" id="back45" class="reference"> [45]</a> 
+<a href="https://www.5rb.com/case/sony-v-ball/">**Sony Entertainment v. Ball**</a><a href="#ref45" id="back45" class="reference"> [45]</a> 
 
 - Defendants designed and marketed a ‘mod-chip’ for PS2, which bypassed the copy-protection system. 
 
-**Nintendo v. PC Box**<a href="#ref46" id="back46" class="reference"> [46]</a> 
+<a href="https://curia.europa.eu/juris/document/document.jsf?docid=146686&doclang=EN">**Nintendo v. PC Box**</a><a href="#ref46" id="back46" class="reference"> [46]</a> 
 
 - The right holder must not deploy technological measures that disproportionately inhibit lawful activities of third parties.<a href="#ref47" id="back47" class="reference"> [47]</a> 
 
@@ -216,7 +217,7 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 
 e.g.
 
-**Mars v. Teknowledge**<a href="#ref48" id="back48" class="reference"> [48]</a> 
+<a href="https://www.casemine.com/judgement/uk/5a8ff7c460d03e7f57eb1f3e">**Mars v. Teknowledge**</a><a href="#ref48" id="back48" class="reference"> [48]</a> 
 
 - 'Anyone with the necessary skill to de-crypt had access to the information', 'mere fact of encryption' does not imply information is confidential.<a href="#ref49" id="back49" class="reference"> [49]</a> 
 
@@ -228,15 +229,15 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 <h3><a href="https://www.legislation.gov.uk/ukpga/1994/26/section/10">Trade Marks Act 1994, s 10(2) – likelihood of confusion</a></h3>
 
-**Jadebay v. Clarke-Coles Ltd**<a href="#ref51" id="back51" class="reference"> [51]</a> 
+<a href="https://www.casemine.com/judgement/uk/5b2897a92c94e06b9e198139">**Jadebay v. Clarke-Coles Ltd**</a><a href="#ref51" id="back51" class="reference"> [51]</a> 
 
 - Use of a sign similar to the claimant’s mark as part of Amazon product listings was an actionable misrepresentation.
 
-**Louis Vuitton v. Google France**<a href="#ref52" id="back52" class="reference"> [52]</a> 
+<a href="https://curia.europa.eu/juris/document/document.jsf?docid=83961&doclang=en">**Louis Vuitton v. Google France**</a><a href="#ref52" id="back52" class="reference"> [52]</a>
 
 - Google did not use the mark ‘in its own commercial communication’ - just generating adverts in response to keyword - no infringement - the competing business simply won a bid on the key word 
 
-**L’Oréal SA v. eBay International AG**<a href="#ref53" id="back53" class="reference"> [53]</a> 
+<a href="https://curia.europa.eu/juris/document/document.jsf?text=&docid=107261&pageIndex=0&doclang=en&mode=req&dir=&occ=first&part=1&cid=1485079">**L’Oréal SA v. eBay International AG**</a><a href="#ref53" id="back53" class="reference"> [53]</a> 
 
 - can the ‘average consumer...ascertain whether the goods or services originate from the proprietor of the trade mark or an undertaking economically connected to it?'<a href="#ref54" id="back54" class="reference"> [54]</a> 
 
@@ -244,7 +245,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 <h3>Cyber-Squatting and Trademarks/Passing Off</h3>
 
-**British Telecommunications v. One in a Million**<a href="#ref55" id="back55" class="reference"> [55]</a> 
+<a href="https://www.casemine.com/judgement/uk/5a938b3f60d03e5f6b82bbd8">**British Telecommunications v. One in a Million**</a><a href="#ref55" id="back55" class="reference"> [55]</a> 
 
 - defendant registered domain names such as ‘virgin.com' without the consent of the organisation that owned the goodwill in the names – defendant's aim was to make a profit 
 
