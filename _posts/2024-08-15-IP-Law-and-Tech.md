@@ -62,6 +62,8 @@ date: 2024-08-15
 
 “One of the constant themes in the history of British copyright law is that it has been influenced by foreign and international trends and developments”<a href="#ref1" id="back1" class="reference"> [1]</a> 
 
+PREFACE: This post is only discussing cases related to tech in respect of Copyright and Trademarks/Passing Off, I found it difficult to find interesting Patent cases regarding tech.
+
 **Copyright**
 
 There are many pre-stage tests one must do before asking whether copyright has been infringed. For example, one must first ask whether the subject matter in question is 'original' enough to be protected (the ‘skill, labour and judgement’ test).<a href="#ref2" id="back2" class="reference"> [2]</a> One must also ask if a 'substantial part' of the work has been copied to amount to infringement.<a href="#ref3" id="back3" class="reference"> [3]</a> For the sake of keeping this blog post as short and sweet as possible. We will be glossing over these details to focus on the cases and juicy bits. 
@@ -207,6 +209,47 @@ Mars v. Teknowledge<a href="#ref48" id="back48" class="reference"> [48]</a>
 
 But, if information has been obtained by illegitimate means, it will be protected.<a href="#ref50" id="back50" class="reference"> [50]</a> 
 
+<br>
+
+**Trademarks & Passing Off**
+
+**Trade Marks Act 1994, s 10(2) – likelihood of confusion**
+
+
+Jadebay v. Clarke-Coles Ltd<a href="#ref51" id="back51" class="reference"> [51]</a> 
+
+Use of a sign similar to the claimant’s mark as part of Amazon product listings was an actionable misrepresentation.
+
+Louis Vuitton v. Google France<a href="#ref52" id="back52" class="reference"> [52]</a> 
+
+Google did not use the mark ‘in its own commercial communication’ - just generating adverts in response to keyword - no infringement - the competing business simply won a bid on the key word 
+
+L’Oréal SA v. eBay International AG<a href="#ref53" id="back53" class="reference"> [53]</a> 
+
+can the ‘average consumer...ascertain whether the goods or services originate from the proprietor of the trade mark or an undertaking economically connected to it?'<a href="#ref54" id="back54" class="reference"> [54]</a> 
+
+<br>
+
+**Cyber-Squatting and Trademarks/Passing Off**
+
+British Telecommunications v. One in a Million<a href="#ref55" id="back55" class="reference"> [55]</a> 
+
+defendant registered domain names such as ‘virgin.com' without the consent of the organisation that owned the goodwill in the names – defendant's aim was to make a profit 
+
+HELD: act of registering names amounted to an actionable misrepresentation. Injunction given 
+
+any ‘realistic use of them as domain names would result in passing off’<a href="#ref56" id="back56" class="reference"> [56]</a> 
+
+French Connection v. Sutton<a href="#ref57" id="back57" class="reference"> [57]</a> 
+
+Compare with 'One in a Million' case - Defendant registered ‘fcuk.com’ 
+
+Held: defendant had not registered domain name with a view to passing off. 
+
+Easyjet Airline Co. v. Dainty<a href="#ref58" id="back58" class="reference"> [58]</a> 
+
+Court may order transfer of domain name if you are found to be passing off a domain name. 
+
 <div id="references">
     <h2>References</h2>
     <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44. <a href="#back1" class="back-to-ref">[1]</a></p>
@@ -258,9 +301,13 @@ But, if information has been obtained by illegitimate means, it will be protecte
     <p id="ref47">47. Ibid, [32]-[33].<a href="#back47" class="back-to-ref">[47]</a></p>
     <p id="ref48">48. [2000] FSR 138<a href="#back48" class="back-to-ref">[48]</a></p>
     <p id="ref49">49. Ibid, 149-150<a href="#back49" class="back-to-ref">[49]</a></p> 
-    <p id="ref50">50. Volkswagen Aktiengesellschaft v. Flavio D Garcia and ors [2014] FSR 12, [38]<a href="#back50" class="back-to-ref">[50]</a></p> 
-
-
-
-  
+    <p id="ref50">50. Volkswagen Aktiengesellschaft v. Flavio D Garcia and ors [2014] FSR 12, [38]<a href="#back50" class="back-to-ref">[50]</a></p>
+    <p id="ref51">51. [2017] EWHC 1400 (IPEC); see also Cosmetic Warriors Ltd v. Amazon.co.uk Ltd [2014] EWHC 181 (Ch); Victoria Plum Ltd v. Victorian Plumbing Ltd [2016] EWHC 2911 (Ch)<a href="#back51" class="back-to-ref">[51]</a></p>
+    <p id="ref52">52. Cases C-236/08-238/08 [2010] ECR I-2417 (ECJ, Grand Chamber)<a href="#back52" class="back-to-ref">[52]</a></p> 
+    <p id="ref53">53. Case C-324/09 [2011] ECR I-6011 (ECJ, Grand Chamber)<a href="#back53" class="back-to-ref">[53]</a></p>
+    <p id="ref54">54. Ibid, [94]-[104].<a href="#back54" class="back-to-ref">[54]</a></p>
+    <p id="ref55">55. [1998] 4 All ER 476<a href="#back55" class="back-to-ref">[55]</a></p>
+    <p id="ref56">56. Ibid, 497; see also Phones4U Ltd v. Phone4u.co.uk Internet Ltd [2006] EWCA Civ 244, [2007] RPC 5 (defendant’s misrepresentation is deceptive, passing off); Tesco Stores Ltd v. Elogicom Ltd [2006] EWHC 403 (Ch), [2007] FSR (4) 83 (injunction).<a href="#back56" class="back-to-ref">[56]</a></p>
+    <p id="ref57">57. [2000] ETMR 341<a href="#back57" class="back-to-ref">[57]</a></p>
+    <p id="ref58">58. [2002] FSR 6<a href="#back58" class="back-to-ref">[58]</a></p>
 </div>
