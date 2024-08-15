@@ -92,10 +92,13 @@ Includes installing peer-to-peer software that allows third parties to access wo
 
 Does not apply if work is already publicly available?<a href="#ref13" id="back13" class="reference"> [13]</a>
 
-e.g. Ziggo case<a href="#ref14" id="back14" class="reference"> [14]</a> 
-    Concerned notorious torrent site ‘The Pirate Bay’  
-    various acts of indexing and classifying of the torrent files made them readily accessible to users. 
-    Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
+e.g. Ziggo case<a href="#ref14" id="back14" class="reference"> [14]</a>
+
+Concerned notorious torrent site ‘The Pirate Bay’  
+
+various acts of indexing and classifying of the torrent files made them readily accessible to users. 
+
+Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
 
 **CDPA 1988, s. 28A - Making of temporary copies**
 
@@ -106,7 +109,27 @@ Copies are transient/incidental e.g. caching websites<a href="#ref16" id="back16
 Copies are ‘essential part of a technological process’, ‘no independent economic significance’<a href="#ref17" id="back17" class="reference"> [17]</a>
 
 Doesn't include unauthorised streams<a href="#ref18" id="back18" class="reference"> [18]</a>
-    
+
+**CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences**
+
+Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>
+
+But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
+
+Decompilation<a href="#ref21" id="back21" class="reference"> [21]</a>
+
+In order to help producers in making systems which are compatible/interoperable<a href="#ref22" id="back22" class="reference"> [22]</a>
+
+Not allowed to decompile for research or study<a href="#ref23" id="back23" class="reference"> [23]</a>
+
+Not allowed if information already readily available<a href="#ref24" id="back24" class="reference"> [24]</a>
+
+Not allowed if decompilation not confined to acts necessary to achieve the permitted objective<a href="#ref25" id="back25" class="reference"> [25]</a>
+
+Not allowed if attempting to create a program that is substantially similar in its expression to the program decompiled, or to do any act restricted by copyright.<a href="#ref26" id="back26" class="reference"> [26]</a>
+
+
+
 <div id="references">
     <h2>References</h2>
     <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44.  <a href="#back1" class="back-to-ref">[1]</a></p>
@@ -127,6 +150,13 @@ Doesn't include unauthorised streams<a href="#ref18" id="back18" class="referenc
     <p id="ref16">16. Info. Soc. Dir., Recital 33; see also Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 236.<a href="#back16" class="back-to-ref">[16]</a></p>
     <p id="ref17">17. FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber), [175]-[177] (copies created in the buffer of a broadcast receiver); Newspaper Licensing Agency (NLA) v. Public Relations Consultants Association (PRCA) [2013] UKSC 18; see also Infopaq I, [2009] ECR I-6569; Infopaq International A/S v. Danske Dagblades Forening, Case C-302/10, EU:C:2012:16 (’Infopaq II’); FAPL, Joined Cases C-403/08 and C-429/08 [2011] ECR I-9083 (ECJ, Grand Chamber).<a href="#back17" class="back-to-ref">[17]</a></p>
     <p id="ref18">18. Stichting Brein v. Jack Frederik Wullems, Case C-527/15, EU:C:2017:300, [69]-[72] (ECJ) (multimedia device which produced transient and unlawful copies of stream)<a href="#back18" class="back-to-ref">[18]</a></p>
-
+    <p id="ref19">19. CDPA 1988, ss 50A<a href="#back19" class="back-to-ref">[19]</a></p>
+    <p id="ref20">20. Sony Computer Entertainment Inc. v. Owen [2002] EMLR (34) 742; EWHC 742 (defendant reverse engineered Japanese PS2 game to be compatible with region specific PS2).<a href="#back20" class="back-to-ref">[20]</a></p>
+    <p id="ref21">21. CDPA 1988, ss 50B<a href="#back21" class="back-to-ref">[21]</a></p>
+    <p id="ref22">22. CDPA 1988, s. 50B(2); see also Page 274 IP book; CDPA 1988, s. 81(2) also exempts computer programs from the right to integrity.<a href="#back22" class="back-to-ref">[22]</a></p>
+    <p id="ref23">23. CDPA 1988, s. 29(4).<a href="#back23" class="back-to-ref">[23]</a></p>
+    <p id="ref24">24. CDPA 1988, s. 50B(3)<a href="#back24" class="back-to-ref">[24]</a></p>    
+    <p id="ref25">25. CDPA 1988, s. 50B(3)(b)<a href="#back25" class="back-to-ref">[25]</a></p>    
+    <p id="ref26">26. CDPA 1988, s. 50B(3)(d)<a href="#back26" class="back-to-ref">[26]</a></p>   
   
 </div>
