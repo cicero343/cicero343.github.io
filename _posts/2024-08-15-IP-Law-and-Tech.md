@@ -64,11 +64,11 @@ date: 2024-08-15
 
 PREFACE: This post is only discussing cases related to tech in respect of Copyright and Trademarks/Passing Off, I found it difficult to find interesting Patent cases regarding tech.
 
-<h1>Copyright</h1>
+<h2>Copyright</h2>
 
 There are many pre-stage tests one must do before asking whether copyright has been infringed. For example, one must first ask whether the subject matter in question is 'original' enough to be protected (the ‘skill, labour and judgement’ test).<a href="#ref2" id="back2" class="reference"> [2]</a> One must also ask if a 'substantial part' of the work has been copied to amount to infringement.<a href="#ref3" id="back3" class="reference"> [3]</a> For the sake of keeping this blog post as short and sweet as possible. We will be glossing over these details to focus on the cases and juicy bits. 
 
-<h2>CDPA 1988, s. 3(1)(b)</h2>
+<h3>CDPA 1988, s. 3(1)(b)</h3>
 
 Computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
 
@@ -211,7 +211,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 <br>
 
-<h1>Trademarks & Passing Off</h1>
+<h2>Trademarks & Passing Off</h2>
 
 **Trade Marks Act 1994, s 10(2) – likelihood of confusion**
 
