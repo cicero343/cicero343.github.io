@@ -155,6 +155,7 @@ Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [
 Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
 <br>
+**Electronic Commerce (EC Directive) Regulations 2002**
 
 The idea that ISPs will only be found liable where they have active involvement is reflected in the Electronic Commerce (EC Directive) Regulations 2002<a href="#ref37" id="back37" class="reference"> [37]</a>
 regs 17, 18, and 19 allow providers 3 actions where they will have immunity from copyright<a href="#ref38" id="back38" class="reference"> [38]</a>
@@ -164,6 +165,11 @@ They also compel providers to act expeditiously to remove infringing content onc
 But immunity is forfeited if ISP plays an ‘active role' allowing it to be aware of the infringing material.<a href="#ref40" id="back40" class="reference"> [40]</a>
 
 It is suggested that this immunity 'shields' cloud providers, such as Microsoft’s OneDrive, DropBox, and iCloud<a href="#ref41" id="back41" class="reference"> [41]</a>
+
+**Digital Economy Act 2010**
+
+Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
+It also compels providers to give copyright infringement reports at the request of copyright owners.<a href="#ref43" id="back43" class="reference"> [43]</a>
 
 
 <div id="references">
@@ -208,6 +214,10 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
     <p id="ref38">38. Ibid, regs. 17, 18, 19<a href="#back38" class="back-to-ref">[38]</a></p> 
     <p id="ref39">39. Ibid, regs. 18(b)(v), 19(ii)<a href="#back39" class="back-to-ref">[39]</a></p> 
     <p id="ref40">40. L’Oréal SA v. eBay International AG, Case C-324/09 [2011] ECR I-6011, EU:C:2011:474, [123] (ECJ, Grand Chamber).<a href="#back40" class="back-to-ref">[40]</a></p> 
-    <p id="ref40">40. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 1291. <a href="#back40" class="back-to-ref">[40]</a></p>    
+    <p id="ref41">41. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 1291. <a href="#back41" class="back-to-ref">[41]</a></p>    
+    <p id="ref42">42. Digital Economy Act 2010, s. 3<a href="#back42" class="back-to-ref">[42]</a></p>
+    <p id="ref43">43. for Norwich Pharmacal orders, see Golden Eye International Ltd v. Telefónica UK Ltd [2012] RPC (28) 698 (in this case, although information disclosed was regulated by the Court, O2 was forced to disclose information related to 9,000 of its customers who were allegedly infringing copyright via peer-to-peer sharing.); Rugby Football Union v. Viagogo Ltd [2012] 1 WLR 3333, [45] (Lord Kerr of Tonaghmore JSC). <a href="#back43" class="back-to-ref">[43]</a></p>
+
+
   
 </div>
