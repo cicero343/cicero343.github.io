@@ -78,7 +78,7 @@ Computer programs protected as literary works<a href="#ref4" id="back4" class="r
 
 - Even computer-generated works could be protected<a href="#ref5" id="back5" class="reference"> [5]</a>
 
-<h3>CDPA 1988, s. 17 - Infringement by Copying</h3>
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/17">CDPA 1988, s. 17 - Infringement by Copying</a></h3>
 
 e.g. **IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd** (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
 
@@ -88,7 +88,8 @@ Includes copies which are transient or are incidental to some other use of the w
 
 Person will infringe (absent a defence) where e.g. they store work (or other subject matter) on a USB.<a href="#ref9" id="back9" class="reference"> [9]</a>
 
-<h3>CDPA 1988, s. 20 - Infringement by Communication to the Public</h3>
+
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/20">CDPA 1988, s. 20 - Infringement by Communication to the Public</a></h3>
 
 Infringing person(s) need to make infringing subject matter 'available to the public'.<a href="#ref10" id="back10" class="reference"> [10]</a>
 
@@ -106,7 +107,7 @@ e.g. **Ziggo** case<a href="#ref14" id="back14" class="reference"> [14]</a>
 
 - Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
 
-<h3>CDPA 1988, s. 28A - Making of temporary copies</h3>
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/28A">CDPA 1988, s. 28A - Making of temporary copies</a></h3>
 
 No copyright liability for making temporary copies if:
 
@@ -116,7 +117,8 @@ No copyright liability for making temporary copies if:
 
 Doesn't include unauthorised streams<a href="#ref18" id="back18" class="reference"> [18]</a>
 
-<h3>CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</h3>
+
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/part/I/chapter/III/crossheading/computer-programs-lawful-users">CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</a></h3>
 
 **1) Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
 
@@ -142,11 +144,12 @@ Suggested that this defence helps producers in making systems which are compatib
 
 - Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
 
-<h3>CDPA 1988, s. 56 - Transfers of copies of works in electronic form.</h3>
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/56">CDPA 1988, s. 56 - Transfers of copies of works in electronic form.</a></h3>
 
 - Transfer is allowed (even if perpetual license instead of a sale), provided the seller destroys their own copy.<a href="#ref31" id="back31" class="reference"> [31]</a>
 
-<h3>CDPA 1988, s. 97A - Injunctions against service providers</h3>
+
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/97A">CDPA 1988, s. 97A - Injunctions against service providers</a></h3>
 
 **EMI Records Ltd v. British Sky Broadcasting Ltd**<a href="#ref32" id="back32" class="reference"> [32]</a>
 
@@ -165,7 +168,8 @@ Suggested that this defence helps producers in making systems which are compatib
 - Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
 <br>
-<h3>Electronic Commerce (EC Directive) Regulations 2002</h3>
+
+<h3><a href="https://www.legislation.gov.uk/uksi/2002/2013">Electronic Commerce (EC Directive) Regulations 2002</a></h3>
 
 The idea that ISPs will only be found liable where they have active involvement is reflected in the Electronic Commerce (EC Directive) Regulations 2002<a href="#ref37" id="back37" class="reference"> [37]</a>
 
@@ -179,7 +183,8 @@ They also compel providers to act expeditiously to remove infringing content onc
 
 It is suggested that this immunity 'shields' cloud providers, such as Microsoft’s OneDrive, DropBox, and iCloud<a href="#ref41" id="back41" class="reference"> [41]</a>
 
-<h3>Digital Economy Act 2010</h3>
+
+<h3><a href="https://www.legislation.gov.uk/ukpga/2010/24/section/3">Digital Economy Act 2010</a></h3>
 
 - Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
 
@@ -187,7 +192,7 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 
 <br>
 
-<h3>CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.</h3>
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/part/VII/crossheading/devices-designed-to-circumvent-copyprotection">CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.</a></h3>
 
 - ‘Technical devices are those intended to restrict acts that are not authorised by the copyright owner of that computer program and are restricted by copyright’<a href="#ref44" id="back44" class="reference"> [44]</a> 
 
@@ -221,8 +226,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 <h2>Trademarks & Passing Off</h2>
 
-<h3>Trade Marks Act 1994, s 10(2) – likelihood of confusion</h3>
-
+<h3><a href="https://www.legislation.gov.uk/ukpga/1994/26/section/10">Trade Marks Act 1994, s 10(2) – likelihood of confusion</a></h3>
 
 **Jadebay v. Clarke-Coles Ltd**<a href="#ref51" id="back51" class="reference"> [51]</a> 
 
