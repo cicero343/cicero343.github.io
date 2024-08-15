@@ -68,18 +68,30 @@ There are many pre-stage tests one must do before asking whether copyright has b
 
 **CDPA 1988, s. 3(1)(b)**
 
-computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
+Computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
 
 Even computer-generated works could be protected<a href="#ref5" id="back5" class="reference"> [5]</a>
 
+**CDPA 1988, s. 17 - Infringement by Literal Copying**
+
+e.g. IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd  (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
+
+Right-holder needs to prove defendant is not simply emulating the function of the program<a href="#ref7" id="back7" class="reference"> [7]</a>
+
+Includes copies which are transient or are incidental to some other use of the work.<a href="#ref8" id="back8" class="reference"> [8]</a>
+
+Person will infringe (absent a defence) where e.g. they store work (or other subject matter) on a USB.<a href="#ref9" id="back9" class="reference"> [9]</a>
+
+
 <div id="references">
     <h2>References</h2>
-    <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44.  <a href="#back4" class="back-to-ref">[1]</a></p>
-    <p id="ref2">2. Ladbroke v William Hill [1964] 1 All ER 465; see also Infopaq case (2009)<a href="#back5" class="back-to-ref">[2]</a></p>
-    <p id="ref3">3. Copyright, Designs and Patents Act (CDPA) 1988, s 16(3) <a href="#back5" class="back-to-ref">[3]</a></p>
-    <p id="ref4">4. see also Trips, Art. 10(1); Software Dir., Art. 1; IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd , [1994] FSR 275; Sega Enterprises v Richards [1983] FSR 73 <a href="#back5" class="back-to-ref">[4]</a></p>
+    <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44.  <a href="#back1" class="back-to-ref">[1]</a></p>
+    <p id="ref2">2. Ladbroke v William Hill [1964] 1 All ER 465; see also Infopaq case (2009)<a href="#back2" class="back-to-ref">[2]</a></p>
+    <p id="ref3">3. Copyright, Designs and Patents Act (CDPA) 1988, s 16(3) <a href="#back3" class="back-to-ref">[3]</a></p>
+    <p id="ref4">4. see also Trips, Art. 10(1); Software Dir., Art. 1; IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd , [1994] FSR 275; Sega Enterprises v Richards [1983] FSR 73 <a href="#back4" class="back-to-ref">[4]</a></p>
     <p id="ref5">5. CDPA 1988, ss. 9(3), 12(7), 178<a href="#back5" class="back-to-ref">[5]</a></p>
-    
-
-  
+    <p id="ref6">6. [1994] FSR 275<a href="#back6" class="back-to-ref">[6]</a></p>
+    <p id="ref7">7. Navitaire Inc v easyJet Airline Company [2006] RPC 3; see also Nova Productions Ltd v Mazooma Games Ltd . [2007] RPC 25<a href="#back6" class="back-to-ref">[7]</a></p>
+    <p id="ref8">8. CDPA 1988, s. 17(6) But note CDPA 1988, s. 28A (transient copies allowed if temporary copy). <a href="#back8" class="back-to-ref">[8]</a></p>
+    <p id="ref9">9. Technische Universität Darnstadt v. Eugen Ulmer KG, Case C-117/13, EU:C:2014:2196, [37], [52] (ECJ).<a href="#back9" class="back-to-ref">[9]</a></p>
 </div>
