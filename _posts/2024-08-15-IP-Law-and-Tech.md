@@ -64,11 +64,11 @@ date: 2024-08-15
 
 PREFACE: This post is only discussing cases related to tech in respect of Copyright and Trademarks/Passing Off, I found it difficult to find interesting Patent cases regarding tech.
 
-**Copyright**
+<h3>Copyright</h3>
 
 There are many pre-stage tests one must do before asking whether copyright has been infringed. For example, one must first ask whether the subject matter in question is 'original' enough to be protected (the ‘skill, labour and judgement’ test).<a href="#ref2" id="back2" class="reference"> [2]</a> One must also ask if a 'substantial part' of the work has been copied to amount to infringement.<a href="#ref3" id="back3" class="reference"> [3]</a> For the sake of keeping this blog post as short and sweet as possible. We will be glossing over these details to focus on the cases and juicy bits. 
 
-**CDPA 1988, s. 3(1)(b)**
+<h1>CDPA 1988, s. 3(1)(b)</h1>
 
 Computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
 
@@ -211,7 +211,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 <br>
 
-**Trademarks & Passing Off**
+<h3>Trademarks & Passing Off</h3>
 
 **Trade Marks Act 1994, s 10(2) – likelihood of confusion**
 
@@ -259,7 +259,7 @@ Court may order transfer of domain name if you are found to be passing off a dom
     <p id="ref5">5. CDPA 1988, ss. 9(3), 12(7), 178<a href="#back5" class="back-to-ref">[5]</a></p>
     <p id="ref6">6. [1994] FSR 275<a href="#back6" class="back-to-ref">[6]</a></p>
     <p id="ref7">7. Navitaire Inc v easyJet Airline Company [2006] RPC 3; see also Nova Productions Ltd v Mazooma Games Ltd . [2007] RPC 25<a href="#back6" class="back-to-ref">[7]</a></p>
-    <p id="ref8">8. CDPA 1988, s. 17(6) But note CDPA 1988, s. 28A (transient copies allowed if temporary copy). <a href="#back8" class="back-to-ref">[8]</a></p>
+    <p id="ref8">8. CDPA 1988, s. 17(6); But, note CDPA 1988, s. 28A (transient copies allowed if temporary copy). <a href="#back8" class="back-to-ref">[8]</a></p>
     <p id="ref9">9. Technische Universität Darnstadt v. Eugen Ulmer KG, Case C-117/13, EU:C:2014:2196, [37], [52] (ECJ).<a href="#back9" class="back-to-ref">[9]</a></p>
     <p id="ref10">10. CDPA 1988, s. 20(2)<a href="#back10" class="back-to-ref">[10]</a></p>
     <p id="ref11">11. Public Relations Consultants Association v. NLA, Case C-360/13, EU:C:2014:1195, [57].<a href="#back11" class="back-to-ref">[11]</a></p>
