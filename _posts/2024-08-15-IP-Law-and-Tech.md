@@ -128,6 +128,13 @@ Not allowed if decompilation not confined to acts necessary to achieve the permi
 
 Not allowed if attempting to create a program that is substantially similar in its expression to the program decompiled, or to do any act restricted by copyright.<a href="#ref26" id="back26" class="reference"> [26]</a>
 
+Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>
+
+Not if breach of license terms?<a href="#ref28" id="back28" class="reference"> [28]</a>
+  
+Other acts permitted to lawful users 
+
+Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
 
 
 <div id="references">
@@ -158,5 +165,10 @@ Not allowed if attempting to create a program that is substantially similar in i
     <p id="ref24">24. CDPA 1988, s. 50B(3)<a href="#back24" class="back-to-ref">[24]</a></p>    
     <p id="ref25">25. CDPA 1988, s. 50B(3)(b)<a href="#back25" class="back-to-ref">[25]</a></p>    
     <p id="ref26">26. CDPA 1988, s. 50B(3)(d)<a href="#back26" class="back-to-ref">[26]</a></p>   
+    <p id="ref27">27. CDPA 1988, ss 50BA<a href="#back27" class="back-to-ref">[27]</a></p> 
+    <p id="ref28">28. SAS Institute v. World Programming (WPL) [2010] EWHC 1829 (Ch), [290].<a href="#back28" class="back-to-ref">[28]</a></p>
+    <p id="ref29">29. CDPA 1988, s 50C(1)<a href="#back29" class="back-to-ref">[29]</a></p> 
+    <p id="ref30">30. CDPA 1988, s 50C(2)<a href="#back30" class="back-to-ref">[30]</a></p>
+
   
 </div>
