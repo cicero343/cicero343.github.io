@@ -140,6 +140,21 @@ Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="ref
 
 Transfer is allowed (even if perpetual license instead of a sale), provided the seller destroys their own copy.<a href="#ref31" id="back31" class="reference"> [31]</a>
 
+**CDPA 1988, s. 97A - Injunctions against service providers**
+
+EMI Records Ltd v. British Sky Broadcasting Ltd<a href="#ref32" id="back32" class="reference"> [32]</a>
+
+Website indexing BitTorrent files 
+Operators ‘authorising’ infringements of the users 
+
+Newzbin<a href="#ref33" id="back33" class="reference"> [33]</a>
+Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
+Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
+
+Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [36]</a>
+Website which allowed peer-to-peer users to watch unauthorised streams of films. 
+
+
 <div id="references">
     <h2>References</h2>
     <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44.  <a href="#back1" class="back-to-ref">[1]</a></p>
@@ -173,5 +188,13 @@ Transfer is allowed (even if perpetual license instead of a sale), provided the 
     <p id="ref29">29. CDPA 1988, s 50C(1)<a href="#back29" class="back-to-ref">[29]</a></p> 
     <p id="ref30">30. CDPA 1988, s 50C(2)<a href="#back30" class="back-to-ref">[30]</a></p>
     <p id="ref31">31. UsedSoft GmbH v. Oracle, Case C-128/11, EU:C:2012:407, [78], [87]. See also CDPA 1988, s. 56(2)-(3) ‘any copy, adaptation or copy of an adaptation made by the purchaser which is not also transferred shall be treated as an infringing copy for all purposes after the transfer.’<a href="#back31" class="back-to-ref">[31]</a></p>
+    <p id="ref32">32. [2013] EWHC 379 (Ch), [45]-[46], [52]-[70] <a href="#back32" class="back-to-ref">[32]</a></p> 
+    <p id="ref33">33. Twentieth Century Fox Film v. Newzbin [2010] EWHC 608 (Ch), [46], [78], [102]. <a href="#back33" class="back-to-ref">[33]</a></p>
+    <p id="ref34">34. For more discussion on what amounts to active involvement, see Football Association Premier League v. British Sky Broadcasting [2013] EWHC 2058 (Ch), [2013] ECDR (14) 377, [39]-[42]; for other cases involving s97A see Paramount Home Entertainment International v. British Sky Broadcasting [2014] EWHC 937 (Ch) (Viooz website).<a href="#back34" class="back-to-ref">[34]</a></p> 
+    <p id="ref35">35. See also Metro-Goldwyn-Mayer Studios Inc v. Grokster, 545 US 913, 125 S. Ct. 2764 (2005); A & M Records, Inc. v. Napster, Inc 239 F.3d 1004 (Court of Appeals, 9th Circuit 2001)<a href="#back35" class="back-to-ref">[35]</a></p> 
+    <p id="ref36">36. [2015] EWHC 1082 (Ch).<a href="#back36" class="back-to-ref">[36]</a></p> 
+
+
+
   
 </div>
