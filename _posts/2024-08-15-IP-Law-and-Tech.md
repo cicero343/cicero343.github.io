@@ -74,7 +74,7 @@ Computer programs protected as literary works<a href="#ref4" id="back4" class="r
 
 Even computer-generated works could be protected<a href="#ref5" id="back5" class="reference"> [5]</a>
 
-**CDPA 1988, s. 17 - Infringement by Copying**
+<h3>CDPA 1988, s. 17 - Infringement by Copying</h3>
 
 e.g. IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd  (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
 
@@ -84,7 +84,7 @@ Includes copies which are transient or are incidental to some other use of the w
 
 Person will infringe (absent a defence) where e.g. they store work (or other subject matter) on a USB.<a href="#ref9" id="back9" class="reference"> [9]</a>
 
-**CDPA 1988, s. 20 - Infringement by Communication to the Public**
+<h3>CDPA 1988, s. 20 - Infringement by Communication to the Public</h3>
 
 Infringing person(s) need to make infringing subject matter 'available to the public'.<a href="#ref10" id="back10" class="reference"> [10]</a>
 
@@ -96,13 +96,13 @@ Does not apply if work is already publicly available?<a href="#ref13" id="back13
 
 e.g. Ziggo case<a href="#ref14" id="back14" class="reference"> [14]</a>
 
-Concerned notorious torrent site ‘The Pirate Bay’  
+- Concerned notorious torrent site ‘The Pirate Bay’  
 
 various acts of indexing and classifying of the torrent files made them readily accessible to users. 
 
 Pirate Bay’s intervention amounted to infringement by communication.<a href="#ref15" id="back15" class="reference"> [15]</a>
 
-**CDPA 1988, s. 28A - Making of temporary copies**
+<h3>CDPA 1988, s. 28A - Making of temporary copies</h3>
 
 No copyright liability for making temporary copies if:
 
@@ -112,13 +112,13 @@ Copies are ‘essential part of a technological process’, ‘no independent ec
 
 Doesn't include unauthorised streams<a href="#ref18" id="back18" class="reference"> [18]</a>
 
-**CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences**
+<h3>CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</h3>
 
-Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>
+**Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
 
 But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
 
-Decompilation<a href="#ref21" id="back21" class="reference"> [21]</a>
+**Decompilation<a href="#ref21" id="back21" class="reference"> [21]</a>**
 
 In order to help producers in making systems which are compatible/interoperable<a href="#ref22" id="back22" class="reference"> [22]</a>
 
@@ -130,19 +130,20 @@ Not allowed if decompilation not confined to acts necessary to achieve the permi
 
 Not allowed if attempting to create a program that is substantially similar in its expression to the program decompiled, or to do any act restricted by copyright.<a href="#ref26" id="back26" class="reference"> [26]</a>
 
-Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>
+**Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>
+**
 
 Not if breach of license terms?<a href="#ref28" id="back28" class="reference"> [28]</a>
   
-Other acts permitted to lawful users 
+**Other acts permitted to lawful users **
 
 Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
 
-**CDPA 1988, s. 56 - Transfers of copies of works in electronic form.**
+<h3>CDPA 1988, s. 56 - Transfers of copies of works in electronic form.</h3>
 
 Transfer is allowed (even if perpetual license instead of a sale), provided the seller destroys their own copy.<a href="#ref31" id="back31" class="reference"> [31]</a>
 
-**CDPA 1988, s. 97A - Injunctions against service providers**
+<h3>CDPA 1988, s. 97A - Injunctions against service providers</h3>
 
 EMI Records Ltd v. British Sky Broadcasting Ltd<a href="#ref32" id="back32" class="reference"> [32]</a>
 
@@ -160,7 +161,7 @@ Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [
 Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
 <br>
-**Electronic Commerce (EC Directive) Regulations 2002**
+<h3>Electronic Commerce (EC Directive) Regulations 2002</h3>
 
 The idea that ISPs will only be found liable where they have active involvement is reflected in the Electronic Commerce (EC Directive) Regulations 2002<a href="#ref37" id="back37" class="reference"> [37]</a>
 
@@ -174,12 +175,12 @@ But immunity is forfeited if ISP plays an ‘active role' allowing it to be awar
 
 It is suggested that this immunity 'shields' cloud providers, such as Microsoft’s OneDrive, DropBox, and iCloud<a href="#ref41" id="back41" class="reference"> [41]</a>
 
-**Digital Economy Act 2010**
+<h3>Digital Economy Act 2010</h3>
 
 Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
 It also compels providers to give copyright infringement reports at the request of copyright owners.<a href="#ref43" id="back43" class="reference"> [43]</a>
 
-**CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.**
+<h3>CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.</h3>
 
 ‘Technical devices are those intended to restrict acts that are not authorised by the copyright owner of that computer program and are restricted by copyright’<a href="#ref44" id="back44" class="reference"> [44]</a> 
 
@@ -213,7 +214,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 <h2>Trademarks & Passing Off</h2>
 
-**Trade Marks Act 1994, s 10(2) – likelihood of confusion**
+<h3>Trade Marks Act 1994, s 10(2) – likelihood of confusion</h3>
 
 
 Jadebay v. Clarke-Coles Ltd<a href="#ref51" id="back51" class="reference"> [51]</a> 
@@ -230,7 +231,7 @@ can the ‘average consumer...ascertain whether the goods or services originate 
 
 <br>
 
-**Cyber-Squatting and Trademarks/Passing Off**
+<h3>Cyber-Squatting and Trademarks/Passing Off</h3>
 
 British Telecommunications v. One in a Million<a href="#ref55" id="back55" class="reference"> [55]</a> 
 
