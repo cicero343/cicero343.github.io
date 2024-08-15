@@ -154,10 +154,21 @@ Newzbin enabled users to download infringing files uploaded by third parties.<a 
 Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [36]</a>
 Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
+<br>
+
+The idea that ISPs will only be found liable where they have active involvement is reflected in the Electronic Commerce (EC Directive) Regulations 2002<a href="#ref37" id="back37" class="reference"> [37]</a>
+regs 17, 18, and 19 allow providers 3 actions where they will have immunity from copyright<a href="#ref38" id="back38" class="reference"> [38]</a>
+‘mere conduits’, ‘caching’, and ‘hosting’
+They also compel providers to act expeditiously to remove infringing content once they obtain knowledge of its existence<a href="#ref39" id="back39" class="reference"> [39]</a>
+
+But immunity is forfeited if ISP plays an ‘active role' allowing it to be aware of the infringing material.<a href="#ref40" id="back40" class="reference"> [40]</a>
+
+It is suggested that this immunity 'shields' cloud providers, such as Microsoft’s OneDrive, DropBox, and iCloud<a href="#ref41" id="back41" class="reference"> [41]</a>
+
 
 <div id="references">
     <h2>References</h2>
-    <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44.  <a href="#back1" class="back-to-ref">[1]</a></p>
+    <p id="ref1">1. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 44. <a href="#back1" class="back-to-ref">[1]</a></p>
     <p id="ref2">2. Ladbroke v William Hill [1964] 1 All ER 465; see also Infopaq case (2009)<a href="#back2" class="back-to-ref">[2]</a></p>
     <p id="ref3">3. Copyright, Designs and Patents Act (CDPA) 1988, s 16(3) <a href="#back3" class="back-to-ref">[3]</a></p>
     <p id="ref4">4. see also Trips, Art. 10(1); Software Dir., Art. 1; IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd , [1994] FSR 275; Sega Enterprises v Richards [1983] FSR 73 <a href="#back4" class="back-to-ref">[4]</a></p>
@@ -193,8 +204,10 @@ Website which allowed peer-to-peer users to watch unauthorised streams of films.
     <p id="ref34">34. For more discussion on what amounts to active involvement, see Football Association Premier League v. British Sky Broadcasting [2013] EWHC 2058 (Ch), [2013] ECDR (14) 377, [39]-[42]; for other cases involving s97A see Paramount Home Entertainment International v. British Sky Broadcasting [2014] EWHC 937 (Ch) (Viooz website).<a href="#back34" class="back-to-ref">[34]</a></p> 
     <p id="ref35">35. See also Metro-Goldwyn-Mayer Studios Inc v. Grokster, 545 US 913, 125 S. Ct. 2764 (2005); A & M Records, Inc. v. Napster, Inc 239 F.3d 1004 (Court of Appeals, 9th Circuit 2001)<a href="#back35" class="back-to-ref">[35]</a></p> 
     <p id="ref36">36. [2015] EWHC 1082 (Ch).<a href="#back36" class="back-to-ref">[36]</a></p> 
-
-
-
+    <p id="ref37">37. e-Commerce Regs, SI 2002/2013.<a href="#back37" class="back-to-ref">[37]</a></p> 
+    <p id="ref38">38. Ibid, regs. 17, 18, 19<a href="#back38" class="back-to-ref">[38]</a></p> 
+    <p id="ref39">39. Ibid, regs. 18(b)(v), 19(ii)<a href="#back39" class="back-to-ref">[39]</a></p> 
+    <p id="ref40">40. L’Oréal SA v. eBay International AG, Case C-324/09 [2011] ECR I-6011, EU:C:2011:474, [123] (ECJ, Grand Chamber).<a href="#back40" class="back-to-ref">[40]</a></p> 
+    <p id="ref40">40. Bently, Sherman, Gangjee, & Johnson, Intellectual Property Law (5th edn, OUP, 2018), 1291. <a href="#back40" class="back-to-ref">[40]</a></p>    
   
 </div>
