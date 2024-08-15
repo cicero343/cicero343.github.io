@@ -71,18 +71,6 @@ Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed
 
 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer fermentum ex sit amet tincidunt consectetur. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.<a href="#ref4" id="back4" class="reference"> [4]</a> Sed cursus nunc sagittis orci ornare porta. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus at pellentesque arcu, ac pulvinar libero.<a href="#ref5" id="back5" class="reference"> [5]</a>
-
-
-<div id="references">
-    <h2>References</h2>
-    <p id="ref4">4. See Suspendisse nisl augue, hendrerit eu urna eu, fermentum accumsan mi. Donec orci ipsum, luctus et quam a, feugiat vulputate magna. Sed non efficitur risus. <a href="#back4" class="back-to-ref">[4]</a></p>
-    <p id="ref5">5. See, e.g., Curabitur maximus aliquam vestibulum. Sed orci enim, tincidunt nec libero a, hendrerit imperdiet diam (1999). <a href="#back5" class="back-to-ref">[5]</a></p>
-</div>
-
-
-
-
 <!-- <div class="slider">
   <img src="/assets/favicon-16x16.png">
   <img src="/assets/favicon-32x32.png">
