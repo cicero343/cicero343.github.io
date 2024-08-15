@@ -114,7 +114,7 @@ Doesn't include unauthorised streams<a href="#ref18" id="back18" class="referenc
 
 <h3>CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</h3>
 
-<h6>Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a></h6>
+<h5>Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a></h5>
 
 - But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
 
