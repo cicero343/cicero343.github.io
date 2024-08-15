@@ -72,7 +72,7 @@ There are many pre-stage tests one must do before asking whether copyright has b
 
 <br>
 
-<h3>CDPA 1988, s. 3(1)(b)</h3>
+<h3><a href="https://www.legislation.gov.uk/ukpga/1988/48/section/3">CDPA 1988, s. 3(1)(b)</a></h3>
 
 Computer programs protected as literary works<a href="#ref4" id="back4" class="reference"> [4]</a>
 
@@ -184,6 +184,8 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoftâ
 - Important in this context as it creates an obligation on copyright holders to report infringements to ISPs.<a href="#ref42" id="back42" class="reference"> [42]</a>
 
 - It also compels providers to give copyright infringement reports at the request of copyright owners.<a href="#ref43" id="back43" class="reference"> [43]</a>
+
+<br>
 
 <h3>CDPA 1988 s. 296 - Devices designed to circumvent copy-protection.</h3>
 
