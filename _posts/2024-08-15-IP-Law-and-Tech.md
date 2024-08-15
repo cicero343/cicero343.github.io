@@ -99,7 +99,7 @@ Infringing person(s) need to make infringing subject matter 'available to the pu
 
 - Does not apply if work is already publicly available?<a href="#ref13" id="back13" class="reference"> [13]</a>
 
-e.g. **Ziggo** case<a href="#ref14" id="back14" class="reference"> [14]</a>
+e.g. <a href="https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX%3A62015CJ0610">**Ziggo**</a> case<a href="#ref14" id="back14" class="reference"> [14]</a>
 
 - Concerned notorious torrent site ‘The Pirate Bay’  
 
