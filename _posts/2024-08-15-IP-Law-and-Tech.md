@@ -118,11 +118,11 @@ Doesn't include unauthorised streams<a href="#ref18" id="back18" class="referenc
 
 <h3>CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</h3>
 
-**Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
+**1) Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
 
 - But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
 
-**Decompilation<a href="#ref21" id="back21" class="reference"> [21]</a>**
+**2) Decompilation<a href="#ref21" id="back21" class="reference"> [21]</a>**
 
 Suggested that this defence helps producers in making systems which are compatible/interoperable<a href="#ref22" id="back22" class="reference"> [22]</a>
 
@@ -134,11 +134,11 @@ Suggested that this defence helps producers in making systems which are compatib
 
 - Not allowed if attempting to create a program that is substantially similar in its expression to the program decompiled, or to do any act restricted by copyright.<a href="#ref26" id="back26" class="reference"> [26]</a>
 
-**Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>**
+**3) Observing, studying and testing of computer programs<a href="#ref27" id="back27" class="reference"> [27]</a>**
 
 - Not permissible if doing so would breach license terms<a href="#ref28" id="back28" class="reference"> [28]</a>
   
-**Other acts permitted to lawful users**
+**4) Other acts permitted to lawful users**
 
 - Copying/adapting necessary for lawful use<a href="#ref29" id="back29" class="reference"> [29]</a> e.g. necessary to correct program error.<a href="#ref30" id="back30" class="reference"> [30]</a>
 
@@ -189,7 +189,7 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 
 - ‘Technical devices are those intended to restrict acts that are not authorised by the copyright owner of that computer program and are restricted by copyright’<a href="#ref44" id="back44" class="reference"> [44]</a> 
 
-**296ZA-ZE applies to technological measures for **non-computer programs****
+**1) 296ZA-ZE applies to technological measures for **non-computer programs****
 
 **Sony Entertainment v. Ball**<a href="#ref45" id="back45" class="reference"> [45]</a> 
 
@@ -199,9 +199,9 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 
 - The right holder must not deploy technological measures that disproportionately inhibit lawful activities of third parties.<a href="#ref47" id="back47" class="reference"> [47]</a> 
 
-**296ZB applies to technological measures for **computer programs****
+**2) 296ZB applies to technological measures for **computer programs****
 
-**296ZG – DRM/ERM – allows copyright owner to prevent removal of rights management information (e.g. metadata) and the further circulation of copies from which such information has been removed.**
+**3) 296ZG – DRM/ERM – allows copyright owner to prevent removal of rights management information (e.g. metadata) and the further circulation of copies from which such information has been removed.**
 
 <br>
 
