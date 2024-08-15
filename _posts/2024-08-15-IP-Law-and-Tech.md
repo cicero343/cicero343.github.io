@@ -64,6 +64,8 @@ date: 2024-08-15
 
 PREFACE: This post is only discussing cases related to tech in respect of Copyright and Trademarks/Passing Off, I found it difficult to find interesting Patent cases regarding tech.
 
+<br>
+
 <h2>Copyright</h2>
 
 There are many pre-stage tests one must do before asking whether copyright has been infringed. For example, one must first ask whether the subject matter in question is 'original' enough to be protected (the ‘skill, labour and judgement’ test).<a href="#ref2" id="back2" class="reference"> [2]</a> One must also ask if a 'substantial part' of the work has been copied to amount to infringement.<a href="#ref3" id="back3" class="reference"> [3]</a> For the sake of keeping this blog post as short and sweet as possible. We will be glossing over these details to focus on the cases and juicy bits. 
@@ -76,7 +78,7 @@ Computer programs protected as literary works<a href="#ref4" id="back4" class="r
 
 <h3>CDPA 1988, s. 17 - Infringement by Copying</h3>
 
-e.g. IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd  (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
+e.g. **IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd** (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
 
 - Right-holder needs to prove defendant is not simply emulating the function of the program<a href="#ref7" id="back7" class="reference"> [7]</a>
 
@@ -94,7 +96,7 @@ Infringing person(s) need to make infringing subject matter 'available to the pu
 
 - Does not apply if work is already publicly available?<a href="#ref13" id="back13" class="reference"> [13]</a>
 
-e.g. Ziggo case<a href="#ref14" id="back14" class="reference"> [14]</a>
+e.g. **Ziggo** case<a href="#ref14" id="back14" class="reference"> [14]</a>
 
 - Concerned notorious torrent site ‘The Pirate Bay’  
 
@@ -114,7 +116,7 @@ Doesn't include unauthorised streams<a href="#ref18" id="back18" class="referenc
 
 <h3>CDPA 1988, s. 50A, 50B, 50BA, 50C - Exceptions/Defences</h3>
 
-<h5>Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a></h5>
+**Making a back-up copy<a href="#ref19" id="back19" class="reference"> [19]</a>**
 
 - But not necessary to back-up a computer game.<a href="#ref20" id="back20" class="reference"> [20]</a>
 
@@ -144,19 +146,19 @@ Suggested that this defence helps producers in making systems which are compatib
 
 <h3>CDPA 1988, s. 97A - Injunctions against service providers</h3>
 
-EMI Records Ltd v. British Sky Broadcasting Ltd<a href="#ref32" id="back32" class="reference"> [32]</a>
+**EMI Records Ltd v. British Sky Broadcasting Ltd**<a href="#ref32" id="back32" class="reference"> [32]</a>
 
 - Website indexing BitTorrent files
   
 - Operators ‘authorising’ infringements of the users 
 
-Newzbin<a href="#ref33" id="back33" class="reference"> [33]</a>
+**Newzbin**<a href="#ref33" id="back33" class="reference"> [33]</a>
 
 - Provider was indexing site (active involvement)<a href="#ref34" id="back34" class="reference"> [34]</a>
 
-- Newzbin enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
+- **Newzbin** enabled users to download infringing files uploaded by third parties.<a href="#ref35" id="back35" class="reference"> [35]</a>
 
-Twentieth Century Fox v. Sky UK<a href="#ref36" id="back36" class="reference"> [36]</a>
+**Twentieth Century Fox v. Sky UK**<a href="#ref36" id="back36" class="reference"> [36]</a>
 
 - Website which allowed peer-to-peer users to watch unauthorised streams of films. 
 
@@ -187,11 +189,11 @@ It is suggested that this immunity 'shields' cloud providers, such as Microsoft�
 
 **296ZA-ZE applies to technological measures for **non-computer programs****
 
-Sony Entertainment v. Ball<a href="#ref45" id="back45" class="reference"> [45]</a> 
+**Sony Entertainment v. Ball**<a href="#ref45" id="back45" class="reference"> [45]</a> 
 
 - Defendants designed and marketed a ‘mod-chip’ for PS2, which bypassed the copy-protection system. 
 
-Nintendo v. PC Box<a href="#ref46" id="back46" class="reference"> [46]</a> 
+**Nintendo v. PC Box**<a href="#ref46" id="back46" class="reference"> [46]</a> 
 
 - The right holder must not deploy technological measures that disproportionately inhibit lawful activities of third parties.<a href="#ref47" id="back47" class="reference"> [47]</a> 
 
@@ -205,7 +207,7 @@ Nintendo v. PC Box<a href="#ref46" id="back46" class="reference"> [46]</a>
 
 e.g.
 
-Mars v. Teknowledge<a href="#ref48" id="back48" class="reference"> [48]</a> 
+**Mars v. Teknowledge**<a href="#ref48" id="back48" class="reference"> [48]</a> 
 
 - 'Anyone with the necessary skill to de-crypt had access to the information', 'mere fact of encryption' does not imply information is confidential.<a href="#ref49" id="back49" class="reference"> [49]</a> 
 
@@ -218,15 +220,15 @@ But, if information has been obtained by illegitimate means, it will be protecte
 <h3>Trade Marks Act 1994, s 10(2) – likelihood of confusion</h3>
 
 
-Jadebay v. Clarke-Coles Ltd<a href="#ref51" id="back51" class="reference"> [51]</a> 
+**Jadebay v. Clarke-Coles Ltd**<a href="#ref51" id="back51" class="reference"> [51]</a> 
 
 - Use of a sign similar to the claimant’s mark as part of Amazon product listings was an actionable misrepresentation.
 
-Louis Vuitton v. Google France<a href="#ref52" id="back52" class="reference"> [52]</a> 
+**Louis Vuitton v. Google France**<a href="#ref52" id="back52" class="reference"> [52]</a> 
 
 - Google did not use the mark ‘in its own commercial communication’ - just generating adverts in response to keyword - no infringement - the competing business simply won a bid on the key word 
 
-L’Oréal SA v. eBay International AG<a href="#ref53" id="back53" class="reference"> [53]</a> 
+**L’Oréal SA v. eBay International AG**<a href="#ref53" id="back53" class="reference"> [53]</a> 
 
 - can the ‘average consumer...ascertain whether the goods or services originate from the proprietor of the trade mark or an undertaking economically connected to it?'<a href="#ref54" id="back54" class="reference"> [54]</a> 
 
@@ -234,7 +236,7 @@ L’Oréal SA v. eBay International AG<a href="#ref53" id="back53" class="refere
 
 <h3>Cyber-Squatting and Trademarks/Passing Off</h3>
 
-British Telecommunications v. One in a Million<a href="#ref55" id="back55" class="reference"> [55]</a> 
+**British Telecommunications v. One in a Million**<a href="#ref55" id="back55" class="reference"> [55]</a> 
 
 - defendant registered domain names such as ‘virgin.com' without the consent of the organisation that owned the goodwill in the names – defendant's aim was to make a profit 
 
@@ -242,13 +244,13 @@ British Telecommunications v. One in a Million<a href="#ref55" id="back55" class
 
 - any ‘realistic use of them as domain names would result in passing off’<a href="#ref56" id="back56" class="reference"> [56]</a> 
 
-French Connection v. Sutton<a href="#ref57" id="back57" class="reference"> [57]</a> 
+**French Connection v. Sutton**<a href="#ref57" id="back57" class="reference"> [57]</a> 
 
-- Compare with 'One in a Million' case - Defendant registered ‘fcuk.com’ 
+- Compare with **'One in a Million'** case - Defendant registered ‘fcuk.com’ 
 
 - Held: defendant had not registered domain name with a view to passing off. 
 
-Easyjet Airline Co. v. Dainty<a href="#ref58" id="back58" class="reference"> [58]</a> 
+**Easyjet Airline Co. v. Dainty**<a href="#ref58" id="back58" class="reference"> [58]</a> 
 
 - Court may order transfer of domain name if you are found to be passing off a domain name. 
 
