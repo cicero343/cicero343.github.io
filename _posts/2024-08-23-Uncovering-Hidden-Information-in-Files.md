@@ -66,9 +66,7 @@ There are, however, various tools that one can use to find hidden information in
 
 My experience thus far is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
 
-<h2>File Analysis, Binary Analysis, Reverse Engineering and Debugging</h2>
-
-These tools can help you inspect files, binaries, or executables for hidden or unexpected information.
+<h2>File Analysis and Metadata Extraction</h2>
 
 <h4>file</h4>
 
@@ -82,14 +80,6 @@ The strings command can be used to extract any printable strings in the binary f
 
 ![image](https://github.com/user-attachments/assets/19907020-c129-4206-a903-7241da04d4b7)
 
-<h4>binwalk</h4>
-
-binwalk is a tool for analysing binary files to detect embedded files, firmware, and other data. It’s commonly used in reverse engineering to extract data from binary files.
-
-![image](https://github.com/user-attachments/assets/5d734045-c42f-41b7-874a-5e9177d0da4b)
-![image](https://github.com/user-attachments/assets/74eef571-0019-4b3a-815e-e65b459e22b9)
-![image](https://github.com/user-attachments/assets/237e3a08-d9ad-4066-9cbd-b4efdd0a0763)
-
 <h4>hexedit</h4>
 
 hexedit is a hex editor that allows you to view and edit the raw binary data of files. It represents the data in both hexadecimal and ASCII formats, making it possible to manipulate the file at a low level. This tool is useful for tasks like modifying file headers, performing manual patching, or inspecting binary content.
@@ -100,29 +90,39 @@ In the images below you can see that we've changed the hex code for this .png fi
 ![image](https://github.com/user-attachments/assets/1e78381b-eb99-4ae7-a063-99695615c841)
 ![image](https://github.com/user-attachments/assets/ee2cbb68-8fea-4ee2-9b4d-fbddfbc03d09)
 
+<br>
+
+<h2>Binary Analysis and Reverse Engineering</h2>
+
+<h4>binwalk</h4>
+
+binwalk is a tool for analysing binary files to detect embedded files, firmware, and other data. It’s commonly used in reverse engineering to extract data from binary files.
+
+![image](https://github.com/user-attachments/assets/5d734045-c42f-41b7-874a-5e9177d0da4b)
+![image](https://github.com/user-attachments/assets/74eef571-0019-4b3a-815e-e65b459e22b9)
+![image](https://github.com/user-attachments/assets/237e3a08-d9ad-4066-9cbd-b4efdd0a0763)
+
 <h4>readelf</h4>
 
 The readelf command is a tool that displays information about ELF files. It can show you headers, sections, symbols, and more.
 
 ![image](https://github.com/user-attachments/assets/d2b25b6a-4907-40f3-9a55-58c102350796)
 
-<h4>ltrace</h4>
-
-ltrace helps you track library function calls made to dynamically linked (shared) libraries.
-
-![image](https://github.com/user-attachments/assets/6f2bc672-b743-4aab-a98b-55aaa988182c)
-
-<h4>strace</h4>
-
-strace helps you monitor system calls made by a program with the kernel. This can help you understand how a program interacts with the operating system.
-
-![word-image-261](https://github.com/user-attachments/assets/4cbf1932-1fce-4e96-b902-41505ec2ffce)
-
 <h4>radare2</h4>
 
 radare2 is a powerful open-source framework for reverse engineering and analysing binaries. It includes a wide range of tools for disassembling, debugging, and analysing binary files.
 
 ![1_325iRMMQV2gupfGta-J7bQ](https://github.com/user-attachments/assets/0c2687a2-1cd2-404e-91a8-e6775c99f21a)
+
+<h4>Ghidra</h4>
+
+Ghidra is a powerful reverse engineering tool developed by the NSA. It disassembles and decompiles binary code, allowing users to analyse programs for hidden functionality, malware, or vulnerabilities.
+
+![215551674-d6f156e0-bb5e-4e7d-867b-4fd4354240e8](https://github.com/user-attachments/assets/9592514c-5d44-49f8-b4ae-c81a33666da2)
+
+<br>
+
+<h2>Debugging and System Monitoring</h2>
 
 <h4>lsof (List Open Files)</h4>
 
@@ -136,12 +136,17 @@ GDB is a debugger for programs written in languages like C, C++, and more compil
 
 ![list-1](https://github.com/user-attachments/assets/44ddcc32-286e-41bb-8b06-dba5e3d192c2)
 
-<h4>Ghidra</h4>
+<h4>ltrace</h4>
 
-Ghidra is a powerful reverse engineering tool developed by the NSA. It disassembles and decompiles binary code, allowing users to analyse programs for hidden functionality, malware, or vulnerabilities.
+ltrace helps you track library function calls made to dynamically linked (shared) libraries.
 
-![215551674-d6f156e0-bb5e-4e7d-867b-4fd4354240e8](https://github.com/user-attachments/assets/9592514c-5d44-49f8-b4ae-c81a33666da2)
+![image](https://github.com/user-attachments/assets/6f2bc672-b743-4aab-a98b-55aaa988182c)
 
+<h4>strace</h4>
+
+strace helps you monitor system calls made by a program with the kernel. This can help you understand how a program interacts with the operating system.
+
+![word-image-261](https://github.com/user-attachments/assets/4cbf1932-1fce-4e96-b902-41505ec2ffce)
 
 <br> 
 
