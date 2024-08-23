@@ -82,13 +82,13 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
 <h2 id="file-analysis">File Analysis</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
-<h4>file</h4>
+<h3>file</h3>
 
 The file command is used to determine the type of a file. This is particularly useful when you need to identify files with ambiguous or missing extensions.
 
 ![image](https://github.com/user-attachments/assets/480df8d5-b27d-4d87-a3bb-ea4684ad2725)
 
-<h4>strings</h4>
+<h3>strings</h3>
 
 The strings command can be used to extract any printable strings in the binary file. This can be useful to see some text data, function names, or other strings embedded in the binary.
 
