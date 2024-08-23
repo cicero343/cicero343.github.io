@@ -89,6 +89,7 @@ hexedit is a hex editor that allows you to view and edit the raw binary data of 
 In the images below you can see that we've changed the hex code for this .png file and now the 'file' command thinks it's a PDF file!
 
 ![image](https://github.com/user-attachments/assets/261b0db5-a762-4da9-8565-7eaf811e2e2b)
+
 ![image](https://github.com/user-attachments/assets/4d60744a-4140-4b12-918f-8a136d3da94e)
 
 ![image](https://github.com/user-attachments/assets/1e78381b-eb99-4ae7-a063-99695615c841)
@@ -183,6 +184,6 @@ foremost is a console program to recover files based on their headers, footers, 
 
 <h4>Autopsy</h4>
 
-Autopsy is a comprehensive digital forensics platform used to analyze hard drives, smartphones, and other data sources. It features file carving, metadata extraction, timeline analysis, keyword searching, and more. Investigators use it to recover deleted files, analyze disk images, and uncover hidden or obscured data.
+Autopsy is a comprehensive digital forensics platform used to analyse hard drives, smartphones, and other data sources. It features file carving, metadata extraction, timeline analysis, keyword searching, and more. Investigators use it to recover deleted files, analyse disk images, and uncover hidden or obscured data.
 
 ![overview](https://github.com/user-attachments/assets/040edcb2-0903-4198-887f-14ac9af1666c)
