@@ -66,11 +66,13 @@ My experience (thus far) is that quite a few of these tools are not that difficu
 
 I'm by no means an expert in steganography, reverse engineering or file analysis; so, perhaps I will update this post as time goes on!
 
+<br>
+
 <h2>File Analysis and Metadata Extraction</h2>
 
 <h4>file</h4>
 
-The file command is used to determine the type of a file. It analyses the file's contents and provides a description, such as whether it's a text file or compiled binary. This is particularly useful when you need to identify files with ambiguous or missing extensions.
+The file command is used to determine the type of a file. This is particularly useful when you need to identify files with ambiguous or missing extensions.
 
 ![image](https://github.com/user-attachments/assets/a60d2b1e-b275-49f5-9765-e0a927624842)
 
