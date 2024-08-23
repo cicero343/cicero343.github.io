@@ -66,7 +66,7 @@ There are, however, various tools that one can use to find hidden information in
 
 My experience thus far is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
 
-<h2>File Analysis, Reverse Engineering and Debugging</h2>
+<h2>File Analysis, Binary Analysis, Reverse Engineering and Debugging</h2>
 
 These tools can help you inspect files, binaries, or executables for hidden or unexpected information.
 
@@ -122,6 +122,27 @@ strace helps you monitor system calls made by a program with the kernel. This ca
 
 radare2 is a powerful open-source framework for reverse engineering and analysing binaries. It includes a wide range of tools for disassembling, debugging, and analysing binary files.
 
+![1_325iRMMQV2gupfGta-J7bQ](https://github.com/user-attachments/assets/0c2687a2-1cd2-404e-91a8-e6775c99f21a)
+
+<h4>lsof (List Open Files)</h4>
+
+lsof lists information about files opened by processes. This can be useful for tracking which files a program is using or analysing potential malware that might be interacting with the file system.
+
+![image](https://github.com/user-attachments/assets/263485aa-56a4-4c19-b344-9c2f80a286a4)
+
+<h4>GDB (GNU Debugger)</h4>
+
+GDB is a debugger for programs written in languages like C, C++, and more compiled binaries. It allows you to see the code that programs are executing in order to find bugs and hidden behaviour.
+
+![list-1](https://github.com/user-attachments/assets/44ddcc32-286e-41bb-8b06-dba5e3d192c2)
+
+<h4>Ghidra</h4>
+
+Ghidra is a powerful reverse engineering tool developed by the NSA. It disassembles and decompiles binary code, allowing users to analyse programs for hidden functionality, malware, or vulnerabilities.
+
+![215551674-d6f156e0-bb5e-4e7d-867b-4fd4354240e8](https://github.com/user-attachments/assets/9592514c-5d44-49f8-b4ae-c81a33666da2)
+
+
 <br> 
 
 <h2>Steganography</h2>
@@ -137,3 +158,17 @@ exiftool is a powerful tool used to read, write, and manipulate metadata in a wi
 steghide is a steganography tool that allows you to embed (hide) and extract data within image or audio files. The tool supports various file formats and can also encrypt the embedded data. It’s often used in security and forensics to conceal or detect hidden information within multimedia files.
 
 ![image](https://github.com/user-attachments/assets/6929e938-4251-4b8f-8963-799f3e4e17a4)
+
+<br> 
+
+<h2>Notable Mentions: File Carving and Digital Forensics</h2>
+
+h4>Foremost</h4>
+
+foremost is a console program to recover files based on their headers, footers, and internal data structures. It can be used for extracting hidden files from disk images or memory dumps, where the file system might be corrupted or missing.
+
+![index 19](https://github.com/user-attachments/assets/b1ee69fd-b8cd-49f2-8d76-1f01f81f0c04)
+
+h4>Autopsy</h4>
+
+Autopsy is a comprehensive digital forensics platform used to analyze hard drives, smartphones, and other data sources. It features file carving, metadata extraction, timeline analysis, keyword searching, and more. Investigators use it to recover deleted files, analyze disk images, and uncover hidden or obscured data.
