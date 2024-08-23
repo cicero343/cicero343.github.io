@@ -1,5 +1,5 @@
 ---
-title: "Uncovering Hidden Information in Files: Tools for File Analysis and Steganography"
+title: "Uncovering Hidden Information in Files: Tools for File Analysis, Binary Analysis, Debugging and Steganography"
 date: 2024-08-23
 ---
 
@@ -92,6 +92,7 @@ In the images below you can see that we've changed the hex code for this .png fi
 ![image](https://github.com/user-attachments/assets/4d60744a-4140-4b12-918f-8a136d3da94e)
 
 ![image](https://github.com/user-attachments/assets/1e78381b-eb99-4ae7-a063-99695615c841)
+
 ![image](https://github.com/user-attachments/assets/e89134eb-6c90-4057-b2a3-7c400904e7bc)
 
 <br>
