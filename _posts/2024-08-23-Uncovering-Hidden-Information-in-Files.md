@@ -60,17 +60,17 @@ date: 2024-08-23
 
 <br>
 
-I'm by no means an expert in steganography, reverse engineering or file analysis. With that in mind, perhaps I will update this post as time goes on.
+There are various tools that one can use to find hidden information in files (e.g. a text document hidden within an image file). These can be invaluable in Digital Forensics and Incident Response (DFIR) scenarios.
 
-There are, however, various tools that one can use to find hidden information in files (e.g. a text document hidden within an image file).
+My experience (thus far) is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
 
-My experience thus far is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
+I'm by no means an expert in steganography, reverse engineering or file analysis; so, perhaps I will update this post as time goes on!
 
 <h2>File Analysis and Metadata Extraction</h2>
 
 <h4>file</h4>
 
-The file command is used to determine the type of a file. It analyses the file's contents and provides a description, such as whether it's a text file, an image, a compiled binary, or something else. This is particularly useful when you need to identify files with ambiguous or missing extensions.
+The file command is used to determine the type of a file. It analyses the file's contents and provides a description, such as whether it's a text file or compiled binary. This is particularly useful when you need to identify files with ambiguous or missing extensions.
 
 ![image](https://github.com/user-attachments/assets/a60d2b1e-b275-49f5-9765-e0a927624842)
 
@@ -82,7 +82,7 @@ The strings command can be used to extract any printable strings in the binary f
 
 <h4>hexedit</h4>
 
-hexedit is a hex editor that allows you to view and edit the raw binary data of files. It represents the data in both hexadecimal and ASCII formats, making it possible to manipulate the file at a low level. This tool is useful for tasks like modifying file headers, performing manual patching, or inspecting binary content.
+hexedit is a hex editor that allows you to view and edit the raw binary data of files. It's useful for tasks like modifying file headers, performing manual patching, or inspecting binary content.
 
 In the images below you can see that we've changed the hex code for this .png file and now the 'file' command thinks it's a PDF file!
 
@@ -168,12 +168,12 @@ steghide is a steganography tool that allows you to embed (hide) and extract dat
 
 <h2>Notable Mentions: File Carving and Digital Forensics</h2>
 
-h4>Foremost</h4>
+<h4>Foremost</h4>
 
 foremost is a console program to recover files based on their headers, footers, and internal data structures. It can be used for extracting hidden files from disk images or memory dumps, where the file system might be corrupted or missing.
 
 ![index 19](https://github.com/user-attachments/assets/b1ee69fd-b8cd-49f2-8d76-1f01f81f0c04)
 
-h4>Autopsy</h4>
+<h4>Autopsy</h4>
 
 Autopsy is a comprehensive digital forensics platform used to analyze hard drives, smartphones, and other data sources. It features file carving, metadata extraction, timeline analysis, keyword searching, and more. Investigators use it to recover deleted files, analyze disk images, and uncover hidden or obscured data.
