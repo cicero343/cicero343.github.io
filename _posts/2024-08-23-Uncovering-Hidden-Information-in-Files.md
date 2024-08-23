@@ -1,5 +1,5 @@
 ---
-title: "Uncovering Hidden Information in Files: Tools for File Analysis, Binary Analysis, Debugging and Steganography"
+title: "Uncovering Hidden Information in Files: Tools for File Analysis, Steganography and more"
 date: 2024-08-23
 ---
 
