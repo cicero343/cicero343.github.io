@@ -105,6 +105,7 @@ binwalk is a tool for analysing binary files to detect embedded files, firmware,
 
 ![image](https://github.com/user-attachments/assets/c45f830e-11b9-4ade-850d-fc2a8cf36143)
 ![image](https://github.com/user-attachments/assets/ff52f6f7-c9a7-4a2c-bb86-b64fac13ef26)
+
 ![image](https://github.com/user-attachments/assets/509ae5f3-2e50-4f05-9fea-1485ca9bebdb)
 
 
