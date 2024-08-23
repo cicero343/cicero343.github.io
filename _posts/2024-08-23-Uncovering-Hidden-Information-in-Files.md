@@ -74,13 +74,13 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
 
 The file command is used to determine the type of a file. This is particularly useful when you need to identify files with ambiguous or missing extensions.
 
-![image](https://github.com/user-attachments/assets/a60d2b1e-b275-49f5-9765-e0a927624842)
+![image](https://github.com/user-attachments/assets/480df8d5-b27d-4d87-a3bb-ea4684ad2725)
 
 <h4>strings</h4>
 
 The strings command can be used to extract any printable strings in the binary file. This can be useful to see some text data, function names, or other strings embedded in the binary.
 
-![image](https://github.com/user-attachments/assets/19907020-c129-4206-a903-7241da04d4b7)
+![image](https://github.com/user-attachments/assets/afc4e48f-2a2f-4b5d-9027-a7ce874119a2)
 
 <h4>hexedit</h4>
 
@@ -88,9 +88,11 @@ hexedit is a hex editor that allows you to view and edit the raw binary data of 
 
 In the images below you can see that we've changed the hex code for this .png file and now the 'file' command thinks it's a PDF file!
 
-![image](https://github.com/user-attachments/assets/1ada6594-4bdd-4cb3-9366-30a43550d87b)
+![image](https://github.com/user-attachments/assets/261b0db5-a762-4da9-8565-7eaf811e2e2b)
+![image](https://github.com/user-attachments/assets/4d60744a-4140-4b12-918f-8a136d3da94e)
+
 ![image](https://github.com/user-attachments/assets/1e78381b-eb99-4ae7-a063-99695615c841)
-![image](https://github.com/user-attachments/assets/ee2cbb68-8fea-4ee2-9b4d-fbddfbc03d09)
+![image](https://github.com/user-attachments/assets/e89134eb-6c90-4057-b2a3-7c400904e7bc)
 
 <br>
 
@@ -100,15 +102,16 @@ In the images below you can see that we've changed the hex code for this .png fi
 
 binwalk is a tool for analysing binary files to detect embedded files, firmware, and other data. It’s commonly used in reverse engineering to extract data from binary files.
 
-![image](https://github.com/user-attachments/assets/5d734045-c42f-41b7-874a-5e9177d0da4b)
-![image](https://github.com/user-attachments/assets/74eef571-0019-4b3a-815e-e65b459e22b9)
-![image](https://github.com/user-attachments/assets/237e3a08-d9ad-4066-9cbd-b4efdd0a0763)
+![image](https://github.com/user-attachments/assets/c45f830e-11b9-4ade-850d-fc2a8cf36143)
+![image](https://github.com/user-attachments/assets/ff52f6f7-c9a7-4a2c-bb86-b64fac13ef26)
+![image](https://github.com/user-attachments/assets/509ae5f3-2e50-4f05-9fea-1485ca9bebdb)
+
 
 <h4>readelf</h4>
 
 The readelf command is a tool that displays information about ELF files. It can show you headers, sections, symbols, and more.
 
-![image](https://github.com/user-attachments/assets/d2b25b6a-4907-40f3-9a55-58c102350796)
+![image](https://github.com/user-attachments/assets/22819f69-dda2-46b8-9838-d9c53b197fef)
 
 <h4>radare2</h4>
 
@@ -130,7 +133,7 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 
 lsof lists information about files opened by processes. This can be useful for tracking which files a program is using or analysing potential malware that might be interacting with the file system.
 
-![image](https://github.com/user-attachments/assets/263485aa-56a4-4c19-b344-9c2f80a286a4)
+![image](https://github.com/user-attachments/assets/70414805-bed7-4d3b-93aa-599be459153b)
 
 <h4>GDB (GNU Debugger)</h4>
 
@@ -142,7 +145,7 @@ GDB is a debugger for programs written in languages like C, C++, and more compil
 
 ltrace helps you track library function calls made to dynamically linked (shared) libraries.
 
-![image](https://github.com/user-attachments/assets/6f2bc672-b743-4aab-a98b-55aaa988182c)
+![image](https://github.com/user-attachments/assets/8c5ca7fc-9877-48a1-a72c-e18bfa4c0b43)
 
 <h4>strace</h4>
 
@@ -158,13 +161,13 @@ strace helps you monitor system calls made by a program with the kernel. This ca
 
 exiftool is a powerful tool used to read, write, and manipulate metadata in a wide variety of file formats, including images, videos, audio files, and documents. It’s commonly used to view or edit EXIF data in images, which includes details like camera settings, timestamps, and GPS coordinates.
 
-![image](https://github.com/user-attachments/assets/9f9bab9b-f073-4db6-9c4b-190ef2f0b65c)
+![image](https://github.com/user-attachments/assets/b94fe8c5-53e6-45a6-8e3d-7b7de2c337af)
 
 <h4>steghide</h4>
 
 steghide is a steganography tool that allows you to embed (hide) and extract data within image or audio files. The tool supports various file formats and can also encrypt the embedded data. It’s often used in security and forensics to conceal or detect hidden information within multimedia files.
 
-![image](https://github.com/user-attachments/assets/6929e938-4251-4b8f-8963-799f3e4e17a4)
+![image](https://github.com/user-attachments/assets/6f9bdc3b-5068-4332-9158-edb199929f26)
 
 <br> 
 
