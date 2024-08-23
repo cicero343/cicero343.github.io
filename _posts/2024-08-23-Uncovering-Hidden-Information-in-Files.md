@@ -98,7 +98,7 @@ In the images below you can see that we've changed the hex code for this .png fi
 
 <br>
 
-<h2>Binary Analysis and Reverse Engineering</h2>
+<h2>Binary Analysis & Reverse Engineering</h2>
 
 <h4>binwalk</h4>
 
@@ -118,7 +118,7 @@ The readelf command is a tool that displays information about ELF files. It can 
 
 <h4>radare2</h4>
 
-radare2 is a powerful open-source framework for reverse engineering and analysing binaries. It includes a wide range of tools for disassembling, debugging, and analysing binary files.
+radare2 is a powerful open-source framework for reverse engineering and analysing binaries. It includes a wide range of tools for disassembling, debugging, and decompilation.
 
 ![1_325iRMMQV2gupfGta-J7bQ](https://github.com/user-attachments/assets/0c2687a2-1cd2-404e-91a8-e6775c99f21a)
 
@@ -129,8 +129,17 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 ![215551674-d6f156e0-bb5e-4e7d-867b-4fd4354240e8](https://github.com/user-attachments/assets/9592514c-5d44-49f8-b4ae-c81a33666da2)
 
 <br>
+<h2>Debugging Tools</h2>
 
-<h2>Debugging and System Monitoring</h2>
+<h4>GDB (GNU Debugger)</h4>
+
+GDB is a debugger for programs written in languages like C, C++, and more compiled binaries. Allows for real-time inspection (interactive) and control over program execution in order to find bugs and hidden behaviour.
+
+![list-1](https://github.com/user-attachments/assets/44ddcc32-286e-41bb-8b06-dba5e3d192c2)
+
+<br>
+
+<h2>System Tracing & Monitoring</h2>
 
 <h4>lsof (List Open Files)</h4>
 
@@ -138,21 +147,15 @@ lsof lists information about files opened by processes. This can be useful for t
 
 ![image](https://github.com/user-attachments/assets/70414805-bed7-4d3b-93aa-599be459153b)
 
-<h4>GDB (GNU Debugger)</h4>
-
-GDB is a debugger for programs written in languages like C, C++, and more compiled binaries. It allows you to see the code that programs are executing in order to find bugs and hidden behaviour.
-
-![list-1](https://github.com/user-attachments/assets/44ddcc32-286e-41bb-8b06-dba5e3d192c2)
-
 <h4>ltrace</h4>
 
-ltrace helps you track library function calls made to dynamically linked (shared) libraries.
+ltrace helps you track library function calls made by programs.
 
 ![image](https://github.com/user-attachments/assets/8c5ca7fc-9877-48a1-a72c-e18bfa4c0b43)
 
 <h4>strace</h4>
 
-strace helps you monitor system calls made by a program with the kernel. This can help you understand how a program interacts with the operating system.
+strace helps you monitor system calls and signals received by programs.
 
 ![word-image-261](https://github.com/user-attachments/assets/4cbf1932-1fce-4e96-b902-41505ec2ffce)
 
