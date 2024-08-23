@@ -64,7 +64,7 @@ There are various tools that one can use to find hidden information in files (e.
 
 My experience (thus far) is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
 
-I'm by no means an expert in steganography, reverse engineering or file analysis; so, perhaps I will update this post as time goes on!
+I'm by no means an expert in these areas; so, perhaps I will update this post as time goes on!
 
 <br>
 
