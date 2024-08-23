@@ -66,8 +66,6 @@ My experience (thus far) is that quite a few of these tools are not that difficu
 
 I'm by no means an expert in these areas; so, perhaps I will update this post as time goes on!
 
-<br>
-
 <h2 id="glossary">Glossary</h2>
 <ul>
     <li><a href="#file-analysis">File Analysis</a></li>
@@ -75,9 +73,11 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
     <li><a href="#debugging">Debugging Tools</a></li>
     <li><a href="#system-tracing">System Tracing & Monitoring</a></li>
     <li><a href="#steganography">Steganography</a></li>
-    <li><a href="#notable-mentions">Notable Mentions</a></li>
+    <li><a href="#notable-mentions">Notable Mentions: File Carving & Digital Forensics</a></li>
     <!-- Add more glossary items as needed -->
 </ul>
+
+<br>
 
 <h2 id="file-analysis">File Analysis</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
@@ -194,7 +194,7 @@ steghide is a steganography tool that allows you to embed (hide) and extract dat
 
 <br> 
 
-<h2 id="notable mentions">Notable Mentions: File Carving & Digital Forensic</h2>
+<h2 id="notable-mentions">Notable Mentions: File Carving & Digital Forensics</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>Foremost</h4>
