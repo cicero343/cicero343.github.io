@@ -58,18 +58,6 @@ date: 2024-08-23
 </body>
 </html>
 
-.back-to-glossary {
-    display: block;
-    margin-top: 20px;
-    font-size: 0.9em;
-    color: #007bff;
-    text-decoration: none;
-}
-
-.back-to-glossary:hover {
-    text-decoration: underline;
-}
-
 <br>
 
 There are various tools that one can use to find hidden information in files (e.g. a text document hidden within an image file). These can be invaluable in Digital Forensics and Incident Response (DFIR) scenarios.
@@ -92,7 +80,6 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
 </ul>
 
 <h2 id="file-analysis">File Analysis</h2>
-<p>Content about File Analysis...</p>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>file</h4>
@@ -124,7 +111,6 @@ In the images below you can see that we've changed the hex code for this .png fi
 <br>
 
 <h2 id="binary-analysis">Binary Analysis & Reverse Engineering</h2>
-<p>Content about Binary Analysis & Reverse Engineering...</p>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>binwalk</h4>
@@ -158,7 +144,6 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 <br>
 
 <h2 id="debugging">Debugging Tools</h2>
-<p>Content about Debugging Tools...</p>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>GDB (GNU Debugger)</h4>
@@ -170,7 +155,6 @@ GDB is a debugger for programs written in languages like C, C++, and more compil
 <br>
 
 <h2 id="system-tracing">System Tracing & Monitoring</h2>
-<p>Content about System Tracing & Monitoring...</p>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>lsof (List Open Files)</h4>
@@ -194,7 +178,6 @@ strace helps you monitor system calls and signals received by programs.
 <br> 
 
 <h2 id="steganography">Steganography</h2>
-<p>Content about Steganography...</p>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>exiftool</h4>
@@ -212,7 +195,6 @@ steghide is a steganography tool that allows you to embed (hide) and extract dat
 <br> 
 
 <h2 id="notable mentions">Notable Mentions: File Carving & Digital Forensic</h2>
-<p>Notable Mentions: File Carving & Digital Forensic...</p>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h4>Foremost</h4>
