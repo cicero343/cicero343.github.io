@@ -79,7 +79,7 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
 
 <br>
 
-<h1 id="file-analysis">File Analysis</h1>
+<h2 id="file-analysis" style="text-decoration: underline;">File Analysis</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
 <h3>file</h3>
