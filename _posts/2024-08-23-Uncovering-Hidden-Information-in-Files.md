@@ -36,19 +36,32 @@ date: 2024-08-23
     </style>
     
 <style>
+/* Default styles for light mode */
 a:link, a:visited {
-    color: #00ff00; /* Green for unvisited and visited links */
-    text-shadow: 1px 1px 2px #000000; /* Black shadow around the text */
+    color: blue; /* Blue links in light mode */
 }
 
 a:hover {
-    color: #00cc00; /* Slightly darker green on hover */
-    text-shadow: 1px 1px 2px #000000; /* Black shadow remains on hover */
+    color: darkblue; /* Darker blue on hover in light mode */
 }
 
 a:active {
-    color: #00ff00; /* Green when clicked */
-    text-shadow: 1px 1px 2px #000000; /* Black shadow remains when clicked */
+    color: blue; /* Blue when clicked in light mode */
+}
+
+/* Styles for dark mode */
+@media (prefers-color-scheme: dark) {
+    a:link, a:visited {
+        color: #00ff00; /* Green links in dark mode */
+    }
+
+    a:hover {
+        color: #00cc00; /* Slightly darker green on hover in dark mode */
+    }
+
+    a:active {
+        color: #00ff00; /* Green when clicked in dark mode */
+    }
 }
 </style>
     
