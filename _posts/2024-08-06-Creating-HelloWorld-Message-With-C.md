@@ -248,17 +248,12 @@ I wanted to create a basic example to help me understand how they work, so here'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal-like Text Box with Copy Function</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-
-        .terminal-container {
-            position: relative; /* For positioning the copy button */
-        }
-
         .terminal {
             background-color: #000; /* Black background for terminal look */
             color: #0f0; /* Green text color */
@@ -271,55 +266,10 @@ I wanted to create a basic example to help me understand how they work, so here'
             width: 100%; /* Make the terminal box full-width */
             box-sizing: border-box; /* Include padding in width calculation */
         }
-
-        /* Copy button styling */
-        .copy-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #333; /* Dark background */
-            color: #fff; /* White text */
-            border: none;
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .copy-button:hover {
-            background-color: #555; /* Lighter background on hover */
-        }
     </style>
 </head>
 <body>
-
-    <div class="terminal-container">
-        <div class="terminal" id="code-block">gcc -fPIC -shared -o libmessage.so message.c</div>
-        <button class="copy-button">Copy</button>
-    </div>
-
-    <script>
-        // JavaScript for copying the code
-        document.querySelector(".copy-button").addEventListener("click", function() {
-            // Get the text from the terminal block
-            const codeText = document.getElementById("code-block").innerText.trim();
-
-            // Copy the text to clipboard
-            navigator.clipboard.writeText(codeText).then(function() {
-                // Change button text to "Copied!" after successful copy
-                const button = document.querySelector(".copy-button");
-                button.innerText = "Copied!";
-                
-                // Revert button text after 2 seconds
-                setTimeout(function() {
-                    button.innerText = "Copy";
-                }, 2000);
-            }, function(err) {
-                console.error('Failed to copy text: ', err);
-            });
-        });
-    </script>
-
+    <div class="terminal">gcc -fPIC -shared -o libmessage.so message.c</div>
 </body>
 </html>
 
@@ -363,17 +313,12 @@ I wanted to create a basic example to help me understand how they work, so here'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal-like Text Box with Copy Function</title>
+    <title>Terminal-like Text Box</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-
-        .terminal-container {
-            position: relative; /* For positioning the copy button */
-        }
-
         .terminal {
             background-color: #000; /* Black background for terminal look */
             color: #0f0; /* Green text color */
@@ -386,72 +331,10 @@ I wanted to create a basic example to help me understand how they work, so here'
             width: 100%; /* Make the terminal box full-width */
             box-sizing: border-box; /* Include padding in width calculation */
         }
-
-        /* Copy button styling */
-        .copy-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #333; /* Dark background */
-            color: #fff; /* White text */
-            border: none;
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .copy-button:hover {
-            background-color: #555; /* Lighter background on hover */
-        }
     </style>
 </head>
 <body>
-
-    <div class="terminal-container">
-        <div class="terminal" id="code-block">
-            #include &lt;stdio.h&gt;<br>#include &lt;dlfcn.h&gt;<br><br>int main() {<br>
-            void *handle;<br>void (*show_message)(const char *);<br><br>handle = dlopen("./libmessage.so", RTLD_LAZY);<br>
-            if (!handle) {<br>    fprintf(stderr, "%s\n", dlerror());<br>    return 1;<br>}<br><br>dlerror(); 
-            // Clear any existing error<br>show_message = (void (*)(const char *))dlsym(handle, "show_message");<br>
-            if (dlerror() != NULL) {<br>    fprintf(stderr, "%s\n", dlerror());<br>    return 1;<br>}<br><br>
-            show_message("Hello, World!");<br><br>dlclose(handle);<br>return 0;<br>}
-        </div>
-        <button class="copy-button">Copy</button>
-    </div>
-
-    <script>
-        // Function to decode HTML entities
-        function decodeHTMLEntities(text) {
-            const tempElement = document.createElement('textarea');
-            tempElement.innerHTML = text;
-            return tempElement.value;
-        }
-
-        // JavaScript for copying the code
-        document.querySelector(".copy-button").addEventListener("click", function() {
-            // Get the raw HTML content from the terminal block
-            const codeHTML = document.getElementById("code-block").innerHTML;
-
-            // Decode the HTML entities to get the correct symbols like < and >
-            const codeText = decodeHTMLEntities(codeHTML.replace(/<br>/g, '\n')).trim();
-
-            // Copy the decoded text to clipboard
-            navigator.clipboard.writeText(codeText).then(function() {
-                // Change button text to "Copied!" after successful copy
-                const button = document.querySelector(".copy-button");
-                button.innerText = "Copied!";
-                
-                // Revert button text after 2 seconds
-                setTimeout(function() {
-                    button.innerText = "Copy";
-                }, 2000);
-            }, function(err) {
-                console.error('Failed to copy text: ', err);
-            });
-        });
-    </script>
-
+    <div class="terminal">#include &lt;stdio.h&gt;<br>#include &lt;dlfcn.h&gt;<br><br>int main() {<br>void *handle;<br>void (*show_message)(const char *);<br><br>handle = dlopen("./libmessage.so", RTLD_LAZY);<br>if (!handle) {<br>    fprintf(stderr, "%s\n", dlerror());<br>    return 1;<br>}<br><br>dlerror(); // Clear any existing error<br>show_message = (void (*)(const char *))dlsym(handle, "show_message");<br>if (dlerror() != NULL) {<br>    fprintf(stderr, "%s\n", dlerror());<br>    return 1;<br>}<br><br>show_message("Hello, World!");<br><br>dlclose(handle);<br>return 0;<br>}</div>
 </body>
 </html>
 
