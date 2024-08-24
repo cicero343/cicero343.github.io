@@ -117,8 +117,6 @@ date: 2024-08-23
 <!-- Anchor for Back to Top Button -->
 <a id="top"></a>
 
-<br>
-
 There are various tools that one can use to find hidden information in files (e.g. a text document hidden within an image file). These can be invaluable in Digital Forensics and Incident Response (DFIR) scenarios.
 
 My experience (thus far) is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
