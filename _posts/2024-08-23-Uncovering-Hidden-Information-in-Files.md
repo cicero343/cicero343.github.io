@@ -21,16 +21,16 @@ date: 2024-08-23
     :root {
         --bg-color: #ffffff;
         --txt-color: #000000;
-        /* No link color is specified here, allowing default browser color */
-        --link-hover-color: darkblue; /* Darker blue on hover in light mode */
+        --link-color-light: initial; /* Use browser's default link color in light mode */
+        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
     }
 
     /* Dark mode settings */
     [data-theme="dark"] {
         --bg-color: #000000;
         --txt-color: #ffffff;
-        --link-color: #00ff00; /* Green links in dark mode */
-        --link-hover-color: #00cc00; /* Slightly darker green on hover in dark mode */
+        --link-color-dark: #00ff00; /* Green links in dark mode */
+        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
     }
 
     /* Apply the variables to the body */
@@ -41,31 +41,28 @@ date: 2024-08-23
 
     /* Link styling */
     a:link, a:visited {
-        /* Default to browser's default link color */
-        color: inherit; /* Inherit the text color */
+        color: var(--link-color-light); /* Default to browser's default color in light mode */
     }
 
     a:hover {
-        color: var(--link-hover-color); /* Hover color based on light mode setting */
+        color: var(--link-hover-color-light); /* Hover color in light mode */
+    }
+
+    a:active {
+        color: var(--link-color-light); /* Color when clicked in light mode */
     }
 
     /* Dark mode link styling */
     [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-        color: var(--link-color); /* Green links in dark mode */
+        color: var(--link-color-dark); /* Green links in dark mode */
     }
 
     [data-theme="dark"] a:hover {
-        color: var(--link-hover-color); /* Darker green on hover in dark mode */
+        color: var(--link-hover-color-dark); /* Darker green on hover in dark mode */
     }
 
-    a:active {
-        /* Maintain inherited color when clicked */
-        color: inherit;
-    }
-
-    /* Dark mode active link styling */
     [data-theme="dark"] a:active {
-        color: var(--link-color); /* Maintain green when clicked in dark mode */
+        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
 </style>
     
