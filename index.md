@@ -14,25 +14,56 @@ Title: A Diary of IT Projects
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
-    <style>
-        /* Default light mode settings */
-        :root {
-            --bg-color: #ffffff;
-            --txt-color: #000000;
-        }
+<style>
+    /* Default light mode settings */
+    :root {
+        --bg-color: #ffffff;
+        --txt-color: #000000;
+        --link-color-light: blue; /* Blue links in light mode */
+        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+        --link-color-dark: #00ff00; /* Green links in dark mode */
+        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+    }
 
-        /* Dark mode settings */
-        [data-theme="dark"] {
-            --bg-color: #000000;
-            --txt-color: #ffffff;
-        }
+    /* Dark mode settings */
+    [data-theme="dark"] {
+        --bg-color: #000000;
+        --txt-color: #ffffff;
+        /* Link colors are handled by the variables above */
+    }
 
-        /* Apply the variables to the body */
-        body {
-            background-color: var(--bg-color);
-            color: var(--txt-color);
-        }
-    </style>
+    /* Apply the variables to the body */
+    body {
+        background-color: var(--bg-color);
+        color: var(--txt-color);
+    }
+
+    /* Link styling */
+    a:link, a:visited {
+        color: var(--link-color-light); /* Default blue for light mode links */
+    }
+
+    a:hover {
+        color: var(--link-hover-color-light); /* Hover color in light mode */
+    }
+
+    a:active {
+        color: var(--link-color-light); /* Active link color in light mode */
+    }
+
+    /* Dark mode overrides */
+    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
+        color: var(--link-color-dark); /* Green links in dark mode */
+    }
+
+    [data-theme="dark"] a:hover {
+        color: var(--link-hover-color-dark); /* Hover color in dark mode */
+    }
+
+    [data-theme="dark"] a:active {
+        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+    }
+</style>
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
