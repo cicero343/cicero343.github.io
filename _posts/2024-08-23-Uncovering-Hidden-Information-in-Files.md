@@ -23,6 +23,9 @@ date: 2024-08-23
         --txt-color: #000000;
         --link-color-light: blue; /* Explicitly set blue for light mode links */
         --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+        --button-bg-light: #000000; /* Black background for button in light mode */
+        --button-text-light: #ffffff; /* White text for button in light mode */
+        --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
     }
 
     /* Dark mode settings */
@@ -31,6 +34,9 @@ date: 2024-08-23
         --txt-color: #ffffff;
         --link-color-dark: #00ff00; /* Green links in dark mode */
         --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+        --button-bg-dark: #000000; /* Black background for button in dark mode */
+        --button-text-dark: #ffffff; /* White text for button in dark mode */
+        --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
     }
 
     /* Apply the variables to the body */
@@ -66,16 +72,14 @@ date: 2024-08-23
     [data-theme="dark"] a:active {
         color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
-</style>
 
-<style>
     /* Style for the Back to Top button */
     .back-to-top {
         position: fixed;
         bottom: 20px; /* Distance from the bottom */
         right: 20px;  /* Distance from the right */
-        background-color: #000000; /* Black background color */
-        color: #ffffff; /* White text color */
+        background-color: var(--button-bg-light); /* Background color for button in light mode */
+        color: var(--button-text-light); /* Text color for button in light mode */
         padding: 10px 15px; /* Padding for the button */
         border-radius: 5px; /* Rounded corners */
         text-decoration: none; /* Remove underline */
@@ -85,8 +89,18 @@ date: 2024-08-23
     }
 
     .back-to-top:hover {
-        background-color: #333333; /* Darker background on hover */
+        background-color: var(--button-bg-hover-light); /* Darker background on hover in light mode */
         box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5); /* Darker shadow on hover */
+    }
+
+    /* Dark mode specific styles for the Back to Top button */
+    [data-theme="dark"] .back-to-top {
+        background-color: var(--button-bg-dark); /* Background color for button in dark mode */
+        color: var(--button-text-dark); /* Text color for button in dark mode */
+    }
+
+    [data-theme="dark"] .back-to-top:hover {
+        background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
     }
 </style>
     
