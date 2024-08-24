@@ -15,54 +15,42 @@ date: 2024-08-23
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
-    <style>
-        /* Default light mode settings */
-        :root {
-            --bg-color: #ffffff;
-            --txt-color: #000000;
-        }
-
-        /* Dark mode settings */
-        [data-theme="dark"] {
-            --bg-color: #000000;
-            --txt-color: #ffffff;
-        }
-
-        /* Apply the variables to the body */
-        body {
-            background-color: var(--bg-color);
-            color: var(--txt-color);
-        }
-    </style>
-    
+  
 <style>
-/* Default styles for light mode */
-a:link, a:visited {
-    color: blue; /* Blue links in light mode */
-}
+    /* Default light mode settings */
+    :root {
+        --bg-color: #ffffff;
+        --txt-color: #000000;
+        --link-color: blue; /* Blue links in light mode */
+        --link-hover-color: darkblue; /* Darker blue on hover in light mode */
+    }
 
-a:hover {
-    color: darkblue; /* Darker blue on hover in light mode */
-}
+    /* Dark mode settings */
+    [data-theme="dark"] {
+        --bg-color: #000000;
+        --txt-color: #ffffff;
+        --link-color: #00ff00; /* Green links in dark mode */
+        --link-hover-color: #00cc00; /* Slightly darker green on hover in dark mode */
+    }
 
-a:active {
-    color: blue; /* Blue when clicked in light mode */
-}
+    /* Apply the variables to the body */
+    body {
+        background-color: var(--bg-color);
+        color: var(--txt-color);
+    }
 
-/* Styles for dark mode */
-@media (prefers-color-scheme: dark) {
+    /* Link styling */
     a:link, a:visited {
-        color: #00ff00; /* Green links in dark mode */
+        color: var(--link-color); /* Link color based on theme */
     }
 
     a:hover {
-        color: #00cc00; /* Slightly darker green on hover in dark mode */
+        color: var(--link-hover-color); /* Hover color based on theme */
     }
 
     a:active {
-        color: #00ff00; /* Green when clicked in dark mode */
+        color: var(--link-color); /* Active link color based on theme */
     }
-}
 </style>
     
 </head>
