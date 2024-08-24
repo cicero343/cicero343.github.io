@@ -24,7 +24,7 @@ date: 2024-08-23
         --link-color-light: blue; /* Blue links in light mode */
         --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
         --button-bg-light: #000000; /* Black background for button in light mode */
-        --button-text-light: #ffffff; /* White text for button in light mode */
+        --button-text: #00ff00; /* Green text color for button in both modes */
         --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
     }
 
@@ -35,7 +35,6 @@ date: 2024-08-23
         --link-color-dark: #00ff00; /* Green links in dark mode */
         --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
         --button-bg-dark: #000000; /* Black background for button in dark mode */
-        --button-text-dark: #ffffff; /* White text for button in dark mode */
         --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
     }
 
@@ -79,7 +78,7 @@ date: 2024-08-23
         bottom: 20px; /* Distance from the bottom */
         right: 20px;  /* Distance from the right */
         background-color: var(--button-bg-light); /* Background color for button in light mode */
-        color: var(--button-text-light); /* Text color for button in light mode */
+        color: var(--button-text); /* Green text color for button in both modes */
         padding: 10px 15px; /* Padding for the button */
         border-radius: 5px; /* Rounded corners */
         text-decoration: none; /* Remove underline */
@@ -96,7 +95,7 @@ date: 2024-08-23
     /* Dark mode specific styles for the Back to Top button */
     [data-theme="dark"] .back-to-top {
         background-color: var(--button-bg-dark); /* Background color for button in dark mode */
-        color: var(--button-text-dark); /* Text color for button in dark mode */
+        color: var(--button-text); /* Green text color for button in dark mode */
     }
 
     [data-theme="dark"] .back-to-top:hover {
