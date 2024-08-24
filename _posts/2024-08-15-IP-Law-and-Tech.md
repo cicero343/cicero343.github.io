@@ -164,9 +164,6 @@ date: 2024-08-15
 </body>
 </html>
 
-<!-- Anchor for Back to Top Button -->
-<a id="top"></a>
-
 <br>
 
 “One of the constant themes in the history of British copyright law is that it has been influenced by foreign and international trends and developments”<a href="#ref1" id="back1" class="reference"> [1]</a> 
@@ -370,10 +367,7 @@ But, if information has been obtained by illegitimate means, it will be protecte
 
 **Easyjet Airline Co. v. Dainty**<a href="#ref58" id="back58" class="reference"> [58]</a> 
 
-- Court may order transfer of domain name if you are found to be passing off a domain name. 
-
-<!-- Back to Top Button -->
-<a href="#top" class="back-to-top" id="back-to-top">Back to Top</a>
+- Court may order transfer of domain name if you are found to be passing off a domain name.
 
 <br>
 
