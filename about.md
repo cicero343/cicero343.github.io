@@ -18,33 +18,51 @@ permalink: /about/
 <style>
     /* Default light mode settings */
     :root {
-        --bg-image-light: url('https://png.pngtree.com/background/20220726/original/pngtree-digital-stream-or-binary-code-data-on-matrix-background-picture-image_1821715.jpg'); /* Light mode background image */
-        --bg-filter-light: brightness(1.2) contrast(1.2); /* Adjust brightness and contrast for better visibility in light mode */
-        --txt-color-light: #000000; /* Text color in light mode */
+        --bg-color: #ffffff;
+        --txt-color: #000000;
+        --link-color-light: blue; /* Blue links in light mode */
+        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+        --link-color-dark: #00ff00; /* Green links in dark mode */
+        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
     }
 
     /* Dark mode settings */
     [data-theme="dark"] {
-        --bg-image-dark: url('https://png.pngtree.com/background/20220726/original/pngtree-digital-stream-or-binary-code-data-on-matrix-background-picture-image_1821715.jpg'); /* Dark mode background image */
-        --bg-filter-dark: none; /* No filter for dark mode, use original image */
-        --txt-color-dark: #ffffff; /* Text color in dark mode */
+        --bg-color: #000000;
+        --txt-color: #ffffff;
+        /* Link colors are handled by the variables above */
     }
 
     /* Apply the variables to the body */
     body {
-        background-image: var(--bg-image-light); /* Default background image */
-        background-size: cover; /* Ensure the image covers the entire background */
-        background-repeat: no-repeat; /* Prevent image repetition */
-        background-position: center; /* Center the image */
-        color: var(--txt-color-light); /* Default text color */
-        filter: var(--bg-filter-light); /* Apply light mode filter */
+        background-color: var(--bg-color);
+        color: var(--txt-color);
+    }
+
+    /* Link styling */
+    a:link, a:visited {
+        color: var(--link-color-light); /* Default blue for light mode links */
+    }
+
+    a:hover {
+        color: var(--link-hover-color-light); /* Hover color in light mode */
+    }
+
+    a:active {
+        color: var(--link-color-light); /* Active link color in light mode */
     }
 
     /* Dark mode overrides */
-    [data-theme="dark"] body {
-        background-image: var(--bg-image-dark); /* Dark mode background image */
-        filter: var(--bg-filter-dark); /* Apply dark mode filter */
-        color: var(--txt-color-dark); /* Dark mode text color */
+    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
+        color: var(--link-color-dark); /* Green links in dark mode */
+    }
+
+    [data-theme="dark"] a:hover {
+        color: var(--link-hover-color-dark); /* Hover color in dark mode */
+    }
+
+    [data-theme="dark"] a:active {
+        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
 </style>
 
