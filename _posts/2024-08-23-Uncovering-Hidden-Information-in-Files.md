@@ -94,7 +94,7 @@ The strings command can be used to extract any printable strings in the binary f
 
 ![image](https://github.com/user-attachments/assets/afc4e48f-2a2f-4b5d-9027-a7ce874119a2)
 
-<h4>hexedit</h4>
+<h3>hexedit</h3>
 
 hexedit is a hex editor that allows you to view and edit the raw binary data of files. It's useful for tasks like modifying file headers, performing manual patching, or inspecting binary content.
 
@@ -113,7 +113,7 @@ In the images below you can see that we've changed the hex code for this .png fi
 <h2 id="binary-analysis">Binary Analysis & Reverse Engineering</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
-<h4>binwalk</h4>
+<h3>binwalk</h3>
 
 binwalk is a tool for analysing binary files to detect embedded files, firmware, and other data. It’s commonly used in reverse engineering to extract data from binary files.
 
@@ -123,19 +123,19 @@ binwalk is a tool for analysing binary files to detect embedded files, firmware,
 ![image](https://github.com/user-attachments/assets/509ae5f3-2e50-4f05-9fea-1485ca9bebdb)
 
 
-<h4>readelf</h4>
+<h3>readelf</h3>
 
 The readelf command is a tool that displays information about ELF files. It can show you headers, sections, symbols, and more.
 
 ![image](https://github.com/user-attachments/assets/22819f69-dda2-46b8-9838-d9c53b197fef)
 
-<h4>radare2</h4>
+<h3>radare2</h3>
 
 radare2 is a powerful open-source framework for reverse engineering and analysing binaries. It includes a wide range of tools for disassembling, debugging, and decompilation.
 
 ![1_325iRMMQV2gupfGta-J7bQ](https://github.com/user-attachments/assets/0c2687a2-1cd2-404e-91a8-e6775c99f21a)
 
-<h4>Ghidra</h4>
+<h3>Ghidra</h3>
 
 Ghidra is a powerful reverse engineering tool developed by the NSA. It disassembles and decompiles binary code, allowing users to analyse programs for hidden functionality, malware, or vulnerabilities.
 
@@ -146,7 +146,7 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 <h2 id="debugging">Debugging Tools</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
-<h4>GDB (GNU Debugger)</h4>
+<h3>GDB (GNU Debugger)</h3>
 
 GDB is a debugger for programs written in languages like C, C++, and more compiled binaries. Allows for real-time inspection (interactive) and control over program execution in order to find bugs and hidden behaviour.
 
@@ -157,19 +157,19 @@ GDB is a debugger for programs written in languages like C, C++, and more compil
 <h2 id="system-tracing">System Tracing & Monitoring</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
-<h4>lsof (List Open Files)</h4>
+<h3>lsof (List Open Files)</h3>
 
 lsof lists information about files opened by processes. This can be useful for tracking which files a program is using or analysing potential malware that might be interacting with the file system.
 
 ![image](https://github.com/user-attachments/assets/70414805-bed7-4d3b-93aa-599be459153b)
 
-<h4>ltrace</h4>
+<h3>ltrace</h3>
 
 ltrace helps you track library function calls made by programs.
 
 ![image](https://github.com/user-attachments/assets/8c5ca7fc-9877-48a1-a72c-e18bfa4c0b43)
 
-<h4>strace</h4>
+<h3>strace</h3>
 
 strace helps you monitor system calls and signals received by programs.
 
@@ -180,13 +180,13 @@ strace helps you monitor system calls and signals received by programs.
 <h2 id="steganography">Steganography</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
-<h4>exiftool</h4>
+<h3>exiftool</h3>
 
 exiftool is a powerful tool used to read, write, and manipulate metadata in a wide variety of file formats, including images, videos, audio files, and documents. It’s commonly used to view or edit EXIF data in images, which includes details like camera settings, timestamps, and GPS coordinates.
 
 ![image](https://github.com/user-attachments/assets/b94fe8c5-53e6-45a6-8e3d-7b7de2c337af)
 
-<h4>steghide</h4>
+<h3>steghide</h3>
 
 steghide is a steganography tool that allows you to embed (hide) and extract data within image or audio files. The tool supports various file formats and can also encrypt the embedded data. It’s often used in security and forensics to conceal or detect hidden information within multimedia files.
 
@@ -197,13 +197,13 @@ steghide is a steganography tool that allows you to embed (hide) and extract dat
 <h2 id="notable-mentions">Notable Mentions: File Carving & Digital Forensics</h2>
 <a href="#glossary" class="back-to-glossary">Back to Glossary</a>
 
-<h4>Foremost</h4>
+<h3>Foremost</h3>
 
 foremost is a console program to recover files based on their headers, footers, and internal data structures. It can be used for extracting hidden files from disk images or memory dumps, where the file system might be corrupted or missing.
 
 ![index 19](https://github.com/user-attachments/assets/b1ee69fd-b8cd-49f2-8d76-1f01f81f0c04)
 
-<h4>Autopsy</h4>
+<h3>Autopsy</h3>
 
 Autopsy is a comprehensive digital forensics platform used to analyse hard drives, smartphones, and other data sources. It features file carving, metadata extraction, timeline analysis, keyword searching, and more. Investigators use it to recover deleted files, analyse disk images, and uncover hidden or obscured data.
 
