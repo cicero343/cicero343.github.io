@@ -18,51 +18,43 @@ permalink: /about/
 <style>
     /* Default light mode settings */
     :root {
-        --bg-color: #ffffff;
-        --txt-color: #000000;
-        --link-color-light: blue; /* Blue links in light mode */
-        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
-        --link-color-dark: #00ff00; /* Green links in dark mode */
-        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+        --bg-color-light: linear-gradient(45deg, #ffffff, #eeeeee); /* Faded white gradient for light mode */
+        --bg-pattern-light: repeating-linear-gradient(
+            0deg,
+            #000000 0,
+            #000000 1px,
+            transparent 1px,
+            transparent 5px
+        ); /* Binary-like pattern for light mode */
+        --txt-color-light: #000000; /* Text color in light mode */
     }
 
     /* Dark mode settings */
     [data-theme="dark"] {
-        --bg-color: #000000;
-        --txt-color: #ffffff;
-        /* Link colors are handled by the variables above */
+        --bg-color-dark: linear-gradient(45deg, #000000, #333333); /* Faded black gradient for dark mode */
+        --bg-pattern-dark: repeating-linear-gradient(
+            0deg,
+            #00ff00 0,
+            #00ff00 1px,
+            transparent 1px,
+            transparent 5px
+        ); /* Binary-like pattern for dark mode */
+        --txt-color-dark: #ffffff; /* Text color in dark mode */
     }
 
     /* Apply the variables to the body */
     body {
-        background-color: var(--bg-color);
-        color: var(--txt-color);
-    }
-
-    /* Link styling */
-    a:link, a:visited {
-        color: var(--link-color-light); /* Default blue for light mode links */
-    }
-
-    a:hover {
-        color: var(--link-hover-color-light); /* Hover color in light mode */
-    }
-
-    a:active {
-        color: var(--link-color-light); /* Active link color in light mode */
+        background-color: var(--bg-color-light); /* Default background color */
+        color: var(--txt-color-light); /* Default text color */
+        background-image: var(--bg-pattern-light); /* Default background pattern */
+        background-size: 100% 100%, 20px 20px; /* Pattern size */
     }
 
     /* Dark mode overrides */
-    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-        color: var(--link-color-dark); /* Green links in dark mode */
-    }
-
-    [data-theme="dark"] a:hover {
-        color: var(--link-hover-color-dark); /* Hover color in dark mode */
-    }
-
-    [data-theme="dark"] a:active {
-        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+    [data-theme="dark"] body {
+        background-color: var(--bg-color-dark); /* Dark mode background color */
+        color: var(--txt-color-dark); /* Dark mode text color */
+        background-image: var(--bg-pattern-dark); /* Dark mode background pattern */
     }
 </style>
 
