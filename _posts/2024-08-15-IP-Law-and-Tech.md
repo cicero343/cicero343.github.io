@@ -34,6 +34,29 @@ date: 2024-08-15
             color: var(--txt-color);
         }
     </style>
+
+<style>
+    /* Style for the Back to Top button */
+    .back-to-top {
+        position: fixed;
+        bottom: 20px; /* Distance from the bottom */
+        right: 20px;  /* Distance from the right */
+        background-color: #000000; /* Background color */
+        color: #ffffff; /* Text color */
+        padding: 10px 15px; /* Padding for the button */
+        border-radius: 5px; /* Rounded corners */
+        text-decoration: none; /* Remove underline */
+        font-size: 16px; /* Font size */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
+        transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    }
+
+    .back-to-top:hover {
+        background-color: #333333; /* Darker background on hover */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5); /* Darker shadow on hover */
+    }
+</style>
+    
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
@@ -57,6 +80,9 @@ date: 2024-08-15
     </script>
 </body>
 </html>
+
+<!-- Anchor for Back to Top Button -->
+<a id="top"></a>
 
 <br>
 
@@ -262,6 +288,9 @@ But, if information has been obtained by illegitimate means, it will be protecte
 **Easyjet Airline Co. v. Dainty**<a href="#ref58" id="back58" class="reference"> [58]</a> 
 
 - Court may order transfer of domain name if you are found to be passing off a domain name. 
+
+<!-- Back to Top Button -->
+<a href="#top" class="back-to-top" id="back-to-top">Back to Top</a>
 
 <br>
 
