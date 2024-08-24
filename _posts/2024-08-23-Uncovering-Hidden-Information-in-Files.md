@@ -21,7 +21,7 @@ date: 2024-08-23
     :root {
         --bg-color: #ffffff;
         --txt-color: #000000;
-        --link-color: blue; /* Blue links in light mode */
+        --link-color: initial; /* Use browser default color for links in light mode */
         --link-hover-color: darkblue; /* Darker blue on hover in light mode */
     }
 
