@@ -85,7 +85,7 @@ My experience (thus far) is that quite a few of these tools are not that difficu
 
 I'm by no means an expert in these areas; so, perhaps I will update this post as time goes on!
 
-<h2 id="table-of-content" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Table of Content</h2>
+<h2 id="content" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Content</h2>
 <ul>
     <li><a href="#file-analysis">File Analysis</a></li>
     <li><a href="#binary-analysis">Binary Analysis & Reverse Engineering</a></li>
@@ -99,7 +99,7 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
 <br>
 
 <h2 id="file-analysis" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">File Analysis</h2>
-<a href="#glossary" class="back-to-glossary">Back to Glossary</a>
+<a href="#content" class="back-to-content">Back to Content</a>
 
 <h3>file</h3>
 
@@ -130,7 +130,7 @@ In the images below you can see that we've changed the hex code for this .png fi
 <br>
 
 <h2 id="binary-analysis" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Binary Analysis & Reverse Engineering</h2>
-<a href="#glossary" class="back-to-glossary">Back to Glossary</a>
+<a href="#content" class="back-to-content">Back to Content</a>
 
 <h3>binwalk</h3>
 
@@ -163,7 +163,7 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 <br>
 
 <h2 id="debugging" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Debugging Tools</h2>
-<a href="#glossary" class="back-to-glossary">Back to Glossary</a>
+<a href="#content" class="back-to-content">Back to Content</a>
 
 <h3>GDB (GNU Debugger)</h3>
 
@@ -174,7 +174,7 @@ GDB is a debugger for programs written in languages like C, C++, and more compil
 <br>
 
 <h2 id="system-tracing" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">System Tracing & Monitoring</h2>
-<a href="#glossary" class="back-to-glossary">Back to Glossary</a>
+<a href="#content" class="back-to-content">Back to Content</a>
 
 <h3>lsof (List Open Files)</h3>
 
@@ -198,7 +198,7 @@ strace helps you monitor system calls and signals received by programs.
 
 
 <h2 id="steganography" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Steganography</h2>
-<a href="#glossary" class="back-to-glossary">Back to Glossary</a>
+<a href="#content" class="back-to-content">Back to Content</a>
 
 <h3>exiftool</h3>
 
@@ -215,7 +215,7 @@ steghide is a steganography tool that allows you to embed (hide) and extract dat
 <br> 
 
 <h2 id="notable-mentions" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Notable Mentions: File Carving & Digital Forensics</h2>
-<a href="#glossary" class="back-to-glossary">Back to Glossary</a>
+<a href="#content" class="back-to-content">Back to Content</a>
 
 <h3>Foremost</h3>
 
