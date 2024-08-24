@@ -16,6 +16,9 @@ date: 2024-08-07
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
     
+<!-- Add Font Awesome for the up arrow icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 <style>
     /* Default light mode settings */
     :root {
@@ -24,7 +27,7 @@ date: 2024-08-07
         --link-color-light: blue; /* Blue links in light mode */
         --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
         --button-bg-light: #000000; /* Black background for button in light mode */
-        --button-text: #00ff00; /* Green text color for button in both modes */
+        --button-text-light: #ffffff; /* White text color for button in light mode */
         --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
     }
 
@@ -35,6 +38,7 @@ date: 2024-08-07
         --link-color-dark: #00ff00; /* Green links in dark mode */
         --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
         --button-bg-dark: #000000; /* Black background for button in dark mode */
+        --button-text-dark: #00ff00; /* Green text color for button in dark mode */
         --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
     }
 
@@ -72,36 +76,69 @@ date: 2024-08-07
         color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
 
-    /* Style for the Back to Top button */
+    /* Circular Back to Top Button */
     .back-to-top {
         position: fixed;
-        bottom: 20px; /* Distance from the bottom */
-        right: 20px;  /* Distance from the right */
-        background-color: var(--button-bg-light); /* Background color for button in light mode */
-        color: var(--button-text); /* Green text color for button in both modes */
-        padding: 10px 15px; /* Padding for the button */
-        border-radius: 5px; /* Rounded corners */
-        text-decoration: none; /* Remove underline */
-        font-size: 16px; /* Font size */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
-        transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--button-bg-light); /* Light mode background */
+        color: var(--button-text-light); /* Light mode icon color */
+        border: none;
+        border-radius: 50%; /* Makes the button circular */
+        width: 50px; /* Diameter of the circle */
+        height: 50px; /* Diameter of the circle */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px; /* Icon size */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow effect */
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        display: none; /* Initially hidden */
     }
 
     .back-to-top:hover {
-        background-color: var(--button-bg-hover-light); /* Darker background on hover in light mode */
-        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5); /* Darker shadow on hover */
+        background-color: var(--button-bg-hover-light); /* Darker background on hover */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
     }
 
-    /* Dark mode specific styles for the Back to Top button */
+    /* Dark mode overrides for the Back to Top button */
     [data-theme="dark"] .back-to-top {
-        background-color: var(--button-bg-dark); /* Background color for button in dark mode */
-        color: var(--button-text); /* Green text color for button in dark mode */
+        background-color: var(--button-bg-dark); /* Dark mode background */
+        color: var(--button-text-dark); /* Dark mode icon color */
     }
 
     [data-theme="dark"] .back-to-top:hover {
         background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
     }
 </style>
+
+<!-- Back to Top Button -->
+<button onclick="topFunction()" class="back-to-top" title="Go to top">
+    <i class="fas fa-chevron-up"></i> <!-- Font Awesome Up Arrow Icon -->
+</button>
+
+<script>
+    // Get the button
+    let myBtn = document.querySelector('.back-to-top');
+
+    // Show the button when the user scrolls down 20px
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            myBtn.style.display = "flex"; /* Show the button */
+        } else {
+            myBtn.style.display = "none"; /* Hide the button */
+        }
+    }
+
+    // Scroll to the top when the button is clicked
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
     
 </head>
 <body>
@@ -126,9 +163,6 @@ date: 2024-08-07
     </script>
 </body>
 </html>
-
-<!-- Anchor for Back to Top Button -->
-<a id="top"></a>
 
 <br>
 
@@ -391,6 +425,3 @@ You'll see in the image above that both the .so file and the executable 'callmes
 <br>
 
 ELF format is used for both types of files in Unix-like systems, but the 'callmessage' file is a standalone program that can be run by the OS.
-
-<!-- Back to Top Button -->
-<a href="#top" class="back-to-top" id="back-to-top">Back to Top</a>
