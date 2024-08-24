@@ -21,7 +21,6 @@ date: 2024-08-23
     :root {
         --bg-color: #ffffff;
         --txt-color: #000000;
-        --link-color: initial; /* Use browser default color for links in light mode */
         --link-hover-color: darkblue; /* Darker blue on hover in light mode */
     }
 
@@ -41,7 +40,7 @@ date: 2024-08-23
 
     /* Link styling */
     a:link, a:visited {
-        color: var(--link-color); /* Link color based on theme */
+        color: inherit; /* Use inherited color (which defaults to the browser default color in light mode) */
     }
 
     a:hover {
@@ -49,7 +48,7 @@ date: 2024-08-23
     }
 
     a:active {
-        color: var(--link-color); /* Active link color based on theme */
+        color: inherit; /* Maintain default color when clicked */
     }
 </style>
     
