@@ -21,7 +21,7 @@ date: 2024-08-23
     :root {
         --bg-color: #ffffff;
         --txt-color: #000000;
-        --link-color-light: blue; /* Explicitly set blue for light mode links */
+        --link-color-light: blue; /* Blue links in light mode */
         --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
         --button-bg-light: #000000; /* Black background for button in light mode */
         --button-text-light: #ffffff; /* White text for button in light mode */
