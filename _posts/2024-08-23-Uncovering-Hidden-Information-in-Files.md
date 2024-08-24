@@ -67,6 +67,28 @@ date: 2024-08-23
         color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
 </style>
+
+<style>
+    /* Style for the Back to Top button */
+    .back-to-top {
+        position: fixed;
+        bottom: 20px; /* Distance from the bottom */
+        right: 20px;  /* Distance from the right */
+        background-color: #000000; /* Background color */
+        color: #ffffff; /* Text color */
+        padding: 10px 15px; /* Padding for the button */
+        border-radius: 5px; /* Rounded corners */
+        text-decoration: none; /* Remove underline */
+        font-size: 16px; /* Font size */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow for 3D effect */
+        transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    }
+
+    .back-to-top:hover {
+        background-color: #333333; /* Darker background on hover */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5); /* Darker shadow on hover */
+    }
+</style>
     
 </head>
 <body>
@@ -91,6 +113,9 @@ date: 2024-08-23
     </script>
 </body>
 </html>
+
+<!-- Anchor for Back to Top Button -->
+<a id="top"></a>
 
 <br>
 
@@ -249,3 +274,8 @@ Autopsy is a comprehensive digital forensics platform used to analyse hard drive
 EnCase is a digital forensics tool primarily used for forensic investigation, data recovery, and analysis of digital devices and storage media.
 
 ![1271757361_encase](https://github.com/user-attachments/assets/50919e3a-374f-4b60-acbc-21698d4a44d0)
+
+<br>
+
+<!-- Back to Top Button -->
+<a href="#top" class="back-to-top" id="back-to-top">Back to Top</a>
