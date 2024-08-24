@@ -166,9 +166,6 @@ date: 2024-08-23
 
 <br>
 
-<!-- Anchor for Back to Top Button -->
-<a id="top"></a>
-
 There are various tools that one can use to find hidden information in files (e.g. a text document hidden within an image file). These can be invaluable in Digital Forensics and Incident Response (DFIR) scenarios.
 
 My experience (thus far) is that quite a few of these tools are not that difficult to use, so I'll be outlining some of them in this post.
@@ -324,8 +321,3 @@ Autopsy is a comprehensive digital forensics platform used to analyse hard drive
 EnCase is a digital forensics tool primarily used for forensic investigation, data recovery, and analysis of digital devices and storage media.
 
 ![1271757361_encase](https://github.com/user-attachments/assets/50919e3a-374f-4b60-acbc-21698d4a44d0)
-
-<br>
-
-<!-- Back to Top Button -->
-<a href="#top" class="back-to-top" id="back-to-top">Back to Top</a>
