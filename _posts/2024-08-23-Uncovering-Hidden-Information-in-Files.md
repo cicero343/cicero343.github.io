@@ -34,6 +34,17 @@ date: 2024-08-23
             color: var(--txt-color);
         }
     </style>
+    
+<style>
+a {
+    color: #00ff00; /* Green text color */
+}
+
+a:hover {
+    color: #00cc00; /* Slightly darker green on hover */
+}
+</style>
+    
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
