@@ -15,34 +15,70 @@ date: 2024-08-07
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
-    <style>
-        /* Default light mode settings */
-        :root {
-            --bg-color: #ffffff;
-            --txt-color: #000000;
-        }
-
-        /* Dark mode settings */
-        [data-theme="dark"] {
-            --bg-color: #000000;
-            --txt-color: #ffffff;
-        }
-
-        /* Apply the variables to the body */
-        body {
-            background-color: var(--bg-color);
-            color: var(--txt-color);
-        }
-    </style>
-
+    
 <style>
+    /* Default light mode settings */
+    :root {
+        --bg-color: #ffffff;
+        --txt-color: #000000;
+        --link-color-light: blue; /* Blue links in light mode */
+        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+        --button-bg-light: #000000; /* Black background for button in light mode */
+        --button-text: #00ff00; /* Green text color for button in both modes */
+        --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
+    }
+
+    /* Dark mode settings */
+    [data-theme="dark"] {
+        --bg-color: #000000;
+        --txt-color: #ffffff;
+        --link-color-dark: #00ff00; /* Green links in dark mode */
+        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+        --button-bg-dark: #000000; /* Black background for button in dark mode */
+        --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
+    }
+
+    /* Apply the variables to the body */
+    body {
+        background-color: var(--bg-color);
+        color: var(--txt-color);
+    }
+
+    /* Link styling */
+    a:link, a:visited {
+        color: var(--link-color-light); /* Use default blue color for light mode */
+    }
+
+    /* Dark mode overrides */
+    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
+        color: var(--link-color-dark); /* Use green color for dark mode */
+    }
+
+    a:hover {
+        color: var(--link-hover-color-light); /* Hover color in light mode */
+    }
+
+    /* Dark mode hover overrides */
+    [data-theme="dark"] a:hover {
+        color: var(--link-hover-color-dark); /* Hover color in dark mode */
+    }
+
+    a:active {
+        color: inherit; /* Maintain inherited color when clicked */
+    }
+
+    /* Dark mode active overrides */
+    [data-theme="dark"] a:active {
+        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+    }
+
     /* Style for the Back to Top button */
     .back-to-top {
         position: fixed;
         bottom: 20px; /* Distance from the bottom */
         right: 20px;  /* Distance from the right */
-        background-color: #000000; /* Background color */
-        color: #ffffff; /* Text color */
+        background-color: var(--button-bg-light); /* Background color for button in light mode */
+        color: var(--button-text); /* Green text color for button in both modes */
         padding: 10px 15px; /* Padding for the button */
         border-radius: 5px; /* Rounded corners */
         text-decoration: none; /* Remove underline */
@@ -52,8 +88,18 @@ date: 2024-08-07
     }
 
     .back-to-top:hover {
-        background-color: #333333; /* Darker background on hover */
+        background-color: var(--button-bg-hover-light); /* Darker background on hover in light mode */
         box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5); /* Darker shadow on hover */
+    }
+
+    /* Dark mode specific styles for the Back to Top button */
+    [data-theme="dark"] .back-to-top {
+        background-color: var(--button-bg-dark); /* Background color for button in dark mode */
+        color: var(--button-text); /* Green text color for button in dark mode */
+    }
+
+    [data-theme="dark"] .back-to-top:hover {
+        background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
     }
 </style>
     
