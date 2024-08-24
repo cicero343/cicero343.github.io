@@ -74,8 +74,8 @@ date: 2024-08-23
         position: fixed;
         bottom: 20px; /* Distance from the bottom */
         right: 20px;  /* Distance from the right */
-        background-color: #000000; /* Background color */
-        color: #ffffff; /* Text color */
+        background-color: #000000; /* Black background color */
+        color: #ffffff; /* White text color */
         padding: 10px 15px; /* Padding for the button */
         border-radius: 5px; /* Rounded corners */
         text-decoration: none; /* Remove underline */
