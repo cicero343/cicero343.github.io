@@ -248,12 +248,17 @@ I wanted to create a basic example to help me understand how they work, so here'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal-like Text Box</title>
+    <title>Terminal-like Text Box with Copy Function</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
+        .terminal-container {
+            position: relative; /* For positioning the copy button */
+        }
+
         .terminal {
             background-color: #000; /* Black background for terminal look */
             color: #0f0; /* Green text color */
@@ -266,10 +271,55 @@ I wanted to create a basic example to help me understand how they work, so here'
             width: 100%; /* Make the terminal box full-width */
             box-sizing: border-box; /* Include padding in width calculation */
         }
+
+        /* Copy button styling */
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #333; /* Dark background */
+            color: #fff; /* White text */
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .copy-button:hover {
+            background-color: #555; /* Lighter background on hover */
+        }
     </style>
 </head>
 <body>
-    <div class="terminal">gcc -fPIC -shared -o libmessage.so message.c</div>
+
+    <div class="terminal-container">
+        <div class="terminal" id="code-block">gcc -fPIC -shared -o libmessage.so message.c</div>
+        <button class="copy-button">Copy</button>
+    </div>
+
+    <script>
+        // JavaScript for copying the code
+        document.querySelector(".copy-button").addEventListener("click", function() {
+            // Get the text from the terminal block
+            const codeText = document.getElementById("code-block").innerText.trim();
+
+            // Copy the text to clipboard
+            navigator.clipboard.writeText(codeText).then(function() {
+                // Change button text to "Copied!" after successful copy
+                const button = document.querySelector(".copy-button");
+                button.innerText = "Copied!";
+                
+                // Revert button text after 2 seconds
+                setTimeout(function() {
+                    button.innerText = "Copy";
+                }, 2000);
+            }, function(err) {
+                console.error('Failed to copy text: ', err);
+            });
+        });
+    </script>
+
 </body>
 </html>
 
