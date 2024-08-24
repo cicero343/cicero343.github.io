@@ -18,43 +18,33 @@ permalink: /about/
 <style>
     /* Default light mode settings */
     :root {
-        --bg-color-light: linear-gradient(45deg, #ffffff, #eeeeee); /* Faded white gradient for light mode */
-        --bg-pattern-light: repeating-linear-gradient(
-            0deg,
-            #000000 0,
-            #000000 1px,
-            transparent 1px,
-            transparent 5px
-        ); /* Binary-like pattern for light mode */
+        --bg-image-light: url('https://png.pngtree.com/background/20220726/original/pngtree-digital-stream-or-binary-code-data-on-matrix-background-picture-image_1821715.jpg'); /* Light mode background image */
+        --bg-filter-light: brightness(1.2) contrast(1.2); /* Adjust brightness and contrast for better visibility in light mode */
         --txt-color-light: #000000; /* Text color in light mode */
     }
 
     /* Dark mode settings */
     [data-theme="dark"] {
-        --bg-color-dark: linear-gradient(45deg, #000000, #333333); /* Faded black gradient for dark mode */
-        --bg-pattern-dark: repeating-linear-gradient(
-            0deg,
-            #00ff00 0,
-            #00ff00 1px,
-            transparent 1px,
-            transparent 5px
-        ); /* Binary-like pattern for dark mode */
+        --bg-image-dark: url('https://png.pngtree.com/background/20220726/original/pngtree-digital-stream-or-binary-code-data-on-matrix-background-picture-image_1821715.jpg'); /* Dark mode background image */
+        --bg-filter-dark: none; /* No filter for dark mode, use original image */
         --txt-color-dark: #ffffff; /* Text color in dark mode */
     }
 
     /* Apply the variables to the body */
     body {
-        background-color: var(--bg-color-light); /* Default background color */
+        background-image: var(--bg-image-light); /* Default background image */
+        background-size: cover; /* Ensure the image covers the entire background */
+        background-repeat: no-repeat; /* Prevent image repetition */
+        background-position: center; /* Center the image */
         color: var(--txt-color-light); /* Default text color */
-        background-image: var(--bg-pattern-light); /* Default background pattern */
-        background-size: 100% 100%, 20px 20px; /* Pattern size */
+        filter: var(--bg-filter-light); /* Apply light mode filter */
     }
 
     /* Dark mode overrides */
     [data-theme="dark"] body {
-        background-color: var(--bg-color-dark); /* Dark mode background color */
+        background-image: var(--bg-image-dark); /* Dark mode background image */
+        filter: var(--bg-filter-dark); /* Apply dark mode filter */
         color: var(--txt-color-dark); /* Dark mode text color */
-        background-image: var(--bg-pattern-dark); /* Dark mode background pattern */
     }
 </style>
 
