@@ -98,10 +98,10 @@ I'm by no means an expert in these areas; so, perhaps I will update this post as
 
 <br>
 
-<h2 id="file-analysis" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">File Analysis</h2>
+<h2 id="file-analysis" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">File Analysis</h2>
 <a href="#content" class="back-to-content">Back to Content</a>
 
-<h3>file</h3>
+<h3 style="text-decoration: underline;">file</h3>
 
 The file command is used to determine the type of a file. This is particularly useful when you need to identify files with ambiguous or missing extensions.
 
