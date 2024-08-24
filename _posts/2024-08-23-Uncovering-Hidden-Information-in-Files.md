@@ -36,20 +36,19 @@ date: 2024-08-23
     </style>
     
 <style>
-a:link {
-    color: #00ff00; /* Green for unvisited links */
-}
-
-a:visited {
-    color: #00ff00; /* Green for visited links */
+a:link, a:visited {
+    color: #00ff00; /* Green for unvisited and visited links */
+    text-shadow: 1px 1px 2px #000000; /* Black shadow around the text */
 }
 
 a:hover {
     color: #00cc00; /* Slightly darker green on hover */
+    text-shadow: 1px 1px 2px #000000; /* Black shadow remains on hover */
 }
 
 a:active {
     color: #00ff00; /* Green when clicked */
+    text-shadow: 1px 1px 2px #000000; /* Black shadow remains when clicked */
 }
 </style>
     
