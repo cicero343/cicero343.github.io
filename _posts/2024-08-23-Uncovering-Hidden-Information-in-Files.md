@@ -36,12 +36,20 @@ date: 2024-08-23
     </style>
     
 <style>
-a {
-    color: #00ff00; /* Green text color */
+a:link {
+    color: #00ff00; /* Green for unvisited links */
+}
+
+a:visited {
+    color: #00ff00; /* Green for visited links */
 }
 
 a:hover {
     color: #00cc00; /* Slightly darker green on hover */
+}
+
+a:active {
+    color: #00ff00; /* Green when clicked */
 }
 </style>
     
@@ -77,7 +85,7 @@ My experience (thus far) is that quite a few of these tools are not that difficu
 
 I'm by no means an expert in these areas; so, perhaps I will update this post as time goes on!
 
-<h2 id="glossary">Glossary</h2>
+<h2 id="table-of-content" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Table of Content</h2>
 <ul>
     <li><a href="#file-analysis">File Analysis</a></li>
     <li><a href="#binary-analysis">Binary Analysis & Reverse Engineering</a></li>
