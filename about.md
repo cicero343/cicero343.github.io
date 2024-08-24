@@ -4,10 +4,15 @@ permalink: /about/
 ---
 
 <head>
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
-  <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
+<link rel="apple-touch-icon" sizes="180x180" href="https://cicero343.github.io/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cicero343.github.io/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cicero343.github.io/assets/favicon-16x16.png">
+<link rel="manifest" href="https://cicero343.github.io/assets/site.webmanifest">
+<link rel="mask-icon" href="https://cicero343.github.io/assets/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="https://cicero343.github.io/assets/favicon.ico">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-config" content="https://cicero343.github.io/assets/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
 </head>
 
 <html lang="en">
