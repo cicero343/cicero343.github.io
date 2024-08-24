@@ -24,28 +24,56 @@ date: 2024-08-23
     :root {
         --bg-color: #ffffff;
         --txt-color: #000000;
-        --link-color-light: blue;
-        --link-hover-color-light: darkblue;
-        --button-bg-light: #000000; /* Black background in light mode */
-        --button-text-light: #ffffff; /* White icon in light mode */
-        --button-bg-hover-light: #333333;
+        --link-color-light: blue; /* Blue links in light mode */
+        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+        --button-bg-light: #000000; /* Black background for button in light mode */
+        --button-text-light: #ffffff; /* White text color for button in light mode */
+        --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
     }
 
     /* Dark mode settings */
     [data-theme="dark"] {
         --bg-color: #000000;
         --txt-color: #ffffff;
-        --link-color-dark: #00ff00;
-        --link-hover-color-dark: #00cc00;
-        --button-bg-dark: #000000;
-        --button-text-dark: #00ff00; /* Green icon in dark mode */
-        --button-bg-hover-dark: #333333;
+        --link-color-dark: #00ff00; /* Green links in dark mode */
+        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+        --button-bg-dark: #000000; /* Black background for button in dark mode */
+        --button-text-dark: #00ff00; /* Green text color for button in dark mode */
+        --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
     }
 
     /* Apply the variables to the body */
     body {
         background-color: var(--bg-color);
         color: var(--txt-color);
+    }
+
+    /* Link styling */
+    a:link, a:visited {
+        color: var(--link-color-light); /* Use default blue color for light mode */
+    }
+
+    /* Dark mode overrides */
+    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
+        color: var(--link-color-dark); /* Use green color for dark mode */
+    }
+
+    a:hover {
+        color: var(--link-hover-color-light); /* Hover color in light mode */
+    }
+
+    /* Dark mode hover overrides */
+    [data-theme="dark"] a:hover {
+        color: var(--link-hover-color-dark); /* Hover color in dark mode */
+    }
+
+    a:active {
+        color: inherit; /* Maintain inherited color when clicked */
+    }
+
+    /* Dark mode active overrides */
+    [data-theme="dark"] a:active {
+        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
 
     /* Circular Back to Top Button */
@@ -74,14 +102,14 @@ date: 2024-08-23
         box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
     }
 
-    /* Dark mode overrides */
+    /* Dark mode overrides for the Back to Top button */
     [data-theme="dark"] .back-to-top {
         background-color: var(--button-bg-dark); /* Dark mode background */
         color: var(--button-text-dark); /* Dark mode icon color */
     }
 
     [data-theme="dark"] .back-to-top:hover {
-        background-color: var(--button-bg-hover-dark);
+        background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
     }
 </style>
 
