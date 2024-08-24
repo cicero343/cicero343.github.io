@@ -85,7 +85,7 @@ My experience (thus far) is that quite a few of these tools are not that difficu
 
 I'm by no means an expert in these areas; so, perhaps I will update this post as time goes on!
 
-<h2 id="content" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Content</h2>
+<h2 id="content" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Content</h2>
 <ul>
     <li><a href="#file-analysis">File Analysis</a></li>
     <li><a href="#binary-analysis">Binary Analysis & Reverse Engineering</a></li>
@@ -107,13 +107,13 @@ The file command is used to determine the type of a file. This is particularly u
 
 ![image](https://github.com/user-attachments/assets/480df8d5-b27d-4d87-a3bb-ea4684ad2725)
 
-<h3>strings</h3>
+<h3 style="text-decoration: underline;">strings</h3>
 
 The strings command can be used to extract any printable strings in the binary file. This can be useful to see some text data, function names, or other strings embedded in the binary.
 
 ![image](https://github.com/user-attachments/assets/afc4e48f-2a2f-4b5d-9027-a7ce874119a2)
 
-<h3>hexedit</h3>
+<h3 style="text-decoration: underline;">hexedit</h3>
 
 hexedit is a hex editor that allows you to view and edit the raw binary data of files. It's useful for tasks like modifying file headers, performing manual patching, or inspecting binary content.
 
@@ -129,10 +129,10 @@ In the images below you can see that we've changed the hex code for this .png fi
 
 <br>
 
-<h2 id="binary-analysis" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Binary Analysis & Reverse Engineering</h2>
+<h2 id="binary-analysis" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Binary Analysis & Reverse Engineering</h2>
 <a href="#content" class="back-to-content">Back to Content</a>
 
-<h3>binwalk</h3>
+<h3 style="text-decoration: underline;">binwalk</h3>
 
 binwalk is a tool for analysing binary files to detect embedded files, firmware, and other data. It’s commonly used in reverse engineering to extract data from binary files.
 
@@ -142,19 +142,19 @@ binwalk is a tool for analysing binary files to detect embedded files, firmware,
 ![image](https://github.com/user-attachments/assets/509ae5f3-2e50-4f05-9fea-1485ca9bebdb)
 
 
-<h3>readelf</h3>
+<h3 style="text-decoration: underline;">readelf</h3>
 
 The readelf command is a tool that displays information about ELF files. It can show you headers, sections, symbols, and more.
 
 ![image](https://github.com/user-attachments/assets/22819f69-dda2-46b8-9838-d9c53b197fef)
 
-<h3>radare2</h3>
+<h3 style="text-decoration: underline;">radare2</h3>
 
 radare2 is a powerful open-source framework for reverse engineering and analysing binaries. It includes a wide range of tools for disassembling, debugging, and decompilation.
 
 ![1_325iRMMQV2gupfGta-J7bQ](https://github.com/user-attachments/assets/0c2687a2-1cd2-404e-91a8-e6775c99f21a)
 
-<h3>Ghidra</h3>
+<h3 style="text-decoration: underline;">Ghidra</h3>
 
 Ghidra is a powerful reverse engineering tool developed by the NSA. It disassembles and decompiles binary code, allowing users to analyse programs for hidden functionality, malware, or vulnerabilities.
 
@@ -162,10 +162,10 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 
 <br>
 
-<h2 id="debugging" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Debugging Tools</h2>
+<h2 id="debugging" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Debugging Tools</h2>
 <a href="#content" class="back-to-content">Back to Content</a>
 
-<h3>GDB (GNU Debugger)</h3>
+<h3 style="text-decoration: underline;">GDB (GNU Debugger)</h3>
 
 GDB is a debugger for programs written in languages like C, C++, and more compiled binaries. Allows for real-time inspection (interactive) and control over program execution in order to find bugs and hidden behaviour.
 
@@ -173,22 +173,22 @@ GDB is a debugger for programs written in languages like C, C++, and more compil
 
 <br>
 
-<h2 id="system-tracing" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">System Tracing & Monitoring</h2>
+<h2 id="system-tracing" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">System Tracing & Monitoring</h2>
 <a href="#content" class="back-to-content">Back to Content</a>
 
-<h3>lsof (List Open Files)</h3>
+<h3 style="text-decoration: underline;">lsof (List Open Files)</h3>
 
 lsof lists information about files opened by processes. This can be useful for tracking which files a program is using or analysing potential malware that might be interacting with the file system.
 
 ![image](https://github.com/user-attachments/assets/70414805-bed7-4d3b-93aa-599be459153b)
 
-<h3>ltrace</h3>
+<h3 style="text-decoration: underline;">ltrace</h3>
 
 ltrace helps you track library function calls made by programs.
 
 ![image](https://github.com/user-attachments/assets/8c5ca7fc-9877-48a1-a72c-e18bfa4c0b43)
 
-<h3>strace</h3>
+<h3 style="text-decoration: underline;">strace</h3>
 
 strace helps you monitor system calls and signals received by programs.
 
@@ -197,16 +197,16 @@ strace helps you monitor system calls and signals received by programs.
 <br> 
 
 
-<h2 id="steganography" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Steganography</h2>
+<h2 id="steganography" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Steganography</h2>
 <a href="#content" class="back-to-content">Back to Content</a>
 
-<h3>exiftool</h3>
+<h3 style="text-decoration: underline;">exiftool</h3>
 
 exiftool is a powerful tool used to read, write, and manipulate metadata in a wide variety of file formats, including images, videos, audio files, and documents. It’s commonly used to view or edit EXIF data in images, which includes details like camera settings, timestamps, and GPS coordinates.
 
 ![image](https://github.com/user-attachments/assets/b94fe8c5-53e6-45a6-8e3d-7b7de2c337af)
 
-<h3>steghide</h3>
+<h3 style="text-decoration: underline;">steghide</h3>
 
 steghide is a steganography tool that allows you to embed (hide) and extract data within image or audio files. The tool supports various file formats and can also encrypt the embedded data. It’s often used in security and forensics to conceal or detect hidden information within multimedia files.
 
@@ -214,22 +214,22 @@ steghide is a steganography tool that allows you to embed (hide) and extract dat
 
 <br> 
 
-<h2 id="notable-mentions" style="text-decoration: underline; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Notable Mentions: File Carving & Digital Forensics</h2>
+<h2 id="notable-mentions" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Notable Mentions: File Carving & Digital Forensics</h2>
 <a href="#content" class="back-to-content">Back to Content</a>
 
-<h3>Foremost</h3>
+<h3 style="text-decoration: underline;">Foremost</h3>
 
 foremost is a console program to recover files based on their headers, footers, and internal data structures. It can be used for extracting hidden files from disk images or memory dumps, where the file system might be corrupted or missing.
 
 ![index 19](https://github.com/user-attachments/assets/b1ee69fd-b8cd-49f2-8d76-1f01f81f0c04)
 
-<h3>Autopsy</h3>
+<h3 style="text-decoration: underline;">Autopsy</h3>
 
 Autopsy is a comprehensive digital forensics platform used to analyse hard drives, smartphones, and other data sources. It features file carving, metadata extraction, timeline analysis, keyword searching, and more. Investigators use it to recover deleted files, analyse disk images, and uncover hidden or obscured data.
 
 ![overview](https://github.com/user-attachments/assets/040edcb2-0903-4198-887f-14ac9af1666c)
 
-<h3>EnCase</h3>
+<h3 style="text-decoration: underline;">EnCase</h3>
 
 EnCase is a digital forensics tool primarily used for forensic investigation, data recovery, and analysis of digital devices and storage media.
 
