@@ -120,11 +120,9 @@ permalink: /about/
 <br>
 
 <div class="content-container">
-  Hello and welcome to my site, I’m so happy you’re here! 🥳
-
-  I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.
-
-  Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!
+  <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
+  <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
+  <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
 </div>
 
 <br>
