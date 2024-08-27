@@ -65,13 +65,35 @@ permalink: /about/
     [data-theme="dark"] a:active {
         color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
     }
+
+    /* Wrap content in a container to apply custom styles */
+    .content-container {
+        background-color: white;
+        margin: 0 auto;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        max-width: 90%; /* Ensures the content doesn't touch the edges */
+    }
+
+    /* Adjust the container width for different screen sizes */
+    @media only screen and (max-width: 768px) {
+        .content-container {
+            max-width: 95%;
+        }
+    }
+
+    @media only screen and (max-width: 480px) {
+        .content-container {
+            max-width: 98%;
+        }
+    }
 </style>
 
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
 
- 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -93,14 +115,17 @@ permalink: /about/
 
 <br>
 
-Hello and welcome to my site, I'm so happy you're here! 🥳
+<div class="content-container">
+  ## Hello and welcome to my site, I’m so happy you’re here! 🥳
 
-I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.
+  I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.
 
-Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!
+  Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!
+</div>
+
+<br>
 
 ![nyan-cat](https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035)
-
 
 
 
