@@ -4,42 +4,40 @@ permalink: /test/
 ---
 
 <style>
+  /* Apply background only to the body, but not to header or footer */
   body {
-    background-color: #f0f0f0; /* Fallback background color */
-    background-image: linear-gradient(to bottom, #f0f0f0, #f0f0f0), linear-gradient(to bottom, #f0f0f0, #f0f0f0);
-    background-position: left center, right center;
-    background-repeat: no-repeat;
-    background-size: 100vw 100vh;
-    padding: 2rem 10%;
+    background-color: #f0f0f0;
+    padding: 0; /* Remove padding applied earlier */
   }
 
+  /* Wrap content in a container to apply custom styles */
+  .content-container {
+    background-color: white;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%; /* Ensures the content doesn't touch the edges */
+  }
+
+  /* Adjust the container width for different screen sizes */
   @media only screen and (max-width: 768px) {
-    body {
-      padding: 2rem 5%;
-      background-size: 100vw 100vh;
+    .content-container {
+      max-width: 95%;
     }
   }
 
   @media only screen and (max-width: 480px) {
-    body {
-      padding: 1rem 2%;
-      background-size: 100vw 100vh;
+    .content-container {
+      max-width: 98%;
     }
-  }
-
-  /* Ensure content area remains white */
-  .main-content {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   }
 </style>
 
-<div class="main-content">
+<div class="content-container">
   ## Your Markdown Content Here
 
-  This is a test page with a custom background applied to the borders. The main content area remains white.
+  This page now has a custom background applied to the borders, but the main content area remains white and centered within a container.
 
-  More content here...
+  Additional content...
 </div>
