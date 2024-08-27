@@ -21,6 +21,8 @@ permalink: /about/
     :root {
         --bg-color: #ffffff;
         --txt-color: #000000;
+        --container-bg-color: white; /* Default content container background in light mode */
+        --container-txt-color: #000000; /* Default content container text color in light mode */
         --link-color-light: blue; /* Blue links in light mode */
         --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
         --link-color-dark: #00ff00; /* Green links in dark mode */
@@ -31,7 +33,8 @@ permalink: /about/
     [data-theme="dark"] {
         --bg-color: #000000;
         --txt-color: #ffffff;
-        /* Link colors are handled by the variables above */
+        --container-bg-color: #333333; /* Grey background for the content container in dark mode */
+        --container-txt-color: #00ff00; /* Green text color in the content container in dark mode */
     }
 
     /* Apply the variables to the body */
@@ -68,7 +71,8 @@ permalink: /about/
 
     /* Wrap content in a container to apply custom styles */
     .content-container {
-        background-color: white;
+        background-color: var(--container-bg-color);
+        color: var(--container-txt-color);
         margin: 0 auto;
         padding: 1rem;
         border-radius: 10px;
@@ -116,7 +120,7 @@ permalink: /about/
 <br>
 
 <div class="content-container">
-  ## Hello and welcome to my site, I’m so happy you’re here! 🥳
+  Hello and welcome to my site, I’m so happy you’re here! 🥳
 
   I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.
 
