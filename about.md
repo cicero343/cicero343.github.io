@@ -1,6 +1,7 @@
 ---
 title: About me
 permalink: /about/
+layout: default
 ---
 
 <head>
@@ -96,39 +97,19 @@ permalink: /about/
 
 </head>
 <body>
-    <button id="theme-toggle">Toggle Dark Mode</button>
+    <!-- Dark mode toggle handled by header, no toggle button needed here -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggleButton = document.getElementById('theme-toggle');
-            const currentTheme = localStorage.getItem('theme');
+    <div class="content-container">
+        <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
+        <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
+        <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
+    </div>
 
-            if (currentTheme) {
-                document.documentElement.setAttribute('data-theme', currentTheme);
-            }
+    <br>
 
-            themeToggleButton.addEventListener('click', () => {
-                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-        });
-    </script>
+    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
 </body>
 </html>
-
-<br>
-
-<div class="content-container">
-  <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
-  <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
-  <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
-</div>
-
-<br>
-
-![nyan-cat](https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035)
-
 
 
 <!-- <div class="slider">
