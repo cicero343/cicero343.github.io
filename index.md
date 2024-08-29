@@ -1,6 +1,6 @@
 ---
 title: A Diary of IT Projects
-layout: default
+layout: home
 ---
 
 <head>
