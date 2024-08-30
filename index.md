@@ -7,6 +7,17 @@ Title: A Diary of IT Projects
   <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
   <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
   <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
+  <style>
+      /* Dark mode settings for icons */
+      [data-theme="dark"] .icon {
+          color: #ffffff; /* Light color for icons in dark mode */
+      }
+
+      /* Light mode settings for icons */
+      [data-theme="light"] .icon {
+          color: #000000; /* Dark color for icons in light mode */
+      }
+  </style>
 </head>
 
 <html lang="en">
@@ -141,8 +152,8 @@ Title: A Diary of IT Projects
                 <script src="https://tryhackme.com/badge/2125035"></script>
             </div>
             <ul class="link-list">
-                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="{{ '/assets/social-icons/linkedin.svg' | relative_url }}" alt="LinkedIn"></a></li>
-                <li><a href="https://github.com/cicero343" target="_blank"><img src="{{ '/assets/social-icons/github.svg' | relative_url }}" alt="GitHub"></a></li>
+                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://static.licdn.com/aero-v1/sc/h/hbdto606zcrbfxdiip8xz0y3" alt="LinkedIn"></a></li>
+                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://static.licdn.com/aero-v1/sc/h/3nous3d0r032tkd25kz8qybgn" alt="GitHub"></a></li>
             </ul>
         </div>
     </div>
