@@ -118,6 +118,7 @@ Title: A Diary of IT Projects
             display: flex;
             flex-direction: column; /* Arrange badge and links vertically */
             gap: 10px; /* Adds space between the badge and the links */
+            align-items: flex-start; /* Align items to the left */
         }
         .link-list {
             list-style: none;
