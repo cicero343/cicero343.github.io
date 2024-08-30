@@ -14,61 +14,60 @@ Title: A Diary of IT Projects
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toggle Dark Mode</title>
-<style>
-    /* Default light mode settings */
-    :root {
-        --bg-color: #ffffff;
-        --txt-color: #000000;
-        --link-color-light: blue; /* Blue links in light mode */
-        --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
-        --link-color-dark: #00ff00; /* Green links in dark mode */
-        --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
-    }
+    <style>
+        /* Default light mode settings */
+        :root {
+            --bg-color: #ffffff;
+            --txt-color: #000000;
+            --link-color-light: blue; /* Blue links in light mode */
+            --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+            --link-color-dark: #00ff00; /* Green links in dark mode */
+            --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+        }
 
-    /* Dark mode settings */
-    [data-theme="dark"] {
-        --bg-color: #000000;
-        --txt-color: #ffffff;
-        /* Link colors are handled by the variables above */
-    }
+        /* Dark mode settings */
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --txt-color: #ffffff;
+            /* Link colors are handled by the variables above */
+        }
 
-    /* Apply the variables to the body */
-    body {
-        background-color: var(--bg-color);
-        color: var(--txt-color);
-    }
+        /* Apply the variables to the body */
+        body {
+            background-color: var(--bg-color);
+            color: var(--txt-color);
+        }
 
-    /* Link styling */
-    a:link, a:visited {
-        color: var(--link-color-light); /* Default blue for light mode links */
-    }
+        /* Link styling */
+        a:link, a:visited {
+            color: var(--link-color-light); /* Default blue for light mode links */
+        }
 
-    a:hover {
-        color: var(--link-hover-color-light); /* Hover color in light mode */
-    }
+        a:hover {
+            color: var(--link-hover-color-light); /* Hover color in light mode */
+        }
 
-    a:active {
-        color: var(--link-color-light); /* Active link color in light mode */
-    }
+        a:active {
+            color: var(--link-color-light); /* Active link color in light mode */
+        }
 
-    /* Dark mode overrides */
-    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-        color: var(--link-color-dark); /* Green links in dark mode */
-    }
+        /* Dark mode overrides */
+        [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
+            color: var(--link-color-dark); /* Green links in dark mode */
+        }
 
-    [data-theme="dark"] a:hover {
-        color: var(--link-hover-color-dark); /* Hover color in dark mode */
-    }
+        [data-theme="dark"] a:hover {
+            color: var(--link-hover-color-dark); /* Hover color in dark mode */
+        }
 
-    [data-theme="dark"] a:active {
-        color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
-    }
-</style>
+        [data-theme="dark"] a:active {
+            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+        }
+    </style>
 </head>
 <body>
     <button id="theme-toggle">Toggle Dark Mode</button>
 
- 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -94,7 +93,7 @@ Title: A Diary of IT Projects
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Side by Side Images with Horizontal Links</title>
+    <title>Social Media Icons</title>
     <style>
         .container {
             display: flex; /* Use flexbox to place items side by side */
@@ -108,6 +107,7 @@ Title: A Diary of IT Projects
             display: flex;
             flex-direction: column; /* Arrange badge and links vertically */
             gap: 10px; /* Adds space between the badge and the links */
+            align-items: center; /* Center align items horizontally */
         }
         .link-list {
             list-style: none;
@@ -117,11 +117,19 @@ Title: A Diary of IT Projects
             gap: 20px; /* Adds space between each link */
         }
         .link-list a {
+            display: flex; /* Make the anchor tags flex containers */
+            align-items: center; /* Center content vertically */
+            justify-content: center; /* Center content horizontally */
+            width: 32px; /* Set width for icons */
+            height: 32px; /* Set height for icons */
             text-decoration: none;
-            color: #007bff;
+        }
+        .link-list img {
+            width: 100%; /* Scale icon to fit anchor tag */
+            height: 100%; /* Scale icon to fit anchor tag */
         }
         .link-list a:hover {
-            text-decoration: underline;
+            opacity: 0.8; /* Slightly change opacity on hover for better visual feedback */
         }
     </style>
 </head>
@@ -133,9 +141,8 @@ Title: A Diary of IT Projects
                 <script src="https://tryhackme.com/badge/2125035"></script>
             </div>
             <ul class="link-list">
-                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank">LinkedIn</a></li>
-                <li><a href="https://github.com/cicero343" target="_blank">GitHub</a></li>
-                <li><a href="https://tryhackme.com/p/cicero343" target="_blank">TryHackMe</a></li>
+                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="{{ '/assets/social-icons/linkedin.svg' | relative_url }}" alt="LinkedIn"></a></li>
+                <li><a href="https://github.com/cicero343" target="_blank"><img src="{{ '/assets/social-icons/github.svg' | relative_url }}" alt="GitHub"></a></li>
             </ul>
         </div>
     </div>
