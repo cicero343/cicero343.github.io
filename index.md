@@ -152,10 +152,10 @@ Title: A Diary of IT Projects
             <div class="tryhackme-badge">
                 <script src="https://tryhackme.com/badge/2125035"></script>
             </div>
-<ul class="link-list">
-    <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="{{ '/assets/icons/linkedin.svg' | relative_url }}" alt="LinkedIn" class="icon"></a></li>
-    <li><a href="https://github.com/cicero343" target="_blank"><img src="{{ '/assets/icons/github.svg' | relative_url }}" alt="GitHub" class="icon"></a></li>
-</ul>
+            <ul class="link-list">
+                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
+                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
+            </ul>
         </div>
     </div>
 </body>
