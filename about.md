@@ -96,25 +96,33 @@ permalink: /about/
         /* Styles for the theme toggle and profile image */
         .header-container {
             display: flex;
-            align-items: center; /* Align items vertically */
+            align-items: flex-start; /* Align items to the top */
             gap: 15px; /* Increased gap between the button and the image */
+            margin-bottom: 15px; /* Space below the header container */
         }
 
         .profile-image {
             border-radius: 10px; /* Rounded edges for the image */
-            width: 100px; /* Set size of the profile image */
-            height: 100px; /* Set size of the profile image */
+            width: 80px; /* Set size of the profile image */
+            height: 80px; /* Set size of the profile image */
             object-fit: cover; /* Ensure the image fits within the dimensions */
         }
 
         .profile-image-container {
-            margin-bottom: 15px; /* Space below the image */
+            /* No additional margin needed here */
+        }
+
+        /* Ensure the button is positioned higher */
+        .theme-toggle-container {
+            margin-bottom: 20px; /* Space below the button, adjust as needed */
         }
     </style>
 </head>
 <body>
-    <div class="header-container">
+    <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
+    </div>
+    <div class="header-container">
         <div class="profile-image-container">
             <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
         </div>
@@ -148,6 +156,7 @@ permalink: /about/
     <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
 </body>
 </html>
+
 
 
 
