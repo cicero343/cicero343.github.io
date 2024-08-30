@@ -32,6 +32,7 @@
       align-items: center;
       padding: 10px 20px; /* Padding around header */
       box-sizing: border-box; /* Include padding in width/height calculations */
+      position: relative; /* Ensure positioning context for the drop-down */
     }
 
     .site-title {
@@ -73,6 +74,34 @@
       background-color: #e0e0e0; /* Change background on hover */
     }
 
+    /* Drop-down menu */
+    .dropdown-content {
+      display: none;
+      position: absolute; /* Absolute positioning to overlay content */
+      top: 100%; /* Position below the nav trigger */
+      right: 0; /* Align to the right of the trigger */
+      background-color: #f5f5f5; /* Light background color */
+      border: 1px solid #ccc; /* Border for better visibility */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for better visibility */
+      z-index: 10; /* Ensure it appears above other content */
+      width: auto; /* Auto width to prevent stretching */
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 8px 12px; /* Padding for better touch target */
+      text-decoration: none;
+      color: #000; /* Text color */
+    }
+
+    .dropdown-content a:hover {
+      background-color: #e0e0e0; /* Change background on hover */
+    }
+
+    .nav-trigger:checked + .trigger .dropdown-content {
+      display: block; /* Show the drop-down content when checked */
+    }
+
     /* Media query for responsiveness */
     @media (max-width: 768px) {
       .site-title h1 {
@@ -107,6 +136,12 @@
         position: relative; /* Ensure positioning context */
         text-align: center; /* Center text */
       }
+
+      .dropdown-content {
+        top: 100%; /* Position below the nav trigger */
+        right: 0; /* Align to the right of the trigger */
+        width: 150px; /* Set a fixed width */
+      }
     }
   </style>
 </head>
@@ -127,7 +162,10 @@
         </span>
       </label>
       <div class="trigger">
-        <a class="page-link" href="/about/">About me</a>
+        <a class="page-link" href="#">About me</a>
+        <div class="dropdown-content">
+          <a href="/about/">About me</a>
+        </div>
       </div>
     </nav>
   </header>
