@@ -76,6 +76,13 @@
     }
 
     /* Inline styles for header */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Space between logo and title */
+      padding: 10px;
+    }
+
     .site-logo {
       width: 50px; /* Set the width of the logo image */
       height: 50px; /* Set the height of the logo image */
@@ -89,20 +96,15 @@
       color: inherit;
     }
 
-    /* Media queries for responsive design */
+    .site-title h1 {
+      font-size: 1.5rem; /* Adjust font size as needed */
+      margin: 0; /* Remove default margin */
+    }
+
+    /* Media query for responsiveness */
     @media (max-width: 768px) {
-      .site-title {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .site-logo {
-        margin-bottom: 10px; /* Space between the logo and title on mobile */
-      }
-
       .site-title h1 {
-        font-size: 1.2rem; /* Smaller font size for smaller screens */
+        font-size: 1.2rem; /* Adjust font size for smaller screens */
       }
     }
   </style>
