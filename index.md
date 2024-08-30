@@ -108,6 +108,7 @@ Title: A Diary of IT Projects
     <style>
         .container {
             display: flex; /* Use flexbox to place items side by side */
+            flex-direction: column; /* Arrange items vertically */
             gap: 10px; /* Adds space between the items */
             align-items: flex-start; /* Align items at the top */
         }
@@ -140,17 +141,22 @@ Title: A Diary of IT Projects
         .link-list a:hover {
             opacity: 0.8; /* Slightly change opacity on hover for better visual feedback */
         }
+        .tryhackme-badge {
+            margin-top: 10px; /* Add some space above the TryHackMe badge */
+        }
     </style>
 </head>
 <body>
-    <div class="badge-links">
-        <div class="tryhackme-badge">
-            <script src="https://tryhackme.com/badge/2125035"></script>
+    <div class="container">
+        <div class="badge-links">
+            <ul class="link-list">
+                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
+                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
+            </ul>
+            <div class="tryhackme-badge">
+                <script src="https://tryhackme.com/badge/2125035"></script>
+            </div>
         </div>
-        <ul class="link-list">
-            <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
-            <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
-        </ul>
     </div>
 </body>
 </html>
