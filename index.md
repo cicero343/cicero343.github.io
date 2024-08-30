@@ -11,6 +11,9 @@ Title: A Diary of IT Projects
       /* Default styles for icons */
       .icon {
           filter: invert(0); /* Default to no inversion */
+          width: 24px;
+          height: 24px;
+          margin-left: 15px; /* Add space between the toggle button and icons */
       }
 
       /* Dark mode settings */
@@ -78,18 +81,13 @@ Title: A Diary of IT Projects
         /* Layout adjustments */
         .header-container {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            justify-content: flex-start; /* Align items at the start */
+            align-items: center; /* Center the items vertically */
             margin-bottom: 10px; /* Add space between header and content below */
         }
-        
-        .theme-toggle {
-            margin-right: 20px; /* Space between toggle and icons */
-        }
 
-        .icon-list {
-            display: flex;
-            gap: 15px; /* Space between icons */
+        .theme-toggle {
+            margin-right: auto; /* Push the icons to the right side */
         }
 
         .tryhackme-badge {
@@ -100,14 +98,29 @@ Title: A Diary of IT Projects
 <body>
     <div class="header-container">
         <button id="theme-toggle" class="theme-toggle">Toggle Dark Mode</button>
-        <ul class="icon-list">
-            <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
-            <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
-        </ul>
+        <a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a>
+        <a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a>
     </div>
     
     <div class="tryhackme-badge">
         <script src="https://tryhackme.com/badge/2125035"></script>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleButton = document.getElementById('theme-toggle');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+            }
+
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        });
+    </script>
 </body>
 </html>
