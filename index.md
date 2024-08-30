@@ -118,21 +118,21 @@ Title: A Diary of IT Projects
             display: flex;
             flex-direction: column; /* Arrange badge and links vertically */
             gap: 10px; /* Adds space between the badge and the links */
-            align-items: center; /* Center align items horizontally */
         }
         .link-list {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex; /* Arrange links horizontally */
-            gap: 20px; /* Adds space between each link */
+            gap: 10px; /* Adds space between each link */
+            align-items: center; /* Align items vertically */
         }
         .link-list a {
             display: flex; /* Make the anchor tags flex containers */
             align-items: center; /* Center content vertically */
             justify-content: center; /* Center content horizontally */
-            width: 32px; /* Set width for icons */
-            height: 32px; /* Set height for icons */
+            width: 24px; /* Set width for icons */
+            height: 24px; /* Set height for icons */
             text-decoration: none;
         }
         .link-list img {
