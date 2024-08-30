@@ -154,7 +154,7 @@ Title: A Diary of IT Projects
             </div>
             <ul class="link-list">
                 <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
-                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.svg" alt="GitHub" class="icon"></a></li>
+                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://www.cleanpng.com/png-github-computer-icons-github-logo-5157320/" alt="GitHub" class="icon"></a></li>
             </ul>
         </div>
     </div>
