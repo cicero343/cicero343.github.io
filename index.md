@@ -8,14 +8,14 @@ Title: A Diary of IT Projects
   <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
   <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
   <style>
-      /* Dark mode settings for icons */
-      [data-theme="dark"] .icon {
-          fill: #ffffff; /* Light color for icons in dark mode */
+      /* Default styles for icons */
+      .icon {
+          filter: invert(0); /* Default to no inversion */
       }
 
-      /* Light mode settings for icons */
-      [data-theme="light"] .icon {
-          fill: #000000; /* Dark color for icons in light mode */
+      /* Dark mode settings */
+      [data-theme="dark"] .icon {
+          filter: invert(1); /* Invert colors for dark mode */
       }
   </style>
 </head>
