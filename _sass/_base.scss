@@ -84,9 +84,17 @@ a:hover {
   color: var(--link-hover-color-light);
 }
 
-
 /* Header styles */
-.site-header .site-title {
+.site-header {
+  display: flex;
+  justify-content: space-between; /* Distribute space between elements */
+  align-items: center;
+  padding: 10px 20px; /* Padding around header */
+  box-sizing: border-box; /* Include padding in width/height calculations */
+  width: 100%; /* Ensure the header takes up the full width */
+}
+
+.site-title {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -102,4 +110,44 @@ a:hover {
 .site-title h1 {
   font-size: 1.5rem; /* Adjust font size as needed */
   margin: 0; /* Remove default margin */
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+}
+
+.page-link {
+  margin-left: 20px; /* Space between the title and the nav link */
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+  .site-title h1 {
+    font-size: 1.2rem; /* Adjust font size for smaller screens */
+  }
+
+  .site-logo {
+    width: 40px; /* Reduce logo size for smaller screens */
+    height: 40px;
+  }
+
+  .site-header {
+    flex-direction: column; /* Stack logo and title vertically on small screens */
+    align-items: flex-start; /* Align items to the start (left) */
+    padding: 10px; /* Adjust padding for small screens */
+  }
+
+  .site-title {
+    margin-top: 10px; /* Space between logo and title on small screens */
+  }
+
+  .site-nav {
+    margin-top: 10px; /* Space between title and nav on small screens */
+  }
+
+  .page-link {
+    margin-left: 0; /* Remove margin on small screens */
+    margin-top: 10px; /* Add margin-top for separation */
+  }
 }
