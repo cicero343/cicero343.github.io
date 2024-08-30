@@ -55,12 +55,22 @@
     .site-nav {
       display: flex;
       align-items: center;
+      position: relative; /* Ensure positioning context for the drop-down */
     }
 
     .page-link {
       text-decoration: none;
       color: inherit; /* Inherit color from parent */
-      margin-left: 20px; /* Space to the left of the link */
+      padding: 8px 12px; /* Add padding for better touch target */
+      font-size: 0.9rem; /* Adjust font size for readability */
+      border: 1px solid #ccc; /* Add border for better visibility */
+      background-color: #f5f5f5; /* Light background color for better visibility */
+      display: inline-block; /* Inline-block for drop-down appearance */
+      position: relative; /* Ensure positioning context for the drop-down */
+    }
+
+    .page-link:hover {
+      background-color: #e0e0e0; /* Change background on hover */
     }
 
     /* Media query for responsiveness */
@@ -75,29 +85,27 @@
       }
 
       .site-header {
-        flex-direction: column; /* Stack logo and title vertically on small screens */
-        align-items: flex-start; /* Align items to the start (left) */
+        flex-direction: row; /* Keep items in a row for small screens */
+        align-items: center; /* Align items to the center */
         padding: 10px; /* Adjust padding for small screens */
       }
 
       .site-title {
-        margin-top: 10px; /* Space between logo and title on small screens */
+        margin-right: 10px; /* Space between title and nav */
       }
 
       .site-nav {
-        margin-top: 10px; /* Space above navigation for small screens */
-        width: 100%; /* Full width for nav on small screens */
+        margin-left: auto; /* Push navigation to the right */
       }
 
       .page-link {
-        display: block; /* Make link block level on small screens */
-        margin: 0; /* Remove margin */
-        padding: 10px; /* Add padding for better touch target */
-        font-size: 1rem; /* Adjust font size for smaller screens */
+        display: block; /* Display block for drop-down on small screens */
+        padding: 8px 12px; /* Padding for better touch target */
         border: 1px solid #ccc; /* Add border for better visibility */
         background-color: #f5f5f5; /* Light background color for better visibility */
+        width: auto; /* Auto width to prevent stretching */
+        position: relative; /* Ensure positioning context */
         text-align: center; /* Center text */
-        width: 100%; /* Full width for drop-down */
       }
     }
   </style>
