@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Begin Jekyll SEO tag v2.8.0 -->
   <title>A Diary of IT Projects | My blog</title>
   <meta name="generator" content="Jekyll v3.10.0" />
   <meta property="og:title" content="A Diary of IT Projects" />
@@ -21,116 +20,9 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"cicero343"},"description":"My blog","headline":"A Diary of IT Projects","name":"A Diary of IT Projects","url":"https://cicero343.github.io/"}
   </script>
-  <!-- End Jekyll SEO tag -->
   <link rel="stylesheet" href="/assets/main.css">
   <link type="application/atom+xml" rel="alternate" href="https://cicero343.github.io/feed.xml" title="A Diary of IT Projects" />
-
-  <!-- Dark Mode CSS -->
-  <style>
-    /* Default light mode settings */
-    :root {
-        --bg-color: #ffffff;
-        --txt-color: #000000;
-        --link-color-light: blue;
-        --link-hover-color-light: darkblue;
-        --link-color-dark: #00ff00;
-        --link-hover-color-dark: #00cc00;
-    }
-
-    /* Dark mode settings */
-    [data-theme="dark"] {
-        --bg-color: #000000;
-        --txt-color: #ffffff;
-    }
-
-    /* Apply the variables to the body */
-    body {
-        background-color: var(--bg-color);
-        color: var(--txt-color);
-    }
-
-    /* Link styling */
-    a:link, a:visited {
-        color: var(--link-color-light);
-    }
-
-    a:hover {
-        color: var(--link-hover-color-light);
-    }
-
-    a:active {
-        color: var(--link-color-light);
-    }
-
-    /* Dark mode overrides */
-    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-        color: var(--link-color-dark);
-    }
-
-    [data-theme="dark"] a:hover {
-        color: var(--link-hover-color-dark);
-    }
-
-    [data-theme="dark"] a:active {
-        color: var(--link-color-dark);
-    }
-
-    /* Header styles */
-    .site-header {
-      display: flex;
-      justify-content: space-between; /* Distribute space between elements */
-      align-items: center;
-      padding: 10px 20px; /* Padding around header */
-      box-sizing: border-box; /* Include padding in width/height calculations */
-    }
-
-    .site-title {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .site-logo {
-      width: 50px; /* Set the width of the logo image */
-      height: 50px; /* Set the height of the logo image */
-      margin-right: 10px; /* Space between the logo and title */
-    }
-
-    .site-title h1 {
-      font-size: 1.5rem; /* Adjust font size as needed */
-      margin: 0; /* Remove default margin */
-    }
-
-    .site-nav {
-      display: flex;
-      align-items: center;
-    }
-
-    /* Media query for responsiveness */
-    @media (max-width: 768px) {
-      .site-title h1 {
-        font-size: 1.2rem; /* Adjust font size for smaller screens */
-      }
-
-      .site-logo {
-        width: 40px; /* Reduce logo size for smaller screens */
-        height: 40px;
-      }
-
-      .site-header {
-        flex-direction: column; /* Stack logo and title vertically on small screens */
-        align-items: flex-start; /* Align items to the start (left) */
-        padding: 10px; /* Adjust padding for small screens */
-      }
-
-      .site-title {
-        margin-top: 10px; /* Space between logo and title on small screens */
-      }
-    }
-  </style>
 </head>
-
 <body>
   <header class="site-header" role="banner">
     <a class="site-title" rel="author" href="/">
@@ -181,23 +73,6 @@
     </div>
   </footer>
 
-  <!-- Optional: Dark Mode Toggle Script -->
-  <!-- Remove or comment out if you don't need dark mode toggle -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const themeToggleButton = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme');
-
-        if (currentTheme) {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-        }
-
-        themeToggleButton.addEventListener('click', () => {
-            const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-    });
-  </script>
+  <!-- Remove dark mode toggle script if not needed -->
 </body>
 </html>
