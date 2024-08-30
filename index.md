@@ -111,9 +111,6 @@ Title: A Diary of IT Projects
             gap: 10px; /* Adds space between the items */
             align-items: flex-start; /* Align items at the top */
         }
-        .profile-image {
-            border-radius: 20px; /* Apply border radius to profile image */
-        }
         .badge-links {
             display: flex;
             flex-direction: column; /* Arrange badge and links vertically */
@@ -146,17 +143,14 @@ Title: A Diary of IT Projects
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="https://avatars.githubusercontent.com/u/175522457?v=4" width="100" height="100" alt="Profile Image" class="profile-image">
-        <div class="badge-links">
-            <div class="tryhackme-badge">
-                <script src="https://tryhackme.com/badge/2125035"></script>
-            </div>
-            <ul class="link-list">
-                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
-                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
-            </ul>
+    <div class="badge-links">
+        <div class="tryhackme-badge">
+            <script src="https://tryhackme.com/badge/2125035"></script>
         </div>
+        <ul class="link-list">
+            <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
+            <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
+        </ul>
     </div>
 </body>
 </html>
