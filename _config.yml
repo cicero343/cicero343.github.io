@@ -4,3 +4,9 @@ title: A Diary of IT Projects
 author: cicero343
 name: cicero343
 description: My blog
+
+markdown: kramdown
+kramdown:
+  input: GFM
+plugins:
+  - jekyll-sass-converter
