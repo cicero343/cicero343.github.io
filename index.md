@@ -74,89 +74,40 @@ Title: A Diary of IT Projects
         [data-theme="dark"] a:active {
             color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
-    </style>
-</head>
-<body>
-    <button id="theme-toggle">Toggle Dark Mode</button>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggleButton = document.getElementById('theme-toggle');
-            const currentTheme = localStorage.getItem('theme');
-
-            if (currentTheme) {
-                document.documentElement.setAttribute('data-theme', currentTheme);
-            }
-
-            themeToggleButton.addEventListener('click', () => {
-                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-        });
-    </script>
-</body>
-</html>
-
-<br>
-
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media Icons</title>
-    <style>
-        .container {
-            display: flex; /* Use flexbox to place items side by side */
-            flex-direction: column; /* Arrange items vertically */
-            gap: 10px; /* Adds space between the items */
-            align-items: flex-start; /* Align items at the top */
-        }
-        .badge-links {
+        /* Layout adjustments */
+        .header-container {
             display: flex;
-            flex-direction: column; /* Arrange badge and links vertically */
-            gap: 10px; /* Adds space between the badge and the links */
-            align-items: flex-start; /* Align items to the left */
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px; /* Add space between header and content below */
         }
-        .link-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex; /* Arrange links horizontally */
-            gap: 10px; /* Adds space between each link */
-            align-items: center; /* Align items vertically */
+        
+        .theme-toggle {
+            margin-right: 20px; /* Space between toggle and icons */
         }
-        .link-list a {
-            display: flex; /* Make the anchor tags flex containers */
-            align-items: center; /* Center content vertically */
-            justify-content: center; /* Center content horizontally */
-            width: 24px; /* Set width for icons */
-            height: 24px; /* Set height for icons */
-            text-decoration: none;
+
+        .icon-list {
+            display: flex;
+            gap: 15px; /* Space between icons */
         }
-        .link-list img {
-            width: 100%; /* Scale icon to fit anchor tag */
-            height: 100%; /* Scale icon to fit anchor tag */
-        }
-        .link-list a:hover {
-            opacity: 0.8; /* Slightly change opacity on hover for better visual feedback */
-        }
+
         .tryhackme-badge {
-            margin-top: 10px; /* Add some space above the TryHackMe badge */
+            margin-top: 15px; /* Add some space above the TryHackMe badge */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="badge-links">
-            <ul class="link-list">
-                <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
-                <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
-            </ul>
-            <div class="tryhackme-badge">
-                <script src="https://tryhackme.com/badge/2125035"></script>
-            </div>
-        </div>
+    <div class="header-container">
+        <button id="theme-toggle" class="theme-toggle">Toggle Dark Mode</button>
+        <ul class="icon-list">
+            <li><a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank"><img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon"></a></li>
+            <li><a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a></li>
+        </ul>
+    </div>
+    
+    <div class="tryhackme-badge">
+        <script src="https://tryhackme.com/badge/2125035"></script>
     </div>
 </body>
 </html>
