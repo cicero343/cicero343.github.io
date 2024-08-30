@@ -22,11 +22,94 @@
   </script>
   <link rel="stylesheet" href="/assets/main.css">
   <link type="application/atom+xml" rel="alternate" href="https://cicero343.github.io/feed.xml" title="A Diary of IT Projects" />
+  <!-- Custom CSS -->
+  <style>
+    /* Default light mode settings */
+    :root {
+        --bg-color: #ffffff;
+        --txt-color: #000000;
+        --link-color-light: blue;
+        --link-hover-color-light: darkblue;
+    }
+
+    /* Apply the variables to the body */
+    body {
+        background-color: var(--bg-color);
+        color: var(--txt-color);
+    }
+
+    /* Link styling */
+    a:link, a:visited {
+        color: var(--link-color-light);
+    }
+
+    a:hover {
+        color: var(--link-hover-color-light);
+    }
+
+    a:active {
+        color: var(--link-color-light);
+    }
+
+    /* Header styles */
+    .site-header {
+      display: flex;
+      align-items: center; /* Align items vertically center */
+      padding: 10px 20px; /* Padding around header */
+      box-sizing: border-box; /* Include padding in width/height calculations */
+    }
+
+    .site-title {
+      display: flex;
+      align-items: center; /* Align items vertically center */
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .site-logo {
+      width: 40px; /* Set the width of the logo image */
+      height: 40px; /* Set the height of the logo image */
+      margin-right: 10px; /* Space between the logo and title */
+    }
+
+    .site-title h1 {
+      font-size: 1.5rem; /* Adjust font size as needed */
+      margin: 0; /* Remove default margin */
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Media query for responsiveness */
+    @media (max-width: 768px) {
+      .site-title h1 {
+        font-size: 1.2rem; /* Adjust font size for smaller screens */
+      }
+
+      .site-logo {
+        width: 30px; /* Reduce logo size for smaller screens */
+        height: 30px;
+      }
+
+      .site-header {
+        flex-direction: column; /* Stack logo and title vertically on small screens */
+        align-items: flex-start; /* Align items to the start (left) */
+        padding: 10px; /* Adjust padding for small screens */
+      }
+
+      .site-title {
+        margin-top: 10px; /* Space between logo and title on small screens */
+      }
+    }
+  </style>
 </head>
+
 <body>
   <header class="site-header" role="banner">
     <a class="site-title" rel="author" href="/">
-      <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Site Logo" class="site-logo" style="width: 40px; height: 40px;">
+      <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Site Logo" class="site-logo">
       <h1>A Diary of IT Projects</h1>
     </a>
     <nav class="site-nav">
@@ -72,5 +155,20 @@
       </div>
     </div>
   </footer>
+
+  <!-- Optional: Dark Mode Toggle Script -->
+  <!-- Remove or comment out if you don't need dark mode toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggleButton = document.getElementById('theme-toggle');
+        if (themeToggleButton) {
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        }
+    });
+  </script>
 </body>
 </html>
