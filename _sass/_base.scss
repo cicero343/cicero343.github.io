@@ -83,3 +83,23 @@ a:hover {
   text-decoration: underline;
   color: var(--link-hover-color-light);
 }
+
+
+/* Header styles */
+.site-header .site-title {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.site-logo {
+  width: 50px; /* Set the width of the logo image */
+  height: 50px; /* Set the height of the logo image */
+  margin-right: 10px; /* Space between the logo and title */
+}
+
+.site-title h1 {
+  font-size: 1.5rem; /* Adjust font size as needed */
+  margin: 0; /* Remove default margin */
+}
