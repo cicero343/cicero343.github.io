@@ -10,3 +10,7 @@ kramdown:
   input: GFM
 plugins:
   - jekyll-sass-converter
+
+header_pages:
+  - about.md
+  - projects.md
