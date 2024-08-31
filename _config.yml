@@ -12,5 +12,6 @@ plugins:
   - jekyll-sass-converter
 
 header_pages:
-  - about.md
-  - projects.md
+  - _pages/projects.md
+  - _pages/about.md
+
