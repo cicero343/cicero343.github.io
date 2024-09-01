@@ -60,7 +60,7 @@ layout: default
         }
 
         [data-theme="dark"] a:active {
-            color: var (--link-color-dark); /* Maintain green when clicked in dark mode */
+            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
         /* Wrap content in a container to apply custom styles */
@@ -89,15 +89,15 @@ layout: default
 
         /* Styles for the theme toggle */
         .theme-toggle-container {
-            margin-bottom: 0; /* Remove the space below the button */
+            margin: 0; /* Remove any margin */
+            padding: 0; /* Remove any padding */
         }
 
         /* Header styling */
         h2 {
             font-size: 2em;
             font-weight: bold;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
+            margin: 0; /* Remove margins to ensure no gap */
             color: #333;
         }
 
