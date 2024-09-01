@@ -21,6 +21,10 @@ layout: default
             --link-color-dark: #00ff00; /* Green links in dark mode */
             --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
             --header-color-dark: #00ff00; /* Green header color in dark mode */
+            --gist-bg-light: #f9f9f9; /* Background color for gists in light mode */
+            --gist-bg-dark: #1e1e1e; /* Background color for gists in dark mode */
+            --gist-border-light: #ddd; /* Border color for gists in light mode */
+            --gist-border-dark: #444; /* Border color for gists in dark mode */
         }
 
         /* Dark mode settings */
@@ -108,9 +112,14 @@ layout: default
         .gist {
             margin-bottom: 20px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--gist-border-light); /* Default border color in light mode */
             border-radius: 4px;
-            background-color: #f9f9f9;
+            background-color: var(--gist-bg-light); /* Default background color in light mode */
+        }
+
+        [data-theme="dark"] .gist {
+            background-color: var(--gist-bg-dark); /* Background color in dark mode */
+            border: 1px solid var(--gist-border-dark); /* Border color in dark mode */
         }
 
         .gist h3 {
@@ -122,6 +131,10 @@ layout: default
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
+        }
+
+        [data-theme="dark"] .gist pre {
+            background-color: #2e2e2e; /* Darker background for code block in dark mode */
         }
 
         .gist a {
