@@ -57,7 +57,7 @@ layout: default
 
 ## GitHub Gists
 
-<div class="gists d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
+<div class="gists">
   <!-- Gists will be dynamically inserted here by JavaScript -->
 </div>
 
@@ -70,17 +70,22 @@ document.addEventListener("DOMContentLoaded", function() {
       container.innerHTML = ''; // Clear existing content
 
       data.forEach(gist => {
-        const gistElement = document.createElement('div');
-        gistElement.className = 'gist';
-        gistElement.innerHTML = `
-          <a href="${gist.html_url}" target="_blank" class="gist-link">
-            <p>${gist.description || 'No Description'}</p>
-          </a>
-        `;
-        container.appendChild(gistElement);
+        const files = gist.files;
+        const fileNames = Object.keys(files);
+
+        fileNames.forEach(fileName => {
+          const file = files[fileName];
+          const gistElement = document.createElement('div');
+          gistElement.className = 'gist';
+          gistElement.innerHTML = `
+            <h3>${gist.description || 'No Description'}</h3>
+            <pre><code>${file.content}</code></pre>
+            <p><a href="${gist.html_url}" target="_blank">View on GitHub</a></p>
+          `;
+          container.appendChild(gistElement);
+        });
       });
     })
     .catch(error => console.error('Error fetching Gists:', error));
 });
 </script>
-
