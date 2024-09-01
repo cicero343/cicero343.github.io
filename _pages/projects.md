@@ -138,7 +138,7 @@ layout: default
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
-    <h2>cicero343's GitHub</h2>
+    <h2>My GitHub Gists</h2>
 
     {% if site.data.github_users %}
     <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
@@ -161,8 +161,6 @@ layout: default
     </div>
     {% endif %}
     -->
-
-    <h2>GitHub Gists</h2>
 
     <div class="content-container">
         <div id="gists-container">
