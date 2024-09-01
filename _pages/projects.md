@@ -25,6 +25,8 @@ layout: default
             --gist-bg-dark: #1e1e1e; /* Background color for gists in dark mode */
             --gist-border-light: #ddd; /* Border color for gists in light mode */
             --gist-border-dark: #444; /* Border color for gists in dark mode */
+            --code-bg-light: #f1f1f1; /* Background color for code blocks in light mode */
+            --code-bg-dark: #2e2e2e; /* Background color for code blocks in dark mode */
         }
 
         /* Dark mode settings */
@@ -127,14 +129,22 @@ layout: default
         }
 
         .gist pre {
-            background-color: #f1f1f1;
+            background-color: var(--code-bg-light); /* Background color for code blocks in light mode */
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
         }
 
         [data-theme="dark"] .gist pre {
-            background-color: #2e2e2e; /* Darker background for code block in dark mode */
+            background-color: var(--code-bg-dark); /* Background color for code blocks in dark mode */
+        }
+
+        .gist code {
+            color: #00ff00; /* Set text color to green in dark mode for code */
+        }
+
+        [data-theme="dark"] .gist code {
+            color: #00ff00; /* Set text color to green in dark mode for code */
         }
 
         .gist a {
