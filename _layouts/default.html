@@ -118,7 +118,25 @@
       gap: 20px;
     }
 
+    .nav-item {
+      text-decoration: none;
+      color: var(--txt-color);
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-item:hover {
+      background-color: var(--link-hover-color-light);
+    }
+
+    .nav-toggle {
+      display: none;
+    }
+
+    /* Mobile dropdown */
     .dropdown {
+      display: none;
       position: relative;
     }
 
@@ -135,10 +153,6 @@
       padding: 0;
     }
 
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
     .dropdown-content a {
       color: var(--txt-color);
       padding: 12px 16px;
@@ -150,44 +164,48 @@
       background-color: var(--link-hover-color-light);
     }
 
-    .page-link {
-      text-decoration: none;
-      color: var(--link-color-light);
-      padding: 5px 10px;
-      font-size: 0.9rem;
-      border: 1px solid #333;
-      background-color: var(--bg-color-light);
-      border-radius: 4px;
+    .dropdown-toggle {
+      cursor: pointer;
+      font-size: 1.5rem;
     }
 
-    .page-link:hover {
-      background-color: #f0f0f0;
-    }
-
-    /* Media query for responsiveness */
     @media (max-width: 768px) {
+      .site-nav {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-left: auto;
+      }
+
+      .dropdown {
+        display: block;
+      }
+
+      .dropdown-content {
+        display: block;
+        position: static;
+        box-shadow: none;
+        width: 100%;
+      }
+
       .site-header {
         flex-direction: column;
         align-items: flex-start;
       }
 
-      .site-nav {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-        gap: 0;
-        padding: 10px 0;
+      .site-title {
+        margin-bottom: 10px;
       }
 
-      .dropdown-content {
-        position: static;
-        display: block;
-        background-color: var(--navbar-bg-color);
-        box-shadow: none;
-      }
-
-      .dropdown:hover .dropdown-content {
-        display: block;
+      .dropdown-content a {
+        padding: 10px;
+        text-align: center;
       }
     }
   </style>
@@ -200,17 +218,18 @@
       <h1>A Diary of IT Projects</h1>
     </a>
     <nav class="site-nav">
-      <ul class="nav-menu">
-        <li class="dropdown">
-          <a class="page-link" href="#">Dropdown 1</a>
-          <ul class="dropdown-content">
-            <li><a href="/about/">About Me</a></li>
-            <li><a href="/projects/">Projects</a></li>
-          </ul>
-        </li>
-        <!-- Add more dropdowns or links if needed -->
-      </ul>
+      <a class="nav-item" href="/about/">About Me</a>
+      <a class="nav-item" href="/projects/">Projects</a>
+      <!-- Additional nav items if needed -->
     </nav>
+    <div class="dropdown">
+      <span class="dropdown-toggle">&#9776;</span>
+      <div class="dropdown-content">
+        <a href="/about/">About Me</a>
+        <a href="/projects/">Projects</a>
+        <!-- Additional dropdown items if needed -->
+      </div>
+    </div>
   </header>
 
   <main class="page-content" aria-label="Content">
