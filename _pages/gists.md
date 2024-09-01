@@ -119,11 +119,17 @@ layout: default
             border: 1px solid var(--gist-border-light);
             border-radius: 4px;
             background-color: var(--gist-bg-light);
+            box-shadow: 0 1px 3px rgba(27, 31, 35, 0.12), 0 8px 24px rgba(27, 31, 35, 0.12);
+            transition: transform 0.2s;
         }
 
         [data-theme="dark"] .gist {
             background-color: var(--gist-bg-dark);
             border: 1px solid var(--gist-border-dark);
+        }
+
+        .gist:hover {
+            transform: scale(1.05);
         }
 
         .gist h3 {
@@ -166,24 +172,6 @@ layout: default
             gap: 20px;
             margin: 20px;
         }
-
-        .gist-card {
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(27, 31, 35, 0.12), 0 8px 24px rgba(27, 31, 35, 0.12);
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-
-        .gist-card:hover {
-            transform: scale(1.05);
-        }
-
-        .repo-img-dark {
-            width: 100%;
-            height: auto;
-            border-bottom: 1px solid #e1e4e8;
-        }
     </style>
 </head>
 <body>
@@ -214,19 +202,30 @@ layout: default
 
           const container = document.getElementById('gists-container');
           gists.forEach(gist => {
-            const gistCard = document.createElement('div');
-            gistCard.className = 'gist-card';
+            const gistDiv = document.createElement('div');
+            gistDiv.className = 'gist';
 
-            gistCard.innerHTML = `
-              <div class="repo p-2 text-center">
-                <a href="${gist.html_url}">
-                  <img class="repo-img-dark w-100" alt="${gist.description || 'No Description'}" 
-                       src="https://github-readme-stats.vercel.app/api/pin/?username=${username}&repo=${gist.id}&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5" />
-                </a>
-              </div>
+            const fileName = Object.keys(gist.files)[0];
+            const file = gist.files[fileName];
+
+            gistDiv.innerHTML = `
+              <h3>${gist.description || 'No Description'}</h3>
+              <pre><code>Loading preview...</code></pre>
+              <a href="${gist.html_url}" target="_blank">View on GitHub</a>
             `;
 
-            container.appendChild(gistCard);
+            container.appendChild(gistDiv);
+
+            // Fetch the raw content to display the first 5 lines
+            fetch(file.raw_url)
+              .then(response => response.text())
+              .then(content => {
+                const codeElement = gistDiv.querySelector('code');
+                codeElement.textContent = content.split('\n').slice(0, 5).join('\n') + '...';
+              })
+              .catch(error => {
+                gistDiv.querySelector('code').textContent = 'Unable to load preview';
+              });
           });
         } catch (error) {
           document.getElementById('gists-container').innerText = 'Failed to load Gists.';
