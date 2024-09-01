@@ -42,6 +42,8 @@ layout: default
         body {
             background-color: var(--bg-color);
             color: var(--txt-color);
+            margin: 0;
+            padding: 0;
         }
 
         /* Link styling */
@@ -117,18 +119,38 @@ layout: default
         .theme-toggle-container {
             margin-bottom: 20px; /* Space below the button, adjust as needed */
         }
+
+        /* Page title styling */
+        .page-title {
+            margin: 1rem 0;
+            padding-left: 1rem; /* Align to the left with padding */
+            color: var(--txt-color); /* Normal color in light mode */
+            text-align: left; /* Ensure title is flush to the left */
+        }
+
+        [data-theme="dark"] .page-title {
+            color: var(--header-color-dark); /* White header color in dark mode */
+        }
     </style>
 </head>
 <body>
     <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
-    <div class="header-container">
-        <div class="profile-image-container">
-            <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
-        </div>
+
+    <!-- Page title -->
+    <h1 class="page-title">About Me</h1>
+
+    <div class="content-container">
+        <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
+        <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
+        <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
     </div>
 
+    <br>
+
+    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -145,18 +167,9 @@ layout: default
             });
         });
     </script>
-
-    <div class="content-container">
-        <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
-        <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
-        <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
-    </div>
-
-    <br>
-
-    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
 </body>
 </html>
+
 
 
 
