@@ -17,7 +17,7 @@ collections:
     permalink: /:path/
     
 navbar:
-  - title: "projects"
-    url: /projects/
+  - title: "My Gists"
+    url: /gists/
   - title: "About me"
     url: /about/
