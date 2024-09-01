@@ -14,29 +14,29 @@ layout: default
         :root {
             --bg-color: #ffffff;
             --txt-color: #000000;
-            --container-bg-color: white;
-            --container-txt-color: #000000;
-            --link-color-light: blue;
-            --link-hover-color-light: darkblue;
-            --link-color-dark: #00ff00;
-            --link-hover-color-dark: #00cc00;
-            --header-color-dark: #00ff00;
-            --gist-bg-light: #f9f9f9;
-            --gist-bg-dark: #1e1e1e;
-            --gist-border-light: #ddd;
-            --gist-border-dark: #444;
-            --code-bg-light: #f1f1f1;
-            --code-bg-dark: #2e2e2e;
-            --code-color-light: #000000;
-            --code-color-dark: #00ff00;
+            --container-bg-color: white; /* Default content container background in light mode */
+            --container-txt-color: #000000; /* Default content container text color in light mode */
+            --link-color-light: blue; /* Blue links in light mode */
+            --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+            --link-color-dark: #00ff00; /* Green links in dark mode */
+            --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+            --header-color-dark: #00ff00; /* Green header color in dark mode */
+            --gist-bg-light: #f9f9f9; /* Background color for gists in light mode */
+            --gist-bg-dark: #1e1e1e; /* Background color for gists in dark mode */
+            --gist-border-light: #ddd; /* Border color for gists in light mode */
+            --gist-border-dark: #444; /* Border color for gists in dark mode */
+            --code-bg-light: #f1f1f1; /* Background color for code blocks in light mode */
+            --code-bg-dark: #2e2e2e; /* Background color for code blocks in dark mode */
+            --code-color-light: #000000; /* Text color for code blocks in light mode */
+            --code-color-dark: #00ff00; /* Text color for code blocks in dark mode */
         }
 
         /* Dark mode settings */
         [data-theme="dark"] {
             --bg-color: #000000;
             --txt-color: #ffffff;
-            --container-bg-color: #333333;
-            --container-txt-color: #00ff00;
+            --container-bg-color: #333333; /* Grey background for the content container in dark mode */
+            --container-txt-color: #00ff00; /* Green text color in the content container in dark mode */
         }
 
         /* Apply the variables to the body */
@@ -47,28 +47,28 @@ layout: default
 
         /* Link styling */
         a:link, a:visited {
-            color: var(--link-color-light);
+            color: var(--link-color-light); /* Default blue for light mode links */
         }
 
         a:hover {
-            color: var(--link-hover-color-light);
+            color: var(--link-hover-color-light); /* Hover color in light mode */
         }
 
         a:active {
-            color: var(--link-color-light);
+            color: var(--link-color-light); /* Active link color in light mode */
         }
 
         /* Dark mode overrides */
         [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-            color: var(--link-color-dark);
+            color: var(--link-color-dark); /* Green links in dark mode */
         }
 
         [data-theme="dark"] a:hover {
-            color: var(--link-hover-color-dark);
+            color: var(--link-hover-color-dark); /* Hover color in dark mode */
         }
 
         [data-theme="dark"] a:active {
-            color: var(--link-color-dark);
+            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
         /* Wrap content in a container to apply custom styles */
@@ -79,7 +79,7 @@ layout: default
             padding: 1rem;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
+            max-width: 90%; /* Ensures the content doesn't touch the edges */
         }
 
         /* Adjust the container width for different screen sizes */
@@ -97,39 +97,33 @@ layout: default
 
         /* Styles for the theme toggle */
         .theme-toggle-container {
-            margin: 0;
-            padding: 0;
+            margin: 0; /* Remove any margin */
+            padding: 0; /* Remove any padding */
         }
 
         /* Header styling */
         h2 {
             font-size: 2em;
             font-weight: bold;
-            margin: 0;
+            margin: 0; /* Remove margins to ensure no gap */
             color: #333;
         }
 
         [data-theme="dark"] h2 {
-            color: var(--header-color-dark);
+            color: var(--header-color-dark); /* Green header color in dark mode */
         }
 
         .gist {
             margin-bottom: 20px;
             padding: 10px;
-            border: 1px solid var(--gist-border-light);
+            border: 1px solid var(--gist-border-light); /* Default border color in light mode */
             border-radius: 4px;
-            background-color: var(--gist-bg-light);
-            box-shadow: 0 1px 3px rgba(27, 31, 35, 0.12), 0 8px 24px rgba(27, 31, 35, 0.12);
-            transition: transform 0.2s;
+            background-color: var(--gist-bg-light); /* Default background color in light mode */
         }
 
         [data-theme="dark"] .gist {
-            background-color: var(--gist-bg-dark);
-            border: 1px solid var(--gist-border-dark);
-        }
-
-        .gist:hover {
-            transform: scale(1.05);
+            background-color: var(--gist-bg-dark); /* Background color in dark mode */
+            border: 1px solid var(--gist-border-dark); /* Border color in dark mode */
         }
 
         .gist h3 {
@@ -137,20 +131,20 @@ layout: default
         }
 
         .gist pre {
-            background-color: var(--code-bg-light);
+            background-color: var(--code-bg-light); /* Background color for code blocks in light mode */
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
-            color: var(--code-color-light);
+            color: var(--code-color-light); /* Text color for code blocks in light mode */
         }
 
         [data-theme="dark"] .gist pre {
-            background-color: var(--code-bg-dark);
-            color: var(--code-color-dark);
+            background-color: var(--code-bg-dark); /* Background color for code blocks in dark mode */
+            color: var(--code-color-dark); /* Text color for code blocks in dark mode */
         }
 
         .gist code {
-            color: inherit;
+            color: inherit; /* Ensure the code inherits color from the pre element */
         }
 
         .gist a {
@@ -164,14 +158,6 @@ layout: default
         .gist a:hover {
             text-decoration: underline;
         }
-
-        /* Styles for the gists grid */
-        .gists-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px;
-        }
     </style>
 </head>
 <body>
@@ -179,12 +165,34 @@ layout: default
     <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
-    <br>
+<br>
     <h1>My GitHub Gists</h1>
 
+    {% if site.data.github_users %}
+    <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
+      {% for user in site.data.github_users %}
+        {% include repository/repo_user.html username=user %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <hr>
+
+    <!--
+    <h2>GitHub Repositories</h2>
+
+    {% if site.data.github_repos %}
+    <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
+      {% for repo in site.data.github_repos %}
+        {% include repository/repo.html repository=repo %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    -->
+
     <div class="content-container">
-        <div id="gists-container" class="gists-grid">
-            <!-- Gists will be loaded here -->
+        <div id="gists-container">
+          <!-- Gists will be loaded here -->
         </div>
     </div>
 
