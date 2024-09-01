@@ -4,6 +4,38 @@ permalink: /projects/
 layout: default
 ---
 
+<style>
+  .gists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gist {
+  flex: 1 1 calc(50% - 1rem);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: var(--bg-color-light);
+}
+
+.gist-link {
+  text-decoration: none;
+  color: var(--txt-color);
+}
+
+.gist-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .gist {
+    flex: 1 1 100%;
+  }
+}
+
+</style>
+
 ## cicero343's GitHub 
 
 {% if site.data.repositories.github_users %}
