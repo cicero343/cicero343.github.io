@@ -15,7 +15,6 @@ $link-hover-color-dark: #00cc00;
   --txt-color: #{$txt-color-light};
   --link-color-light: #{$link-color-light};
   --link-hover-color-light: #{$link-hover-color-light};
-  --navbar-bg-color: #f5f5f5; /* Background color for the navbar */
 }
 
 /* Dark mode */
@@ -23,8 +22,7 @@ $link-hover-color-dark: #00cc00;
   --bg-color: #{$bg-color-dark};
   --txt-color: #{$txt-color-dark};
   --link-color-light: #{$link-color-dark};
-  --link-hover-color-light: #{$link-color-dark};
-  --navbar-bg-color: #333; /* Darker background for dark mode */
+  --link-hover-color-light: #{$link-hover-color-dark};
 }
 
 /* Apply the variables to body */
@@ -51,23 +49,52 @@ a:hover {
   color: var(--link-hover-color-dark);
 }
 
-/* Header styles */
+/* Layout styles */
+.container {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.profile-image {
+  border-radius: 20px;
+}
+
+.badge-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.link-list a {
+  text-decoration: none;
+  color: var(--link-color-light);
+}
+
+.link-list a:hover {
+  text-decoration: underline;
+  color: var(--link-hover-color-light);
+}
+
 .site-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
-  background-color: var(--navbar-bg-color);
   width: 100%;
-  position: relative;
 }
 
 .site-title {
   display: flex;
   align-items: center;
-  text-decoration: none;
-  color: inherit;
-  white-space: nowrap;
 }
 
 .site-logo {
@@ -82,43 +109,31 @@ a:hover {
 }
 
 .site-nav {
-  display: flex;
-  align-items: center;
-}
-
-.nav-menu {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-item {
   position: relative;
 }
 
-.nav-item .dropdown-content {
+.nav-toggle {
+  display: none;
+}
+
+.dropdown-content {
   display: none;
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: var(--navbar-bg-color);
-  min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  background-color: var(--bg-color);
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.nav-item:hover .dropdown-content {
-  display: block;
+.dropdown-content li {
+  list-style: none;
 }
 
 .dropdown-content a {
-  color: var(--txt-color);
-  padding: 12px 16px;
-  text-decoration: none;
   display: block;
+  padding: 10px;
+  color: var(--link-color-light);
 }
 
 .dropdown-content a:hover {
@@ -127,54 +142,46 @@ a:hover {
 
 /* Media query for responsiveness */
 @media (max-width: 768px) {
+  .site-title h1 {
+    font-size: 1.2rem;
+  }
+
+  .site-logo {
+    width: 40px;
+    height: 40px;
+  }
+
   .site-header {
-    flex-direction: row;
-    align-items: center;
-    padding: 10px;
-    overflow: hidden;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .site-title {
-    margin-right: 60px; /* Ensure space for dropdown */
-    flex-grow: 1;
+    margin-top: 10px;
   }
 
   .site-nav {
-    flex-grow: 1;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .link-list {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .link-list.active {
+    display: flex;
   }
 
   .nav-toggle {
     display: block;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    margin-left: auto;
   }
 
-  .nav-menu {
-    display: none; /* Hide menu by default */
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: var(--navbar-bg-color);
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 200px; /* Adjust width as necessary */
-    z-index: 1;
-  }
-
-  .nav-menu.active {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .nav-item .dropdown-content {
-    position: static; /* Align properly on mobile */
-    top: auto;
-    right: auto;
-    box-shadow: none; /* Remove shadow on mobile */
+  .dropdown-content {
+    display: block;
+    position: static;
+    box-shadow: none;
   }
 }
