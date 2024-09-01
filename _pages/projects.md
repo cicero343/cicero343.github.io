@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div class="gists d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
   {% for gist in site.data.gists %}
     <div class="gist">
-      <a href="{{ gist.url }}" target="_blank" class="gist-link">
+      <a href="{{ https://gist.github.com/cicero343/b8eac1a5e5ac46d15ac8dee805388fc4 }}" target="_blank" class="gist-link">
         <p>{{ gist.description }}</p>
       </a>
     </div>
