@@ -73,22 +73,11 @@ layout: default
             color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
-        /* Layout adjustments for header */
-        .header-container {
-            display: flex;
-            align-items: center; /* Center items vertically */
-            margin-bottom: 1rem; /* Space below the header */
-        }
-
+        /* Styles for the theme toggle button */
         .theme-toggle-container {
-            margin-right: 1rem; /* Space between the toggle button and profile image */
-        }
-
-        .profile-image {
-            border-radius: 10px; /* Rounded edges for the image */
-            width: 80px; /* Set size of the profile image */
-            height: 80px; /* Set size of the profile image */
-            object-fit: cover; /* Ensure the image fits within the dimensions */
+            position: fixed; /* Fixed position at the top */
+            top: 10px; /* Space from the top */
+            left: 10px; /* Space from the left */
         }
 
         /* Page title styling */
@@ -96,11 +85,27 @@ layout: default
             margin: 0;
             padding: 0;
             color: var(--txt-color); /* Normal color in light mode */
-            margin-top: 1rem; /* Space above the title */
+            text-align: left; /* Ensure title is flush to the left */
         }
 
         [data-theme="dark"] .page-title {
             color: var(--header-color-dark); /* White header color in dark mode */
+        }
+
+        /* Header container styling */
+        .header-container {
+            display: flex;
+            align-items: center; /* Center items vertically */
+            gap: 15px; /* Space between the title and the profile image */
+            margin: 60px 0 20px 0; /* Space at the top and bottom */
+            padding: 0; /* Remove padding */
+        }
+
+        .profile-image {
+            border-radius: 10px; /* Rounded edges for the image */
+            width: 80px; /* Set size of the profile image */
+            height: 80px; /* Set size of the profile image */
+            object-fit: cover; /* Ensure the image fits within the dimensions */
         }
 
         /* Content container styling */
@@ -128,14 +133,15 @@ layout: default
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <div class="theme-toggle-container">
-            <button id="theme-toggle">Toggle Dark Mode</button>
-        </div>
-        <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
+    <div class="theme-toggle-container">
+        <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
     <h1 class="page-title">About Me</h1>
+
+    <div class="header-container">
+        <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
+    </div>
 
     <div class="content-container">
         <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
@@ -165,8 +171,6 @@ layout: default
     </script>
 </body>
 </html>
-
-
 
 
 
