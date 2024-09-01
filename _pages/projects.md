@@ -31,33 +31,51 @@ layout: default
 ## GitHub Gists
 
 <div id="gists-container">
-  <!-- The Gists will be loaded here dynamically by JavaScript -->
+  <!-- Gists will be loaded here -->
 </div>
 
 <script>
   async function fetchGists() {
-    const username = 'cicero343'; // Replace with your GitHub username
-    const response = await fetch(`https://api.github.com/users/${username}/gists`);
-    const gists = await response.json();
+    try {
+      const username = 'cicero343'; // Your GitHub username
+      const response = await fetch(`https://api.github.com/users/${username}/gists`);
+      const gists = await response.json();
 
-    const container = document.getElementById('gists-container');
-    
-    gists.forEach(gist => {
-      const gistDiv = document.createElement('div');
-      gistDiv.className = 'gist';
+      if (gists.length === 0) {
+        document.getElementById('gists-container').innerText = 'No Gists found.';
+        return;
+      }
 
-      // Limit to first 5 lines of the first file in the Gist
-      const fileName = Object.keys(gist.files)[0];
-      const file = gist.files[fileName];
+      const container = document.getElementById('gists-container');
+      gists.forEach(gist => {
+        const gistDiv = document.createElement('div');
+        gistDiv.className = 'gist';
 
-      gistDiv.innerHTML = `
-        <h3>${gist.description || 'No Description'}</h3>
-        <pre><code>${file.content.split('\n').slice(0, 5).join('\n')}...</code></pre>
-        <a href="${gist.html_url}" target="_blank">View on GitHub</a>
-      `;
+        const fileName = Object.keys(gist.files)[0];
+        const file = gist.files[fileName];
 
-      container.appendChild(gistDiv);
-    });
+        gistDiv.innerHTML = `
+          <h3>${gist.description || 'No Description'}</h3>
+          <pre><code>Loading preview...</code></pre>
+          <a href="${gist.html_url}" target="_blank">View on GitHub</a>
+        `;
+
+        container.appendChild(gistDiv);
+
+        // Fetch the raw content to display the first 5 lines
+        fetch(file.raw_url)
+          .then(response => response.text())
+          .then(content => {
+            const codeElement = gistDiv.querySelector('code');
+            codeElement.textContent = content.split('\n').slice(0, 5).join('\n') + '...';
+          })
+          .catch(error => {
+            gistDiv.querySelector('code').textContent = 'Unable to load preview';
+          });
+      });
+    } catch (error) {
+      document.getElementById('gists-container').innerText = 'Failed to load Gists.';
+    }
   }
 
   fetchGists();
