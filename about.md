@@ -28,6 +28,7 @@ layout: default
             --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
             --link-color-dark: #00ff00; /* Green links in dark mode */
             --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+            --header-color-dark: #ffffff; /* White header color in dark mode */
         }
 
         /* Dark mode settings */
@@ -72,36 +73,17 @@ layout: default
             color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
-        /* Wrap content in a container to apply custom styles */
-        .content-container {
-            background-color: var(--container-bg-color);
-            color: var(--container-txt-color);
-            margin: 0 auto;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 90%; /* Ensures the content doesn't touch the edges */
-        }
-
-        /* Adjust the container width for different screen sizes */
-        @media only screen and (max-width: 768px) {
-            .content-container {
-                max-width: 95%;
-            }
-        }
-
-        @media only screen and (max-width: 480px) {
-            .content-container {
-                max-width: 98%;
-            }
-        }
-
         /* Styles for the theme toggle and profile image */
+        .theme-toggle-container {
+            margin-bottom: 20px; /* Space below the button, adjust as needed */
+        }
+
         .header-container {
             display: flex;
             align-items: flex-start; /* Align items to the top */
             gap: 15px; /* Increased gap between the button and the image */
-            margin-bottom: 15px; /* Space below the header container */
+            margin-bottom: 20px; /* Space below the header container */
+            padding-left: 1rem; /* Align to the left with padding */
         }
 
         .profile-image {
@@ -115,11 +97,6 @@ layout: default
             /* No additional margin needed here */
         }
 
-        /* Ensure the button is positioned higher */
-        .theme-toggle-container {
-            margin-bottom: 20px; /* Space below the button, adjust as needed */
-        }
-
         /* Page title styling */
         .page-title {
             margin: 1rem 0;
@@ -131,6 +108,29 @@ layout: default
         [data-theme="dark"] .page-title {
             color: var(--header-color-dark); /* White header color in dark mode */
         }
+
+        /* Content container styling */
+        .content-container {
+            background-color: var(--container-bg-color);
+            color: var(--container-txt-color);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 90%; /* Ensures the content doesn't touch the edges */
+            margin: 0 auto;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .content-container {
+                max-width: 95%;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .content-container {
+                max-width: 98%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -138,8 +138,13 @@ layout: default
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
-    <!-- Page title -->
     <h1 class="page-title">About Me</h1>
+
+    <div class="header-container">
+        <div class="profile-image-container">
+            <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
+        </div>
+    </div>
 
     <div class="content-container">
         <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
@@ -150,7 +155,7 @@ layout: default
     <br>
 
     <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -169,7 +174,6 @@ layout: default
     </script>
 </body>
 </html>
-
 
 
 
