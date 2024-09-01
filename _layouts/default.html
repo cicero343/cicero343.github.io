@@ -209,24 +209,22 @@
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <a class="site-title" href="/">
+  <header class="site-header" role="banner">
+    <a class="site-title" rel="author" href="/">
       <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Site Logo" class="site-logo">
       <h1>A Diary of IT Projects</h1>
     </a>
     <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
     <nav class="site-nav">
-      <ul class="link-list">
+      <ul class="nav-menu">
         {% for item in site.navbar %}
-          <li>
+          <li class="dropdown">
             <a class="page-link" href="{{ item.url }}">{{ item.title }}</a>
-            {% if item.subitems %}
-              <ul class="dropdown-content">
-                {% for subitem in item.subitems %}
-                  <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
-                {% endfor %}
-              </ul>
-            {% endif %}
+            <ul class="dropdown-content">
+              {% for subitem in item.subitems %}
+                <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
+              {% endfor %}
+            </ul>
           </li>
         {% endfor %}
       </ul>
@@ -264,7 +262,7 @@
 
   <script>
     document.querySelector('.nav-toggle').addEventListener('click', function() {
-      document.querySelector('.link-list').classList.toggle('active');
+      document.querySelector('.site-nav').classList.toggle('active');
     });
   </script>
 </body>
