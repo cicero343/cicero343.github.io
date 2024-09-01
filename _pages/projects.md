@@ -121,6 +121,15 @@ layout: default
         .gist a:hover {
             text-decoration: underline;
         }
+
+        /* Header styling */
+        h2 {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -129,10 +138,20 @@ layout: default
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
-    ## cicero343's GitHub
+    <h2>cicero343's GitHub</h2>
+
+    {% if site.data.github_users %}
+    <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
+      {% for user in site.data.github_users %}
+        {% include repository/repo_user.html username=user %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <hr>
 
     <!--
-    ## GitHub Repositories
+    <h2>GitHub Repositories</h2>
 
     {% if site.data.github_repos %}
     <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
@@ -143,7 +162,7 @@ layout: default
     {% endif %}
     -->
 
-    ## GitHub Gists
+    <h2>GitHub Gists</h2>
 
     <div class="content-container">
         <div id="gists-container">
