@@ -87,7 +87,6 @@ a:hover {
 .site-nav {
   display: flex;
   align-items: center;
-  position: relative;
 }
 
 .nav-menu {
@@ -95,14 +94,14 @@ a:hover {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.nav-menu li {
   position: relative;
 }
 
-/* Dropdown menu styles */
-.dropdown-content {
+.nav-item {
+  position: relative;
+}
+
+.nav-item .dropdown-content {
   display: none;
   position: absolute;
   right: 0;
@@ -116,7 +115,7 @@ a:hover {
   margin: 0;
 }
 
-.nav-menu li:hover .dropdown-content {
+.nav-item:hover .dropdown-content {
   display: block;
 }
 
@@ -136,13 +135,13 @@ a:hover {
   .site-header {
     flex-direction: row;
     align-items: center;
-    padding: 10px 20px;
-    width: 100%;
+    padding: 10px;
     overflow: hidden;
   }
 
   .site-title {
     margin-right: 20px; /* Adjust margin to ensure space for dropdown */
+    flex-grow: 1;
   }
 
   .site-nav {
@@ -158,7 +157,7 @@ a:hover {
     background: none;
     border: none;
     font-size: 1.5rem;
-    margin-left: auto; /* Align toggle button to the right */
+    margin-left: auto;
   }
 
   .nav-menu {
@@ -180,11 +179,7 @@ a:hover {
     flex-direction: column;
   }
 
-  .nav-menu li {
-    width: 100%;
-  }
-
-  .dropdown-content {
+  .nav-item .dropdown-content {
     position: static; /* Ensure dropdown aligns properly */
     top: auto;
     right: auto;
