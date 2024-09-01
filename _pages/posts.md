@@ -38,8 +38,9 @@ layout: default
         }
 
         .theme-toggle-container {
-            margin: 1rem; /* Adjust as needed */
+            margin: 0; /* Ensure no extra margin */
             padding: 0;
+            position: relative; /* Ensure it positions correctly */
         }
 
         .posts-container {
@@ -97,7 +98,6 @@ layout: default
             background-color: #333333;
         }
 
-        /* Styling for the page title */
         .page-title {
             margin: 1rem 0;
             padding-left: 1rem; /* Align to the left with padding */
@@ -111,10 +111,12 @@ layout: default
 </head>
 <body>
 
+    <!-- Dark mode toggle button -->
     <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
+    <!-- Page title -->
     <h1 class="page-title">Posts</h1>
     <hr>
     <div class="posts-container">
