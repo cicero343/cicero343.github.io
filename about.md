@@ -75,9 +75,8 @@ layout: default
 
         /* Styles for the theme toggle button */
         .theme-toggle-container {
-            position: fixed; /* Fixed position at the top */
-            top: 10px; /* Space from the top */
-            left: 10px; /* Space from the left */
+            margin-bottom: 20px; /* Space below the toggle button */
+            text-align: left; /* Align button to the left */
         }
 
         /* Page title styling */
@@ -97,7 +96,7 @@ layout: default
             display: flex;
             align-items: center; /* Center items vertically */
             gap: 15px; /* Space between the title and the profile image */
-            margin: 60px 0 20px 0; /* Space at the top and bottom */
+            margin-bottom: 20px; /* Space below the header container */
             padding: 0; /* Remove padding */
         }
 
@@ -137,9 +136,8 @@ layout: default
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
-    <h1 class="page-title">About Me</h1>
-
     <div class="header-container">
+        <h1 class="page-title">About Me</h1>
         <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
     </div>
 
@@ -171,6 +169,7 @@ layout: default
     </script>
 </body>
 </html>
+
 
 
 
