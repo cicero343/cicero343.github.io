@@ -36,6 +36,31 @@ layout: default
 
 </style>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  fetch('https://api.github.com/users/cicero343/gists')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.querySelector('.gists');
+      container.innerHTML = ''; // Clear existing content
+
+      data.forEach(gist => {
+        const gistElement = document.createElement('div');
+        gistElement.className = 'gist';
+        gistElement.innerHTML = `
+          <a href="${gist.html_url}" target="_blank" class="gist-link">
+            <p>${gist.description || 'No Description'}</p>
+          </a>
+        `;
+        container.appendChild(gistElement);
+      });
+    })
+    .catch(error => console.error('Error fetching Gists:', error));
+});
+</script>
+
+
+
 ## cicero343's GitHub 
 
 {% if site.data.repositories.github_users %}
