@@ -32,7 +32,8 @@
     --link-color-dark: #00ff00;
     --link-hover-color-dark: #00cc00;
     --navbar-bg-color: #f5f5f5;
-    --hover-bg-color: #e0e0e0; /* Light grey for hover effect */
+    --hover-bg-color-light: #e0e0e0; /* Light grey for hover effect in light mode */
+    --hover-bg-color-dark: #333; /* Dark grey for hover effect in dark mode */
   }
 
   [data-theme="dark"] {
@@ -41,6 +42,7 @@
     --link-color-light: var(--link-color-dark);
     --link-hover-color-light: var(--link-hover-color-dark);
     --navbar-bg-color: #333;
+    --hover-bg-color-light: var(--hover-bg-color-dark); /* Set hover effect to dark grey in dark mode */
   }
 
   [data-theme="light"] {
@@ -123,7 +125,7 @@
   }
 
   .nav-item:hover {
-    background-color: var(--hover-bg-color);
+    background-color: var(--hover-bg-color-light); /* Apply the hover color */
     color: var(--txt-color);
   }
 
@@ -157,7 +159,7 @@
   }
 
   .dropdown-content a:hover {
-    background-color: var(--hover-bg-color);
+    background-color: var(--hover-bg-color-light); /* Apply the hover color */
   }
 
   .dropdown-toggle {
