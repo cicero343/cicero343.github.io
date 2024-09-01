@@ -22,67 +22,62 @@
 
   <!-- Custom CSS -->
   <style>
-    /* Default light mode settings */
     :root {
-        --bg-color-light: #ffffff;
-        --txt-color-light: #000000;
-        --link-color-light: blue;
-        --link-hover-color-light: darkblue;
-        --bg-color-dark: #000000;
-        --txt-color-dark: #ffffff;
-        --link-color-dark: #00ff00;
-        --link-hover-color-dark: #00cc00;
-        --navbar-bg-color: #f5f5f5;
+      --bg-color-light: #ffffff;
+      --txt-color-light: #000000;
+      --link-color-light: blue;
+      --link-hover-color-light: darkblue;
+      --bg-color-dark: #000000;
+      --txt-color-dark: #ffffff;
+      --link-color-dark: #00ff00;
+      --link-hover-color-dark: #00cc00;
+      --navbar-bg-color: #f5f5f5;
     }
 
-    /* Dark mode settings */
     [data-theme="dark"] {
-        --bg-color: var(--bg-color-dark);
-        --txt-color: var(--txt-color-dark);
-        --link-color-light: var(--link-color-dark);
-        --link-hover-color-light: var(--link-hover-color-dark);
-        --navbar-bg-color: #333;
+      --bg-color: var(--bg-color-dark);
+      --txt-color: var(--txt-color-dark);
+      --link-color-light: var(--link-color-dark);
+      --link-hover-color-light: var(--link-hover-color-dark);
+      --navbar-bg-color: #333;
     }
 
-    /* Light mode settings */
     [data-theme="light"] {
-        --bg-color: var(--bg-color-light);
-        --txt-color: var(--txt-color-light);
+      --bg-color: var(--bg-color-light);
+      --txt-color: var(--txt-color-light);
     }
 
-    /* Apply the variables to the body */
     body {
-        background-color: var(--bg-color);
-        color: var(--txt-color);
+      background-color: var(--bg-color);
+      color: var(--txt-color);
+      margin: 0;
+      font-family: Arial, sans-serif;
     }
 
-    /* Link styling */
     a:link, a:visited {
-        color: var(--link-color-light);
+      color: var(--link-color-light);
     }
 
     a:hover {
-        color: var(--link-hover-color-light);
+      color: var(--link-hover-color-light);
     }
 
     a:active {
-        color: var(--link-color-light);
+      color: var(--link-color-light);
     }
 
-    /* Dark mode overrides */
     [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-        color: var(--link-color-dark);
+      color: var(--link-color-dark);
     }
 
     [data-theme="dark"] a:hover {
-        color: var(--link-hover-color-dark);
+      color: var(--link-hover-color-dark);
     }
 
     [data-theme="dark"] a:active {
-        color: var(--link-color-dark);
+      color: var(--link-color-dark);
     }
 
-    /* Header styles */
     .site-header {
       display: flex;
       justify-content: space-between;
@@ -134,7 +129,6 @@
       display: none;
     }
 
-    /* Mobile dropdown */
     .dropdown {
       display: none;
       position: relative;
@@ -174,38 +168,37 @@
         display: none;
       }
 
-      .nav-toggle {
+      .dropdown {
         display: block;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
         margin-left: auto;
       }
 
-      .dropdown {
+      .dropdown-toggle {
         display: block;
       }
 
       .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: var(--navbar-bg-color);
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content.show {
         display: block;
-        position: static;
-        box-shadow: none;
-        width: 100%;
       }
 
       .site-header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
       }
 
       .site-title {
-        margin-bottom: 10px;
-      }
-
-      .dropdown-content a {
-        padding: 10px;
-        text-align: center;
+        margin-right: 10px;
       }
     }
   </style>
@@ -220,14 +213,12 @@
     <nav class="site-nav">
       <a class="nav-item" href="/about/">About Me</a>
       <a class="nav-item" href="/projects/">Projects</a>
-      <!-- Additional nav items if needed -->
     </nav>
     <div class="dropdown">
-      <span class="dropdown-toggle">&#9776;</span>
-      <div class="dropdown-content">
+      <span class="dropdown-toggle" onclick="toggleDropdown()">&#9776;</span>
+      <div id="dropdown-content" class="dropdown-content">
         <a href="/about/">About Me</a>
         <a href="/projects/">Projects</a>
-        <!-- Additional dropdown items if needed -->
       </div>
     </div>
   </header>
@@ -260,5 +251,11 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    function toggleDropdown() {
+      document.getElementById('dropdown-content').classList.toggle('show');
+    }
+  </script>
 </body>
 </html>
