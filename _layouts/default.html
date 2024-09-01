@@ -209,7 +209,7 @@
   </style>
 </head>
 <body>
-<header class="site-header" role="banner">
+  <header class="site-header" role="banner">
     <a class="site-title" rel="author" href="/">
       <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Site Logo" class="site-logo">
       <h1>A Diary of IT Projects</h1>
@@ -220,11 +220,13 @@
         {% for item in site.navbar %}
           <li class="dropdown">
             <a class="page-link" href="{{ item.url }}">{{ item.title }}</a>
-            <ul class="dropdown-content">
-              {% for subitem in item.subitems %}
-                <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
-              {% endfor %}
-            </ul>
+            {% if item.subitems %}
+              <ul class="dropdown-content">
+                {% for subitem in item.subitems %}
+                  <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
