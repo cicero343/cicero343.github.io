@@ -20,7 +20,7 @@ layout: default
             --link-hover-color-light: darkblue;
             --link-color-dark: #00ff00;
             --link-hover-color-dark: #00cc00;
-            --header-color-dark: #00ff00; /* Green header color in dark mode */
+            --header-color-dark: #ffffff; /* White header color in dark mode */
         }
 
         [data-theme="dark"] {
@@ -105,7 +105,7 @@ layout: default
         }
 
         [data-theme="dark"] .page-title {
-            color: var(--header-color-dark); /* Green header color in dark mode */
+            color: var(--header-color-dark); /* White header color in dark mode */
         }
     </style>
 </head>
