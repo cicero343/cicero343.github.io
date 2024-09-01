@@ -1,6 +1,6 @@
 ---
-title: Projects
-permalink: /projects/
+title: My Gists
+permalink: /gists/
 layout: default
 ---
 
@@ -8,7 +8,7 @@ layout: default
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects</title>
+    <title>My Gists</title>
     <style>
         /* Default light mode settings */
         :root {
