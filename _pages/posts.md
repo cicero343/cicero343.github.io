@@ -9,7 +9,6 @@ layout: default
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts</title>
-    <hr>
     <style>
         /* Ensure dark mode settings are included */
         :root {
@@ -117,7 +116,7 @@ layout: default
     </div>
 
     <h1 class="page-title">Posts</h1>
-
+    <hr>
     <div class="posts-container">
         {% for post in site.posts %}
           <div class="post">
