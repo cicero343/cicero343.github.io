@@ -3,19 +3,17 @@ title: About me
 permalink: /about/
 ---
 
-<head>
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
-  <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
-  <link rel="shortcut icon" href="{{ '/assets/favicon.ico' | relative_url }}" type="image/x-icon">
-</head>
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
+    <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
+    <link rel="shortcut icon" href="{{ '/assets/favicon.ico' | relative_url }}" type="image/x-icon">
     <style>
         /* Default light mode settings */
         :root {
@@ -41,6 +39,8 @@ permalink: /about/
         body {
             background-color: var(--bg-color);
             color: var(--txt-color);
+            margin: 0;
+            padding: 0;
         }
 
         /* Link styling */
@@ -73,7 +73,7 @@ permalink: /about/
         .content-container {
             background-color: var(--container-bg-color);
             color: var(--container-txt-color);
-            margin: 0 auto;
+            margin: 1rem auto; /* Margin at the top and bottom for spacing */
             padding: 1rem;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -93,28 +93,21 @@ permalink: /about/
             }
         }
 
-        /* Styles for the theme toggle and profile image */
-        .header-container {
-            display: flex;
-            align-items: flex-start; /* Align items to the top */
-            gap: 15px; /* Increased gap between the button and the image */
-            margin-bottom: 15px; /* Space below the header container */
-        }
-
-        .profile-image {
-            border-radius: 10px; /* Rounded edges for the image */
-            width: 80px; /* Set size of the profile image */
-            height: 80px; /* Set size of the profile image */
-            object-fit: cover; /* Ensure the image fits within the dimensions */
-        }
-
-        .profile-image-container {
-            /* No additional margin needed here */
-        }
-
-        /* Ensure the button is positioned higher */
+        /* Styling for the theme toggle button */
         .theme-toggle-container {
-            margin-bottom: 20px; /* Space below the button, adjust as needed */
+            margin: 1rem; /* Space around the button */
+            text-align: center; /* Center the button horizontally */
+        }
+
+        /* Styling for the page title */
+        .page-title {
+            margin: 0;
+            padding-left: 1rem; /* Align to the left with padding */
+            color: var(--txt-color); /* Normal color in light mode */
+        }
+
+        [data-theme="dark"] .page-title {
+            color: var(--header-color-dark); /* White header color in dark mode */
         }
     </style>
 </head>
@@ -122,11 +115,18 @@ permalink: /about/
     <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
-    <div class="header-container">
-        <div class="profile-image-container">
-            <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
-        </div>
+
+    <h1 class="page-title">About me</h1>
+
+    <div class="content-container">
+        <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
+        <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
+        <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
     </div>
+
+    <br>
+
+    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -144,20 +144,8 @@ permalink: /about/
             });
         });
     </script>
-
-    <div class="content-container">
-        <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
-        <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
-        <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
-    </div>
-
-    <br>
-
-    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
 </body>
 </html>
-
-
 
 
 
