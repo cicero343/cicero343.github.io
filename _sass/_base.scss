@@ -54,10 +54,9 @@ a:hover {
 /* Header styles */
 .site-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
-  box-sizing: border-box;
   background-color: var(--navbar-bg-color);
   width: 100%;
   position: relative;
@@ -68,9 +67,7 @@ a:hover {
   align-items: center;
   text-decoration: none;
   color: inherit;
-  flex-grow: 1;
   white-space: nowrap;
-  margin-right: 60px; /* Space for the dropdown */
 }
 
 .site-logo {
@@ -94,7 +91,6 @@ a:hover {
   list-style: none;
   padding: 0;
   margin: 0;
-  position: relative;
 }
 
 .nav-item {
@@ -104,12 +100,11 @@ a:hover {
 .nav-item .dropdown-content {
   display: none;
   position: absolute;
-  right: 0;
   top: 100%;
+  right: 0;
   background-color: var(--navbar-bg-color);
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
   list-style: none;
   padding: 0;
   margin: 0;
@@ -140,14 +135,11 @@ a:hover {
   }
 
   .site-title {
-    margin-right: 20px; /* Adjust margin to ensure space for dropdown */
+    margin-right: 60px; /* Ensure space for dropdown */
     flex-grow: 1;
   }
 
   .site-nav {
-    display: flex;
-    align-items: center;
-    position: relative;
     flex-grow: 1;
   }
 
@@ -166,7 +158,7 @@ a:hover {
     right: 0;
     top: 100%;
     background-color: var(--navbar-bg-color);
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     list-style: none;
     padding: 0;
     margin: 0;
@@ -180,7 +172,7 @@ a:hover {
   }
 
   .nav-item .dropdown-content {
-    position: static; /* Ensure dropdown aligns properly */
+    position: static; /* Align properly on mobile */
     top: auto;
     right: auto;
     box-shadow: none; /* Remove shadow on mobile */
