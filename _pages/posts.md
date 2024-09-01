@@ -40,6 +40,7 @@ layout: default
         .theme-toggle-container {
             margin: 0; /* Ensure no extra margin */
             padding: 0;
+            position: relative; /* Ensure it positions correctly */
         }
 
         .posts-container {
@@ -98,10 +99,10 @@ layout: default
         }
 
         .page-title {
-            margin: 0; /* Remove margin to flush left */
-            padding: 0 1rem; /* Optional padding to ensure some space */
+            margin: 1rem 0; /* Adjust top and bottom margin */
+            padding: 0; /* Remove padding */
             color: var(--txt-color); /* Normal color in light mode */
-            border-bottom: 1px solid #ddd; /* Optional bottom border for clarity */
+            text-align: left; /* Ensure left alignment */
         }
 
         [data-theme="dark"] .page-title {
@@ -152,4 +153,5 @@ layout: default
 
 </body>
 </html>
+
 
