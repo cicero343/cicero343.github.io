@@ -5,35 +5,30 @@ layout: default
 ---
 
 <style>
-  .gists {
+.gists {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 20px;
 }
 
 .gist {
-  flex: 1 1 calc(50% - 1rem);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  flex: 1 1 200px; /* Adjust as needed */
+  border: 1px solid #ddd;
+  padding: 10px;
   border-radius: 4px;
-  background-color: var(--bg-color-light);
+  background: #f9f9f9;
 }
 
 .gist-link {
   text-decoration: none;
-  color: var(--txt-color);
+  color: inherit;
 }
 
 .gist-link:hover {
-  text-decoration: underline;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
 }
-
-@media (max-width: 768px) {
-  .gist {
-    flex: 1 1 100%;
-  }
-}
-
 </style>
 
 <script>
