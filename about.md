@@ -73,32 +73,18 @@ layout: default
             color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
-        /* Styles for the theme toggle button */
-        .theme-toggle-container {
-            margin: 0; /* Ensure no extra margin */
-            padding: 0;
-            position: relative; /* Ensure it positions correctly */
-        }
-
-        /* Page title styling */
-        .page-title {
-            margin: 1rem 0;
-            padding: 0; /* Remove padding to align title flush to the left */
-            color: var(--txt-color); /* Normal color in light mode */
-            text-align: left; /* Ensure title is flush to the left */
-        }
-
-        [data-theme="dark"] .page-title {
-            color: var(--header-color-dark); /* White header color in dark mode */
-        }
-
-        /* Header container styling */
+        /* Layout adjustments for header */
         .header-container {
             display: flex;
             align-items: center; /* Center items vertically */
-            gap: 15px; /* Space between the image and other elements */
-            margin: 0 0 20px 0; /* No extra margin on the left, space below the container */
-            padding: 0; /* Remove padding to align flush to the left */
+            justify-content: space-between; /* Space out items to the edges */
+            padding: 1rem; /* Add padding around the container */
+            margin-bottom: 20px; /* Space below the header */
+        }
+
+        .theme-toggle-container {
+            display: flex;
+            align-items: center;
         }
 
         .profile-image {
@@ -106,6 +92,17 @@ layout: default
             width: 80px; /* Set size of the profile image */
             height: 80px; /* Set size of the profile image */
             object-fit: cover; /* Ensure the image fits within the dimensions */
+        }
+
+        /* Page title styling */
+        .page-title {
+            margin: 0;
+            padding: 0;
+            color: var(--txt-color); /* Normal color in light mode */
+        }
+
+        [data-theme="dark"] .page-title {
+            color: var(--header-color-dark); /* White header color in dark mode */
         }
 
         /* Content container styling */
@@ -133,16 +130,12 @@ layout: default
     </style>
 </head>
 <body>
-    <div class="theme-toggle-container">
-        <button id="theme-toggle">Toggle Dark Mode</button>
-    </div>
-
-    <h1 class="page-title">About Me</h1>
-
     <div class="header-container">
-        <div class="profile-image-container">
-            <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
+        <div class="theme-toggle-container">
+            <button id="theme-toggle">Toggle Dark Mode</button>
         </div>
+        <h1 class="page-title">About Me</h1>
+        <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
     </div>
 
     <div class="content-container">
@@ -173,7 +166,6 @@ layout: default
     </script>
 </body>
 </html>
-
 
 
 
