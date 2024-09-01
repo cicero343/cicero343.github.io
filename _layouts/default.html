@@ -173,7 +173,7 @@
     }
   </style>
 </head>
-
+  
 <body>
   <header class="site-header" role="banner">
     <a class="site-title" rel="author" href="/">
@@ -181,7 +181,13 @@
       <h1>A Diary of IT Projects</h1>
     </a>
     <nav class="site-nav">
-      <a class="page-link" href="/about/">About me</a>
+      <ul>
+        {% for page in site.pages %}
+          {% if page.title %}
+            <li><a class="page-link" href="{{ page.url | relative_url }}">{{ page.title }}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
     </nav>
   </header>
 
