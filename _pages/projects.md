@@ -4,33 +4,6 @@ permalink: /projects/
 layout: default
 ---
 
-<style>
-.gists {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.gist {
-  flex: 1 1 200px; /* Adjust as needed */
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 4px;
-  background: #f9f9f9;
-}
-
-.gist-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.gist-link:hover {
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  padding: 8px;
-}
-</style>
-
 ## cicero343's GitHub 
 
 {% if site.data.github_users %}
@@ -57,48 +30,68 @@ layout: default
 
 ## GitHub Gists
 
-<h2>GitHub Gists</h2>
-
-<div id="gists-container"></div>
+<div id="gists-container">
+  <!-- The Gists will be loaded here dynamically by JavaScript -->
+</div>
 
 <script>
-  const gists = [
-    {
-      id: "b8eac1a5e5ac46d15ac8dee805388fc4", // Replace with your Gist ID
-      description: "Sample Gist 1"
-    },
-    // Add more gists here
-  ];
+  async function fetchGists() {
+    const username = 'cicero343'; // Replace with your GitHub username
+    const response = await fetch(`https://api.github.com/users/${username}/gists`);
+    const gists = await response.json();
 
-  const container = document.getElementById('gists-container');
+    const container = document.getElementById('gists-container');
+    
+    gists.forEach(gist => {
+      const gistDiv = document.createElement('div');
+      gistDiv.className = 'gist';
 
-  gists.forEach(gist => {
-    const gistElement = document.createElement('div');
-    gistElement.className = 'gist';
+      // Limit to first 5 lines of the first file in the Gist
+      const fileName = Object.keys(gist.files)[0];
+      const file = gist.files[fileName];
 
-    const gistTitle = document.createElement('h3');
-    gistTitle.textContent = gist.description;
+      gistDiv.innerHTML = `
+        <h3>${gist.description || 'No Description'}</h3>
+        <pre><code>${file.content.split('\n').slice(0, 5).join('\n')}...</code></pre>
+        <a href="${gist.html_url}" target="_blank">View on GitHub</a>
+      `;
 
-    const gistContent = document.createElement('div');
-    gistContent.textContent = 'Loading...';
+      container.appendChild(gistDiv);
+    });
+  }
 
-    gistElement.appendChild(gistTitle);
-    gistElement.appendChild(gistContent);
-    container.appendChild(gistElement);
-
-    // Fetch the Gist content
-    fetch(`https://api.github.com/gists/${gist.id}`)
-      .then(response => response.json())
-      .then(data => {
-        const files = data.files;
-        const fileContent = Object.keys(files).map(fileName => {
-          return files[fileName].content;
-        }).join('\n\n');
-
-        gistContent.textContent = fileContent;
-      })
-      .catch(error => {
-        gistContent.textContent = 'Failed to load Gist content';
-      });
-  });
+  fetchGists();
 </script>
+
+<style>
+  .gist {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+
+  .gist h3 {
+    margin-top: 0;
+  }
+
+  .gist pre {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  .gist a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0366d6;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .gist a:hover {
+    text-decoration: underline;
+  }
+</style>
