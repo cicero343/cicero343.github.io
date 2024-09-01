@@ -96,6 +96,13 @@ layout: default
         [data-theme="dark"] .post {
             background-color: #333333;
         }
+
+        /* Styling for the page title */
+        .page-title {
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--header-color-dark);
+        }
     </style>
 </head>
 <body>
@@ -104,8 +111,9 @@ layout: default
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
+    <h1 class="page-title">Posts</h1>
+
     <div class="posts-container">
-        <h1>Posts</h1>
         {% for post in site.posts %}
           <div class="post">
             <div class="date">{{ post.date | date: "%B %d, %Y" }}</div>
