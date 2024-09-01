@@ -57,35 +57,48 @@ layout: default
 
 ## GitHub Gists
 
-<div class="gists">
-  <!-- Gists will be dynamically inserted here by JavaScript -->
-</div>
+<h2>GitHub Gists</h2>
+
+<div id="gists-container"></div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  fetch('https://api.github.com/users/cicero343/gists')
-    .then(response => response.json())
-    .then(data => {
-      const container = document.querySelector('.gists');
-      container.innerHTML = ''; // Clear existing content
+  const gists = [
+    {
+      id: "b8eac1a5e5ac46d15ac8dee805388fc4", // Replace with your Gist ID
+      description: "Sample Gist 1"
+    },
+    // Add more gists here
+  ];
 
-      data.forEach(gist => {
-        const files = gist.files;
-        const fileNames = Object.keys(files);
+  const container = document.getElementById('gists-container');
 
-        fileNames.forEach(fileName => {
-          const file = files[fileName];
-          const gistElement = document.createElement('div');
-          gistElement.className = 'gist';
-          gistElement.innerHTML = `
-            <h3>${gist.description || 'No Description'}</h3>
-            <pre><code>${file.content}</code></pre>
-            <p><a href="${gist.html_url}" target="_blank">View on GitHub</a></p>
-          `;
-          container.appendChild(gistElement);
-        });
+  gists.forEach(gist => {
+    const gistElement = document.createElement('div');
+    gistElement.className = 'gist';
+
+    const gistTitle = document.createElement('h3');
+    gistTitle.textContent = gist.description;
+
+    const gistContent = document.createElement('div');
+    gistContent.textContent = 'Loading...';
+
+    gistElement.appendChild(gistTitle);
+    gistElement.appendChild(gistContent);
+    container.appendChild(gistElement);
+
+    // Fetch the Gist content
+    fetch(`https://api.github.com/gists/${gist.id}`)
+      .then(response => response.json())
+      .then(data => {
+        const files = data.files;
+        const fileContent = Object.keys(files).map(fileName => {
+          return files[fileName].content;
+        }).join('\n\n');
+
+        gistContent.textContent = fileContent;
+      })
+      .catch(error => {
+        gistContent.textContent = 'Failed to load Gist content';
       });
-    })
-    .catch(error => console.error('Error fetching Gists:', error));
-});
+  });
 </script>
