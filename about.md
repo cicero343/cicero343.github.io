@@ -73,17 +73,32 @@ layout: default
             color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
-        /* Styles for the theme toggle and profile image */
+        /* Styles for the theme toggle button */
         .theme-toggle-container {
-            margin-bottom: 20px; /* Space below the button, adjust as needed */
+            margin: 0; /* Ensure no extra margin */
+            padding: 0;
+            position: relative; /* Ensure it positions correctly */
         }
 
+        /* Page title styling */
+        .page-title {
+            margin: 1rem 0;
+            padding: 0; /* Remove padding to align title flush to the left */
+            color: var(--txt-color); /* Normal color in light mode */
+            text-align: left; /* Ensure title is flush to the left */
+        }
+
+        [data-theme="dark"] .page-title {
+            color: var(--header-color-dark); /* White header color in dark mode */
+        }
+
+        /* Header container styling */
         .header-container {
             display: flex;
-            align-items: flex-start; /* Align items to the top */
-            gap: 15px; /* Increased gap between the button and the image */
-            margin-bottom: 20px; /* Space below the header container */
-            padding-left: 1rem; /* Align to the left with padding */
+            align-items: center; /* Center items vertically */
+            gap: 15px; /* Space between the image and other elements */
+            margin: 0 0 20px 0; /* No extra margin on the left, space below the container */
+            padding: 0; /* Remove padding to align flush to the left */
         }
 
         .profile-image {
@@ -91,22 +106,6 @@ layout: default
             width: 80px; /* Set size of the profile image */
             height: 80px; /* Set size of the profile image */
             object-fit: cover; /* Ensure the image fits within the dimensions */
-        }
-
-        .profile-image-container {
-            /* No additional margin needed here */
-        }
-
-        /* Page title styling */
-        .page-title {
-            margin: 1rem 0;
-            padding-left: 1rem; /* Align to the left with padding */
-            color: var(--txt-color); /* Normal color in light mode */
-            text-align: left; /* Ensure title is flush to the left */
-        }
-
-        [data-theme="dark"] .page-title {
-            color: var(--header-color-dark); /* White header color in dark mode */
         }
 
         /* Content container styling */
@@ -174,7 +173,6 @@ layout: default
     </script>
 </body>
 </html>
-
 
 
 
