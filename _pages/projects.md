@@ -1,5 +1,5 @@
 ---
-title: projects
+title: Projects
 permalink: /projects/
 layout: default
 ---
@@ -90,42 +90,65 @@ layout: default
         .theme-toggle-container {
             margin-bottom: 20px; /* Space below the button, adjust as needed */
         }
+
+        .gist {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .gist h3 {
+            margin-top: 0;
+        }
+
+        .gist pre {
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        .gist a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .gist a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
+
     <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 
-## cicero343's GitHub 
+    ## cicero343's GitHub
 
-{% if site.data.github_users %}
-<div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
-  {% for user in site.data.github_users %}
-    {% include repository/repo_user.html username=user %}
-  {% endfor %}
-</div>
-{% endif %}
+    <!--
+    ## GitHub Repositories
 
----
+    {% if site.data.github_repos %}
+    <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
+      {% for repo in site.data.github_repos %}
+        {% include repository/repo.html repository=repo %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    -->
 
-<!--
-## GitHub Repositories
-
-{% if site.data.github_repos %}
-<div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
-  {% for repo in site.data.github_repos %}
-    {% include repository/repo.html repository=repo %}
-  {% endfor %}
-</div>
-{% endif %}
--->
-
-## GitHub Gists
+    ## GitHub Gists
 
     <div class="content-container">
-    <div id="gists-container">
-      <!-- Gists will be loaded here -->
+        <div id="gists-container">
+          <!-- Gists will be loaded here -->
+        </div>
     </div>
 
     <script>
@@ -175,40 +198,6 @@ layout: default
       fetchGists();
     </script>
 
-    <style>
-      .gist {
-        margin-bottom: 20px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        background-color: #f9f9f9;
-      }
-
-      .gist h3 {
-        margin-top: 0;
-      }
-
-      .gist pre {
-        background-color: #f1f1f1;
-        padding: 10px;
-        border-radius: 4px;
-        overflow-x: auto;
-      }
-
-      .gist a {
-        display: inline-block;
-        margin-top: 10px;
-        color: #0366d6;
-        text-decoration: none;
-        font-weight: bold;
-      }
-
-      .gist a:hover {
-        text-decoration: underline;
-      }
-    </style>
-</div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
@@ -225,5 +214,6 @@ layout: default
             });
         });
     </script>
+
 </body>
 </html>
