@@ -32,7 +32,7 @@
         --txt-color-dark: #ffffff;
         --link-color-dark: #00ff00;
         --link-hover-color-dark: #00cc00;
-        --navbar-bg-color: #f5f5f5; /* Background color for the navbar */
+        --navbar-bg-color: #f5f5f5;
     }
 
     /* Dark mode settings */
@@ -41,7 +41,7 @@
         --txt-color: var(--txt-color-dark);
         --link-color-light: var(--link-color-dark);
         --link-hover-color-light: var(--link-hover-color-dark);
-        --navbar-bg-color: #333; /* Darker background for dark mode */
+        --navbar-bg-color: #333;
     }
 
     /* Light mode settings */
@@ -99,7 +99,6 @@
       align-items: center;
       text-decoration: none;
       color: inherit;
-      flex-grow: 1; /* Allow title to take up remaining space */
     }
 
     .site-logo {
@@ -119,21 +118,7 @@
       gap: 20px;
     }
 
-    .page-link {
-      text-decoration: none;
-      color: var(--link-color-light);
-      padding: 5px 10px;
-      font-size: 0.9rem;
-      border: 1px solid #333;
-      background-color: var(--bg-color-light);
-      border-radius: 4px;
-    }
-
-    .page-link:hover {
-      background-color: #f0f0f0;
-    }
-
-    /* Dropdown menu styles */
+    /* Dropdown styles */
     .dropdown {
       position: relative;
     }
@@ -164,6 +149,20 @@
 
     .dropdown-content a:hover {
       background-color: var(--link-hover-color-light);
+    }
+
+    .page-link {
+      text-decoration: none;
+      color: var(--link-color-light);
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      border: 1px solid #333;
+      background-color: var(--bg-color-light);
+      border-radius: 4px;
+    }
+
+    .page-link:hover {
+      background-color: #f0f0f0;
     }
 
     /* Media query for responsiveness */
@@ -225,16 +224,20 @@
     </a>
     <nav class="site-nav">
       <ul class="nav-menu">
-        {% for item in site.navbar %}
-          <li class="dropdown">
-            <a class="page-link" href="{{ item.url }}">{{ item.title }}</a>
-            <ul class="dropdown-content">
-              {% for subitem in item.subitems %}
-                <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endfor %}
+        <li class="dropdown">
+          <a class="page-link" href="#">Dropdown 1</a>
+          <ul class="dropdown-content">
+            <li><a href="/link1">Link 1</a></li>
+            <li><a href="/link2">Link 2</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="page-link" href="#">Dropdown 2</a>
+          <ul class="dropdown-content">
+            <li><a href="/link3">Link 3</a></li>
+            <li><a href="/link4">Link 4</a></li>
+          </ul>
+        </li>
       </ul>
     </nav>
   </header>
