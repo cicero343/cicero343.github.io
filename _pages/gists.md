@@ -166,7 +166,7 @@ layout: default
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
 <br>
-    <h2>My GitHub Gists</h2>
+    <h1>My GitHub Gists</h1>
 
     {% if site.data.github_users %}
     <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
