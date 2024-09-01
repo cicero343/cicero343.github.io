@@ -49,49 +49,16 @@ a:hover {
   color: var(--link-hover-color-dark);
 }
 
-/* Layout styles */
-.container {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.profile-image {
-  border-radius: 20px;
-}
-
-.badge-links {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.link-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 20px;
-}
-
-.link-list a {
-  text-decoration: none;
-  color: var(--link-color-light);
-}
-
-.link-list a:hover {
-  text-decoration: underline;
-  color: var(--link-hover-color-light);
-}
-
 /* Header styles */
 .site-header {
   display: flex;
-  justify-content: space-between; /* Distribute space between elements */
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Padding around header */
-  box-sizing: border-box; /* Include padding in width/height calculations */
-  width: 100%; /* Ensure the header takes up the full width */
+  padding: 10px 20px;
+  box-sizing: border-box;
+  background-color: var(--navbar-bg-color); /* Set background color */
+  width: 100%;
+  position: relative;
 }
 
 .site-title {
@@ -102,52 +69,99 @@ a:hover {
 }
 
 .site-logo {
-  width: 50px; /* Set the width of the logo image */
-  height: 50px; /* Set the height of the logo image */
-  margin-right: 10px; /* Space between the logo and title */
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
 
 .site-title h1 {
-  font-size: 1.5rem; /* Adjust font size as needed */
-  margin: 0; /* Remove default margin */
+  font-size: 1.5rem;
+  margin: 0;
 }
 
 .site-nav {
   display: flex;
   align-items: center;
+  gap: 20px;
 }
 
 .page-link {
-  margin-left: 20px; /* Space between the title and the nav link */
+  text-decoration: none;
+  color: var(--link-color-light);
+  padding: 5px 10px;
+}
+
+.page-link:hover {
+  text-decoration: underline;
+  color: var(--link-hover-color-light);
+}
+
+/* Dropdown menu styles */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: var(--navbar-bg-color);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  top: 100%;
+}
+
+.dropdown-content a {
+  color: var(--txt-color);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--link-hover-color-light);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
 /* Media query for responsiveness */
 @media (max-width: 768px) {
-  .site-title h1 {
-    font-size: 1.2rem; /* Adjust font size for smaller screens */
-  }
-
-  .site-logo {
-    width: 40px; /* Reduce logo size for smaller screens */
-    height: 40px;
-  }
-
   .site-header {
-    flex-direction: column; /* Stack logo and title vertically on small screens */
-    align-items: flex-start; /* Align items to the start (left) */
-    padding: 10px; /* Adjust padding for small screens */
-  }
-
-  .site-title {
-    margin-top: 10px; /* Space between logo and title on small screens */
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .site-nav {
-    margin-top: 10px; /* Space between title and nav on small screens */
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    padding: 10px 0;
   }
 
-  .page-link {
-    margin-left: 0; /* Remove margin on small screens */
-    margin-top: 10px; /* Add margin-top for separation */
+  .site-nav.active {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: block;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+
+  .nav-menu li {
+    width: 100%;
+    text-align: center;
   }
 }
