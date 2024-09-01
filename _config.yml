@@ -21,5 +21,3 @@ navbar:
     url: /gists/
   - title: "About me"
     url: /about/
-
-search_enabled: true
