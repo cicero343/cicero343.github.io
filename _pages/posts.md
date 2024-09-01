@@ -20,7 +20,7 @@ layout: default
             --link-hover-color-light: darkblue;
             --link-color-dark: #00ff00;
             --link-hover-color-dark: #00cc00;
-            --header-color-dark: #00ff00;
+            --header-color-dark: #00ff00; /* Green header color in dark mode */
         }
 
         [data-theme="dark"] {
@@ -99,9 +99,13 @@ layout: default
 
         /* Styling for the page title */
         .page-title {
-            text-align: center;
             margin: 1rem 0;
-            color: var(--header-color-dark);
+            padding-left: 1rem; /* Align to the left with padding */
+            color: var(--txt-color); /* Normal color in light mode */
+        }
+
+        [data-theme="dark"] .page-title {
+            color: var(--header-color-dark); /* Green header color in dark mode */
         }
     </style>
 </head>
