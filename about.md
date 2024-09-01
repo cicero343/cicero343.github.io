@@ -77,14 +77,11 @@ layout: default
         .header-container {
             display: flex;
             align-items: center; /* Center items vertically */
-            justify-content: space-between; /* Space out items to the edges */
-            padding: 1rem; /* Add padding around the container */
-            margin-bottom: 20px; /* Space below the header */
+            margin-bottom: 1rem; /* Space below the header */
         }
 
         .theme-toggle-container {
-            display: flex;
-            align-items: center;
+            margin-right: 1rem; /* Space between the toggle button and profile image */
         }
 
         .profile-image {
@@ -99,6 +96,7 @@ layout: default
             margin: 0;
             padding: 0;
             color: var(--txt-color); /* Normal color in light mode */
+            margin-top: 1rem; /* Space above the title */
         }
 
         [data-theme="dark"] .page-title {
@@ -134,9 +132,10 @@ layout: default
         <div class="theme-toggle-container">
             <button id="theme-toggle">Toggle Dark Mode</button>
         </div>
-        <h1 class="page-title">About Me</h1>
         <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
     </div>
+
+    <h1 class="page-title">About Me</h1>
 
     <div class="content-container">
         <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
@@ -166,6 +165,7 @@ layout: default
     </script>
 </body>
 </html>
+
 
 
 
