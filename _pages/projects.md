@@ -27,6 +27,8 @@ layout: default
             --gist-border-dark: #444; /* Border color for gists in dark mode */
             --code-bg-light: #f1f1f1; /* Background color for code blocks in light mode */
             --code-bg-dark: #2e2e2e; /* Background color for code blocks in dark mode */
+            --code-color-light: #000000; /* Text color for code blocks in light mode */
+            --code-color-dark: #00ff00; /* Text color for code blocks in dark mode */
         }
 
         /* Dark mode settings */
@@ -133,18 +135,16 @@ layout: default
             padding: 10px;
             border-radius: 4px;
             overflow-x: auto;
+            color: var(--code-color-light); /* Text color for code blocks in light mode */
         }
 
         [data-theme="dark"] .gist pre {
             background-color: var(--code-bg-dark); /* Background color for code blocks in dark mode */
+            color: var(--code-color-dark); /* Text color for code blocks in dark mode */
         }
 
         .gist code {
-            color: #00ff00; /* Set text color to green in dark mode for code */
-        }
-
-        [data-theme="dark"] .gist code {
-            color: #00ff00; /* Set text color to green in dark mode for code */
+            color: inherit; /* Ensure the code inherits color from the pre element */
         }
 
         .gist a {
