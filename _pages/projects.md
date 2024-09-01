@@ -8,7 +8,7 @@ layout: default
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
+    <title>Projects</title>
     <style>
         /* Default light mode settings */
         :root {
@@ -59,7 +59,7 @@ layout: default
         }
 
         [data-theme="dark"] a:active {
-            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+            color: var (--link-color-dark); /* Maintain green when clicked in dark mode */
         }
 
         /* Wrap content in a container to apply custom styles */
@@ -86,26 +86,7 @@ layout: default
             }
         }
 
-        /* Styles for the theme toggle and profile image */
-        .header-container {
-            display: flex;
-            align-items: flex-start; /* Align items to the top */
-            gap: 15px; /* Increased gap between the button and the image */
-            margin-bottom: 15px; /* Space below the header container */
-        }
-
-        .profile-image {
-            border-radius: 10px; /* Rounded edges for the image */
-            width: 80px; /* Set size of the profile image */
-            height: 80px; /* Set size of the profile image */
-            object-fit: cover; /* Ensure the image fits within the dimensions */
-        }
-
-        .profile-image-container {
-            /* No additional margin needed here */
-        }
-
-        /* Ensure the button is positioned higher */
+        /* Styles for the theme toggle */
         .theme-toggle-container {
             margin-bottom: 20px; /* Space below the button, adjust as needed */
         }
@@ -115,10 +96,9 @@ layout: default
     <div class="theme-toggle-container">
         <button id="theme-toggle">Toggle Dark Mode</button>
     </div>
-    <div class="header-container">
-        <div class="profile-image-container">
-            <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
-        </div>
+
+    <div class="content-container">
+        <!-- Your existing content here -->
     </div>
 
     <script>
@@ -137,6 +117,9 @@ layout: default
             });
         });
     </script>
+</body>
+</html>
+
 
 
 ## cicero343's GitHub 
