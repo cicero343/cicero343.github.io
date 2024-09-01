@@ -17,175 +17,210 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
   <meta property="twitter:title" content="A Diary of IT Projects" />
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"cicero343"},"description":"My blog","headline":"A Diary of IT Projects","name":"A Diary of IT Projects","url":"https://cicero343.github.io/"}
-  </script>
   <link rel="stylesheet" href="/assets/main.css">
   <link type="application/atom+xml" rel="alternate" href="https://cicero343.github.io/feed.xml" title="A Diary of IT Projects" />
 
   <!-- Custom CSS -->
   <style>
-    /* Default light mode settings */
+    /* Variables for colors */
     :root {
-        --bg-color-light: #ffffff;
-        --txt-color-light: #000000;
-        --link-color-light: blue;
-        --link-hover-color-light: darkblue;
-        --bg-color-dark: #000000;
-        --txt-color-dark: #ffffff;
-        --link-color-dark: #00ff00;
-        --link-hover-color-dark: #00cc00;
+      --bg-color-light: #ffffff;
+      --txt-color-light: #000000;
+      --link-color-light: blue;
+      --link-hover-color-light: darkblue;
+      --bg-color-dark: #000000;
+      --txt-color-dark: #ffffff;
+      --link-color-dark: #00ff00;
+      --link-hover-color-dark: #00cc00;
+      --navbar-bg-color: #f5f5f5; /* Add a background color for the navbar */
     }
 
-    /* Dark mode settings */
+    /* Dark mode */
     [data-theme="dark"] {
-        --bg-color: var(--bg-color-dark);
-        --txt-color: var(--txt-color-dark);
+      --bg-color: var(--bg-color-dark);
+      --txt-color: var(--txt-color-dark);
+      --link-color-light: var(--link-color-dark);
+      --link-hover-color-light: var(--link-hover-color-dark);
+      --navbar-bg-color: #333; /* Darker background for dark mode */
     }
 
-    /* Light mode settings */
-    [data-theme="light"] {
-        --bg-color: var(--bg-color-light);
-        --txt-color: var(--txt-color-light);
-    }
-
-    /* Apply the variables to the body */
+    /* Apply the variables to body */
     body {
-        background-color: var(--bg-color);
-        color: var(--txt-color);
+      background-color: var(--bg-color);
+      color: var(--txt-color);
     }
 
-    /* Link styling */
-    a:link, a:visited {
-        color: var(--link-color-light);
+    a:link,
+    a:visited {
+      color: var(--link-color-light);
     }
 
     a:hover {
-        color: var(--link-hover-color-light);
+      color: var(--link-hover-color-light);
     }
 
-    a:active {
-        color: var(--link-color-light);
-    }
-
-    /* Dark mode overrides */
-    [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-        color: var(--link-color-dark);
+    [data-theme="dark"] a:link,
+    [data-theme="dark"] a:visited {
+      color: var(--link-color-dark);
     }
 
     [data-theme="dark"] a:hover {
-        color: var(--link-hover-color-dark);
-    }
-
-    [data-theme="dark"] a:active {
-        color: var(--link-color-dark);
+      color: var(--link-hover-color-dark);
     }
 
     /* Header styles */
     .site-header {
       display: flex;
-      justify-content: space-between; /* Space between logo/title and nav */
+      justify-content: space-between;
       align-items: center;
-      padding: 10px 20px; /* Padding around header */
-      box-sizing: border-box; /* Include padding in width/height calculations */
-      position: relative; /* Ensure positioning context */
+      padding: 10px 20px;
+      box-sizing: border-box;
+      background-color: var(--navbar-bg-color); /* Set background color */
+      width: 100%;
+      position: relative;
     }
 
     .site-title {
       display: flex;
-      align-items: center; /* Align items vertically center */
+      align-items: center;
       text-decoration: none;
       color: inherit;
     }
 
     .site-logo {
-      width: 40px; /* Set the width of the logo image */
-      height: 40px; /* Set the height of the logo image */
-      margin-right: 10px; /* Space between the logo and title */
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
     }
 
     .site-title h1 {
-      font-size: 1.5rem; /* Adjust font size as needed */
-      margin: 0; /* Remove default margin */
+      font-size: 1.5rem;
+      margin: 0;
     }
 
     .site-nav {
       display: flex;
       align-items: center;
+      gap: 20px;
     }
 
     .page-link {
       text-decoration: none;
-      color: inherit; /* Inherit color from parent */
-      padding: 4px 8px; /* Reduce padding for smaller button on small screens */
-      font-size: 0.8rem; /* Adjust font size for readability */
-      border: 1px solid #333; /* Dark border for better visibility */
-      background-color: var(--bg-color-light); /* White background for light mode */
-      color: var(--txt-color-light); /* Black text for light mode */
-      display: inline-block; /* Inline-block for button appearance */
-      border-radius: 4px; /* Slightly rounded corners for a modern look */
-      margin-left: 10px; /* Space between button and title */
+      color: var(--link-color-light);
+      padding: 5px 10px;
     }
 
     .page-link:hover {
-      background-color: #f0f0f0; /* Light grey on hover for better contrast */
+      text-decoration: underline;
+      color: var(--link-hover-color-light);
     }
 
-    /* Dark mode overrides */
-    [data-theme="dark"] .page-link {
-      background-color: var(--bg-color-dark); /* Dark background for dark mode */
-      color: var(--txt-color-dark); /* Light text for dark mode */
+    .nav-toggle {
+      display: none;
     }
 
-    [data-theme="dark"] .page-link:hover {
-      background-color: #444; /* Slightly lighter grey on hover for dark mode */
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-menu li {
+      margin: 0;
+    }
+
+    /* Dropdown menu styles */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: var(--navbar-bg-color);
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      top: 100%;
+    }
+
+    .dropdown-content a {
+      color: var(--txt-color);
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: var(--link-hover-color-light);
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
     }
 
     /* Media query for responsiveness */
     @media (max-width: 768px) {
-      .site-title h1 {
-        font-size: 1.2rem; /* Adjust font size for smaller screens */
-      }
-
-      .site-logo {
-        width: 30px; /* Reduce logo size for smaller screens */
-        height: 30px;
-      }
-
       .site-header {
-        flex-direction: row; /* Keep items in a row for small screens */
-        align-items: center; /* Align items to the center */
-        padding: 10px; /* Adjust padding for small screens */
-      }
-
-      .site-title {
-        margin-right: 10px; /* Space between title and nav */
+        flex-direction: column;
+        align-items: flex-start;
       }
 
       .site-nav {
-        margin-left: auto; /* Push navigation to the right */
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 0;
+        padding: 10px 0;
       }
 
-      .page-link {
-        padding: 2px 6px; /* Further reduce padding for smaller screens */
-        font-size: 0.7rem; /* Further adjust font size for smaller screens */
+      .site-nav.active {
+        display: flex;
+      }
+
+      .nav-toggle {
+        display: block;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+      }
+
+      .nav-menu {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+      }
+
+      .nav-menu li {
+        width: 100%;
+        text-align: center;
       }
     }
   </style>
 </head>
-  
 <body>
   <header class="site-header" role="banner">
     <a class="site-title" rel="author" href="/">
       <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Site Logo" class="site-logo">
       <h1>A Diary of IT Projects</h1>
     </a>
-   <nav class="site-nav">
-  <ul>
-    <li><a class="page-link" href="/projects/">Projects</a></li>
-    <li><a class="page-link" href="/about/">About me</a></li>
-  </ul>
-</nav>
+    <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+    <nav class="site-nav">
+      <ul class="nav-menu">
+        {% for item in site.navbar %}
+          <li>
+            {% if item.url contains '#' %}
+              <a class="page-link" href="{{ item.url }}">{{ item.title }}</a>
+            {% else %}
+              <a class="page-link" href="{{ item.url }}">{{ item.title }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
   </header>
 
   <main class="page-content" aria-label="Content">
@@ -216,5 +251,11 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    document.querySelector('.nav-toggle').addEventListener('click', function() {
+      document.querySelector('.site-nav').classList.toggle('active');
+    });
+  </script>
 </body>
 </html>
