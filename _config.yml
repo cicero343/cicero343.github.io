@@ -15,7 +15,10 @@ collections:
   pages:
     output: true
     permalink: /:path/
-
+  gists:
+    output: true
+    permalink: /gists/:path/
+    
 navbar:
   - title: "projects"
     url: /projects/
