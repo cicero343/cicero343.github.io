@@ -11,7 +11,10 @@ kramdown:
 plugins:
   - jekyll-sass-converter
 
-header_pages:
-  - _pages/projects.md
-  - _pages/about.md
-
+navbar:
+  - title: "Home"
+    url: "/"
+  - title: "Projects"
+    url: /projects/
+  - title: "About me"
+    url: /about/
