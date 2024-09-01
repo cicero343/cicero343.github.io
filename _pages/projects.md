@@ -20,6 +20,7 @@ layout: default
             --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
             --link-color-dark: #00ff00; /* Green links in dark mode */
             --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+            --header-color-dark: #00ff00; /* Green header color in dark mode */
         }
 
         /* Dark mode settings */
@@ -88,7 +89,20 @@ layout: default
 
         /* Styles for the theme toggle */
         .theme-toggle-container {
-            margin-bottom: 20px; /* Space below the button, adjust as needed */
+            margin-bottom: 0; /* Remove the space below the button */
+        }
+
+        /* Header styling */
+        h2 {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            color: #333;
+        }
+
+        [data-theme="dark"] h2 {
+            color: var(--header-color-dark); /* Green header color in dark mode */
         }
 
         .gist {
@@ -120,15 +134,6 @@ layout: default
 
         .gist a:hover {
             text-decoration: underline;
-        }
-
-        /* Header styling */
-        h2 {
-            font-size: 2em;
-            font-weight: bold;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            color: #333;
         }
     </style>
 </head>
