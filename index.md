@@ -105,8 +105,10 @@ Title: A Diary of IT Projects
     <div class="tryhackme-badge">
         <script src="https://tryhackme.com/badge/2125035"></script>
     </div>
-
-<img src="https://www.hackthebox.eu/badge/image/2067546" alt="Hack The Box Profile Badge" width="150">
+<br>
+<a href="https://app.hackthebox.com/users/2067546" target="_blank">
+    <img src="https://www.hackthebox.eu/badge/image/2067546" alt="Hack The Box Profile Badge" width="150">
+</a>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
