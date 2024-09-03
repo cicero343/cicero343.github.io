@@ -106,6 +106,8 @@ Title: A Diary of IT Projects
         <script src="https://tryhackme.com/badge/2125035"></script>
     </div>
 
+    <img src="https://www.hackthebox.eu/badge/image/2067546" alt="Hack The Box Profile Badge">
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const themeToggleButton = document.getElementById('theme-toggle');
