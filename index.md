@@ -20,6 +20,41 @@ Title: A Diary of IT Projects
       [data-theme="dark"] .icon {
           filter: invert(1); /* Invert colors for dark mode */
       }
+
+      /* Layout adjustments */
+      .header-container {
+          display: flex;
+          justify-content: flex-start; /* Align items at the start */
+          align-items: center; /* Center the items vertically */
+          margin-bottom: 10px; /* Add space between header and content below */
+      }
+
+      .theme-toggle {
+          margin-right: auto; /* Push the icons to the right side */
+      }
+
+      .badge-container {
+          display: flex;
+          flex-direction: column; /* Stack badges vertically by default */
+          margin-top: 15px;
+      }
+
+      .tryhackme-badge, .hackthebox-badge {
+          margin-bottom: 5px;
+      }
+
+      /* Responsive layout for larger screens */
+      @media (min-width: 768px) {
+          .badge-container {
+              flex-direction: row; /* Align badges side by side on larger screens */
+              align-items: center;
+          }
+
+          .hackthebox-badge {
+              margin-left: 10px; /* Add some space between the two badges */
+              margin-bottom: 0; /* Remove bottom margin when side by side */
+          }
+      }
   </style>
 </head>
 
@@ -77,22 +112,6 @@ Title: A Diary of IT Projects
         [data-theme="dark"] a:active {
             color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
         }
-
-        /* Layout adjustments */
-        .header-container {
-            display: flex;
-            justify-content: flex-start; /* Align items at the start */
-            align-items: center; /* Center the items vertically */
-            margin-bottom: 10px; /* Add space between header and content below */
-        }
-
-        .theme-toggle {
-            margin-right: auto; /* Push the icons to the right side */
-        }
-
-        .tryhackme-badge {
-            margin-top: 15px; /* Add some space above the TryHackMe badge */
-        }
     </style>
 </head>
 <body>
@@ -102,15 +121,16 @@ Title: A Diary of IT Projects
         <a href="https://github.com/cicero343" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon"></a>
     </div>
     
-    <div class="tryhackme-badge">
-        <script src="https://tryhackme.com/badge/2125035"></script>
+    <div class="badge-container">
+        <div class="tryhackme-badge">
+            <script src="https://tryhackme.com/badge/2125035"></script>
+        </div>
+        <div class="hackthebox-badge">
+            <a href="https://app.hackthebox.com/users/2067546" target="_blank">
+                <img src="https://www.hackthebox.eu/badge/image/2067546" alt="Hack The Box Profile" width="150" height="34">
+            </a>
+        </div>
     </div>
-
-<div style="margin-bottom: 5px;">
-    <a href="https://app.hackthebox.com/users/2067546" target="_blank">
-        <img src="https://www.hackthebox.eu/badge/image/2067546" alt="Hack The Box Profile" width="150" height="34">
-    </a>
-</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
