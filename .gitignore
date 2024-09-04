@@ -1,0 +1,24 @@
+# Jekyll output directory
+_site/
+
+# Jekyll caches
+.jekyll-cache/
+
+# Dependencies
+.bundle/
+vendor/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
