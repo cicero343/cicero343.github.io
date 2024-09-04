@@ -209,6 +209,8 @@ Computer programs protected as literary works<a href="#ref4" id="back4" class="r
 
 e.g. <strong>IBCOS Computers Ltd v Barclays Mercantile Highland Finance Ltd</strong> (copying computer code).<a href="#ref6" id="back6" class="reference"> [6]</a>
 
+<br>
+
 <ul>
 <li>Right-holder needs to prove defendant is not simply emulating the function of the program<a href="#ref7" id="back7" class="reference"> [7]</a></li>
 </ul>
