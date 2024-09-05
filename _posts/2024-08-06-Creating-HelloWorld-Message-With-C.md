@@ -274,6 +274,9 @@ You'll see in the image above that both the .so file and the executable 'callmes
 
 ELF format is used for both types of files in Unix-like systems, but the 'callmessage' file is a standalone program that can be run by the OS.
 
+<br>
+<br>
+
 <script src="https://giscus.app/client.js"
         data-repo="cicero343/cicero343.github.io"
         data-repo-id="R_kgDOMgKHgA"
