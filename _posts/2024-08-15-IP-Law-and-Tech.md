@@ -589,3 +589,20 @@ But, if information has been obtained by illegitimate means, it will be protecte
     <p id="ref57">57. [2000] ETMR 341 <a href="#back57" class="back-to-ref">[57]</a></p>
     <p id="ref58">58. [2002] FSR 6 <a href="#back58" class="back-to-ref">[58]</a></p>
 </div>
+
+<script src="https://giscus.app/client.js"
+        data-repo="cicero343/cicero343.github.io"
+        data-repo-id="R_kgDOMgKHgA"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOMgKHgM4CiNr5"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="dark"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
