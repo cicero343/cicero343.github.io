@@ -591,7 +591,6 @@ But, if information has been obtained by illegitimate means, it will be protecte
 </div>
 
 <br>
-<br>
 
 <script src="https://giscus.app/client.js"
         data-repo="cicero343/cicero343.github.io"
