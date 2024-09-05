@@ -438,3 +438,20 @@ EnCase is a digital forensics tool primarily used for forensic investigation, da
 <br>
 
 <img src="/assets/images/encase.jpg" alt="encase" style="max-width: 100%; height: auto;">
+
+<script src="https://giscus.app/client.js"
+        data-repo="cicero343/cicero343.github.io"
+        data-repo-id="R_kgDOMgKHgA"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOMgKHgM4CiNr5"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="dark"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
