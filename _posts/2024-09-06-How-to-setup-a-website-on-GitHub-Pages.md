@@ -415,7 +415,7 @@ It appears there may be publically available Docker images for Jekyll (I've not 
 <br>
 <br>
 
-If you start using Jekyll locally, do yourself a favour and install <a href="https://code.visualstudio.com/download">Visual Studio Code</a>, the <a href="https://desktop.github.com/download/">Github Desktop App</a> might be helpful too.
+If you start using Jekyll locally, do yourself a favour and install <a href="https://code.visualstudio.com/download">Visual Studio Code</a>. The <a href="https://desktop.github.com/download/">Github Desktop App</a> might be helpful too.
 
 <br>
 <br>
