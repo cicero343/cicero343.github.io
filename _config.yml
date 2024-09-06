@@ -18,6 +18,8 @@ collections:
   pages:
     output: true
     permalink: /:path/
+  posts:
+    output: true
     
 navbar:
   - title: "My Gists"
