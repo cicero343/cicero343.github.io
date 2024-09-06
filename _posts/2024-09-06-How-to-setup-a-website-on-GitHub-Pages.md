@@ -439,13 +439,13 @@ GitHub Pages supports Javascript, CSS and HTML. If you see some cool styling on 
 
 <div id="references">
     <h2>References</h2>
-    <p id="ref1">A Gemfile in Jekyll describes the Ruby dependencies the website needs to run.<a href="#back1" class="back-to-ref"> [1]</a></p>
+    <p id="ref1">1. A Gemfile in Jekyll describes the Ruby dependencies the website needs to run.<a href="#back1" class="back-to-ref"> [1]</a></p>
     <p id="ref2">
-    <a href="https://www.wix.com/blog/static-vs-dynamic-website">https://www.wix.com/blog/static-vs-dynamic-website</a><a href="#back2" class="back-to-ref"> [2]</a></p>
+    2. <a href="https://www.wix.com/blog/static-vs-dynamic-website">https://www.wix.com/blog/static-vs-dynamic-website</a><a href="#back2" class="back-to-ref"> [2]</a></p>
     <p id="ref3">
-    <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages</a><a href="#back3" class="back-to-ref"> [3]</a></p>
+    3. <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages">https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages</a><a href="#back3" class="back-to-ref"> [3]</a></p>
     <p id="ref4">
-    <a href="https://shipit.dev/posts/from-utterances-to-giscus.html">https://shipit.dev/posts/from-utterances-to-giscus.html</a><a href="#back4" class="back-to-ref"> [4]</a></p>
+    4. <a href="https://shipit.dev/posts/from-utterances-to-giscus.html">https://shipit.dev/posts/from-utterances-to-giscus.html</a><a href="#back4" class="back-to-ref"> [4]</a></p>
 </div>
 
 <br>
