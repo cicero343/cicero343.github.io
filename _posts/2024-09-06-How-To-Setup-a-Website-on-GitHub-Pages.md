@@ -349,7 +349,7 @@ I recommend exploring these after you have set your site up.
 <br>
 <br>
 
-<a href="https://ralphwillgoss.github.io/blog/2023/05/17/installalling-jekyll-windows-10-wsl2">test</a>
+<a href="https://ralphwillgoss.github.io/blog/2023/05/17/installalling-jekyll-windows-10-wsl2">Ralph Willgoss' Write-up</a>
 
 <br>
 <br>
