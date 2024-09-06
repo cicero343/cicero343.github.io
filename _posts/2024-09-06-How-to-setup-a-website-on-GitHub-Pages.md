@@ -420,7 +420,7 @@ If you start using Jekyll locally, do yourself a favour and install <a href="htt
 <br>
 <br>
 
-I've yet to try it, but <a href="https://pingendo.com/">Pingendo</a> looks like it could be a useful tool to help style your site.
+I've yet to try these, but I've heard <a href="https://pingendo.com/">Pingendo</a> and <a href="https://getbootstrap.com/">Bootstrap</a> are useful in letting you make visual changes to your site, and providing you the resulting CSS styling which you can then just copy into your site's code.
 
 <br>
 <br>
