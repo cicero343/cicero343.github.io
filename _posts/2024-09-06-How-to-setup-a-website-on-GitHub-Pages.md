@@ -156,7 +156,7 @@ layout: default
 </body>
 </html>
 
-As a 90s kid who grew up with MySpace and Piczo, being able to customise a website with HTML and CSS was somewhat natural to me. Learning how to do the same with this Jekyll site on GitHub was a bit more of a challenge, and I've certainly learned some things along the way.
+As a '90s kid who grew up with MySpace and Piczo, being able to customise a website with HTML and CSS was somewhat natural to me. Learning how to do the same with this Jekyll site on GitHub was a bit more of a challenge, and I've certainly learned some things along the way.
 
 <br>
 <br>
@@ -395,7 +395,7 @@ Lots of paid and free Jekyll themes, here's a curated list of all the free ones 
 <ul>
 <li><a href="https://giscus.app/">giscus</a> (this is what I'm using, and I would recommend it over utterances for this <a href="#ref4" id="back4" class="reference"> [4]</a> reason)</li>
 <br>
-<li><a href="https://utteranc.es/ ">uterrances</a></li>
+<li><a href="https://utteranc.es/ ">utterances</a></li>
 </ul>
 
 <br>
