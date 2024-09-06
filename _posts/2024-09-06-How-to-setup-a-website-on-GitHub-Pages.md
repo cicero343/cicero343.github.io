@@ -436,9 +436,9 @@ I was initially quite confused as to which one of my site's files contained the 
 <br>
 
 <ul>
-<li> This is because if you don't specify a layout in your pages, Jekyll will use its own hidden "default" layout corresponding to your theme. If you want to override this layout, you should e.g. create a new layout called 'default.html' and store it inside a directory called '/_layouts' in your repo. You can then apply this layout by specifying 'layout: default' in each individual page. You can also have many layouts for certain pages of your site.</li>
+<li> This is because if you don't specify a layout in your pages, Jekyll will use its own hidden "default" layout corresponding to your theme. If you want to override this layout, you should e.g. create a new layout called 'default.html' and store it inside a directory called '/_layouts' in your repo. You can then apply this layout by specifying 'layout: default' in each individual page. You can also have many layouts for certain pages of your site. You can read more about this here <a href="https://jekyllrb.com/docs/themes/#overriding-theme-defaults">Jekyll Docs Overriding Theme Defaults</a>.</li>
 </ul>
-    
+
 <br>
 
 GitHub Pages supports Javascript, CSS and HTML. If you see some cool styling on a website you can always 'view page source' or 'inspect' -> 'style editor' to reverse engineer and borrow ideas for your site. There's also lots of cool resources online that give example styles etc. for you to use for free; just Google something like 'Top 10 CSS/HTML/Javascript for your static website'.
