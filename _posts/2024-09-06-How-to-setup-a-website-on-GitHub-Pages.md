@@ -217,7 +217,7 @@ e.g. a site that holds your CV (resume) vs. Amazon or a CMS system with a back-e
 
 <h2 id="If you're a complete beginner, don't fret!" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">If you're a complete beginner, don't fret!</h2>
 
-GitHub actually has a beginner guide that will walk you through the process of setting up your GitHub Pages site, and you can have your site up and running in less than an hour. It's actually what I did, and I don't think you should feel any shame in using it.
+GitHub has a beginner guide that will walk you through the process of setting up your GitHub Pages site, and you can have your site up and running in less than an hour. It's actually what I did, and I don't think you should feel any shame in using it.
 
 <br>
 <br>
