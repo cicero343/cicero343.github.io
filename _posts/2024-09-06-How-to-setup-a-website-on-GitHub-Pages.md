@@ -180,10 +180,9 @@ I've included some of these resources below, so skip to the end if you're at a f
 
 <br>
 <br>
+<br>
 
 <h2 id="Static Sites vs. Dynamic Sites" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Static Sites vs. Dynamic Sites</h2>
-
-<br>
 
 With GitHub Pages, you'll be creating a <strong>static</strong> website.
 
@@ -204,10 +203,9 @@ e.g. a site that holds your CV (resume) vs. Amazon or a CMS system with a back-e
 
 <br>
 <br>
+<br>
 
 <h2 id="Limitations of GitHub Pages" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Limitations of GitHub Pages</h2>
-
-<br>
 
 <ul>
 <li>You can't use it for commercial purposes.</li>
@@ -219,8 +217,6 @@ e.g. a site that holds your CV (resume) vs. Amazon or a CMS system with a back-e
 
 <h2 id="If you're a complete beginner, don't fret!" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">If you're a complete beginner, don't fret!</h2>
 
-<br>
-
 GitHub actually has a beginner guide that will walk you through the process of setting up your GitHub Pages site, and you can have your site up and running in less than an hour. It's actually what I did, and I don't think you should feel any shame in using it.
 
 <br>
@@ -231,9 +227,18 @@ GitHub actually has a beginner guide that will walk you through the process of s
 <br>
 <br>
 
-<h2 id="What is Jekyll?" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">What is Jekyll?</h2>
+<strong><u>Select a free theme for your Jekyll site</u></strong> - <a href="https://jekyllthemes.io/free">Jekyll Themes.io</a> 
 
 <br>
+<br>
+
+If you just want a simple site - for example, you're a photographer wanting to share your portfolio - I would even argue you could stop at this point!
+
+<br>
+<br>
+<br>
+
+<h2 id="What is Jekyll?" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">What is Jekyll?</h2>
 
 Jekyll is a static site generator with built-in support for GitHub Pages.
 
@@ -250,8 +255,6 @@ It simplifies website creation by automating tasks and applying pre-set styles, 
 <br>
 
 <h2 id="Do I need to install Jekyll locally?" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">"Do I need to install Jekyll locally?"</h2>
-
-<br>
 
 In short, no. If you create your site using the <a href="https://github.com/skills/github-pages">GitHub Pages Skills</a> link, your site will be created using Jekyll (on GitHub), and you don't really need to learn how to use Jekyll.
 
@@ -282,10 +285,9 @@ In the image below, you can see that I have Jekyll installed locally via WSL2, t
 
 <br>
 <br>
+<br>
 
 <h2 id="Windows Subsystem for Linux 2 (WSL2)" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Windows Subsystem for Linux 2 (WSL2)</h2>
-
-<br>
 
 Windows Subsystem for Linux (WSL) lets you install Linux and use Linux applications, utilities, and Bash command-line tools directly on Windows. It's also faster than a virtual machine or dual boot. 
 
@@ -299,8 +301,6 @@ For installing it, you should use this Microsoft Guide - <a href="https://learn.
 
 <h2 id="Why do we need WSL2 to install Jekyll?" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">"So, why do we need WSL2 to install Jekyll?"</h2>
 
-<br>
-
 Jekyll is written using the Ruby programming language, and so we'll need to install both in order to use Jekyll locally. You won't actually need to learn how to use Ruby though, so don't worry.
 
 <br>
@@ -311,19 +311,12 @@ My decision to use WSL2 for Jekyll was based off what I read online, as there ar
 <br>
 <br>
 
-I also considered installing Jekyll and Ruby via a Docker container, as this sounded like a fun project. However, it's arguably overkill just for creating a static site.
-
-<br>
-<br>
-
 For installing Jekyll, you should refer to this guide - <a href="https://jekyllrb.com/docs/installation/windows/">Jekyll Docs</a> (refer to "Installation via Bash on Windows 10" section)
 
 <br>
 <br>
 
 <h2 id="Ok, so, how do we install Ruby?" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">"Ok, so, how do we install Ruby?"</h2>
-
-<br>
 
 Check out some of the useful links below for some of the guides I used. It seemed to me that people were using slightly different methods. 
 
@@ -343,7 +336,6 @@ Bear in mind that it's normally recommended to add Ruby and Brew to your path en
 
 <h2 id="USEFUL RESOURCES" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">USEFUL RESOURCES:</h2>
 
-<br>
 I recommend exploring these after you have set your site up.
 
 <br>
@@ -374,18 +366,6 @@ I recommend exploring these after you have set your site up.
 <br>
 
 <h2 id="Additional Resources" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Additional Resources:</h2>
-
-<br>
-
-<strong><u>Choosing a different theme for your Jekyll site:</u></strong>
-
-<br>
-<br>
-
-Lots of paid and free Jekyll themes, here's a curated list of all the free ones - <a href="https://jekyllthemes.io/free">Jekyll Themes.io</a>
-
-<br>
-<br>
 
 <strong><u>For adding comment sections:</u></strong>
 
@@ -427,8 +407,6 @@ I've yet to try these, but I've heard <a href="https://pingendo.com/">Pingendo</
 <br>
 
 <h2 id="Final thoughts" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Final thoughts / Things I wish I knew earlier:</h2>
-
-<br>
 
 I was initially quite confused as to which one of my site's files contained the code that said "your posts will be displayed on the index/main page". I could see the page code for it when I looked at the index page source, but there was no traces of it in the actual files of my site.
 
