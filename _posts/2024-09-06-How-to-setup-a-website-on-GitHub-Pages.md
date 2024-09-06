@@ -161,7 +161,7 @@ As a 90s kid who grew up with MySpace and Piczo, being able to customise a websi
 <br>
 <br>
 
-If you're looking to create a static website for your portfolio or blogging, then look no further than GitHub pages. It's a fun experience!
+If you're looking to create a static website for your portfolio or blogging, then look no further than GitHub pages. It's a fun experience, and it's completely free!
 
 <br>
 <br>
@@ -330,7 +330,7 @@ Check out some of the useful links below for some of the guides I used. It seeme
 <br>
 <br>
 
-For me, the easiest way of installing Ruby and Jekyll locally on WSL2 was actually to use the brew package manager for unix devices - <a href="https://brew.sh/">Homebrew Package Manager</a>
+For me, the easiest way of installing Ruby on WSL2 was actually to use the brew package manager for unix devices - <a href="https://brew.sh/">Homebrew Package Manager</a>
 
 <br>
 <br>
