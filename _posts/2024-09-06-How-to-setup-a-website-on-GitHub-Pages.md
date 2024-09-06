@@ -382,7 +382,7 @@ I recommend exploring these after you have set your site up.
 <br>
 <br>
 
-Lots of paid and free jekyll themes, here's a curated list of all the free ones - <a href="https://jekyllthemes.io/free">Jekyll Themes.io</a>
+Lots of paid and free Jekyll themes, here's a curated list of all the free ones - <a href="https://jekyllthemes.io/free">Jekyll Themes.io</a>
 
 <br>
 <br>
@@ -411,6 +411,16 @@ Lots of paid and free jekyll themes, here's a curated list of all the free ones 
 <br>
 
 It appears there may be publically available Docker images for Jekyll (I've not used this, so I can't vouch for it) - <a href="https://hub.docker.com/r/jekyll/jekyll/">Jekyll Docker Image</a>
+
+<br>
+<br>
+
+If you start using Jekyll locally, do yourself a favour and install <a href="https://code.visualstudio.com/download">Visual Studio Code</a>, the <a href="https://desktop.github.com/download/">Github Desktop App</a> might be helpful too.
+
+<br>
+<br>
+
+I've yet to try it, but <a href="https://pingendo.com/">Pingendo</a> looks like it could be a useful tool to help style your site.
 
 <br>
 <br>
