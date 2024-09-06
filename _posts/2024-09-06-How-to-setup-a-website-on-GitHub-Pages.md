@@ -1,11 +1,11 @@
 ---
-title: "How to Setup a Website on GitHub Pages"
+title: "How to setup a website on GitHub Pages"
 date: 2024-09-06
 layout: default
 ---
 
 <header class="post-header">
-  <h1 class="post-title p-name" itemprop="name headline">How to Setup a Website on GitHub Pages</h1>
+  <h1 class="post-title p-name" itemprop="name headline">How to setup a website on GitHub Pages</h1>
   <p class="post-meta">
     <time class="dt-published" datetime="2024-09-06T00:00:00+00:00" itemprop="datePublished">Sep 06, 2024</time>
   </p>
