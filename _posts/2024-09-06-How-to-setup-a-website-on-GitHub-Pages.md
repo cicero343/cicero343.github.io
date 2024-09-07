@@ -156,7 +156,7 @@ layout: default
 </body>
 </html>
 
-As a '90s kid who grew up with MySpace and Piczo, being able to customise a website with HTML and CSS was somewhat natural to me. Learning how to do the same with this Jekyll site on GitHub was a bit more of a challenge, and I've certainly learned some things along the way.
+As a '90s kid who grew up with MySpace and Piczo, being able to customise a website with HTML and CSS was fairly natural to me. Learning how to do the same with this Jekyll site on GitHub was a bit more of a challenge, and I've certainly learned some things along the way.
 
 <br>
 <br>
@@ -408,7 +408,7 @@ I've yet to try these, but I've heard <a href="https://pingendo.com/">Pingendo</
 
 <h2 id="Final thoughts" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Final thoughts / Things I wish I knew earlier:</h2>
 
-I was initially quite confused as to which one of my site's files contained the code that said "your posts will be displayed on the index/main page". I could see the page code for it when I looked at the index page source, but there was no traces of it in the actual files of my site.
+I was initially quite confused as to which one of my site's files contained the code that said "your posts will be displayed on the index/main page". I could see the page code for it when I looked at the index page source, but there were no traces of it in the actual files of my site.
 
 <br>
 <br>
