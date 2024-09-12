@@ -39,6 +39,7 @@ layout: default
             --button-bg-light: #000000; /* Black background for button in light mode */
             --button-text-light: #ffffff; /* White text color for button in light mode */
             --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
+            --toc-bg-color: #f0f0f0; /* Grey background for table of contents */
         }
 
         /* Dark mode settings */
@@ -50,6 +51,7 @@ layout: default
             --button-bg-dark: #000000; /* Black background for button in dark mode */
             --button-text-dark: #00ff00; /* Green text color for button in dark mode */
             --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
+            --toc-bg-color: #333333; /* Dark grey background for table of contents */
         }
 
         /* Apply the variables to the body */
@@ -121,6 +123,46 @@ layout: default
         [data-theme="dark"] .back-to-top:hover {
             background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
         }
+
+        /* Table of Contents styles */
+        .tableOfContents_bqdL {
+            position: fixed;
+            top: 120px; /* Adjust this value to sit lower from the header */
+            right: 20px;
+            width: 250px;
+            background-color: var(--toc-bg-color); /* Grey background in both light and dark modes */
+            color: var(--txt-color);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Ensure it sits on top of other content */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+        }
+
+        .tableOfContents_bqdL ul {
+            list-style: none; /* Remove bullet points */
+            padding: 0;
+            margin: 0;
+        }
+
+        .tableOfContents_bqdL li {
+            margin: 5px 0;
+        }
+
+        .tableOfContents_bqdL a {
+            text-decoration: none;
+            color: var(--txt-color);
+        }
+
+        .tableOfContents_bqdL a.toc-highlight {
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .tableOfContents_bqdL {
+                display: none; /* Hide on smaller screens */
+            }
+        }
     </style>
 </head>
 
@@ -131,12 +173,28 @@ layout: default
         <i class="fas fa-chevron-up"></i> <!-- Font Awesome Up Arrow Icon -->
     </button>
 
+    <!-- Table of Contents for large screens -->
+    <div class="tableOfContents_bqdL thin-scrollbar">
+        <ul class="table-of-contents">
+            <li><a href="#file-analysis" class="toc-highlight">File Analysis</a></li>
+            <li><a href="#binary-analysis" class="toc-highlight">Binary Analysis & Reverse Engineering</a></li>
+            <li><a href="#debugging" class="toc-highlight">Debugging Tools</a></li>
+            <li><a href="#system-tracing" class="toc-highlight">System Tracing & Monitoring</a></li>
+            <li><a href="#steganography" class="toc-highlight">Steganography</a></li>
+            <li><a href="#notable-mentions" class="toc-highlight">Notable Mentions: File Carving & Digital Forensics</a></li>
+        </ul>
+    </div>
+
+
     <script>
         // Get the button
         let myBtn = document.querySelector('.back-to-top');
 
         // Show the button when the user scrolls down 20px
-        window.onscroll = function() {scrollFunction()};
+        window.onscroll = function() {
+            scrollFunction();
+            highlightToc();
+        };
 
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
@@ -150,6 +208,24 @@ layout: default
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
+        }
+
+        // Highlight the current section in the TOC
+        function highlightToc() {
+            const tocLinks = document.querySelectorAll('.tableOfContents_bqdL a');
+            let scrollPos = document.documentElement.scrollTop || document.body.scrollTop;
+            tocLinks.forEach(link => {
+                const section = document.querySelector(link.getAttribute('href'));
+                if (section) {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+                    if (scrollPos >= sectionTop - 50 && scrollPos < sectionTop + sectionHeight) {
+                        link.classList.add('toc-highlight');
+                    } else {
+                        link.classList.remove('toc-highlight');
+                    }
+                }
+            });
         }
     </script>
 
