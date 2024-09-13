@@ -18,6 +18,7 @@
   <meta name="twitter:card" content="summary" />
   <meta property="twitter:title" content="{{ page.title }}" />
   <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css">
   <link type="application/atom+xml" rel="alternate" href="{{ "/feed.xml" | relative_url }}" title="A Diary of IT Projects" />
 
   <!-- Custom CSS -->
@@ -288,11 +289,16 @@
 .icon {
   width: 24px;
   height: 24px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, filter 0.3s ease, brightness 0.3s ease;
 }
 
 .icon:hover {
   transform: scale(1.1);
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .icon {
+  filter: invert(1) brightness(1.5);
 }
 
   </style>
@@ -336,6 +342,7 @@
       </div>
     </div>
   </header>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
