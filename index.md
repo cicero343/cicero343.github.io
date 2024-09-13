@@ -14,12 +14,13 @@ layout: default
           filter: invert(0); /* Default to no inversion */
           width: 24px;
           height: 24px;
+          transition: transform 0.2s, filter 0.3s ease, brightness 0.3s ease;
           margin-left: 10px; /* Reduced space between the icons */
       }
 
       /* Dark mode settings */
       [data-theme="dark"] .icon {
-          filter: invert(1); /* Invert colors for dark mode */
+          filter: invert(1) brightness(1.5); /* Invert colors for dark mode */
       }
 
       /* Layout adjustments */
