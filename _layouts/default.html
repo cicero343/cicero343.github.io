@@ -264,6 +264,37 @@
 .toggle-switch label .moon {
   right: 6px; /* Adjusted to fit smaller size */
 }
+
+.footer-heading-icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-heading {
+  margin: 0;
+}
+
+/* Remove bullet points */
+.social-media-list {
+  list-style: none;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s;
+}
+
+.icon:hover {
+  transform: scale(1.1);
+}
+
   </style>
 </head>
 <body>
@@ -320,7 +351,17 @@
 <footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
   <div class="wrapper">
-    <h2 class="footer-heading">A Diary of IT Projects</h2>
+    <div class="footer-heading-icons">
+      <h2 class="footer-heading">A Diary of IT Projects</h2>
+      <div class="footer-icons">
+        <a href="https://www.linkedin.com/in/benedict-c-donovan/" target="_blank">
+          <img src="https://www.svgrepo.com/show/391478/linkedin.svg" alt="LinkedIn" class="icon">
+        </a>
+        <a href="https://github.com/cicero343" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="icon">
+        </a>
+      </div>
+    </div>
     <div class="footer-col-wrapper">
       <div class="footer-col footer-col-1">
         <ul class="contact-list">
