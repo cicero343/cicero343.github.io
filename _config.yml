@@ -22,11 +22,11 @@ collections:
     output: true
     
 navbar:
-  - title: "My Gists"
-    url: /gists/
+  - title: "My Github Projects"
+    url: /githubprojects/
   - title: "About me"
     url: /about/
-  - title: "Posts"
+  - title: "All Posts"
     url: /posts/
 
 # Exclude from processing
