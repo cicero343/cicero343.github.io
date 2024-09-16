@@ -1,5 +1,5 @@
 ---
-title: Posts
+title: All Posts
 permalink: /posts/
 layout: default
 ---
@@ -110,7 +110,7 @@ layout: default
 </head>
 <body>
     <!-- Page title -->
-    <h1 class="page-title">Posts</h1>
+    <h1 class="page-title">All Posts</h1>
     <hr>
     <div class="posts-container">
         {% for post in site.posts %}
