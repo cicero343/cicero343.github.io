@@ -1,6 +1,6 @@
 ---
-title: My Gists
-permalink: /gists/
+title: My Github Projects
+permalink: /githubprojects/
 layout: default
 ---
 
@@ -8,7 +8,7 @@ layout: default
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Gists</title>
+    <title>My Github Projects</title>
     <style>
         /* Default light mode settings */
         :root {
@@ -84,6 +84,7 @@ layout: default
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             max-width: 90%; /* Ensures the content doesn't touch the edges */
+            margin-bottom: 20px; /* Add space between the containers */
         }
 
         /* Adjust the container width for different screen sizes */
@@ -156,34 +157,25 @@ layout: default
         .gist a:hover {
             text-decoration: underline;
         }
+
     </style>
 </head>
 <body>
 
     <br>
-    <h1>My GitHub Gists</h1>
-
-    {% if site.data.github_users %}
-    <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
-      {% for user in site.data.github_users %}
-        {% include repository/repo_user.html username=user %}
-      {% endfor %}
-    </div>
-    {% endif %}
+    <h1>My GitHub Projects</h1>
 
     <hr>
 
-    <!--
-    <h2>GitHub Repositories</h2>
+    <br>
 
-    {% if site.data.github_repos %}
-    <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
-      {% for repo in site.data.github_repos %}
-        {% include repository/repo.html repository=repo %}
-      {% endfor %}
+    <!-- Repository Preview Section -->
+    <div class="content-container">
+        <h3>PopupWindowsAPI</h3>
+        <a href="https://github.com/cicero343/PopupWindowsAPI" target="_blank">
+            <img class="repo-img-dark w-100" alt="PopupWindowsAPI" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=PopupWindowsAPI&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
+        </a>
     </div>
-    {% endif %}
-    -->
 
     <div class="content-container">
         <div id="gists-container">
