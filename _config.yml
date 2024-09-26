@@ -22,8 +22,8 @@ collections:
     output: true
     
 navbar:
-  - title: "My Github Projects"
-    url: /githubprojects/
+  - title: "My Projects"
+    url: /projects/
   - title: "About me"
     url: /about/
   - title: "All Posts"
