@@ -1,6 +1,6 @@
 ---
-title: My Github Projects
-permalink: /githubprojects/
+title: My Projects
+permalink: /projects/
 layout: default
 ---
 
@@ -8,7 +8,7 @@ layout: default
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Github Projects</title>
+    <title>My Projects</title>
     <style>
         /* Default light mode settings */
         :root {
