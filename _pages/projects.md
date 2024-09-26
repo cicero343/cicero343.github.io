@@ -166,7 +166,7 @@ layout: default
     <hr>
 
     <br>
-    <iframe frameborder="0" src="https://itch.io/embed/2997483?linkback=true&amp;dark=true" width="552" height="167"><a href="https://cicero343.itch.io/serenityskies">SerenitySkies by cicero343</a></iframe>
+    <iframe frameborder="0" src="https://itch.io/embed/2997483?linkback=true&amp;dark=true" width="505" height="167"><a href="https://cicero343.itch.io/serenityskies">SerenitySkies by cicero343</a></iframe>
 
     <br>
 
