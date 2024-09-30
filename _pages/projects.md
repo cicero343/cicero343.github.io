@@ -166,11 +166,8 @@ layout: default
         border: none; /* Removes the border around the iframe */
     }
 
-    /* Optional: Center the iframe in its container */
+    /* Container styling without centering */
     .iframe-container {
-        display: flex;
-        justify-content: center; /* Center horizontally */
-        margin: 20px 0; /* Add some margin for spacing */
         overflow: hidden; /* Hide overflow to prevent stretching */
     }
 
@@ -191,10 +188,6 @@ layout: default
         <a href="https://cicero343.itch.io/serenityskies">SerenitySkies by cicero343</a>
     </iframe>
     </div>
-
-    <br>
-
-    <br>
 
     <br>
     <h1>My GitHub Projects</h1>
