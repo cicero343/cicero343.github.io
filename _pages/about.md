@@ -152,7 +152,7 @@ layout: default
     
     <iframe
         class="game-iframe"
-        src="https://exampleuser.github.io/my-website/game-files/index.html"
+        src="https://cicero343.github.io/mygame/index.html"
         width="640"
         height="360"
         scrolling="no">
