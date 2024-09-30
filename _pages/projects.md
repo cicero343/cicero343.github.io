@@ -158,6 +158,22 @@ layout: default
             text-decoration: underline;
         }
 
+    /* Ensure the iframe is responsive */
+    .responsive-iframe {
+        width: 100%; /* Take full width of the parent container */
+        max-width: 505px; /* Set a max width to keep it within standard smartphone width */
+        height: 167px; /* Set the height according to your iframe content */
+        border: none; /* Removes the border around the iframe */
+    }
+
+    /* Optional: Center the iframe in its container */
+    .iframe-container {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        margin: 20px 0; /* Add some margin for spacing */
+        overflow: hidden; /* Hide overflow to prevent stretching */
+    }
+
     </style>
 </head>
 <body>
@@ -166,7 +182,15 @@ layout: default
     <hr>
 
     <br>
-    <iframe frameborder="0" src="https://itch.io/embed/2997483?linkback=true&amp;dark=true" width="505" height="167"><a href="https://cicero343.itch.io/serenityskies">SerenitySkies by cicero343</a></iframe>
+    
+    <div class="iframe-container">
+    <iframe
+        class="responsive-iframe"
+        frameborder="0"
+        src="https://itch.io/embed/2997483?linkback=true&amp;dark=true">
+        <a href="https://cicero343.itch.io/serenityskies">SerenitySkies by cicero343</a>
+    </iframe>
+    </div>
 
     <br>
 
