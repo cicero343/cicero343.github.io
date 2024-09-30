@@ -124,12 +124,20 @@ layout: default
             }
         }
 
-        /* iFrame styling */
-        .game-iframe {
-            display: block; /* Ensures it takes the full width */
-            margin: 20px auto; /* Centers the iFrame */
-            border: none; /* Removes the default border */
-        }
+    /* Ensure the iframe is responsive */
+    .responsive-iframe {
+        width: 100%; /* Take full width of the parent container */
+        max-width: 640px; /* Set a max width to keep it within standard smartphone width */
+        height: 360px; /* You can adjust this height based on your game design */
+        border: none; /* Removes the border around the iframe */
+    }
+
+    /* Optional: Center the iframe in its container */
+    .iframe-container {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        margin: 20px 0; /* Add some margin for spacing */
+    }
     </style>
 </head>
 <body>
@@ -150,13 +158,12 @@ layout: default
 
     <br>
     
-    <iframe
-        class="game-iframe"
-        src="https://cicero343.github.io/mygame/index.html"
-        width="640"
-        height="360"
-        scrolling="no">
-    </iframe>
+    <div class="iframe-container">
+        <iframe
+            src="https://exampleuser.github.io/my-website/mygame/index.html"
+            class="responsive-iframe">
+        </iframe>
+    </div>
 
 </body>
 </html>
