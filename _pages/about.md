@@ -123,6 +123,13 @@ layout: default
                 max-width: 98%;
             }
         }
+
+        /* iFrame styling */
+        .game-iframe {
+            display: block; /* Ensures it takes the full width */
+            margin: 20px auto; /* Centers the iFrame */
+            border: none; /* Removes the default border */
+        }
     </style>
 </head>
 <body>
@@ -140,6 +147,17 @@ layout: default
     <br>
 
     <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
+
+    <br>
+    
+    <iframe
+        class="game-iframe"
+        src="https://exampleuser.github.io/my-website/game-files/index.html"
+        width="640"
+        height="360"
+        scrolling="no">
+    </iframe>
+
 </body>
 </html>
 
