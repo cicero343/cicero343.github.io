@@ -154,7 +154,7 @@ layout: default
 
     <br>
 
-    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="nyan-cat">
+    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="Nyan Cat" class="nyan-cat" style="width: 438px; height: 200px;">
 
     <br>
     
