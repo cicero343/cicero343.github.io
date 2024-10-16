@@ -196,13 +196,20 @@ layout: default
 
     <br>
 
-    <!-- Repository Preview Section -->
-    <div class="content-container">
-        <h3>PopupWindowsAPI</h3>
-        <a href="https://github.com/cicero343/PopupWindowsAPI" target="_blank">
-            <img class="repo-img-dark w-100" alt="PopupWindowsAPI" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=PopupWindowsAPI&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
-        </a>
-    </div>
+<!-- Repository Preview Section -->
+<div class="content-container">
+    <h3>PopupWindowsAPI</h3>
+    <a href="https://github.com/cicero343/PopupWindowsAPI" target="_blank" class="repo-link">
+        <img class="repo-img-dark fill-div" alt="PopupWindowsAPI" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=PopupWindowsAPI&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
+    </a>
+</div>
+
+<div class="content-container">
+    <h3>CyberSecBookmarks</h3>
+    <a href="https://github.com/cicero343/CyberSecBookmarks" target="_blank" class="repo-link">
+        <img class="repo-img-dark fill-div" alt="CyberSecBookmarks" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=CyberSecBookmarks&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
+    </a>
+</div>
 
     <div class="content-container">
         <div id="gists-container">
