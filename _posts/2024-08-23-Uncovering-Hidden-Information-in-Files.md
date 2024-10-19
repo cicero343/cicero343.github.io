@@ -320,6 +320,18 @@ In the images below you can see that we've changed the hex code for this .png fi
 
 <br>
 <br>
+
+<h3 style="text-decoration: underline;">Oletools</h3>
+
+Oletools is a collection of Python tools for analysing Microsoft OLE2 files (e.g., Office files). It’s useful for detecting embedded objects, macros, or hidden content.
+
+<br>
+<br>
+
+<img src="/assets/images/olevba1.png" alt="olevba (part of oletools)" style="max-width: 100%; height: auto;">
+
+<br>
+<br>
 <br>
 
 <h2 id="binary-analysis" style="text-decoration: none; font-weight: bold; color: #00ff00; background-color: #000000; padding: 5px; border-radius: 5px;">Binary Analysis & Reverse Engineering</h2>
@@ -378,6 +390,30 @@ Ghidra is a powerful reverse engineering tool developed by the NSA. It disassemb
 <br>
 
 <img src="/assets/images/ghidra.png" alt="ghidra command output" style="max-width: 100%; height: auto;">
+
+<br>
+<br>
+
+<h3 style="text-decoration: underline;">PeStudio</h3>
+
+PEstudio is used for inspecting PE (Portable Executable) files on Windows. It provides detailed information about potential risks, indicators of malware, and can help with reverse engineering and binary analysis.
+
+<br>
+<br>
+
+<img src="/assets/images/pestudio1.png" alt="pestudio" style="max-width: 100%; height: auto;">
+
+<br>
+<br>
+
+<h3 style="text-decoration: underline;">Jadx-Gui</h3>
+
+Jadx decompiles Android APK files to Java code to help with reverse engineering.
+
+<br>
+<br>
+
+<img src="/assets/images/jadx1.png" alt="jadx" style="max-width: 100%; height: auto;">
 
 <br>
 <br>
@@ -514,6 +550,30 @@ EnCase is a digital forensics tool primarily used for forensic investigation, da
 <br>
 
 <img src="/assets/images/encase.jpg" alt="encase" style="max-width: 100%; height: auto;">
+
+<br>
+<br>
+
+<h3 style="text-decoration: underline;">Shellbags Explorer</h3>
+
+Shellbags Explorer analyses user activity on Windows by tracking accessed files and folders logged in the Windows registry.
+
+<br>
+<br>
+
+<img src="/assets/images/shellbags1.png" alt="shellbags explorer" style="max-width: 100%; height: auto;">
+
+<br>
+<br>
+
+<h3 style="text-decoration: underline;">Remnux VM</h3>
+
+Remnux is a Linux-based virtual machine tailored for reverse engineering and malware analysis. It includes tools for file analysis, binary inspection, and forensics. 
+
+<br>
+<br>
+
+<img src="/assets/images/remnux1.png" alt="remnux VM" style="max-width: 100%; height: auto;">
 
 <br>
 <br>
