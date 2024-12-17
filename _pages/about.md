@@ -17,7 +17,10 @@ layout: default
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me</title>
-    <style>
+   
+   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+ 
+ <style>
         /* Default light mode settings */
         :root {
             --bg-color: #ffffff;
@@ -138,6 +141,21 @@ layout: default
         justify-content: center; /* Center horizontally */
         margin: 20px 0; /* Add some margin for spacing */
     }
+
+ /* Typing effect styles */
+        #typingText {
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow: hidden;
+            border-right: 0.15em solid var(--txt-color); /* Blinking cursor effect */
+            animation: blink-cursor 0.7s steps(40) infinite normal;
+        }
+
+        @keyframes blink-cursor {
+            from { border-color: transparent; }
+            to { border-color: var(--txt-color); }
+        }
+
     </style>
 </head>
 <body>
@@ -147,9 +165,7 @@ layout: default
     </div>
 
     <div class="content-container">
-        <p>Hello and welcome to my site, I’m so happy you’re here! 🥳</p>
-        <p>I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.</p>
-        <p>Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!</p>
+        <div id="typingText"></div>
     </div>
 
     <br>
@@ -164,6 +180,63 @@ layout: default
             class="responsive-iframe">
         </iframe>
     </div>
+
+     <!-- Typing effect script -->
+    <script>
+        const text = `Hello and welcome to my site, I’m so happy you’re here! 🥳\n
+I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.\n
+Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!`;
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typingText").textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50); // Adjust typing speed here
+            }
+        }
+
+        window.onload = typeWriter;
+
+        window.addEventListener('load', function() {
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        });
+
+        // Mouse click emoji script
+        const emojis = ["🎉", "😊", "🚀", "🌟", "🔥", "💖", "🍀", "🎈", "🌈", "🐱"];
+
+        document.addEventListener("click", function(event) {
+            const emojiElement = document.createElement("span");
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            emojiElement.textContent = randomEmoji;
+            emojiElement.style.position = "absolute";
+            emojiElement.style.left = `${event.pageX}px`;
+            emojiElement.style.top = `${event.pageY}px`;
+            emojiElement.style.fontSize = "24px";
+            emojiElement.style.transform = "translate(-50%, -50%)";
+            document.body.appendChild(emojiElement);
+            setTimeout(() => emojiElement.remove(), 1500);
+        });
+
+    </script>
+
+
+ <!-- Trigger the confetti script -->
+    <script>
+        // This triggers confetti when the page is loaded
+        window.addEventListener('load', function() {
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        });
+    </script>
+
 
 </body>
 </html>
