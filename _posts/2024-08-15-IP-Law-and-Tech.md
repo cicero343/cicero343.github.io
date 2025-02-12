@@ -28,193 +28,101 @@ layout: default
   
     <!-- Add Font Awesome for the up arrow icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 
     <style>
         /* Default light mode settings */
         :root {
             --bg-color: #ffffff;
             --txt-color: #000000;
-            --link-color-light: blue; /* Blue links in light mode */
-            --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
-            --button-bg-light: #000000; /* Black background for button in light mode */
-            --button-text-light: #ffffff; /* White text color for button in light mode */
-            --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
+            --link-color-light: blue;
+            --link-hover-color-light: darkblue;
+            --button-bg-light: #000000;
+            --button-text-light: #ffffff;
+            --button-bg-hover-light: #333333;
         }
 
         /* Dark mode settings */
         [data-theme="dark"] {
             --bg-color: #000000;
             --txt-color: #ffffff;
-            --link-color-dark: #00ff00; /* Green links in dark mode */
-            --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
-            --button-bg-dark: #000000; /* Black background for button in dark mode */
-            --button-text-dark: #00ff00; /* Green text color for button in dark mode */
-            --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
+            --link-color-dark: #00ff00;
+            --link-hover-color-dark: #00cc00;
+            --button-bg-dark: #000000;
+            --button-text-dark: #00ff00;
+            --button-bg-hover-dark: #333333;
         }
 
-        /* Apply the variables to the body */
         body {
             background-color: var(--bg-color);
             color: var(--txt-color);
         }
 
-        /* Link styling */
         a:link, a:visited {
-            color: var(--link-color-light); /* Use default blue color for light mode */
+            color: var(--link-color-light);
         }
 
-        /* Dark mode overrides */
         [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-            color: var(--link-color-dark); /* Use green color for dark mode */
+            color: var(--link-color-dark);
         }
 
         a:hover {
-            color: var(--link-hover-color-light); /* Hover color in light mode */
+            color: var(--link-hover-color-light);
         }
 
-        /* Dark mode hover overrides */
         [data-theme="dark"] a:hover {
-            color: var(--link-hover-color-dark); /* Hover color in dark mode */
+            color: var(--link-hover-color-dark);
         }
 
         a:active {
-            color: inherit; /* Maintain inherited color when clicked */
+            color: inherit;
         }
 
-        /* Dark mode active overrides */
         [data-theme="dark"] a:active {
-            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+            color: var(--link-color-dark);
         }
-
-        /* Circular Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--button-bg-light); /* Light mode background */
-            color: var(--button-text-light); /* Light mode icon color */
-            border: none;
-            border-radius: 50%; /* Makes the button circular */
-            width: 50px; /* Diameter of the circle */
-            height: 50px; /* Diameter of the circle */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px; /* Icon size */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow effect */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            display: none; /* Initially hidden */
-        }
-
-        .back-to-top:hover {
-            background-color: var(--button-bg-hover-light); /* Darker background on hover */
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Dark mode overrides for the Back to Top button */
-        [data-theme="dark"] .back-to-top {
-            background-color: var(--button-bg-dark); /* Dark mode background */
-            color: var(--button-text-dark); /* Dark mode icon color */
-        }
-
-        [data-theme="dark"] .back-to-top:hover {
-            background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
-        }
-
-      /* TOC STYLING */
-
-       body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        /* Floating ToC Button */
-        .toc-button {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            background: #333;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        /* Sidebar */
-        .toc-sidebar {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 250px;
-            height: 100%;
-            background: #222;
-            color: white;
-            padding: 20px;
-            transition: right 0.3s ease-in-out;
-        }
-        .toc-sidebar.active {
-            right: 0;
-        }
-        .toc-sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .toc-sidebar ul li {
-            margin: 10px 0;
-        }
-        .toc-sidebar ul li a {
-            color: white;
-            text-decoration: none;
-        }
-        /* Close Button */
-        .close-btn {
-            background: red;
-            color: white;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-
     </style>
 </head>
-
 <body>
-  
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-white text-xl font-bold">IP Law and Tech</a>
+            <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul id="menu" class="hidden md:flex space-x-6 text-white">
+                <li><a href="#" class="hover:text-gray-400">Home</a></li>
+                <li><a href="#" class="hover:text-gray-400">About</a></li>
+                <li><a href="#" class="hover:text-gray-400">Services</a></li>
+                <li><a href="#" class="hover:text-gray-400">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <!-- Back to Top Button -->
     <button onclick="topFunction()" class="back-to-top" title="Go to top">
-        <i class="fas fa-chevron-up"></i> <!-- Font Awesome Up Arrow Icon -->
+        <i class="fas fa-chevron-up"></i>
     </button>
 
-    <!-- Table of Contents Button -->
-    <button class="toc-button" onclick="toggleToC()">☰ Table of Contents</button>
-
-    <!-- Table of Contents Sidebar -->
-    <div class="toc-sidebar" id="tocSidebar">
-        <button class="close-btn" onclick="toggleToC()">✖</button>
-        <h2>Table of Contents</h2>
-        <ul>
-            <li><a href="#section1">Section 1</a></li>
-            <li><a href="#section2">Section 2</a></li>
-            <li><a href="#section3">Section 3</a></li>
-        </ul>
-    </div>
-
     <script>
-        // Back to Top Button Script
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            let menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Get the back-to-top button
         let myBtn = document.querySelector('.back-to-top');
 
         window.onscroll = function() {scrollFunction()};
 
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                myBtn.style.display = "flex"; /* Show the button */
+                myBtn.style.display = "flex";
             } else {
-                myBtn.style.display = "none"; /* Hide the button */
+                myBtn.style.display = "none";
             }
         }
 
@@ -222,14 +130,7 @@ layout: default
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
-
-        // Table of Contents Toggle Script
-        function toggleToC() {
-            document.getElementById("tocSidebar").classList.toggle("active");
-        }
     </script>
-
-
 </body>
 </html>
 
