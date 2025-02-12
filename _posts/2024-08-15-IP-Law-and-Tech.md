@@ -25,7 +25,8 @@ layout: default
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP Law and Tech</title>
-    
+  
+    <!-- Add Font Awesome for the up arrow icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
@@ -33,180 +34,127 @@ layout: default
         :root {
             --bg-color: #ffffff;
             --txt-color: #000000;
-            --link-color-light: blue;
-            --link-hover-color-light: darkblue;
-            --button-bg-light: #000000;
-            --button-text-light: #ffffff;
-            --button-bg-hover-light: #333333;
+            --link-color-light: blue; /* Blue links in light mode */
+            --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
+            --button-bg-light: #000000; /* Black background for button in light mode */
+            --button-text-light: #ffffff; /* White text color for button in light mode */
+            --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
         }
 
+        /* Dark mode settings */
         [data-theme="dark"] {
             --bg-color: #000000;
             --txt-color: #ffffff;
-            --link-color-dark: #00ff00;
-            --link-hover-color-dark: #00cc00;
-            --button-bg-dark: #000000;
-            --button-text-dark: #00ff00;
-            --button-bg-hover-dark: #333333;
+            --link-color-dark: #00ff00; /* Green links in dark mode */
+            --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
+            --button-bg-dark: #000000; /* Black background for button in dark mode */
+            --button-text-dark: #00ff00; /* Green text color for button in dark mode */
+            --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
         }
 
+        /* Apply the variables to the body */
         body {
             background-color: var(--bg-color);
             color: var(--txt-color);
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
         }
 
+        /* Link styling */
         a:link, a:visited {
-            color: var(--link-color-light);
+            color: var(--link-color-light); /* Use default blue color for light mode */
         }
-        
+
+        /* Dark mode overrides */
         [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-            color: var(--link-color-dark);
+            color: var(--link-color-dark); /* Use green color for dark mode */
         }
 
         a:hover {
-            color: var(--link-hover-color-light);
+            color: var(--link-hover-color-light); /* Hover color in light mode */
         }
-        
+
+        /* Dark mode hover overrides */
         [data-theme="dark"] a:hover {
-            color: var(--link-hover-color-dark);
+            color: var(--link-hover-color-dark); /* Hover color in dark mode */
         }
 
-        /* Navbar Styling */
-        .navbar {
-            background: #222;
-            color: white;
-            padding: 15px;
+        a:active {
+            color: inherit; /* Maintain inherited color when clicked */
+        }
+
+        /* Dark mode active overrides */
+        [data-theme="dark"] a:active {
+            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+        }
+
+        /* Circular Back to Top Button */
+        .back-to-top {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-        }
-
-        .navbar a:hover {
-            color: #00ff00;
-        }
-
-        /* Floating ToC Button */
-        .toc-button {
-            position: fixed;
-            top: 50%;
+            bottom: 20px;
             right: 20px;
-            transform: translateY(-50%);
-            background: #333;
-            color: white;
+            background-color: var(--button-bg-light); /* Light mode background */
+            color: var(--button-text-light); /* Light mode icon color */
             border: none;
-            padding: 10px;
+            border-radius: 50%; /* Makes the button circular */
+            width: 50px; /* Diameter of the circle */
+            height: 50px; /* Diameter of the circle */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px; /* Icon size */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow effect */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            border-radius: 5px;
+            display: none; /* Initially hidden */
         }
-        
-        /* Sidebar */
-        .toc-sidebar {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 250px;
-            height: 100%;
-            background: #222;
-            color: white;
-            padding: 20px;
-            transition: right 0.3s ease-in-out;
+
+        .back-to-top:hover {
+            background-color: var(--button-bg-hover-light); /* Darker background on hover */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
         }
-        .toc-sidebar.active {
-            right: 0;
+
+        /* Dark mode overrides for the Back to Top button */
+        [data-theme="dark"] .back-to-top {
+            background-color: var(--button-bg-dark); /* Dark mode background */
+            color: var(--button-text-dark); /* Dark mode icon color */
         }
-        .toc-sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .toc-sidebar ul li {
-            margin: 10px 0;
-        }
-        .toc-sidebar ul li a {
-            color: white;
-            text-decoration: none;
-        }
-        
-        /* Close Button */
-        .close-btn {
-            background: red;
-            color: white;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
+
+        [data-theme="dark"] .back-to-top:hover {
+            background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
         }
     </style>
 </head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div>
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#contact">Contact</a>
-        </div>
-    </nav>
 
-    <!-- Floating Table of Contents Button -->
-    <button class="toc-button" onclick="toggleToC()">☰ Table of Contents</button>
-    
-    <!-- Sidebar -->
-    <div class="toc-sidebar" id="tocSidebar">
-        <button class="close-btn" onclick="toggleToC()">✖</button>
-        <h2>Table of Contents</h2>
-        <ul>
-            <li><a href="#section1">Section 1</a></li>
-            <li><a href="#section2">Section 2</a></li>
-            <li><a href="#section3">Section 3</a></li>
-        </ul>
-    </div>
-    
+<body>
+
     <!-- Back to Top Button -->
     <button onclick="topFunction()" class="back-to-top" title="Go to top">
-        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i> <!-- Font Awesome Up Arrow Icon -->
     </button>
 
     <script>
-        function toggleToC() {
-            document.getElementById("tocSidebar").classList.toggle("active");
-        }
-        
+        // Get the button
         let myBtn = document.querySelector('.back-to-top');
+
+        // Show the button when the user scrolls down 20px
         window.onscroll = function() {scrollFunction()};
-        
+
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                myBtn.style.display = "flex";
+                myBtn.style.display = "flex"; /* Show the button */
             } else {
-                myBtn.style.display = "none";
+                myBtn.style.display = "none"; /* Hide the button */
             }
         }
-        
+
+        // Scroll to the top when the button is clicked
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
     </script>
+
 </body>
 </html>
-
 
 “One of the constant themes in the history of British copyright law is that it has been influenced by foreign and international trends and developments”<a href="#ref1" id="back1" class="reference"> [1]</a> 
 
