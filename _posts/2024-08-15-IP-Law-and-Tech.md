@@ -25,10 +25,8 @@ layout: default
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP Law and Tech</title>
-  
-    <!-- Add Font Awesome for the up arrow icon -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 
     <style>
         /* Default light mode settings */
@@ -42,7 +40,6 @@ layout: default
             --button-bg-hover-light: #333333;
         }
 
-        /* Dark mode settings */
         [data-theme="dark"] {
             --bg-color: #000000;
             --txt-color: #ffffff;
@@ -56,12 +53,15 @@ layout: default
         body {
             background-color: var(--bg-color);
             color: var(--txt-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         a:link, a:visited {
             color: var(--link-color-light);
         }
-
+        
         [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
             color: var(--link-color-dark);
         }
@@ -69,55 +69,128 @@ layout: default
         a:hover {
             color: var(--link-hover-color-light);
         }
-
+        
         [data-theme="dark"] a:hover {
             color: var(--link-hover-color-dark);
         }
 
-        a:active {
-            color: inherit;
+        /* Navbar Styling */
+        .navbar {
+            background: #222;
+            color: white;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
         }
 
-        [data-theme="dark"] a:active {
-            color: var(--link-color-dark);
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        .navbar a:hover {
+            color: #00ff00;
+        }
+
+        /* Floating ToC Button */
+        .toc-button {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        /* Sidebar */
+        .toc-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 250px;
+            height: 100%;
+            background: #222;
+            color: white;
+            padding: 20px;
+            transition: right 0.3s ease-in-out;
+        }
+        .toc-sidebar.active {
+            right: 0;
+        }
+        .toc-sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .toc-sidebar ul li {
+            margin: 10px 0;
+        }
+        .toc-sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Close Button */
+        .close-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     </style>
 </head>
 <body>
-
-    <!-- Navigation Bar -->
-    <nav class="bg-gray-800 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="#" class="text-white text-xl font-bold">IP Law and Tech</a>
-            <button class="md:hidden text-white focus:outline-none" onclick="toggleMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-            <ul id="menu" class="hidden md:flex space-x-6 text-white">
-                <li><a href="#" class="hover:text-gray-400">Home</a></li>
-                <li><a href="#" class="hover:text-gray-400">About</a></li>
-                <li><a href="#" class="hover:text-gray-400">Services</a></li>
-                <li><a href="#" class="hover:text-gray-400">Contact</a></li>
-            </ul>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#contact">Contact</a>
         </div>
     </nav>
 
+    <!-- Floating Table of Contents Button -->
+    <button class="toc-button" onclick="toggleToC()">☰ Table of Contents</button>
+    
+    <!-- Sidebar -->
+    <div class="toc-sidebar" id="tocSidebar">
+        <button class="close-btn" onclick="toggleToC()">✖</button>
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#section1">Section 1</a></li>
+            <li><a href="#section2">Section 2</a></li>
+            <li><a href="#section3">Section 3</a></li>
+        </ul>
+    </div>
+    
     <!-- Back to Top Button -->
     <button onclick="topFunction()" class="back-to-top" title="Go to top">
         <i class="fas fa-chevron-up"></i>
     </button>
 
     <script>
-        // Mobile Menu Toggle
-        function toggleMenu() {
-            let menu = document.getElementById('menu');
-            menu.classList.toggle('hidden');
+        function toggleToC() {
+            document.getElementById("tocSidebar").classList.toggle("active");
         }
-
-        // Get the back-to-top button
+        
         let myBtn = document.querySelector('.back-to-top');
-
         window.onscroll = function() {scrollFunction()};
-
+        
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
                 myBtn.style.display = "flex";
@@ -125,7 +198,7 @@ layout: default
                 myBtn.style.display = "none";
             }
         }
-
+        
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
@@ -133,6 +206,7 @@ layout: default
     </script>
 </body>
 </html>
+
 
 “One of the constant themes in the history of British copyright law is that it has been influenced by foreign and international trends and developments”<a href="#ref1" id="back1" class="reference"> [1]</a> 
 
