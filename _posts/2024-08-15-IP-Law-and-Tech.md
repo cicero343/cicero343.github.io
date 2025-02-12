@@ -121,21 +121,93 @@ layout: default
         [data-theme="dark"] .back-to-top:hover {
             background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
         }
+
+      /* TOC STYLING */
+
+       body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        /* Floating ToC Button */
+        .toc-button {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        /* Sidebar */
+        .toc-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 250px;
+            height: 100%;
+            background: #222;
+            color: white;
+            padding: 20px;
+            transition: right 0.3s ease-in-out;
+        }
+        .toc-sidebar.active {
+            right: 0;
+        }
+        .toc-sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .toc-sidebar ul li {
+            margin: 10px 0;
+        }
+        .toc-sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        /* Close Button */
+        .close-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
     </style>
 </head>
 
 <body>
-
+  
     <!-- Back to Top Button -->
     <button onclick="topFunction()" class="back-to-top" title="Go to top">
         <i class="fas fa-chevron-up"></i> <!-- Font Awesome Up Arrow Icon -->
     </button>
 
+    <!-- Table of Contents Button -->
+    <button class="toc-button" onclick="toggleToC()">☰ Table of Contents</button>
+
+    <!-- Table of Contents Sidebar -->
+    <div class="toc-sidebar" id="tocSidebar">
+        <button class="close-btn" onclick="toggleToC()">✖</button>
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#section1">Section 1</a></li>
+            <li><a href="#section2">Section 2</a></li>
+            <li><a href="#section3">Section 3</a></li>
+        </ul>
+    </div>
+
     <script>
-        // Get the button
+        // Back to Top Button Script
         let myBtn = document.querySelector('.back-to-top');
 
-        // Show the button when the user scrolls down 20px
         window.onscroll = function() {scrollFunction()};
 
         function scrollFunction() {
@@ -146,12 +218,17 @@ layout: default
             }
         }
 
-        // Scroll to the top when the button is clicked
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
         }
+
+        // Table of Contents Toggle Script
+        function toggleToC() {
+            document.getElementById("tocSidebar").classList.toggle("active");
+        }
     </script>
+
 
 </body>
 </html>
