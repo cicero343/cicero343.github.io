@@ -198,6 +198,13 @@ layout: default
 
 <!-- Repository Preview Section -->
 <div class="content-container">
+    <h3>KQL-Queries</h3>
+    <a href="https://github.com/cicero343/KQL-Queries" target="_blank" class="repo-link">
+        <img class="repo-img-dark fill-div" alt="KQL-Queries" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=KQL-Queries&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
+    </a>
+</div>
+
+<div class="content-container">
     <h3>PopupWindowsAPI</h3>
     <a href="https://github.com/cicero343/PopupWindowsAPI" target="_blank" class="repo-link">
         <img class="repo-img-dark fill-div" alt="PopupWindowsAPI" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=PopupWindowsAPI&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
