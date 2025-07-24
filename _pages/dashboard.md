@@ -10,140 +10,159 @@ permalink: /dashboard/
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7fa;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    margin: 0;
+    padding: 0;
+  }
 
-    /* Secondary tabs styles */
-    .dashboard-tabs {
-      display: flex;
-      justify-content: center;
-      background: #1565c0;
-      padding: 10px;
-      flex-wrap: wrap;
-    }
+  /* Secondary tabs styles */
+  .dashboard-tabs {
+    display: flex;
+    justify-content: center;
+    background: #1565c0;
+    padding: 10px;
+    flex-wrap: wrap;
+  }
 
-    .dashboard-tabs a {
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+  .dashboard-tabs a {
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-    .dashboard-tabs a.active,
-    .dashboard-tabs a:hover {
-      background: #64b5f6;
-    }
+  .dashboard-tabs a.active,
+  .dashboard-tabs a:hover {
+    background: #64b5f6;
+  }
 
-    .dashboard-content {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
-    }
+  .dashboard-content {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
+  }
 
-    .tab-content {
-      display: none;
-    }
+  .tab-content {
+    display: none;
+  }
 
-    .tab-content.active {
-      display: block;
-    }
+  .tab-content.active {
+    display: block;
+  }
 
-    textarea {
-      width: 100%;
-      height: 200px;
-      margin-top: 10px;
-      font-size: 1em;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      resize: vertical;
-    }
+  textarea {
+    width: 100%;
+    height: 200px;
+    margin-top: 10px;
+    font-size: 1em;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+  }
 
-    button.export-btn, button.table-btn {
-      margin: 10px 5px 20px 0;
-      padding: 8px 18px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 0.95em;
-      cursor: pointer;
-    }
+  button.export-btn, button.table-btn {
+    margin: 10px 5px 20px 0;
+    padding: 8px 18px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95em;
+    cursor: pointer;
+  }
 
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      background: white;
-      margin-bottom: 20px;
-    }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+    margin-bottom: 20px;
+  }
 
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
 
-    th[contenteditable], td[contenteditable] {
-      background-color: #fafafa;
-    }
+  th[contenteditable], td[contenteditable] {
+    background-color: #fafafa;
+  }
 
-    .canvas-controls {
-      text-align: center;
-      margin-top: 10px;
-    }
+  .canvas-controls {
+    text-align: center;
+    margin-top: 10px;
+  }
 
-    canvas {
-      border: 2px solid #444;
-      border-radius: 4px;
-      background: #ffffff;
-      cursor: crosshair;
-      display: block;
-      margin: 20px auto;
-    }
+  canvas {
+    border: 2px solid #444;
+    border-radius: 4px;
+    background: #ffffff;
+    cursor: crosshair;
+    display: block;
+    margin: 20px auto;
+  }
 
-    /* World Clock & Weather styles */
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-    }
+  /* World Clock & Weather styles */
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+  }
 
+  .card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    width: calc(33.333% - 22px); /* 3 per row on desktop */
+    box-sizing: border-box;
+    text-align: left;
+    transition: transform 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  .card h2 {
+    margin-top: 0;
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    margin: 6px 0;
+    font-size: 0.9em;
+  }
+
+  .card .loading {
+    font-style: italic;
+    color: #888;
+  }
+
+  @media (max-width: 900px) {
     .card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      width: 240px;
-      text-align: left;
+      width: calc(50% - 20px); /* 2 per row on tablets */
     }
+  }
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.2em;
-      margin-bottom: 10px;
+  @media (max-width: 600px) {
+    .card {
+      width: 100%; /* 1 per row on mobile */
     }
-
-    .card p {
-      margin: 6px 0;
-    }
-
-    .card .loading {
-      font-style: italic;
-      color: #888;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
