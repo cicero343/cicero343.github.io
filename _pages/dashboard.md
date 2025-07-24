@@ -4,24 +4,175 @@ layout: default
 permalink: /dashboard/
 ---
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Secondary tabs styles */
+    .dashboard-tabs {
+      display: flex;
+      justify-content: center;
+      background: #1565c0;
+      padding: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-tabs a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .dashboard-tabs a.active,
+    .dashboard-tabs a:hover {
+      background: #64b5f6;
+    }
+
+    .dashboard-content {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      margin-top: 10px;
+      font-size: 1em;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+
+    button.export-btn, button.table-btn {
+      margin: 10px 5px 20px 0;
+      padding: 8px 18px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.95em;
+      cursor: pointer;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th[contenteditable], td[contenteditable] {
+      background-color: #fafafa;
+    }
+
+    .canvas-controls {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    canvas {
+      border: 2px solid #444;
+      border-radius: 4px;
+      background: #ffffff;
+      cursor: crosshair;
+      display: block;
+      margin: 20px auto;
+    }
+
+    /* World Clock & Weather styles */
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 240px;
+      text-align: left;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      margin: 6px 0;
+    }
+
+    .card .loading {
+      font-style: italic;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
 <div id="dashboard-app">
 
-  <!-- Secondary tabs navigation -->
+  <!-- Navigation -->
   <nav class="dashboard-tabs">
-    <a href="#" class="active" data-tab="notes">Notes</a>
+    <a href="#" class="active" data-tab="world">World</a>
+    <a href="#" data-tab="notes">Notes</a>
     <a href="#" data-tab="sheet">Spreadsheet</a>
     <a href="#" data-tab="canvas">Canvas</a>
   </nav>
 
-  <!-- Container for tab content -->
   <div class="dashboard-content">
 
-    <section id="notes" class="tab-content active">
+    <!-- World Clock Tab -->
+    <section id="world" class="tab-content active">
+      <h2>🌍 World Clock & Weather</h2>
+      <div class="grid" id="dashboard-grid"></div>
+    </section>
+
+    <!-- Notes Tab -->
+    <section id="notes" class="tab-content">
       <h2>Quick Notes</h2>
       <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
       <button class="export-btn" onclick="exportText('notesArea', 'notes.txt')">Export Notes</button>
     </section>
 
+    <!-- Spreadsheet Tab -->
     <section id="sheet" class="tab-content">
       <h2>Spreadsheet</h2>
       <button class="table-btn" onclick="addRow()">Add Row</button>
@@ -51,6 +202,7 @@ permalink: /dashboard/
       </table>
     </section>
 
+    <!-- Canvas Tab -->
     <section id="canvas" class="tab-content">
       <h2>Canvas Drawing Tool</h2>
       <div class="canvas-controls">
@@ -66,101 +218,6 @@ permalink: /dashboard/
 
   </div>
 </div>
-
-<style>
-  /* Secondary tabs styles */
-  .dashboard-tabs {
-    display: flex;
-    justify-content: center;
-    background: #1565c0;
-    padding: 10px;
-    flex-wrap: wrap;
-  }
-
-  .dashboard-tabs a {
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .dashboard-tabs a.active,
-  .dashboard-tabs a:hover {
-    background: #64b5f6;
-  }
-
-  .dashboard-content {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
-}
-
-  .tab-content {
-    display: none;
-  }
-
-  .tab-content.active {
-    display: block;
-  }
-
-  textarea {
-    width: 100%;
-    height: 200px;
-    margin-top: 10px;
-    font-size: 1em;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    resize: vertical;
-  }
-
-  button.export-btn, button.table-btn {
-    margin: 10px 5px 20px 0;
-    padding: 8px 18px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.95em;
-    cursor: pointer;
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    background: white;
-    margin-bottom: 20px;
-  }
-
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-
-  th[contenteditable], td[contenteditable] {
-    background-color: #fafafa;
-  }
-
-  .canvas-controls {
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  canvas {
-    border: 2px solid #444;
-    border-radius: 4px;
-    background: #ffffff;
-    cursor: crosshair;
-    display: block;
-    margin: 20px auto;
-  }
-</style>
 
 <script>
   // Tab switching logic
@@ -203,7 +260,6 @@ permalink: /dashboard/
     link.click();
   }
 
-  // Spreadsheet functions
   function addRow() {
     const table = document.getElementById("spreadsheet");
     const maxRows = 20;
@@ -229,7 +285,7 @@ permalink: /dashboard/
     }
   }
 
-  // Canvas drawing with mouse and touch support
+  // Canvas logic
   const canvas = document.getElementById('drawCanvas');
   const ctx = canvas.getContext('2d');
   let painting = false;
@@ -276,13 +332,11 @@ permalink: /dashboard/
     ctx.moveTo(pos.x, pos.y);
   }
 
-  // Mouse events
   canvas.addEventListener('mousedown', startPosition);
   canvas.addEventListener('mouseup', finishedPosition);
   canvas.addEventListener('mouseout', finishedPosition);
   canvas.addEventListener('mousemove', draw);
 
-  // Touch events
   canvas.addEventListener('touchstart', startPosition, { passive: false });
   canvas.addEventListener('touchend', finishedPosition, { passive: false });
   canvas.addEventListener('touchcancel', finishedPosition, { passive: false });
@@ -298,5 +352,71 @@ permalink: /dashboard/
     link.href = canvas.toDataURL();
     link.click();
   }
+
+  // World Clock & Weather logic
+  const cities = [
+    { name: "London", tz: "Europe/London", lat: 51.5074, lon: -0.1278, code: "GB" },
+    { name: "New York", tz: "America/New_York", lat: 40.7128, lon: -74.0060, code: "US" },
+    { name: "Paris", tz: "Europe/Paris", lat: 48.8566, lon: 2.3522, code: "FR" },
+    { name: "Berlin", tz: "Europe/Berlin", lat: 52.52, lon: 13.4050, code: "DE" },
+    { name: "Tokyo", tz: "Asia/Tokyo", lat: 35.6762, lon: 139.6503, code: "JP" },
+    { name: "Riyadh", tz: "Asia/Riyadh", lat: 24.7136, lon: 46.6753, code: "SA" },
+    { name: "Mumbai", tz: "Asia/Kolkata", lat: 19.0760, lon: 72.8777, code: "IN" },
+    { name: "Beijing", tz: "Asia/Shanghai", lat: 39.9042, lon: 116.4074, code: "CN" },
+    { name: "San Francisco", tz: "America/Los_Angeles", lat: 37.7749, lon: -122.4194, code: "US" }
+  ];
+
+  const dashboardGrid = document.getElementById('dashboard-grid');
+
+  function createCard(city) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h2>📍 ${city.name} (${city.code})</h2>
+      <p><strong>Time:</strong> <span class="clock">--:--:--</span></p>
+      <p><strong>Temp:</strong> <span class="temp">Loading...</span></p>
+      <p><strong>Wind:</strong> <span class="wind">Loading...</span></p>
+    `;
+    dashboardGrid.appendChild(card);
+    return card;
+  }
+
+  function updateClock(card, city) {
+    const clockSpan = card.querySelector('.clock');
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = new Intl.DateTimeFormat('en-GB', {
+        timeZone: city.tz,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      }).format(now);
+      clockSpan.textContent = timeStr;
+    }, 1000);
+  }
+
+  function updateWeather(card, temp, wind) {
+    const tempSpan = card.querySelector('.temp');
+    const windSpan = card.querySelector('.wind');
+    tempSpan.textContent = `${temp}°C`;
+    windSpan.textContent = `${wind} km/h`;
+  }
+
+  if (dashboardGrid) {
+    cities.forEach(city => {
+      const card = createCard(city);
+      updateClock(card, city);
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current_weather=true`)
+        .then(res => res.json())
+        .then(weather => {
+          const temp = weather.current_weather?.temperature ?? "N/A";
+          const wind = weather.current_weather?.windspeed ?? "N/A";
+          updateWeather(card, temp, wind);
+        })
+        .catch(() => updateWeather(card, "N/A", "N/A"));
+    });
+  }
 </script>
+</body>
+</html>
 
