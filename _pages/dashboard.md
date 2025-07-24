@@ -17,7 +17,6 @@ permalink: /dashboard/
     padding: 0;
   }
 
-  /* Secondary tabs styles */
   .dashboard-tabs {
     display: flex;
     justify-content: center;
@@ -124,7 +123,7 @@ permalink: /dashboard/
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     padding: 16px;
-    width: calc(33.333% - 22px); /* 3 per row on desktop */
+    width: calc(33.333% - 22px);
     box-sizing: border-box;
     text-align: left;
     transition: transform 0.2s ease;
@@ -152,15 +151,53 @@ permalink: /dashboard/
 
   @media (max-width: 900px) {
     .card {
-      width: calc(50% - 20px); /* 2 per row on tablets */
+      width: calc(50% - 20px);
     }
   }
 
   @media (max-width: 600px) {
     .card {
-      width: 100%; /* 1 per row on mobile */
+      width: 100%;
     }
   }
+
+  /* Combined Dark Mode Overrides */
+  [data-theme="dark"] .dashboard-content,
+  [data-theme="dark"] .dashboard-tabs a,
+  [data-theme="dark"] .card,
+  [data-theme="dark"] .card h2,
+  [data-theme="dark"] .card p,
+  [data-theme="dark"] h2,
+  [data-theme="dark"] p,
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] table,
+  [data-theme="dark"] th,
+  [data-theme="dark"] td {
+    background-color: #111 !important;
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .card .loading {
+    color: #00aa00;
+  }
+
+  [data-theme="dark"] button.export-btn,
+  [data-theme="dark"] button.table-btn {
+    background-color: #006400;
+    color: #00ff00;
+  }
+
+  [data-theme="dark"] canvas {
+    background: #222;
+  }
+  /* Fixes: White Canvas + Dark Navbar */
+[data-theme="dark"] canvas {
+  background: #fff !important;
+}
+
+[data-theme="dark"] .dashboard-tabs {
+  background: #000 !important;
+}
 </style>
 </head>
 <body>
@@ -437,4 +474,3 @@ permalink: /dashboard/
 </script>
 </body>
 </html>
-
