@@ -161,6 +161,67 @@ permalink: /dashboard/
     }
   }
 
+  /* Exchange Rates specific styles */
+  table caption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  img.flag {
+    width: 24px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+
+  /* Foodbanks Finder styles */
+  form {
+    margin-bottom: 1rem;
+  }
+  
+  label, select, input {
+    font-size: 1.1em;
+  }
+  
+  input[type="text"] {
+    width: 180px;
+    padding: 6px;
+    margin-right: 10px;
+  }
+  
+  select {
+    padding: 6px;
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 7px 15px;
+    font-size: 1.1em;
+    cursor: pointer;
+  }
+  
+  #error {
+    color: red;
+    margin-bottom: 15px;
+    display: none;
+  }
+  
+  .foodbank {
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    background: #f9f9f9;
+  }
+  
+  .foodbank h3 {
+    margin-top: 0;
+    margin-bottom: 6px;
+  }
+
   /* Combined Dark Mode Overrides */
   [data-theme="dark"] .dashboard-content,
   [data-theme="dark"] .dashboard-tabs a,
@@ -172,7 +233,8 @@ permalink: /dashboard/
   [data-theme="dark"] textarea,
   [data-theme="dark"] table,
   [data-theme="dark"] th,
-  [data-theme="dark"] td {
+  [data-theme="dark"] td,
+  [data-theme="dark"] .foodbank {
     background-color: #111 !important;
     color: #00ff00 !important;
   }
@@ -182,22 +244,19 @@ permalink: /dashboard/
   }
 
   [data-theme="dark"] button.export-btn,
-  [data-theme="dark"] button.table-btn {
+  [data-theme="dark"] button.table-btn,
+  [data-theme="dark"] button {
     background-color: #006400;
     color: #00ff00;
   }
 
   [data-theme="dark"] canvas {
-    background: #222;
+    background: #fff !important;
   }
-  /* Fixes: White Canvas + Dark Navbar */
-[data-theme="dark"] canvas {
-  background: #fff !important;
-}
 
-[data-theme="dark"] .dashboard-tabs {
-  background: #000 !important;
-}
+  [data-theme="dark"] .dashboard-tabs {
+    background: #000 !important;
+  }
 </style>
 </head>
 <body>
@@ -207,6 +266,8 @@ permalink: /dashboard/
   <!-- Navigation -->
   <nav class="dashboard-tabs">
     <a href="#" class="active" data-tab="world">World</a>
+    <a href="#" data-tab="foodbanks">UK Foodbanks</a>
+    <a href="#" data-tab="exchange">Exchange Rates</a>
     <a href="#" data-tab="notes">Notes</a>
     <a href="#" data-tab="sheet">Spreadsheet</a>
     <a href="#" data-tab="canvas">Canvas</a>
@@ -218,6 +279,47 @@ permalink: /dashboard/
     <section id="world" class="tab-content active">
       <h2>🌍 World Clock & Weather</h2>
       <div class="grid" id="dashboard-grid"></div>
+    </section>
+
+    <!-- UK Foodbanks Tab -->
+    <section id="foodbanks" class="tab-content">
+      <h2>Find Nearby UK Foodbanks</h2>
+
+      <form id="searchForm">
+        <label for="postcode">Enter UK postcode:</label>
+        <input type="text" id="postcode" name="postcode" placeholder="e.g. OX49 5NU" required />
+
+        <label for="radius">Radius (miles):</label>
+        <select id="radius" name="radius">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+
+        <button type="submit">Search</button>
+      </form>
+
+      <div id="error"></div>
+      <div id="results"></div>
+    </section>
+
+    <!-- Exchange Rates Tab -->
+    <section id="exchange" class="tab-content">
+      <h2>Exchange Rates (Base: GBP)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>Currency Code</th>
+            <th>Rate (vs GBP)</th>
+          </tr>
+        </thead>
+        <tbody id="exchange-body">
+          <!-- Injected by JS -->
+        </tbody>
+        <caption>Rates pulled from Fawaz Exchange API</caption>
+      </table>
     </section>
 
     <!-- Notes Tab -->
@@ -471,6 +573,155 @@ permalink: /dashboard/
         .catch(() => updateWeather(card, "N/A", "N/A"));
     });
   }
+
+  // --- Exchange Rates Script ---
+  const preferredCurrencies = ["usd", "eur", "jpy", "aud", "cad", "inr", "cny", "chf", "zar", "btc", "eth"];
+
+  const currencyToCountry = {
+    usd: "us",
+    eur: "eu",
+    jpy: "jp",
+    aud: "au",
+    cad: "ca",
+    inr: "in",
+    cny: "cn",
+    chf: "ch",
+    zar: "za"
+  };
+
+  async function fetchRates() {
+    const fallbackURL = "https://latest.currency-api.pages.dev/v1/currencies/gbp.json";
+    const mainURL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/gbp.json";
+
+    try {
+      const res = await fetch(mainURL);
+      if (!res.ok) throw new Error("Primary failed");
+      const data = await res.json();
+      updateTable(data.gbp);
+    } catch (err) {
+      console.warn("Falling back to Cloudflare:", err.message);
+      try {
+        const fallbackRes = await fetch(fallbackURL);
+        if (!fallbackRes.ok) throw new Error("Fallback failed");
+        const fallbackData = await fallbackRes.json();
+        updateTable(fallbackData.gbp);
+      } catch (fallbackErr) {
+        document.getElementById("exchange-body").innerHTML = `
+          <tr><td colspan="3">Failed to load exchange rates.</td></tr>`;
+      }
+    }
+  }
+
+  function updateTable(rates) {
+    const tbody = document.getElementById("exchange-body");
+    tbody.innerHTML = "";
+
+    preferredCurrencies.forEach(code => {
+      if (rates[code]) {
+        let flagCellContent = '';
+        if (code === 'btc' || code === 'eth') {
+          flagCellContent = '💰';
+        } else {
+          const countryCode = currencyToCountry[code] || "un";
+          const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
+          flagCellContent = `<img class="flag" src="${flagUrl}" alt="${code.toUpperCase()} flag">`;
+        }
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${flagCellContent}</td>
+          <td>${code.toUpperCase()}</td>
+          <td>${rates[code].toFixed(4)}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    });
+  }
+
+  fetchRates();
+
+  // --- Foodbanks Finder Script ---
+  // Haversine formula to calculate distance between 2 lat/lng points in miles
+  function distanceMiles(lat1, lon1, lat2, lon2) {
+    const toRad = x => (x * Math.PI) / 180;
+    const R = 3958.8; // Radius of the Earth in miles
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  const form = document.getElementById('searchForm');
+  const resultsDiv = document.getElementById('results');
+  const errorDiv = document.getElementById('error');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultsDiv.innerHTML = '';
+    errorDiv.style.display = 'none';
+
+    const postcode = document.getElementById('postcode').value.trim();
+    const radius = Number(document.getElementById('radius').value);
+
+    if (!postcode) return;
+
+    try {
+      // Step 1: Get lat/lng for input postcode
+      const resPostcode = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
+      const dataPostcode = await resPostcode.json();
+
+      if (dataPostcode.status !== 200) {
+        throw new Error(dataPostcode.error || "Invalid postcode");
+      }
+
+      const { latitude: userLat, longitude: userLng } = dataPostcode.result;
+
+      // Step 2: Fetch full live foodbanks list from the API
+      const resFoodbanks = await fetch('https://www.givefood.org.uk/api/2/foodbanks/');
+      if (!resFoodbanks.ok) {
+        throw new Error("Failed to fetch foodbanks list");
+      }
+      const dataFoodbanks = await resFoodbanks.json();
+
+      // Filter foodbanks within radius
+      const filtered = dataFoodbanks.filter(fb => {
+        if (!fb.lat_lng) return false;
+        const [fbLat, fbLng] = fb.lat_lng.split(',').map(Number);
+        const dist = distanceMiles(userLat, userLng, fbLat, fbLng);
+        return dist <= radius;
+      });
+
+      if (filtered.length === 0) {
+        resultsDiv.innerHTML = `<p>No foodbanks found within ${radius} miles.</p>`;
+        return;
+      }
+
+      // Sort by distance ascending
+      const sorted = filtered.sort((a,b) => {
+        const [aLat, aLng] = a.lat_lng.split(',').map(Number);
+        const [bLat, bLng] = b.lat_lng.split(',').map(Number);
+        return distanceMiles(userLat, userLng, aLat, aLng) - distanceMiles(userLat, userLng, bLat, bLng);
+      });
+
+      resultsDiv.innerHTML = sorted.map(fb => {
+        const [fbLat, fbLng] = fb.lat_lng.split(',').map(Number);
+        const dist = distanceMiles(userLat, userLng, fbLat, fbLng).toFixed(1);
+        return `
+          <div class="foodbank">
+            <h3>${fb.name} (${dist} miles)</h3>
+            <p>${fb.address ? fb.address.replace(/\n/g, '<br>') : 'No address available'}</p>
+            <p>Phone: ${fb.phone || 'N/A'}</p>
+            ${fb.urls?.homepage ? `<p><a href="${fb.urls.homepage}" target="_blank" rel="noopener">Website</a></p>` : ''}
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      errorDiv.textContent = `Error: ${err.message}`;
+      errorDiv.style.display = 'block';
+    }
+  });
 </script>
 </body>
 </html>
