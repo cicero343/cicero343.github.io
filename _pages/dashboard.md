@@ -593,6 +593,566 @@ permalink: /dashboard/
     }
   }
 
+  /* CVE Tracker Styles */
+  .cve-tracker-container {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    font-size: 14px;
+    margin: -20px;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .cve-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #00ff88;
+    backdrop-filter: blur(10px);
+  }
+
+  .cve-header h1 {
+    font-size: 2.2em;
+    color: #00ff88;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    margin-bottom: 8px;
+  }
+
+  .cve-header p {
+    color: #cccccc;
+    font-size: 1em;
+  }
+
+  .cve-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+  }
+
+  .cve-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cve-filter-label {
+    color: #00ff88;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+
+  .cve-filter-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #ffffff;
+    font-size: 13px;
+  }
+
+  .cve-filter-select option {
+    background: #1a1a3a;
+    color: #ffffff;
+  }
+
+  .cve-calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0, 255, 136, 0.1);
+    padding: 8px 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    position: relative;
+  }
+
+  .cve-nav-btn {
+    background: transparent;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 13px;
+  }
+
+  .cve-nav-btn:hover {
+    background: #00ff88;
+    color: #000;
+  }
+
+  .cve-current-month {
+    font-weight: bold;
+    color: #00ff88;
+    min-width: 120px;
+    text-align: center;
+    font-size: 0.95em;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    position: relative;
+  }
+
+  .cve-month-text {
+    color: #00ff88;
+  }
+
+  .cve-year-text {
+    color: #4ecdc4;
+    font-size: 0.85em;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .cve-year-text:hover {
+    color: #00ff88;
+  }
+
+  .cve-year-picker {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 26, 58, 0.98);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    min-width: 100px;
+    margin-top: 5px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .cve-year-picker.cve-show {
+    display: block;
+  }
+
+  .cve-year-option {
+    padding: 5px 10px;
+    cursor: pointer;
+    color: #cccccc;
+    text-align: center;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .cve-year-option:hover {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+  }
+
+  .cve-year-option.cve-current {
+    background: rgba(0, 255, 136, 0.3);
+    color: #00ff88;
+  }
+
+  .cve-dashboard {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+    height: calc(100vh - 160px);
+  }
+
+  .cve-main-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cve-side-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 160px);
+  }
+
+  .cve-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+  }
+
+  .cve-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #00ff88;
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
+  .cve-api-status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .cve-api-live {
+    background: #00ff88;
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+  }
+
+  .cve-api-error {
+    background: #ff6b6b;
+    color: #fff;
+  }
+
+  .cve-calendar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 80px;
+  }
+
+  .cve-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    flex: 1;
+  }
+
+  .cve-calendar-header {
+    background: rgba(0, 255, 136, 0.2);
+    padding: 8px 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #00ff88;
+    border-radius: 6px;
+    font-size: 0.8em;
+  }
+
+  .cve-calendar-day {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 45px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3px;
+  }
+
+  .cve-calendar-day:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+    z-index: 5;
+  }
+
+  .cve-calendar-day.selected {
+    background: rgba(0, 255, 136, 0.3);
+    border-color: #00ff88;
+    transform: scale(1.05);
+  }
+
+  .cve-calendar-day.other-month {
+    opacity: 0.3;
+  }
+
+  .cve-calendar-day.today {
+    border: 2px solid #4ecdc4;
+    box-shadow: 0 0 8px rgba(78, 205, 196, 0.3);
+  }
+
+  .cve-day-number {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  .cve-day-count {
+    font-size: 0.7em;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1px 4px;
+    border-radius: 8px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .cve-day-heat-0 { background: rgba(255, 255, 255, 0.03) !important; }
+  .cve-day-heat-1 { background: rgba(0, 255, 136, 0.2) !important; }
+  .cve-day-heat-2 { background: rgba(0, 255, 136, 0.4) !important; }
+  .cve-day-heat-3 { background: rgba(255, 183, 0, 0.4) !important; }
+  .cve-day-heat-4 { background: rgba(255, 121, 0, 0.4) !important; }
+  .cve-day-heat-5 { background: rgba(255, 107, 107, 0.4) !important; }
+
+  .cve-stats-summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+  }
+
+  .cve-stat-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex: 1;
+  }
+
+  .cve-stat-number {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #00ff88;
+    margin-bottom: 3px;
+  }
+
+  .cve-stat-label {
+    font-size: 0.8em;
+    color: #cccccc;
+  }
+
+  .cve-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    color: #666;
+    font-size: 1em;
+  }
+
+  .cve-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(0, 255, 136, 0.1);
+    border-top: 3px solid #00ff88;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 12px;
+  }
+
+  .cve-error {
+    color: #ff6b6b;
+    text-align: center;
+    padding: 30px;
+    font-size: 1em;
+  }
+
+  .cve-no-advisories {
+    text-align: center;
+    color: #666;
+    padding: 30px;
+    font-style: italic;
+    font-size: 0.9em;
+  }
+
+  .cve-advisory-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid #ff6b6b;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .cve-advisory-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(3px);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .cve-advisory-item.expanded {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .cve-severity-badge {
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.7em;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .cve-severity-critical {
+    background: #ff6b6b;
+    color: white;
+  }
+
+  .cve-severity-high {
+    background: #ff8c00;
+    color: white;
+  }
+
+  .cve-severity-medium {
+    background: #ffa500;
+    color: black;
+  }
+
+  .cve-severity-low {
+    background: #00ff88;
+    color: black;
+  }
+
+  .cve-advisory-details {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .cve-advisory-details.cve-show {
+    display: block;
+  }
+
+  .cve-selected-date-info {
+    background: rgba(0, 255, 136, 0.1);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    flex-shrink: 0;
+  }
+
+  .cve-selected-date {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #00ff88;
+    margin-bottom: 3px;
+  }
+
+  .cve-date-summary {
+    font-size: 0.85em;
+    color: #cccccc;
+  }
+
+  .cve-advisory-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+
+  .cve-advisory-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .cve-advisory-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+  }
+
+  .cve-advisory-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 136, 0.3);
+    border-radius: 2px;
+  }
+
+  .cve-advisory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .cve-advisory-title {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cve-advisory-id {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #00ff88;
+  }
+
+  .cve-id {
+    font-size: 0.75em;
+    color: #4ecdc4;
+    font-family: monospace;
+  }
+
+  .cve-advisory-summary {
+    font-size: 0.8em;
+    line-height: 1.3;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cve-detail-row {
+    display: flex;
+    margin: 6px 0;
+    font-size: 0.75em;
+  }
+
+  .cve-detail-label {
+    font-weight: bold;
+    color: #00ff88;
+    min-width: 80px;
+  }
+
+  .cve-detail-value {
+    color: #cccccc;
+    word-break: break-word;
+  }
+
+  .cve-external-link {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid #00ff88;
+    border-radius: 15px;
+    color: #00ff88;
+    text-decoration: none;
+    font-size: 0.75em;
+    transition: all 0.3s ease;
+  }
+
+  .cve-external-link:hover {
+    background: #00ff88;
+    color: #000;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
   /* Combined Dark Mode Overrides */
   [data-theme="dark"] .dashboard-content,
   [data-theme="dark"] .dashboard-tabs a,
@@ -636,6 +1196,38 @@ permalink: /dashboard/
     background-color: #111 !important;
     color: #00ff00 !important;
   }
+
+  @media (max-width: 1200px) {
+    .cve-dashboard {
+      grid-template-columns: 1fr;
+      gap: 15px;
+      height: auto;
+    }
+    
+    .cve-controls {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cve-calendar-day {
+      min-height: 35px;
+    }
+    
+    .cve-day-number {
+      font-size: 0.8em;
+    }
+    
+    .cve-day-count {
+      font-size: 0.6em;
+    }
+    
+    .cve-header h1 {
+      font-size: 1.8em;
+    }
+  }
 </style>
 </head>
 <body>
@@ -645,6 +1237,7 @@ permalink: /dashboard/
   <!-- Navigation -->
   <nav class="dashboard-tabs">
     <a href="#" class="active" data-tab="world">World</a>
+    <a href="#" data-tab="cve">CVE Tracker</a>
     <a href="#" data-tab="foodbanks">UK Foodbanks</a>
     <a href="#" data-tab="exchange">Exchange Rates</a>
     <a href="#" data-tab="recipes">Food Recipes</a>
@@ -659,6 +1252,93 @@ permalink: /dashboard/
     <section id="world" class="tab-content active">
       <h2>🌍 World Clock & Weather</h2>
       <div class="grid" id="dashboard-grid"></div>
+    </section>
+
+    <!-- CVE Tracker Tab -->
+    <section id="cve" class="tab-content">
+      <div class="cve-tracker-container">
+        <div class="cve-header">
+          <h1>📅 Cybersecurity Intelligence Calendar</h1>
+          <p>Interactive vulnerability timeline and analysis</p>
+        </div>
+
+        <div class="cve-controls">
+          <div class="cve-filter-group">
+            <label class="cve-filter-label">Severity:</label>
+            <select id="cve-severity-filter" class="cve-filter-select">
+              <option value="">All Severities</option>
+              <option value="critical">Critical</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="cve-filter-group">
+            <label class="cve-filter-label">Type:</label>
+            <select id="cve-type-filter" class="cve-filter-select">
+              <option value="reviewed">Reviewed</option>
+              <option value="unreviewed">Unreviewed</option>
+              <option value="malware">Malware</option>
+            </select>
+          </div>
+          <div class="cve-calendar-nav">
+            <button class="cve-nav-btn" onclick="cveTool.changeMonth(-1)">‹ Prev</button>
+            <div class="cve-current-month" id="cve-current-month-container">
+              <div class="cve-month-text" id="cve-current-month">Loading...</div>
+              <div class="cve-year-text" id="cve-current-year" onclick="cveTool.toggleYearPicker()">2025</div>
+              <div class="cve-year-picker" id="cve-year-picker"></div>
+            </div>
+            <button class="cve-nav-btn" onclick="cveTool.changeMonth(1)">Next ›</button>
+          </div>
+        </div>
+
+        <div class="cve-dashboard">
+          <!-- Main Panel - Calendar -->
+          <div class="cve-main-panel">
+            <div class="cve-panel-header">
+              <div class="cve-panel-title">
+                <span>📅</span>
+                Security Advisory Calendar
+              </div>
+              <div id="cve-github-status" class="cve-api-status cve-api-error">Loading</div>
+            </div>
+            
+            <div class="cve-calendar-container">
+              <div id="cve-calendar-content" class="cve-loading">
+                <div class="cve-spinner"></div>
+                Loading security advisory data...
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Panel - Selected Date Details -->
+          <div class="cve-side-panel">
+            <div class="cve-panel-header">
+              <div class="cve-panel-title">
+                <span>🔍</span>
+                Advisory Details
+              </div>
+            </div>
+            
+            <div class="cve-stats-summary">
+              <div class="cve-stat-box">
+                <div class="cve-stat-number" id="cve-critical-count">0</div>
+                <div class="cve-stat-label">Critical</div>
+              </div>
+              <div class="cve-stat-box">
+                <div class="cve-stat-number" id="cve-high-count">0</div>
+                <div class="cve-stat-label">High</div>
+              </div>
+            </div>
+            
+            <div id="cve-advisory-details" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
+              <div class="cve-no-advisories">
+                Click on a calendar date to view security advisories for that day
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- UK Foodbanks Tab -->
@@ -817,6 +1497,12 @@ permalink: /dashboard/
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       this.classList.add('active');
       document.getElementById(this.dataset.tab).classList.add('active');
+      
+      // Initialize CVE tool when first accessed
+      if (this.dataset.tab === 'cve' && !window.cveInitialized) {
+        window.cveInitialized = true;
+        setTimeout(() => cveTool.initDashboard(), 100);
+      }
     });
   });
 
@@ -1439,6 +2125,376 @@ permalink: /dashboard/
       closeRecipeModal();
     }
   });
+
+  // CVE Tracker functionality
+  const cveTool = {
+    currentDate: new Date(),
+    advisoriesData: [],
+    advisoriesByDate: {},
+    selectedDate: null,
+    isLoading: false,
+
+    toggleYearPicker: function() {
+      const yearPicker = document.getElementById('cve-year-picker');
+      const isVisible = yearPicker.classList.contains('cve-show');
+      
+      if (isVisible) {
+        yearPicker.classList.remove('cve-show');
+      } else {
+        // Generate year options dynamically based on current date
+        const currentYear = new Date().getFullYear(); // Always use actual current year
+        const displayedYear = this.currentDate.getFullYear(); // Year being displayed
+        
+        // Show range: current year -10 to current year +5
+        // This ensures we always have past data and some future flexibility
+        const startYear = currentYear - 10;
+        const endYear = currentYear + 5;
+        
+        let yearHTML = '';
+        for (let year = endYear; year >= startYear; year--) {
+          const isDisplayedYear = year === displayedYear;
+          yearHTML += `
+            <div class="cve-year-option ${isDisplayedYear ? 'cve-current' : ''}" 
+                 onclick="cveTool.selectYear(${year})">${year}</div>
+          `;
+        }
+        
+        yearPicker.innerHTML = yearHTML;
+        yearPicker.classList.add('cve-show');
+      }
+    },
+
+    selectYear: function(year) {
+      this.currentDate.setFullYear(year);
+      document.getElementById('cve-year-picker').classList.remove('cve-show');
+      this.loadAdvisoriesForMonth();
+    },
+
+    // Calendar generation and management
+    generateCalendar: function(year, month) {
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const firstDayOfWeek = firstDay.getDay();
+      const daysInMonth = lastDay.getDate();
+      
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      
+      document.getElementById('cve-current-month').textContent = monthNames[month];
+      document.getElementById('cve-current-year').textContent = year;
+
+      let calendarHTML = `
+        <div class="cve-calendar-grid">
+          <div class="cve-calendar-header">Sun</div>
+          <div class="cve-calendar-header">Mon</div>
+          <div class="cve-calendar-header">Tue</div>
+          <div class="cve-calendar-header">Wed</div>
+          <div class="cve-calendar-header">Thu</div>
+          <div class="cve-calendar-header">Fri</div>
+          <div class="cve-calendar-header">Sat</div>
+      `;
+
+      // Previous month's trailing days
+      const prevMonth = new Date(year, month - 1, 0);
+      for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+        const day = prevMonth.getDate() - i;
+        calendarHTML += `
+          <div class="cve-calendar-day other-month">
+            <div class="cve-day-number">${day}</div>
+          </div>
+        `;
+      }
+
+      // Current month days
+      const today = new Date();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const currentDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const advisoryCount = this.advisoriesByDate[currentDateStr] ? this.advisoriesByDate[currentDateStr].length : 0;
+        
+        const isToday = today.getFullYear() === year && 
+                       today.getMonth() === month && 
+                       today.getDate() === day;
+        
+        const heatLevel = Math.min(Math.floor(advisoryCount / 3) + (advisoryCount > 0 ? 1 : 0), 5);
+        const todayClass = isToday ? 'today' : '';
+        
+        calendarHTML += `
+          <div class="cve-calendar-day cve-day-heat-${heatLevel} ${todayClass}" 
+               onclick="cveTool.selectDate('${currentDateStr}')"
+               data-date="${currentDateStr}">
+            <div class="cve-day-number">${day}</div>
+            ${advisoryCount > 0 ? `<div class="cve-day-count">${advisoryCount}</div>` : ''}
+          </div>
+        `;
+      }
+
+      // Next month's leading days
+      const remainingCells = 42 - (firstDayOfWeek + daysInMonth);
+      for (let day = 1; day <= remainingCells && remainingCells < 7; day++) {
+        calendarHTML += `
+          <div class="cve-calendar-day other-month">
+            <div class="cve-day-number">${day}</div>
+          </div>
+        `;
+      }
+
+      calendarHTML += '</div>';
+      document.getElementById('cve-calendar-content').innerHTML = calendarHTML;
+    },
+
+    changeMonth: function(direction) {
+      if (this.isLoading) return;
+      this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+      this.loadAdvisoriesForMonth();
+    },
+
+    selectDate: function(dateStr) {
+      document.querySelectorAll('.cve-calendar-day.selected').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      const dayElement = document.querySelector(`[data-date="${dateStr}"]`);
+      if (dayElement) {
+        dayElement.classList.add('selected');
+      }
+      
+      this.selectedDate = dateStr;
+      this.displayAdvisoriesForDate(dateStr);
+    },
+
+    displayAdvisoriesForDate: function(dateStr) {
+      const advisories = this.advisoriesByDate[dateStr] || [];
+      const formattedDate = new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      let html = `
+        <div class="cve-selected-date-info">
+          <div class="cve-selected-date">${formattedDate}</div>
+          <div class="cve-date-summary">${advisories.length} security advisories</div>
+        </div>
+      `;
+
+      if (advisories.length === 0) {
+        html += '<div class="cve-no-advisories">No security advisories published on this date</div>';
+      } else {
+        html += '<div class="cve-advisory-list" style="flex: 1; overflow-y: auto;">';
+        advisories.forEach((advisory, index) => {
+          const severity = advisory.severity || 'unknown';
+          const severityClass = `cve-severity-${severity.toLowerCase()}`;
+          const cveId = advisory.cve_id || advisory.identifiers?.find(id => id.type === 'CVE')?.value || null;
+          
+          html += `
+            <div class="cve-advisory-item" onclick="cveTool.toggleAdvisoryDetails(${index}, '${dateStr}')">
+              <div class="cve-advisory-header">
+                <div class="cve-advisory-title">
+                  <div class="cve-advisory-id">${advisory.ghsa_id}</div>
+                  ${cveId ? `<div class="cve-id">${cveId}</div>` : ''}
+                </div>
+                <div class="cve-severity-badge ${severityClass}">${severity}</div>
+              </div>
+              
+              <div class="cve-advisory-summary">
+                ${advisory.summary}
+              </div>
+              
+              <div class="cve-advisory-details" id="cve-details-${dateStr}-${index}">
+                ${advisory.cvss?.score ? `
+                  <div class="cve-detail-row">
+                    <div class="cve-detail-label">CVSS:</div>
+                    <div class="cve-detail-value">${advisory.cvss.score}/10</div>
+                  </div>
+                ` : ''}
+                ${advisory.cwes?.length ? `
+                  <div class="cve-detail-row">
+                    <div class="cve-detail-label">CWEs:</div>
+                    <div class="cve-detail-value">${advisory.cwes.slice(0, 2).map(cwe => cwe.name).join(', ')}</div>
+                  </div>
+                ` : ''}
+                ${advisory.vulnerabilities?.length ? `
+                  <div class="cve-detail-row">
+                    <div class="cve-detail-label">Affected:</div>
+                    <div class="cve-detail-value">${advisory.vulnerabilities[0].package?.name} (${advisory.vulnerabilities[0].package?.ecosystem})</div>
+                  </div>
+                ` : ''}
+                ${advisory.html_url ? `
+                  <a href="${advisory.html_url}" target="_blank" class="cve-external-link">
+                    View Full Advisory →
+                  </a>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        html += '</div>';
+      }
+
+      const advisoryDetailsContainer = document.getElementById('cve-advisory-details');
+      advisoryDetailsContainer.innerHTML = html;
+      advisoryDetailsContainer.style.flex = '1';
+      advisoryDetailsContainer.style.overflowY = 'auto';
+      advisoryDetailsContainer.style.display = 'flex';
+      advisoryDetailsContainer.style.flexDirection = 'column';
+    },
+
+    toggleAdvisoryDetails: function(index, dateStr) {
+      const details = document.getElementById(`cve-details-${dateStr}-${index}`);
+      const item = details.closest('.cve-advisory-item');
+      
+      if (details.classList.contains('cve-show')) {
+        details.classList.remove('cve-show');
+        item.classList.remove('expanded');
+      } else {
+        // Close all other details first
+        document.querySelectorAll('.cve-advisory-details.cve-show').forEach(el => {
+          el.classList.remove('cve-show');
+          if (el.closest('.cve-advisory-item')) {
+            el.closest('.cve-advisory-item').classList.remove('expanded');
+          }
+        });
+        
+        details.classList.add('cve-show');
+        item.classList.add('expanded');
+      }
+    },
+
+    // API functions with improved rate limiting
+    loadAdvisoriesForMonth: async function() {
+      if (this.isLoading) return;
+      this.isLoading = true;
+
+      try {
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth();
+        
+        const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+        const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${new Date(year, month + 1, 0).getDate()}`;
+        
+        const severity = document.getElementById('cve-severity-filter').value;
+        const type = document.getElementById('cve-type-filter').value;
+        
+        console.log('🔍 Fetching CVE advisories for date range:', { startDate, endDate, severity, type });
+        
+        this.advisoriesData = [];
+        this.advisoriesByDate = {};
+        
+        let baseUrl = `https://api.github.com/advisories?published=${startDate}..${endDate}&sort=published&direction=desc`;
+        if (severity) baseUrl += `&severity=${severity}`;
+        if (type) baseUrl += `&type=${type}`;
+        
+        let page = 1;
+        let hasMore = true;
+        const maxPages = 5;
+        
+        while (hasMore && page <= maxPages) {
+          const url = `${baseUrl}&per_page=100&page=${page}`;
+          console.log(`📄 Fetching CVE page ${page}...`);
+          
+          if (page > 1) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+          }
+          
+          const response = await fetch(url);
+          
+          if (!response.ok) {
+            if (response.status === 403) {
+              throw new Error(`Rate limit exceeded. Please wait a moment and try again.`);
+            }
+            throw new Error(`GitHub API returned ${response.status}: ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+          
+          if (data.length === 0) {
+            hasMore = false;
+          } else {
+            this.advisoriesData.push(...data);
+            
+            const linkHeader = response.headers.get('Link');
+            hasMore = linkHeader && linkHeader.includes('rel="next"');
+            page++;
+          }
+        }
+        
+        console.log(`✅ Successfully loaded ${this.advisoriesData.length} CVE advisories from ${page - 1} pages`);
+        
+        this.processAdvisoriesData();
+        
+        document.getElementById('cve-github-status').className = 'cve-api-status cve-api-live';
+        document.getElementById('cve-github-status').textContent = 'Live';
+        
+        this.generateCalendar(year, month);
+        this.updateStats();
+        
+      } catch (error) {
+        console.error('❌ GitHub CVE API Error:', error);
+        document.getElementById('cve-calendar-content').innerHTML = `
+          <div class="cve-error">
+            <strong>Unable to load security advisories</strong><br>
+            ${error.message}
+          </div>
+        `;
+        document.getElementById('cve-github-status').className = 'cve-api-status cve-api-error';
+        document.getElementById('cve-github-status').textContent = 'Error';
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    processAdvisoriesData: function() {
+      this.advisoriesByDate = {};
+      
+      this.advisoriesData.forEach(advisory => {
+        const publishedDate = new Date(advisory.published_at).toISOString().split('T')[0];
+        
+        if (!this.advisoriesByDate[publishedDate]) {
+          this.advisoriesByDate[publishedDate] = [];
+        }
+        
+        this.advisoriesByDate[publishedDate].push(advisory);
+      });
+    },
+
+    updateStats: function() {
+      const criticalCount = this.advisoriesData.filter(advisory => 
+        (advisory.severity || '').toLowerCase() === 'critical'
+      ).length;
+      
+      const highCount = this.advisoriesData.filter(advisory => 
+        (advisory.severity || '').toLowerCase() === 'high'
+      ).length;
+      
+      document.getElementById('cve-critical-count').textContent = criticalCount;
+      document.getElementById('cve-high-count').textContent = highCount;
+    },
+
+    // Initialize CVE dashboard
+    initDashboard: async function() {
+      console.log('🚀 Initializing CVE tracker dashboard...');
+      
+      // Add click listener to close year picker when clicking outside
+      document.addEventListener('click', (event) => {
+        const yearPicker = document.getElementById('cve-year-picker');
+        const monthContainer = document.getElementById('cve-current-month-container');
+        
+        if (yearPicker && monthContainer && !monthContainer.contains(event.target)) {
+          yearPicker.classList.remove('cve-show');
+        }
+      });
+      
+      await this.loadAdvisoriesForMonth();
+      
+      console.log('✅ CVE Dashboard initialization complete');
+    }
+  };
+
+  // Initialize CVE event listeners when first accessed
+  window.cveInitialized = false;
 </script>
 </body>
 </html>
