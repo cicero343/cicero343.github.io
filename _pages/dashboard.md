@@ -3,7 +3,6 @@ title: Dashboard
 layout: default
 permalink: /dashboard/
 ---
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -32,6 +31,35 @@ permalink: /dashboard/
     margin: 5px;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1em;
+  }
+
+  /* Mobile-friendly tab layout */
+  @media (max-width: 768px) {
+    .dashboard-tabs {
+      padding: 8px 5px;
+    }
+    
+    .dashboard-tabs a {
+      flex: 1 1 calc(33.333% - 10px);
+      max-width: calc(33.333% - 10px);
+      padding: 8px 6px;
+      margin: 3px;
+      font-size: 0.85em;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  /* Extra small screens - slightly smaller text */
+  @media (max-width: 480px) {
+    .dashboard-tabs a {
+      font-size: 0.8em;
+      padding: 7px 4px;
+      margin: 2px;
+    }
   }
 
   .dashboard-tabs a.active,
