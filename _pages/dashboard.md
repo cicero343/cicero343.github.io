@@ -34,31 +34,32 @@ permalink: /dashboard/
     font-size: 1em;
   }
 
-  /* Mobile-friendly tab layout */
+  /* Mobile-friendly tab layout - Fixed for 3 per line */
   @media (max-width: 768px) {
     .dashboard-tabs {
-      padding: 8px 5px;
+      padding: 8px 2px;
+      gap: 2px;
     }
     
     .dashboard-tabs a {
-      flex: 1 1 calc(33.333% - 10px);
-      max-width: calc(33.333% - 10px);
-      padding: 8px 6px;
-      margin: 3px;
-      font-size: 0.85em;
+      flex: 0 0 calc(33.333% - 4px);
+      width: calc(33.333% - 4px);
+      padding: 8px 4px;
+      margin: 1px;
+      font-size: 0.8em;
       text-align: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      box-sizing: border-box;
     }
   }
 
-  /* Extra small screens - slightly smaller text */
+  /* Extra small screens */
   @media (max-width: 480px) {
     .dashboard-tabs a {
-      font-size: 0.8em;
-      padding: 7px 4px;
-      margin: 2px;
+      font-size: 0.75em;
+      padding: 7px 2px;
     }
   }
 
@@ -316,6 +317,7 @@ permalink: /dashboard/
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.2s ease;
+    cursor: pointer;
   }
 
   .recipe-card:hover {
@@ -574,11 +576,6 @@ permalink: /dashboard/
   .youtube-link:hover {
     background: #cc0000;
     color: white;
-  }
-
-  .recipe-card {
-    cursor: pointer;
-    transition: all 0.2s ease;
   }
 
   @media (max-width: 600px) {
