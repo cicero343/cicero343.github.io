@@ -1211,7 +1211,7 @@ permalink: /dashboard/
     }
     
     .cve-main-panel {
-      min-height: 450px;
+      min-height: 380px;
     }
     
     .cve-controls {
@@ -1223,20 +1223,22 @@ permalink: /dashboard/
 
   @media (max-width: 768px) {
     .cve-calendar-container {
-      margin-top: 30px;
+      margin-top: 25px;
     }
     
     .cve-main-panel {
-      min-height: 420px;
+      min-height: 350px;
     }
     
     .cve-calendar-day {
-      min-height: 30px;
+      min-height: 28px;
       font-size: 0.85em;
+      padding: 2px;
     }
     
     .cve-day-number {
       font-size: 0.75em;
+      margin-bottom: 1px;
     }
     
     .cve-day-count {
