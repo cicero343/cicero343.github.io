@@ -840,6 +840,18 @@ permalink: /dashboard/
     margin-top: 80px;
   }
 
+  @media (max-width: 1200px) {
+    .cve-calendar-container {
+      margin-top: 40px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cve-calendar-container {
+      margin-top: 20px;
+    }
+  }
+
   .cve-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
