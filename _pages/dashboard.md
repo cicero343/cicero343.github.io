@@ -842,7 +842,7 @@ permalink: /dashboard/
 
   @media (max-width: 1200px) {
     .cve-calendar-container {
-      margin-top: 60px;
+      margin-top: 40px;
     }
   }
 
@@ -1211,7 +1211,7 @@ permalink: /dashboard/
     }
     
     .cve-main-panel {
-      min-height: 600px;
+      min-height: 450px;
     }
     
     .cve-controls {
@@ -1223,23 +1223,29 @@ permalink: /dashboard/
 
   @media (max-width: 768px) {
     .cve-calendar-container {
-      margin-top: 50px;
+      margin-top: 30px;
     }
     
     .cve-main-panel {
-      min-height: 650px;
+      min-height: 420px;
     }
     
     .cve-calendar-day {
-      min-height: 35px;
+      min-height: 30px;
+      font-size: 0.85em;
     }
     
     .cve-day-number {
-      font-size: 0.8em;
+      font-size: 0.75em;
     }
     
     .cve-day-count {
-      font-size: 0.6em;
+      font-size: 0.55em;
+      padding: 1px 3px;
+    }
+    
+    .cve-calendar-grid {
+      gap: 1px;
     }
     
     .cve-header h1 {
