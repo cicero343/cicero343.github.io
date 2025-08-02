@@ -566,14 +566,12 @@ layout: default
                     addTerminalMessage('decrypt    - File decryption', true);
                     addTerminalMessage('override   - Emergency override', true);
                     addTerminalMessage('virus      - Deploy/contain virus', true);
-                    addTerminalMessage('explorer   - Access local file system', true);
                     addTerminalMessage('=== SYSTEM COMMANDS ===', true);
                     addTerminalMessage('ls, cd, pwd, ps, top, cat, date, clear', true);
                     addTerminalMessage('sysinfo    - Analyze target system', true);
                     addTerminalMessage('=== EASTER EGGS ===', true);
                     addTerminalMessage('cat secrets.txt, cat reality.cfg', true);
                     break;
-                    
                 case 'sysinfo':
                     addTerminalMessage('Scanning target system...', true);
                     document.querySelector('.glitch-text').textContent = 'SYSTEM SCAN';
@@ -670,18 +668,6 @@ layout: default
                     } else {
                         addTerminalMessage(`ls: cannot access '${path}': No such file or directory`, true);
                     }
-                    break;
-                    
-                case 'explorer':
-                    addTerminalMessage('Accessing local file system...', true);
-                    document.querySelector('.glitch-text').textContent = 'FILE SYSTEM ACCESS';
-                    setTimeout(() => {
-                        addTerminalMessage('Opening file explorer...', true);
-                        window.open('../../../', '_blank');
-                        setTimeout(() => {
-                            document.querySelector('.glitch-text').textContent = 'SYSTEM BREACH';
-                        }, 2000);
-                    }, 1000);
                     break;
                     
                 case 'cd':
