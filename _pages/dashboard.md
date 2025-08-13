@@ -1159,6 +1159,368 @@ permalink: /dashboard/
     100% { transform: rotate(360deg); }
   }
 
+  /* MSRC Tracker Styles */
+  .msrc-tracker-container {
+    max-width: none;
+    margin: -20px;
+    padding: 0;
+    background: white;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .msrc-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+  }
+
+  .msrc-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+
+  .msrc-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .msrc-loading {
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+    display: none;
+  }
+
+  .msrc-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .msrc-controls {
+    padding: 20px 30px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .msrc-stats {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .msrc-stat-item {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 80px;
+  }
+
+  .msrc-stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+  }
+
+  .msrc-stat-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .msrc-api-info {
+    background: #e3f2fd;
+    padding: 15px 30px;
+    border-left: 4px solid #2196f3;
+    margin: 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .msrc-api-info p {
+    color: #1976d2;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .msrc-api-info code {
+    background: rgba(25, 118, 210, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .msrc-filter-controls {
+    background: #f8f9fa;
+    padding: 20px 30px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .msrc-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .msrc-filter-group label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+  }
+
+  .msrc-filter-select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+  }
+
+  .msrc-filter-select:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+
+  .msrc-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .msrc-pagination-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .msrc-pagination-btn:hover {
+    background: #5a67d8;
+  }
+
+  .msrc-pagination-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .msrc-pagination-info {
+    margin: 0 20px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .msrc-demo-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .msrc-demo-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .msrc-demo-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+  }
+
+  .msrc-demo-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .msrc-month-selector {
+    padding: 8px 12px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .msrc-cve-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .msrc-cve-item {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid #667eea;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .msrc-cve-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    border-left-color: #5a67d8;
+  }
+
+  .msrc-cve-item:active {
+    transform: translateY(-1px);
+  }
+
+  .msrc-external-link-icon {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-left: 8px;
+    font-size: 0.9rem;
+    color: #667eea;
+  }
+
+  .msrc-cve-item:hover .msrc-external-link-icon {
+    opacity: 1;
+  }
+
+  .msrc-cve-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .msrc-cve-id {
+    font-weight: bold;
+    color: #667eea;
+    font-size: 1.1rem;
+  }
+
+  .msrc-cve-date {
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .msrc-cve-title {
+    margin-bottom: 10px;
+    color: #333;
+    line-height: 1.4;
+    font-size: 1rem;
+  }
+
+  .msrc-cve-severity {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .msrc-severity-critical {
+    background: #ffebee;
+    color: #c62828;
+  }
+
+  .msrc-severity-important {
+    background: #fff3e0;
+    color: #ef6c00;
+  }
+
+  .msrc-severity-moderate {
+    background: #fff8e1;
+    color: #f57f17;
+  }
+
+  .msrc-severity-low {
+    background: #e8f5e8;
+    color: #2e7d32;
+  }
+
+  .msrc-severity-unknown {
+    background: #f5f5f5;
+    color: #666;
+  }
+
+  .msrc-cve-description {
+    margin-top: 10px;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .msrc-no-data {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+  }
+
+  .msrc-error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #c62828;
+  }
+
+  .msrc-success {
+    background: #e8f5e8;
+    color: #2e7d32;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #2e7d32;
+  }
+
+  .msrc-demo-section {
+    padding: 30px;
+  }
+
+  .msrc-results-summary {
+    background: #e8f5e8;
+    padding: 15px 30px;
+    border-left: 4px solid #28a745;
+    margin: 0 30px 20px 30px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #155724;
+  }
+
   /* Combined Dark Mode Overrides */
   [data-theme="dark"] .dashboard-content,
   [data-theme="dark"] .dashboard-tabs a,
@@ -1219,6 +1581,28 @@ permalink: /dashboard/
       align-items: center;
       gap: 10px;
     }
+
+    .msrc-cve-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .msrc-header h1 {
+      font-size: 2rem;
+    }
+
+    .msrc-demo-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .msrc-filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .msrc-filter-group {
+      justify-content: space-between;
+    }
   }
 
   @media (max-width: 768px) {
@@ -1253,6 +1637,11 @@ permalink: /dashboard/
     .cve-header h1 {
       font-size: 1.8em;
     }
+
+    .msrc-controls {
+      flex-direction: column;
+      text-align: center;
+    }
   }
 </style>
 </head>
@@ -1263,7 +1652,8 @@ permalink: /dashboard/
   <!-- Navigation -->
   <nav class="dashboard-tabs">
     <a href="#" class="active" data-tab="world">World</a>
-    <a href="#" data-tab="cve">CVE Tracker</a>
+    <a href="#" data-tab="cve">GHSA Tracker</a>
+    <a href="#" data-tab="msrc">MSRC Tracker</a>
     <a href="#" data-tab="foodbanks">UK Foodbanks</a>
     <a href="#" data-tab="exchange">Exchange Rates</a>
     <a href="#" data-tab="recipes">Food Recipes</a>
@@ -1362,6 +1752,94 @@ permalink: /dashboard/
                 Click on a calendar date to view security advisories for that day
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MSRC Tracker Tab -->
+    <section id="msrc" class="tab-content">
+      <div class="msrc-tracker-container">
+        <div class="msrc-header">
+          <h1>Microsoft Security Response Center</h1>
+          <p>CVE Dashboard - MSRC API Integration Demo</p>
+          <div class="msrc-loading" id="msrc-loading">
+            <div class="msrc-spinner"></div>
+          </div>
+        </div>
+
+        <div class="msrc-api-info">
+          <p>This demo uses <code>CorsProxy.io</code> to access the MSRC API directly from your browser.</p>
+          <p><strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.</p>
+        </div>
+
+        <div class="msrc-controls">
+          <div class="msrc-stats">
+            <div class="msrc-stat-item">
+              <div class="msrc-stat-number" id="msrc-totalCves">-</div>
+              <div class="msrc-stat-label">Total CVEs</div>
+            </div>
+            <div class="msrc-stat-item">
+              <div class="msrc-stat-number" id="msrc-criticalCount">-</div>
+              <div class="msrc-stat-label">Critical</div>
+            </div>
+            <div class="msrc-stat-item">
+              <div class="msrc-stat-number" id="msrc-apiCalls">0</div>
+              <div class="msrc-stat-label">API Calls</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="msrc-demo-section">
+          <h2 style="margin-bottom: 20px; color: #333;">Microsoft Security Updates Browser</h2>
+          
+          <div class="msrc-demo-controls">
+            <button class="msrc-demo-btn" onclick="msrcTool.previousMonth()">← Previous Month</button>
+            <select class="msrc-month-selector" id="msrc-monthSelector" onchange="msrcTool.onMonthSelectorChange()">
+              <!-- Dynamically populated -->
+            </select>
+            <button class="msrc-demo-btn" onclick="msrcTool.nextMonth()">Next Month →</button>
+            <button class="msrc-demo-btn" onclick="msrcTool.fetchMonthData()" style="background: #28a745;">Load Security Updates</button>
+          </div>
+
+          <div class="msrc-filter-controls" id="msrc-filterControls" style="display: none;">
+            <div class="msrc-filter-group">
+              <label for="msrc-severityFilter">Severity:</label>
+              <select class="msrc-filter-select" id="msrc-severityFilter" onchange="msrcTool.applyFilters()">
+                <option value="all">All Severities</option>
+                <option value="critical">Critical Only</option>
+                <option value="important">Important Only</option>
+                <option value="moderate">Moderate Only</option>
+                <option value="low">Low Only</option>
+              </select>
+            </div>
+            <div class="msrc-filter-group">
+              <label for="msrc-pageSize">Show:</label>
+              <select class="msrc-filter-select" id="msrc-pageSize" onchange="msrcTool.applyFilters()">
+                <option value="20">20 per page</option>
+                <option value="50">50 per page</option>
+                <option value="100">100 per page</option>
+                <option value="all">All results</option>
+              </select>
+            </div>
+            <div class="msrc-filter-group">
+              <button class="msrc-demo-btn" onclick="msrcTool.resetFilters()" style="background: #6c757d;">Reset Filters</button>
+            </div>
+          </div>
+
+          <div id="msrc-resultsSummary" style="display: none;"></div>
+          <div id="msrc-messageArea"></div>
+          
+          <div class="msrc-cve-grid" id="msrc-cveGrid">
+            <div class="msrc-no-data">
+              Select a month and click "Load Security Updates" to fetch CVE data.
+            </div>
+          </div>
+          
+          <div class="msrc-pagination" id="msrc-pagination" style="display: none;">
+            <button class="msrc-pagination-btn" id="msrc-prevPage" onclick="msrcTool.changePage(-1)">Previous</button>
+            <span class="msrc-pagination-info" id="msrc-paginationInfo"></span>
+            <button class="msrc-pagination-btn" id="msrc-nextPage" onclick="msrcTool.changePage(1)">Next</button>
           </div>
         </div>
       </div>
@@ -1528,6 +2006,12 @@ permalink: /dashboard/
       if (this.dataset.tab === 'cve' && !window.cveInitialized) {
         window.cveInitialized = true;
         setTimeout(() => cveTool.initDashboard(), 100);
+      }
+      
+      // Initialize MSRC tool when first accessed
+      if (this.dataset.tab === 'msrc' && !window.msrcInitialized) {
+        window.msrcInitialized = true;
+        setTimeout(() => msrcTool.init(), 100);
       }
     });
   });
@@ -2519,8 +3003,534 @@ permalink: /dashboard/
     }
   };
 
-  // Initialize CVE event listeners when first accessed
+  // MSRC Tracker functionality
+  const msrcTool = {
+    apiCallCount: 0,
+    currentCveData: [],
+    filteredCveData: [],
+    currentDate: new Date(),
+    currentPage: 1,
+    pageSize: 20,
+
+    // Full month names for MSRC API (it expects full month names)
+    monthNames: ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'],
+
+    showLoading: function(show = true) {
+      document.getElementById('msrc-loading').style.display = show ? 'block' : 'none';
+    },
+
+    updateApiCallCount: function() {
+      document.getElementById('msrc-apiCalls').textContent = this.apiCallCount;
+    },
+
+    showMessage: function(message, type = 'info') {
+      const messageArea = document.getElementById('msrc-messageArea');
+      if (!messageArea) return;
+      
+      if (!message || message === '') {
+        messageArea.innerHTML = '';
+        messageArea.style.display = 'none';
+        return;
+      }
+      
+      const className = type === 'error' ? 'msrc-error' : type === 'success' ? 'msrc-success' : 'msrc-api-info';
+      messageArea.innerHTML = `<div class="${className}">${message}</div>`;
+      messageArea.style.display = 'block';
+    },
+
+    // Generate month options dynamically - now properly synchronized
+    populateMonthSelector: function() {
+      const selector = document.getElementById('msrc-monthSelector');
+      const options = [];
+
+      // Generate 24 months back from current month for better coverage
+      for (let i = 0; i < 24; i++) {
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        
+        const year = date.getFullYear();
+        const monthIndex = date.getMonth();
+        const monthName = this.monthNames[monthIndex];
+        
+        // MSRC API format: "2024-Aug" (year-shortMonth)
+        const shortMonth = monthName.substring(0, 3);
+        const apiFormat = `${year}-${shortMonth}`;
+        const displayFormat = `${monthName} ${year}`;
+        
+        options.push({
+          value: apiFormat,
+          label: displayFormat,
+          date: new Date(date) // Create a copy to avoid reference issues
+        });
+      }
+
+      selector.innerHTML = options.map(opt => 
+        `<option value="${opt.value}">${opt.label}</option>`
+      ).join('');
+
+      // Set current month as default
+      const currentYear = new Date().getFullYear();
+      const currentMonthName = this.monthNames[new Date().getMonth()];
+      const currentShort = currentMonthName.substring(0, 3);
+      const currentApiFormat = `${currentYear}-${currentShort}`;
+      
+      selector.value = currentApiFormat;
+      
+      // Update currentDate to match the selected option
+      this.currentDate = new Date();
+    },
+
+    // Handle dropdown selection change
+    onMonthSelectorChange: function() {
+      const selector = document.getElementById('msrc-monthSelector');
+      const selectedValue = selector.value;
+      
+      // Parse the selected value (e.g., "2024-Aug")
+      const [year, shortMonth] = selectedValue.split('-');
+      const monthIndex = this.monthNames.findIndex(month => month.startsWith(shortMonth));
+      
+      // Update currentDate to match selection
+      this.currentDate = new Date(parseInt(year), monthIndex, 1);
+      
+      console.log('Month selector changed:', selectedValue, '-> Date:', this.currentDate);
+    },
+
+    // Month navigation
+    previousMonth: function() {
+      this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+      this.updateMonthSelector();
+    },
+
+    nextMonth: function() {
+      this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+      this.updateMonthSelector();
+    },
+
+    updateMonthSelector: function() {
+      const selector = document.getElementById('msrc-monthSelector');
+      const year = this.currentDate.getFullYear();
+      const monthName = this.monthNames[this.currentDate.getMonth()];
+      const shortMonth = monthName.substring(0, 3);
+      const apiFormat = `${year}-${shortMonth}`;
+      
+      // Check if this month exists in selector, if not add it
+      if (!selector.querySelector(`option[value="${apiFormat}"]`)) {
+        const displayFormat = `${monthName} ${year}`;
+        const option = new Option(displayFormat, apiFormat);
+        selector.appendChild(option);
+      }
+      
+      selector.value = apiFormat;
+      console.log('Updated month selector to:', apiFormat);
+    },
+
+    // Get MSRC URL for a CVE
+    getMSRCUrl: function(cveId) {
+      return `https://msrc.microsoft.com/update-guide/vulnerability/${cveId}`;
+    },
+
+    // Fetch CVE data using CorsProxy.io with enhanced error handling
+    fetchMonthData: async function() {
+      const monthSelector = document.getElementById('msrc-monthSelector');
+      const selectedMonth = monthSelector.value;
+      
+      if (!selectedMonth) {
+        this.showMessage('Please select a month first.', 'error');
+        return;
+      }
+
+      this.showLoading(true);
+      this.showMessage('Fetching data from MSRC API via CORS proxy...', 'info');
+
+      console.log('Fetching data for:', selectedMonth);
+
+      try {
+        const targetUrl = `https://api.msrc.microsoft.com/cvrf/v3.0/cvrf/${selectedMonth}`;
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+
+        console.log('Target URL:', targetUrl);
+
+        const response = await fetch(proxyUrl, {
+          headers: {
+            'Accept': 'application/json',
+            'Origin': window.location.origin
+          },
+          // Add timeout to prevent hanging
+          signal: AbortSignal.timeout(30000) // 30 second timeout
+        });
+
+        this.apiCallCount++;
+        this.updateApiCallCount();
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            this.showMessage(`No security updates found for ${selectedMonth}. This month may not have any published updates yet.`, 'error');
+            this.displayCVEs([]);
+            return;
+          }
+          if (response.status === 429) {
+            this.showMessage('Rate limit exceeded on the CORS proxy. Please wait a few minutes before trying again.', 'error');
+            this.displayCVEs([]);
+            return;
+          }
+          if (response.status >= 500) {
+            this.showMessage('The CORS proxy service appears to be experiencing issues. You can try again later or access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
+            this.displayCVEs([]);
+            return;
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const responseText = await response.text();
+        
+        // Check if the proxy returned an error page instead of JSON
+        if (responseText.trim().startsWith('<') || responseText.includes('<!DOCTYPE')) {
+          if (responseText.includes('blocked') || responseText.includes('403') || responseText.includes('access denied')) {
+            this.showMessage('Access blocked by CORS proxy. The service may have restrictions in your region. You can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
+          } else {
+            this.showMessage('The CORS proxy returned an error page instead of data. The service may be temporarily unavailable.', 'error');
+          }
+          this.displayCVEs([]);
+          return;
+        }
+
+        const data = JSON.parse(responseText);
+        console.log('MSRC API Response parsed successfully');
+
+        if (!data.Vulnerability || !Array.isArray(data.Vulnerability)) {
+          throw new Error('No Vulnerability array found in response');
+        }
+
+        console.log(`Found ${data.Vulnerability.length} vulnerabilities in API response`);
+        const cves = this.parseMSRCData(data);
+        this.currentCveData = cves;
+        this.filteredCveData = [...cves];
+        this.currentPage = 1;
+        
+        // Show filter controls if we have data
+        const filterControls = document.getElementById('msrc-filterControls');
+        if (filterControls) {
+          filterControls.style.display = cves.length > 0 ? 'flex' : 'none';
+        }
+        
+        this.displayCurrentPage();
+        this.updateStats();
+        this.updateResultsSummary();
+
+        // Clear the main message area since we now show results summary
+        this.showMessage('', 'info');
+
+      } catch (error) {
+        console.error('Error fetching CVE data:', error);
+        
+        // Provide specific error messages based on error type
+        if (error.name === 'AbortError') {
+          this.showMessage('Request timed out. The CORS proxy service may be slow or unavailable. You can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
+        } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          this.showMessage('Network error: Unable to reach the CORS proxy service. Please check your internet connection or try again later. Alternatively, visit <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a> directly.', 'error');
+        } else if (error.message.includes('JSON')) {
+          this.showMessage('Invalid response format received from the API. The CORS proxy may be experiencing issues.', 'error');
+        } else {
+          this.showMessage(`Failed to fetch data: ${error.message}. If this persists, you can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.`, 'error');
+        }
+        
+        this.displayCVEs([]);
+      } finally {
+        this.showLoading(false);
+      }
+    },
+
+    // Parse MSRC CVRF data structure and filter to only the selected month
+    parseMSRCData: function(data) {
+      console.log('Parsing MSRC data...');
+      
+      if (!data.Vulnerability || !Array.isArray(data.Vulnerability)) {
+        console.error('No Vulnerability array found');
+        return [];
+      }
+
+      const vulnerabilities = data.Vulnerability;
+      const cves = [];
+      
+      // Get the selected month/year for filtering
+      const selectedMonth = document.getElementById('msrc-monthSelector').value;
+      const [selectedYear, selectedShortMonth] = selectedMonth.split('-');
+      const selectedMonthIndex = this.monthNames.findIndex(month => month.startsWith(selectedShortMonth));
+      
+      console.log(`Filtering for month: ${selectedYear}-${selectedShortMonth} (index: ${selectedMonthIndex})`);
+      
+      // Get default release date from document tracking
+      const defaultReleaseDate = data.DocumentTracking ? 
+        new Date(data.DocumentTracking.CurrentReleaseDate || data.DocumentTracking.InitialReleaseDate) : 
+        new Date();
+
+      vulnerabilities.forEach((vuln, index) => {
+        const cveId = vuln.CVE || '';
+        
+        // Filter out invalid CVEs
+        if (!cveId || !cveId.startsWith('CVE-') || cveId === 'CVE-' || cveId.length < 8) {
+          return;
+        }
+        
+        // Extract title
+        let title = 'Security Update';
+        if (vuln.Title && vuln.Title.Value) {
+          title = vuln.Title.Value;
+        }
+        
+        // Skip if title is generic/placeholder
+        if (title === 'Security Update' || title === '' || title === 'Unknown') {
+          return;
+        }
+
+        // Try to extract individual CVE date from RevisionHistory
+        let cveDate = defaultReleaseDate;
+        if (vuln.RevisionHistory && Array.isArray(vuln.RevisionHistory)) {
+          // Find the initial release revision (usually the first one)
+          const initialRevision = vuln.RevisionHistory.find(rev => 
+            rev.Description && rev.Description.Value && 
+            rev.Description.Value.toLowerCase().includes('published')
+          );
+          
+          if (initialRevision && initialRevision.Date) {
+            cveDate = new Date(initialRevision.Date);
+          } else if (vuln.RevisionHistory.length > 0 && vuln.RevisionHistory[0].Date) {
+            // Fallback to first revision
+            cveDate = new Date(vuln.RevisionHistory[0].Date);
+          }
+        }
+
+        // **KEY FIX**: Only include CVEs that were actually published in the selected month
+        const cveYear = cveDate.getFullYear();
+        const cveMonth = cveDate.getMonth();
+        
+        if (cveYear != selectedYear || cveMonth != selectedMonthIndex) {
+          console.log(`Filtering out CVE ${cveId}: published ${cveDate.toLocaleDateString()} (not in ${selectedYear}-${selectedShortMonth})`);
+          return;
+        }
+
+        // Extract CVSS score
+        let maxScore = null;
+        if (vuln.CVSSScoreSets && Array.isArray(vuln.CVSSScoreSets)) {
+          vuln.CVSSScoreSets.forEach(scoreSet => {
+            if (scoreSet.BaseScore && (!maxScore || scoreSet.BaseScore > maxScore)) {
+              maxScore = scoreSet.BaseScore;
+            }
+          });
+        }
+
+        // Extract severity from Threats
+        let severityText = 'Unknown';
+        if (vuln.Threats && Array.isArray(vuln.Threats)) {
+          const severityThreat = vuln.Threats.find(threat => 
+            threat.Type === 3 || 
+            (threat.Description && threat.Description.Value && 
+             (threat.Description.Value.includes('Critical') || 
+              threat.Description.Value.includes('Important') ||
+              threat.Description.Value.includes('Moderate') ||
+              threat.Description.Value.includes('Low')))
+          );
+          if (severityThreat && severityThreat.Description && severityThreat.Description.Value) {
+            severityText = severityThreat.Description.Value;
+          }
+        }
+
+        // Extract description from Notes
+        let description = '';
+        if (vuln.Notes && Array.isArray(vuln.Notes)) {
+          const descNote = vuln.Notes.find(note => note.Type === 1);
+          if (descNote && descNote.Value) {
+            description = descNote.Value;
+          }
+        }
+
+        // Add the CVE since it passed all filters
+        cves.push({
+          id: cveId,
+          title: title,
+          date: cveDate,
+          severity: maxScore,
+          severityText: severityText,
+          description: description
+        });
+      });
+
+      // Sort by date descending (most recent first)
+      cves.sort((a, b) => b.date - a.date);
+
+      console.log(`Successfully parsed ${cves.length} CVEs for ${selectedYear}-${selectedShortMonth} (filtered out ${vulnerabilities.length - cves.length} from other months)`);
+      return cves;
+    },
+
+    // Update results summary
+    updateResultsSummary: function() {
+      const summaryDiv = document.getElementById('msrc-resultsSummary');
+      if (!summaryDiv) return;
+      
+      const total = this.currentCveData.length;
+      const filtered = this.filteredCveData.length;
+      const severityFilterSelect = document.getElementById('msrc-severityFilter');
+      const severityFilter = severityFilterSelect ? severityFilterSelect.value : 'all';
+      
+      let message = `Showing ${filtered} of ${total} CVEs`;
+      if (severityFilter !== 'all') {
+        message += ` (filtered by ${severityFilter} severity)`;
+      }
+      
+      summaryDiv.innerHTML = `<div class="msrc-results-summary">${message}</div>`;
+      summaryDiv.style.display = total > 0 ? 'block' : 'none';
+    },
+
+    // Apply filters to CVE data
+    applyFilters: function() {
+      const severityFilterSelect = document.getElementById('msrc-severityFilter');
+      const pageSizeSelect = document.getElementById('msrc-pageSize');
+      
+      if (!severityFilterSelect || !pageSizeSelect) return;
+      
+      const severityFilter = severityFilterSelect.value;
+      const pageSizeValue = pageSizeSelect.value;
+      
+      // Update page size
+      this.pageSize = pageSizeValue === 'all' ? this.currentCveData.length : parseInt(pageSizeValue);
+      
+      // Filter by severity
+      this.filteredCveData = this.currentCveData.filter(cve => {
+        if (severityFilter === 'all') return true;
+        
+        const category = this.getSeverityCategory(cve.severity);
+        return category === severityFilter;
+      });
+      
+      this.currentPage = 1;
+      this.displayCurrentPage();
+      this.updateResultsSummary();
+    },
+
+    // Reset all filters
+    resetFilters: function() {
+      const severityFilterSelect = document.getElementById('msrc-severityFilter');
+      const pageSizeSelect = document.getElementById('msrc-pageSize');
+      
+      if (severityFilterSelect) severityFilterSelect.value = 'all';
+      if (pageSizeSelect) pageSizeSelect.value = '20';
+      
+      this.pageSize = 20;
+      this.filteredCveData = [...this.currentCveData];
+      this.currentPage = 1;
+      this.displayCurrentPage();
+      this.updateResultsSummary();
+    },
+
+    // Pagination functions
+    changePage: function(delta) {
+      const totalPages = Math.ceil(this.filteredCveData.length / this.pageSize);
+      const newPage = this.currentPage + delta;
+      
+      if (newPage >= 1 && newPage <= totalPages) {
+        this.currentPage = newPage;
+        this.displayCurrentPage();
+      }
+    },
+
+    displayCurrentPage: function() {
+      const totalPages = Math.ceil(this.filteredCveData.length / this.pageSize);
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = Math.min(startIndex + this.pageSize, this.filteredCveData.length);
+      const currentPageData = this.filteredCveData.slice(startIndex, endIndex);
+      
+      this.displayCVEs(currentPageData);
+      this.updatePaginationControls(totalPages);
+    },
+
+    updatePaginationControls: function(totalPages) {
+      const paginationDiv = document.getElementById('msrc-pagination');
+      const prevBtn = document.getElementById('msrc-prevPage');
+      const nextBtn = document.getElementById('msrc-nextPage');
+      const infoDiv = document.getElementById('msrc-paginationInfo');
+      
+      if (!paginationDiv || !prevBtn || !nextBtn || !infoDiv) return;
+      
+      if (totalPages <= 1) {
+        paginationDiv.style.display = 'none';
+      } else {
+        paginationDiv.style.display = 'flex';
+        prevBtn.disabled = this.currentPage <= 1;
+        nextBtn.disabled = this.currentPage >= totalPages;
+        infoDiv.textContent = `Page ${this.currentPage} of ${totalPages}`;
+      }
+    },
+
+    // Display CVE data in grid format with clickable links
+    displayCVEs: function(cves) {
+      const grid = document.getElementById('msrc-cveGrid');
+      
+      if (cves.length === 0) {
+        grid.innerHTML = '<div class="msrc-no-data">No security updates found for the selected period.</div>';
+        return;
+      }
+
+      let html = '';
+      cves.forEach(cve => {
+        const severity = this.getSeverityCategory(cve.severity);
+        const severityDisplay = cve.severity ? 
+          `${cve.severityText} (CVSS: ${cve.severity})` : 
+          cve.severityText;
+
+        const msrcUrl = this.getMSRCUrl(cve.id);
+
+        html += `
+          <div class="msrc-cve-item" onclick="window.open('${msrcUrl}', '_blank')">
+            <div class="msrc-cve-header">
+              <div class="msrc-cve-id">
+                ${cve.id}
+                <span class="msrc-external-link-icon">🔗</span>
+              </div>
+              <div class="msrc-cve-date">${cve.date.toLocaleDateString()}</div>
+            </div>
+            <div class="msrc-cve-title">${cve.title}</div>
+            <div class="msrc-cve-severity msrc-severity-${severity}">${severityDisplay}</div>
+            ${cve.description ? `
+              <div class="msrc-cve-description">
+                ${cve.description.substring(0, 300)}${cve.description.length > 300 ? '...' : ''}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+    },
+
+    // Get severity category from CVSS score or text
+    getSeverityCategory: function(score) {
+      if (!score) return 'unknown';
+      if (score >= 9.0) return 'critical';
+      if (score >= 7.0) return 'important';
+      if (score >= 4.0) return 'moderate';
+      return 'low';
+    },
+
+    // Update statistics
+    updateStats: function() {
+      const criticalCves = this.currentCveData.filter(cve => this.getSeverityCategory(cve.severity) === 'critical');
+      
+      document.getElementById('msrc-totalCves').textContent = this.currentCveData.length;
+      document.getElementById('msrc-criticalCount').textContent = criticalCves.length;
+    },
+
+    // Initialize
+    init: function() {
+      console.log('Initializing MSRC CVE Dashboard...');
+      this.updateApiCallCount();
+      this.populateMonthSelector();
+    }
+  };
+
+  // Initialize flags
   window.cveInitialized = false;
+  window.msrcInitialized = false;
 </script>
 </body>
 </html>
