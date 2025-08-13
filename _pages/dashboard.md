@@ -3,6 +3,7 @@ title: Dashboard
 layout: default
 permalink: /dashboard/
 ---
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
