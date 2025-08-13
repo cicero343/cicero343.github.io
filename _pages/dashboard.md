@@ -3,7 +3,6 @@ title: Dashboard
 layout: default
 permalink: /dashboard/
 ---
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -1675,7 +1674,7 @@ permalink: /dashboard/
     <section id="cve" class="tab-content">
       <div class="cve-tracker-container">
         <div class="cve-header">
-          <h1>📅 Cybersecurity Intelligence Calendar</h1>
+          <h1>📅 GitHub Security Advisory Calendar</h1>
           <p>Interactive vulnerability timeline and analysis</p>
         </div>
 
@@ -1763,14 +1762,14 @@ permalink: /dashboard/
       <div class="msrc-tracker-container">
         <div class="msrc-header">
           <h1>Microsoft Security Response Center</h1>
-          <p>CVE Dashboard - MSRC API Integration Demo</p>
+          <p>CVE Dashboard - MSRC API Integration Page</p>
           <div class="msrc-loading" id="msrc-loading">
             <div class="msrc-spinner"></div>
           </div>
         </div>
 
         <div class="msrc-api-info">
-          <p>This demo uses <code>CorsProxy.io</code> to access the MSRC API directly from your browser.</p>
+          <p>This page uses <code>CorsProxy.io</code> to access the MSRC API directly from your browser.</p>
           <p><strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.</p>
         </div>
 
