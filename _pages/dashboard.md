@@ -68,6 +68,46 @@ permalink: /dashboard/
     background: #64b5f6;
   }
 
+  /* Secondary CVE Navigation */
+  .cve-secondary-nav {
+    display: none;
+    justify-content: center;
+    background: #1976d2;
+    padding: 8px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .cve-secondary-nav.show {
+    display: flex;
+  }
+
+  .cve-secondary-nav a {
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .cve-secondary-nav a.active,
+  .cve-secondary-nav a:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  @media (max-width: 768px) {
+    .cve-secondary-nav a {
+      flex: 0 0 calc(33.333% - 6px);
+      padding: 6px 8px;
+      margin: 2px;
+      font-size: 0.8em;
+      text-align: center;
+    }
+  }
+
   .dashboard-content {
     max-width: 1000px;
     margin: 30px auto;
@@ -82,6 +122,15 @@ permalink: /dashboard/
   }
 
   .tab-content.active {
+    display: block;
+  }
+
+  /* CVE Sub-tab styles */
+  .cve-sub-tab {
+    display: none;
+  }
+
+  .cve-sub-tab.active {
     display: block;
   }
 
@@ -1521,6 +1570,269 @@ permalink: /dashboard/
     color: #155724;
   }
 
+  /* NVD Lookup Styles */
+  .nvd-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    margin: -20px;
+    border-radius: 0;
+  }
+  
+  .nvd-inner-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  }
+  
+  .nvd-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .nvd-header h1 {
+    color: #2d3748;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .nvd-status-badge {
+    display: inline-block;
+    background: linear-gradient(45deg, #38a169, #2f855a);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .nvd-search-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+  
+  .nvd-input-group {
+    margin-bottom: 20px;
+  }
+  
+  .nvd-input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2d3748;
+    font-size: 16px;
+  }
+  
+  .nvd-input-group input, .nvd-input-group select {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .nvd-input-group input:focus, .nvd-input-group select:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .nvd-grid-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .nvd-button {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .nvd-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+  }
+  
+  .nvd-button:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .nvd-results-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    display: none;
+  }
+  
+  .nvd-vulnerability-card {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 18px;
+    border-left: 4px solid #667eea;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .nvd-vulnerability-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    border-left-color: #4c51bf;
+    background: #f1f5f9;
+  }
+  
+  .nvd-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .nvd-cve-id {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #2d3748;
+    font-family: 'Monaco', monospace;
+  }
+  
+  .nvd-cvss-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .nvd-cvss-critical { background: linear-gradient(45deg, #dc2626, #b91c1c); }
+  .nvd-cvss-high { background: linear-gradient(45deg, #ea580c, #c2410c); }
+  .nvd-cvss-medium { background: linear-gradient(45deg, #d97706, #b45309); }
+  .nvd-cvss-low { background: linear-gradient(45deg, #059669, #047857); }
+  .nvd-cvss-none { background: linear-gradient(45deg, #6b7280, #4b5563); }
+  
+  .nvd-card-description {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .nvd-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  .nvd-click-hint {
+    color: #667eea;
+    font-weight: 600;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+  
+  .nvd-loading {
+    text-align: center;
+    color: #667eea;
+    font-style: italic;
+    padding: 40px;
+  }
+  
+  .nvd-error {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #dc2626;
+  }
+  
+  /* NVD Popup Styles - FIXED for proper centering */
+  .nvd-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: none;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .nvd-popup-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    top: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .nvd-popup-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+  }
+
+  .nvd-popup-close:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  .nvd-popup-body {
+    padding: 30px;
+  }
+
   /* Combined Dark Mode Overrides */
   [data-theme="dark"] .dashboard-content,
   [data-theme="dark"] .dashboard-tabs a,
@@ -1603,6 +1915,11 @@ permalink: /dashboard/
     .msrc-filter-group {
       justify-content: space-between;
     }
+
+    .nvd-grid-controls {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -1642,6 +1959,18 @@ permalink: /dashboard/
       flex-direction: column;
       text-align: center;
     }
+
+    .nvd-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .nvd-popup-content {
+      padding: 25px;
+      margin: 10px;
+      width: calc(100% - 20px);
+    }
   }
 </style>
 </head>
@@ -1649,11 +1978,10 @@ permalink: /dashboard/
 
 <div id="dashboard-app">
 
-  <!-- Navigation -->
+  <!-- Primary Navigation -->
   <nav class="dashboard-tabs">
     <a href="#" class="active" data-tab="world">World</a>
-    <a href="#" data-tab="cve">GHSA Tracker</a>
-    <a href="#" data-tab="msrc">MSRC Tracker</a>
+    <a href="#" data-tab="cve">CVE Tracker</a>
     <a href="#" data-tab="foodbanks">UK Foodbanks</a>
     <a href="#" data-tab="exchange">Exchange Rates</a>
     <a href="#" data-tab="recipes">Food Recipes</a>
@@ -1662,187 +1990,262 @@ permalink: /dashboard/
     <a href="#" data-tab="canvas">Canvas</a>
   </nav>
 
+  <!-- Secondary CVE Navigation -->
+  <nav class="cve-secondary-nav" id="cve-secondary-nav">
+    <a href="#" class="active" data-cve-tab="nvd">NVD Lookup</a>
+    <a href="#" data-cve-tab="ghsa">GHSA Tracker</a>
+    <a href="#" data-cve-tab="msrc">MSRC Tracker</a>
+  </nav>
+
   <div class="dashboard-content">
 
     <!-- World Clock Tab -->
     <section id="world" class="tab-content active">
-      <h2>🌍 World Clock & Weather</h2>
+      <h2>📍 World Clock & Weather</h2>
       <div class="grid" id="dashboard-grid"></div>
     </section>
 
-    <!-- CVE Tracker Tab -->
+    <!-- CVE Tracker Tab (Container for sub-tabs) -->
     <section id="cve" class="tab-content">
-      <div class="cve-tracker-container">
-        <div class="cve-header">
-          <h1>📅 GitHub Security Advisory Calendar</h1>
-          <p>Interactive vulnerability timeline and analysis</p>
+      
+      <!-- NVD Lookup Sub-tab -->
+      <div id="nvd" class="cve-sub-tab active">
+        <div class="nvd-container">
+          <div class="nvd-inner-container">
+            <div class="nvd-header">
+              <h1>🛡️ NVD Vulnerability Lookup</h1>
+              <div class="nvd-status-badge">✅ Live API - NIST National Vulnerability Database</div>
+              <p style="color: #666; font-size: 1.1em;">Real-time vulnerability data from the official US government database</p>
+            </div>
+            
+            <div class="nvd-search-section">
+              <div class="nvd-input-group">
+                <label for="nvd-searchType">Search Type:</label>
+                <select id="nvd-searchType" onchange="nvdTool.updatePlaceholder()">
+                  <option value="cve">Specific CVE ID</option>
+                  <option value="keyword">Keyword Search</option>
+                </select>
+              </div>
+              
+              <div class="nvd-input-group">
+                <label for="nvd-searchInput">Search Term:</label>
+                <input type="text" id="nvd-searchInput" placeholder="CVE-2024-3094" value="CVE-2024-3094">
+              </div>
+              
+              <div class="nvd-grid-controls">
+                <div class="nvd-input-group" style="margin-bottom: 0;">
+                  <label for="nvd-resultsPerPage">Results Per Page:</label>
+                  <select id="nvd-resultsPerPage">
+                    <option value="10">10 results</option>
+                    <option value="20" selected>20 results</option>
+                    <option value="50">50 results</option>
+                    <option value="100">100 results</option>
+                  </select>
+                </div>
+                
+                <div class="nvd-input-group" style="margin-bottom: 0;">
+                  <label for="nvd-cvssFilter">CVSS Severity Filter:</label>
+                  <select id="nvd-cvssFilter">
+                    <option value="">All Severities</option>
+                    <option value="CRITICAL">Critical (9.0-10.0)</option>
+                    <option value="HIGH">High (7.0-8.9)</option>
+                    <option value="MEDIUM">Medium (4.0-6.9)</option>
+                    <option value="LOW">Low (0.1-3.9)</option>
+                  </select>
+                </div>
+                
+                <div class="nvd-input-group" style="margin-bottom: 0;">
+                  <label for="nvd-sortBy">Sort By:</label>
+                  <select id="nvd-sortBy">
+                    <option value="published" selected>Published Date</option>
+                    <option value="modified">Last Modified</option>
+                  </select>
+                </div>
+              </div>
+              
+              <button onclick="nvdTool.searchNVD()" id="nvd-searchBtn" class="nvd-button">Search NVD Database</button>
+            </div>
+            
+            <div id="nvd-results" class="nvd-results-container"></div>
+          </div>
         </div>
+      </div>
 
-        <div class="cve-controls">
-          <div class="cve-filter-group">
-            <label class="cve-filter-label">Severity:</label>
-            <select id="cve-severity-filter" class="cve-filter-select">
-              <option value="">All Severities</option>
-              <option value="critical">Critical</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
+      <!-- GHSA Tracker Sub-tab -->
+      <div id="ghsa" class="cve-sub-tab">
+        <div class="cve-tracker-container">
+          <div class="cve-header">
+            <h1>📅 GitHub Security Advisory Calendar</h1>
+            <p>Interactive vulnerability timeline and analysis</p>
           </div>
-          <div class="cve-filter-group">
-            <label class="cve-filter-label">Type:</label>
-            <select id="cve-type-filter" class="cve-filter-select">
-              <option value="reviewed">Reviewed</option>
-              <option value="unreviewed">Unreviewed</option>
-              <option value="malware">Malware</option>
-            </select>
-          </div>
-          <div class="cve-calendar-nav">
-            <button class="cve-nav-btn" onclick="cveTool.changeMonth(-1)">‹ Prev</button>
-            <div class="cve-current-month" id="cve-current-month-container">
-              <div class="cve-month-text" id="cve-current-month">Loading...</div>
-              <div class="cve-year-text" id="cve-current-year" onclick="cveTool.toggleYearPicker()">2025</div>
-              <div class="cve-year-picker" id="cve-year-picker"></div>
-            </div>
-            <button class="cve-nav-btn" onclick="cveTool.changeMonth(1)">Next ›</button>
-          </div>
-        </div>
 
-        <div class="cve-dashboard">
-          <!-- Main Panel - Calendar -->
-          <div class="cve-main-panel">
-            <div class="cve-panel-header">
-              <div class="cve-panel-title">
-                <span>📅</span>
-                Security Advisory Calendar
-              </div>
-              <div id="cve-github-status" class="cve-api-status cve-api-error">Loading</div>
+          <div class="cve-controls">
+            <div class="cve-filter-group">
+              <label class="cve-filter-label">Severity:</label>
+              <select id="cve-severity-filter" class="cve-filter-select">
+                <option value="">All Severities</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
             </div>
-            
-            <div class="cve-calendar-container">
-              <div id="cve-calendar-content" class="cve-loading">
-                <div class="cve-spinner"></div>
-                Loading security advisory data...
+            <div class="cve-filter-group">
+              <label class="cve-filter-label">Type:</label>
+              <select id="cve-type-filter" class="cve-filter-select">
+                <option value="reviewed">Reviewed</option>
+                <option value="unreviewed">Unreviewed</option>
+                <option value="malware">Malware</option>
+              </select>
+            </div>
+            <div class="cve-calendar-nav">
+              <button class="cve-nav-btn" onclick="cveTool.changeMonth(-1)">‹ Prev</button>
+              <div class="cve-current-month" id="cve-current-month-container">
+                <div class="cve-month-text" id="cve-current-month">Loading...</div>
+                <div class="cve-year-text" id="cve-current-year" onclick="cveTool.toggleYearPicker()">2025</div>
+                <div class="cve-year-picker" id="cve-year-picker"></div>
               </div>
+              <button class="cve-nav-btn" onclick="cveTool.changeMonth(1)">Next ›</button>
             </div>
           </div>
 
-          <!-- Side Panel - Selected Date Details -->
-          <div class="cve-side-panel">
-            <div class="cve-panel-header">
-              <div class="cve-panel-title">
-                <span>🔍</span>
-                Advisory Details
+          <div class="cve-dashboard">
+            <!-- Main Panel - Calendar -->
+            <div class="cve-main-panel">
+              <div class="cve-panel-header">
+                <div class="cve-panel-title">
+                  <span>📅</span>
+                  Security Advisory Calendar
+                </div>
+                <div id="cve-github-status" class="cve-api-status cve-api-error">Loading</div>
+              </div>
+              
+              <div class="cve-calendar-container">
+                <div id="cve-calendar-content" class="cve-loading">
+                  <div class="cve-spinner"></div>
+                  Loading security advisory data...
+                </div>
               </div>
             </div>
-            
-            <div class="cve-stats-summary">
-              <div class="cve-stat-box">
-                <div class="cve-stat-number" id="cve-critical-count">0</div>
-                <div class="cve-stat-label">Critical</div>
+
+            <!-- Side Panel - Selected Date Details -->
+            <div class="cve-side-panel">
+              <div class="cve-panel-header">
+                <div class="cve-panel-title">
+                  <span>🔍</span>
+                  Advisory Details
+                </div>
               </div>
-              <div class="cve-stat-box">
-                <div class="cve-stat-number" id="cve-high-count">0</div>
-                <div class="cve-stat-label">High</div>
+              
+              <div class="cve-stats-summary">
+                <div class="cve-stat-box">
+                  <div class="cve-stat-number" id="cve-critical-count">0</div>
+                  <div class="cve-stat-label">Critical</div>
+                </div>
+                <div class="cve-stat-box">
+                  <div class="cve-stat-number" id="cve-high-count">0</div>
+                  <div class="cve-stat-label">High</div>
+                </div>
               </div>
-            </div>
-            
-            <div id="cve-advisory-details" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
-              <div class="cve-no-advisories">
-                Click on a calendar date to view security advisories for that day
+              
+              <div id="cve-advisory-details" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
+                <div class="cve-no-advisories">
+                  Click on a calendar date to view security advisories for that day
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- MSRC Tracker Tab -->
-    <section id="msrc" class="tab-content">
-      <div class="msrc-tracker-container">
-        <div class="msrc-header">
-          <h1>Microsoft Security Response Center</h1>
-          <p>CVE Dashboard - MSRC API Integration Page</p>
-          <div class="msrc-loading" id="msrc-loading">
-            <div class="msrc-spinner"></div>
-          </div>
-        </div>
-
-        <div class="msrc-api-info">
-          <p>This page uses <code>CorsProxy.io</code> to access the MSRC API directly from your browser.</p>
-          <p><strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.</p>
-        </div>
-
-        <div class="msrc-controls">
-          <div class="msrc-stats">
-            <div class="msrc-stat-item">
-              <div class="msrc-stat-number" id="msrc-totalCves">-</div>
-              <div class="msrc-stat-label">Total CVEs</div>
-            </div>
-            <div class="msrc-stat-item">
-              <div class="msrc-stat-number" id="msrc-criticalCount">-</div>
-              <div class="msrc-stat-label">Critical</div>
-            </div>
-            <div class="msrc-stat-item">
-              <div class="msrc-stat-number" id="msrc-apiCalls">0</div>
-              <div class="msrc-stat-label">API Calls</div>
+      <!-- MSRC Tracker Sub-tab -->
+      <div id="msrc" class="cve-sub-tab">
+        <div class="msrc-tracker-container">
+          <div class="msrc-header">
+            <h1>Microsoft Security Response Center</h1>
+            <p>CVE Dashboard - MSRC API Integration Page</p>
+            <div class="msrc-loading" id="msrc-loading">
+              <div class="msrc-spinner"></div>
             </div>
           </div>
-        </div>
 
-        <div class="msrc-demo-section">
-          <h2 style="margin-bottom: 20px; color: #333;">Microsoft Security Updates Browser</h2>
-          
-          <div class="msrc-demo-controls">
-            <button class="msrc-demo-btn" onclick="msrcTool.previousMonth()">← Previous Month</button>
-            <select class="msrc-month-selector" id="msrc-monthSelector" onchange="msrcTool.onMonthSelectorChange()">
-              <!-- Dynamically populated -->
-            </select>
-            <button class="msrc-demo-btn" onclick="msrcTool.nextMonth()">Next Month →</button>
-            <button class="msrc-demo-btn" onclick="msrcTool.fetchMonthData()" style="background: #28a745;">Load Security Updates</button>
+          <div class="msrc-api-info">
+            <p>This page uses <code>CorsProxy.io</code> to access the MSRC API directly from your browser.</p>
+            <p><strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.</p>
           </div>
 
-          <div class="msrc-filter-controls" id="msrc-filterControls" style="display: none;">
-            <div class="msrc-filter-group">
-              <label for="msrc-severityFilter">Severity:</label>
-              <select class="msrc-filter-select" id="msrc-severityFilter" onchange="msrcTool.applyFilters()">
-                <option value="all">All Severities</option>
-                <option value="critical">Critical Only</option>
-                <option value="important">Important Only</option>
-                <option value="moderate">Moderate Only</option>
-                <option value="low">Low Only</option>
+          <div class="msrc-controls">
+            <div class="msrc-stats">
+              <div class="msrc-stat-item">
+                <div class="msrc-stat-number" id="msrc-totalCves">-</div>
+                <div class="msrc-stat-label">Total CVEs</div>
+              </div>
+              <div class="msrc-stat-item">
+                <div class="msrc-stat-number" id="msrc-criticalCount">-</div>
+                <div class="msrc-stat-label">Critical</div>
+              </div>
+              <div class="msrc-stat-item">
+                <div class="msrc-stat-number" id="msrc-apiCalls">0</div>
+                <div class="msrc-stat-label">API Calls</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="msrc-demo-section">
+            <h2 style="margin-bottom: 20px; color: #333;">Microsoft Security Updates Browser</h2>
+            
+            <div class="msrc-demo-controls">
+              <button class="msrc-demo-btn" onclick="msrcTool.previousMonth()">← Previous Month</button>
+              <select class="msrc-month-selector" id="msrc-monthSelector" onchange="msrcTool.onMonthSelectorChange()">
+                <!-- Dynamically populated -->
               </select>
+              <button class="msrc-demo-btn" onclick="msrcTool.nextMonth()">Next Month →</button>
+              <button class="msrc-demo-btn" onclick="msrcTool.fetchMonthData()" style="background: #28a745;">Load Security Updates</button>
             </div>
-            <div class="msrc-filter-group">
-              <label for="msrc-pageSize">Show:</label>
-              <select class="msrc-filter-select" id="msrc-pageSize" onchange="msrcTool.applyFilters()">
-                <option value="20">20 per page</option>
-                <option value="50">50 per page</option>
-                <option value="100">100 per page</option>
-                <option value="all">All results</option>
-              </select>
-            </div>
-            <div class="msrc-filter-group">
-              <button class="msrc-demo-btn" onclick="msrcTool.resetFilters()" style="background: #6c757d;">Reset Filters</button>
-            </div>
-          </div>
 
-          <div id="msrc-resultsSummary" style="display: none;"></div>
-          <div id="msrc-messageArea"></div>
-          
-          <div class="msrc-cve-grid" id="msrc-cveGrid">
-            <div class="msrc-no-data">
-              Select a month and click "Load Security Updates" to fetch CVE data.
+            <div class="msrc-filter-controls" id="msrc-filterControls" style="display: none;">
+              <div class="msrc-filter-group">
+                <label for="msrc-severityFilter">Severity:</label>
+                <select class="msrc-filter-select" id="msrc-severityFilter" onchange="msrcTool.applyFilters()">
+                  <option value="all">All Severities</option>
+                  <option value="critical">Critical Only</option>
+                  <option value="important">Important Only</option>
+                  <option value="moderate">Moderate Only</option>
+                  <option value="low">Low Only</option>
+                </select>
+              </div>
+              <div class="msrc-filter-group">
+                <label for="msrc-pageSize">Show:</label>
+                <select class="msrc-filter-select" id="msrc-pageSize" onchange="msrcTool.applyFilters()">
+                  <option value="20">20 per page</option>
+                  <option value="50">50 per page</option>
+                  <option value="100">100 per page</option>
+                  <option value="all">All results</option>
+                </select>
+              </div>
+              <div class="msrc-filter-group">
+                <button class="msrc-demo-btn" onclick="msrcTool.resetFilters()" style="background: #6c757d;">Reset Filters</button>
+              </div>
             </div>
-          </div>
-          
-          <div class="msrc-pagination" id="msrc-pagination" style="display: none;">
-            <button class="msrc-pagination-btn" id="msrc-prevPage" onclick="msrcTool.changePage(-1)">Previous</button>
-            <span class="msrc-pagination-info" id="msrc-paginationInfo"></span>
-            <button class="msrc-pagination-btn" id="msrc-nextPage" onclick="msrcTool.changePage(1)">Next</button>
+
+            <div id="msrc-resultsSummary" style="display: none;"></div>
+            <div id="msrc-messageArea"></div>
+            
+            <div class="msrc-cve-grid" id="msrc-cveGrid">
+              <div class="msrc-no-data">
+                Select a month and click "Load Security Updates" to fetch CVE data.
+              </div>
+            </div>
+            
+            <div class="msrc-pagination" id="msrc-pagination" style="display: none;">
+              <button class="msrc-pagination-btn" id="msrc-prevPage" onclick="msrcTool.changePage(-1)">Previous</button>
+              <span class="msrc-pagination-info" id="msrc-paginationInfo"></span>
+              <button class="msrc-pagination-btn" id="msrc-nextPage" onclick="msrcTool.changePage(1)">Next</button>
+            </div>
           </div>
         </div>
       </div>
+
     </section>
 
     <!-- UK Foodbanks Tab -->
@@ -1992,27 +2395,62 @@ permalink: /dashboard/
   </div>
 </div>
 
+<!-- NVD Popup Overlay - Moved outside dashboard-content to avoid width restrictions -->
+<div id="nvd-popupOverlay" class="nvd-popup-overlay" onclick="nvdTool.closePopup(event)">
+  <div class="nvd-popup-content" onclick="event.stopPropagation()">
+    <button class="nvd-popup-close" onclick="nvdTool.closePopup()">&times;</button>
+    <div class="nvd-popup-body">
+      <div id="nvd-popupContent"></div>
+    </div>
+  </div>
+</div>
+
 <script>
-  // Tab switching logic
+  // Tab switching logic for primary navigation
   document.querySelectorAll('.dashboard-tabs a').forEach(tabLink => {
     tabLink.addEventListener('click', function(e) {
       e.preventDefault();
+      
+      // Update primary tab styling
       document.querySelectorAll('.dashboard-tabs a').forEach(a => a.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       this.classList.add('active');
+      
+      // Show/hide secondary nav based on CVE tracker
+      const cveSecondaryNav = document.getElementById('cve-secondary-nav');
+      if (this.dataset.tab === 'cve') {
+        cveSecondaryNav.classList.add('show');
+      } else {
+        cveSecondaryNav.classList.remove('show');
+      }
+      
+      // Show the selected tab content
       document.getElementById(this.dataset.tab).classList.add('active');
       
-      // Initialize CVE tool when first accessed
-      if (this.dataset.tab === 'cve' && !window.cveInitialized) {
-        window.cveInitialized = true;
-        setTimeout(() => cveTool.initDashboard(), 100);
+      // Initialize tools when first accessed
+      if (this.dataset.tab === 'cve' && !window.cveToolsInitialized) {
+        window.cveToolsInitialized = true;
+        setTimeout(() => {
+          cveTool.initDashboard();
+          msrcTool.init();
+          nvdTool.init();
+        }, 100);
       }
+    });
+  });
+
+  // Secondary CVE navigation
+  document.querySelectorAll('.cve-secondary-nav a').forEach(cveTabLink => {
+    cveTabLink.addEventListener('click', function(e) {
+      e.preventDefault();
       
-      // Initialize MSRC tool when first accessed
-      if (this.dataset.tab === 'msrc' && !window.msrcInitialized) {
-        window.msrcInitialized = true;
-        setTimeout(() => msrcTool.init(), 100);
-      }
+      // Update secondary tab styling
+      document.querySelectorAll('.cve-secondary-nav a').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('.cve-sub-tab').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Show the selected CVE sub-tab
+      document.getElementById(this.dataset.cveTab).classList.add('active');
     });
   });
 
@@ -2633,10 +3071,394 @@ permalink: /dashboard/
   document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
       closeRecipeModal();
+      nvdTool.closePopup();
     }
   });
 
-  // CVE Tracker functionality
+  // NVD Tool functionality
+  const nvdTool = {
+    currentResults: [],
+    totalResults: 0,
+    currentPage: 0,
+    currentSearch: null,
+
+    init: function() {
+      console.log('Initializing NVD Tool...');
+      this.updatePlaceholder();
+      
+      // Add event listeners
+      document.getElementById('nvd-searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.searchNVD();
+        }
+      });
+    },
+
+    async searchNVD() {
+      const searchType = document.getElementById('nvd-searchType').value;
+      const searchInput = document.getElementById('nvd-searchInput').value.trim();
+      const resultsPerPage = parseInt(document.getElementById('nvd-resultsPerPage').value);
+      const cvssFilter = document.getElementById('nvd-cvssFilter').value;
+      const resultsDiv = document.getElementById('nvd-results');
+      const searchBtn = document.getElementById('nvd-searchBtn');
+      
+      if (!searchInput) {
+        this.showError('Please enter search criteria');
+        return;
+      }
+      
+      // Reset pagination
+      this.currentPage = 0;
+      this.currentResults = [];
+      this.currentSearch = { searchType, searchInput, resultsPerPage, cvssFilter };
+      
+      // Show loading
+      resultsDiv.style.display = 'block';
+      resultsDiv.innerHTML = '<div class="nvd-loading">🔍 Searching NIST NVD database...</div>';
+      searchBtn.disabled = true;
+      
+      try {
+        let apiUrl;
+        
+        switch(searchType) {
+          case 'cve':
+            if (!searchInput.match(/^CVE-\d{4}-\d+$/)) {
+              this.showError('Please enter a valid CVE ID (format: CVE-YYYY-NNNN)');
+              return;
+            }
+            apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${searchInput}`;
+            break;
+            
+          case 'keyword':
+            apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(searchInput)}&resultsPerPage=${resultsPerPage}`;
+            if (cvssFilter) {
+              apiUrl += `&cvssV3Severity=${cvssFilter}`;
+            }
+            break;
+        }
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        this.currentResults = data.vulnerabilities || [];
+        this.totalResults = data.totalResults || 0;
+        
+        this.displayResults();
+        
+      } catch (error) {
+        console.error('NVD API error:', error);
+        this.showError(`Search failed: ${error.message}`);
+      } finally {
+        searchBtn.disabled = false;
+      }
+    },
+
+    displayResults() {
+      const resultsDiv = document.getElementById('nvd-results');
+      
+      if (this.currentResults.length === 0) {
+        this.showError('No vulnerabilities found for your search criteria');
+        return;
+      }
+      
+      let html = '';
+      
+      // Show limitation note for keyword searches
+      if (this.currentSearch.searchType === 'keyword') {
+        html += `
+          <div style="background: #fef7e0; border: 1px solid #f6cc4d; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Search Limitations:</strong> Keyword Search may not find all relevant CVEs - searches description text but not all product names
+          </div>
+        `;
+      }
+      
+      // Search results header
+      html += `
+        <div style="margin-bottom: 25px; padding: 20px; background: #ebf8ff; border-radius: 10px; border-left: 4px solid #3182ce;">
+          <strong>📊 Search Results:</strong> Found ${this.totalResults.toLocaleString()} vulnerabilities
+          <br><small>Showing ${this.currentResults.length} results</small>
+        </div>
+      `;
+      
+      // Add vulnerability cards
+      this.currentResults.forEach(vuln => {
+        const cve = vuln.cve;
+        html += this.createCompactCard(cve);
+      });
+      
+      // Add pagination for multi-page results
+      if (this.totalResults > this.currentSearch.resultsPerPage) {
+        const totalPages = Math.ceil(this.totalResults / this.currentSearch.resultsPerPage);
+        const hasNext = (this.currentPage + 1) * this.currentSearch.resultsPerPage < this.totalResults;
+        
+        html += `
+          <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 10px;">
+            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
+              <button onclick="nvdTool.goToPage(${this.currentPage - 1})" ${this.currentPage === 0 ? 'disabled' : ''} 
+                      style="padding: 10px 20px;">← Previous</button>
+              
+              <span style="color: #4b5563; font-weight: 600;">
+                Page ${this.currentPage + 1} of ${totalPages}
+              </span>
+              
+              <button onclick="nvdTool.goToPage(${this.currentPage + 1})" ${!hasNext ? 'disabled' : ''} 
+                      style="padding: 10px 20px;">Next →</button>
+            </div>
+            
+            <div style="color: #6b7280; font-size: 14px;">
+              Showing ${this.currentResults.length} of ${this.totalResults.toLocaleString()} total results
+            </div>
+          </div>
+        `;
+      }
+      
+      resultsDiv.innerHTML = html;
+    },
+
+    async goToPage(pageNumber) {
+      if (pageNumber < 0) return;
+      
+      const startIndex = pageNumber * this.currentSearch.resultsPerPage;
+      if (startIndex >= this.totalResults) return;
+      
+      this.currentPage = pageNumber;
+      
+      const resultsDiv = document.getElementById('nvd-results');
+      resultsDiv.innerHTML = '<div class="nvd-loading">📖 Loading page ' + (pageNumber + 1) + '...</div>';
+      
+      try {
+        let apiUrl;
+        
+        switch(this.currentSearch.searchType) {
+          case 'keyword':
+            apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(this.currentSearch.searchInput)}&resultsPerPage=${this.currentSearch.resultsPerPage}&startIndex=${startIndex}`;
+            if (this.currentSearch.cvssFilter) {
+              apiUrl += `&cvssV3Severity=${this.currentSearch.cvssFilter}`;
+            }
+            break;
+            
+          default:
+            return;
+        }
+        
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        this.currentResults = data.vulnerabilities || [];
+        
+        this.displayResults();
+        
+        // Scroll to top of results
+        document.getElementById('nvd-results').scrollIntoView({ behavior: 'smooth' });
+        
+      } catch (error) {
+        this.showError(`Failed to load page: ${error.message}`);
+      }
+    },
+
+    createCompactCard(cve) {
+      const cvssData = this.extractCVSSData(cve);
+      const cvssClass = this.getCVSSClass(cvssData.score);
+      const description = cve.descriptions?.find(d => d.lang === 'en')?.value || 'No description available';
+      const publishedDate = cve.published ? new Date(cve.published).toLocaleDateString('en-GB') : 'Unknown';
+      
+      return `
+        <div class="nvd-vulnerability-card" onclick="nvdTool.showCVEDetails('${cve.id.replace(/'/g, "\\'")}')">
+          <div class="nvd-card-header">
+            <div class="nvd-cve-id">${cve.id}</div>
+            ${cvssData.score ? `<div class="nvd-cvss-badge ${cvssClass}">${cvssData.severity} - ${cvssData.score}</div>` : ''}
+          </div>
+          
+          <div class="nvd-card-description">
+            ${description}
+          </div>
+          
+          <div class="nvd-card-meta">
+            <div>
+              <span>📅 ${publishedDate}</span>
+              <span style="margin-left: 15px;">🔗 ${cve.references?.length || 0} refs</span>
+            </div>
+            <div class="nvd-click-hint">Click for details</div>
+          </div>
+        </div>
+      `;
+    },
+
+    showCVEDetails(cveId) {
+      const cve = this.currentResults.find(vuln => vuln.cve.id === cveId)?.cve;
+      if (!cve) return;
+      
+      const cvssData = this.extractCVSSData(cve);
+      const cvssClass = this.getCVSSClass(cvssData.score);
+      const description = cve.descriptions?.find(d => d.lang === 'en')?.value || 'No description available';
+      
+      const publishedDate = cve.published ? new Date(cve.published).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }) : 'Unknown';
+      
+      const modifiedDate = cve.lastModified ? new Date(cve.lastModified).toLocaleDateString('en-GB', {
+        year: 'numeric', 
+        month: 'long',
+        day: 'numeric'
+      }) : 'Unknown';
+      
+      const popupContentHTML = `
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+            <h2 style="color: #2d3748; font-family: 'Monaco', monospace; margin: 0;">${cve.id}</h2>
+            <div style="display: flex; gap: 10px;">
+              ${cvssData.score ? `<div class="nvd-cvss-badge ${cvssClass}">${cvssData.severity} - ${cvssData.score}</div>` : ''}
+              ${cvssData.version ? `<div class="nvd-cvss-badge nvd-cvss-none">CVSS ${cvssData.version}</div>` : ''}
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 25px;">
+            <h3 style="margin-bottom: 15px; color: #374151;">🔍 Full Description</h3>
+            <div style="line-height: 1.6; color: #374151; font-size: 16px; padding: 20px; background: #f8fafc; border-radius: 10px; border-left: 4px solid #667eea;">
+              ${description}
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">📅 PUBLISHED</div>
+              <div style="color: #1f2937;">${publishedDate}</div>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">📄 MODIFIED</div>
+              <div style="color: #1f2937;">${modifiedDate}</div>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">⚡ CVSS SCORE</div>
+              <div style="color: #1f2937;">${cvssData.score || 'Not scored'}</div>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">🎯 SEVERITY</div>
+              <div style="color: #1f2937;">${cvssData.severity || 'Unknown'}</div>
+            </div>
+          </div>
+          
+          ${cvssData.vector ? `
+            <div style="margin-bottom: 25px;">
+              <h3 style="margin-bottom: 15px; color: #374151;">🔢 CVSS Vector</h3>
+              <div style="background: #1a202c; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; word-break: break-all;">
+                ${cvssData.vector}
+              </div>
+            </div>
+          ` : ''}
+          
+          ${cve.references && cve.references.length > 0 ? `
+            <div>
+              <h3 style="margin-bottom: 15px; color: #374151;">🔗 References (${cve.references.length})</h3>
+              <div style="max-height: 200px; overflow-y: auto; background: #f8fafc; padding: 15px; border-radius: 8px;">
+                ${cve.references.map(ref => 
+                  `<a href="${ref.url}" target="_blank" style="display: block; color: #3182ce; text-decoration: none; margin: 5px 0; padding: 8px 12px; background: white; border-radius: 6px; word-break: break-all;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='white'">
+                    ${ref.url.length > 70 ? ref.url.substring(0, 70) + '...' : ref.url}
+                  </a>`
+                ).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      // Set popup content
+      document.getElementById('nvd-popupContent').innerHTML = popupContentHTML;
+      
+      // Show popup using exact same method as recipe modal
+      const popup = document.getElementById('nvd-popupOverlay');
+      popup.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    },
+
+    closePopup(event) {
+      if (event && event.target !== document.getElementById('nvd-popupOverlay')) return;
+      
+      document.getElementById('nvd-popupOverlay').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    },
+
+    extractCVSSData(cve) {
+      let cvssData = { score: null, severity: null, vector: null, version: null };
+      
+      const metrics = cve.metrics;
+      if (metrics?.cvssMetricV31 && metrics.cvssMetricV31.length > 0) {
+        const cvss = metrics.cvssMetricV31[0].cvssData;
+        cvssData = {
+          score: cvss.baseScore,
+          severity: cvss.baseSeverity,
+          vector: cvss.vectorString,
+          version: '3.1'
+        };
+      } else if (metrics?.cvssMetricV30 && metrics.cvssMetricV30.length > 0) {
+        const cvss = metrics.cvssMetricV30[0].cvssData;
+        cvssData = {
+          score: cvss.baseScore,
+          severity: cvss.baseSeverity,
+          vector: cvss.vectorString,
+          version: '3.0'
+        };
+      } else if (metrics?.cvssMetricV2 && metrics.cvssMetricV2.length > 0) {
+        const cvss = metrics.cvssMetricV2[0].cvssData;
+        cvssData = {
+          score: cvss.baseScore,
+          severity: this.getSeverityFromV2Score(cvss.baseScore),
+          vector: cvss.vectorString,
+          version: '2.0'
+        };
+      }
+      
+      return cvssData;
+    },
+
+    getSeverityFromV2Score(score) {
+      if (score >= 7.0) return 'HIGH';
+      if (score >= 4.0) return 'MEDIUM';
+      return 'LOW';
+    },
+
+    getCVSSClass(score) {
+      if (!score) return 'nvd-cvss-none';
+      if (score >= 9.0) return 'nvd-cvss-critical';
+      if (score >= 7.0) return 'nvd-cvss-high';
+      if (score >= 4.0) return 'nvd-cvss-medium';
+      return 'nvd-cvss-low';
+    },
+
+    showError(message) {
+      const resultsDiv = document.getElementById('nvd-results');
+      resultsDiv.style.display = 'block';
+      resultsDiv.innerHTML = `<div class="nvd-error">⚠ ${message}</div>`;
+    },
+
+    updatePlaceholder() {
+      const searchType = document.getElementById('nvd-searchType').value;
+      const input = document.getElementById('nvd-searchInput');
+      
+      switch(searchType) {
+        case 'cve':
+          input.placeholder = 'CVE-2024-3094';
+          break;
+        case 'keyword':
+          input.placeholder = 'log4j, openssl, apache, etc.';
+          break;
+      }
+    }
+  };
+
+  // CVE Tracker functionality (GHSA)
   const cveTool = {
     currentDate: new Date(),
     advisoriesData: [],
@@ -2651,12 +3473,9 @@ permalink: /dashboard/
       if (isVisible) {
         yearPicker.classList.remove('cve-show');
       } else {
-        // Generate year options dynamically based on current date
-        const currentYear = new Date().getFullYear(); // Always use actual current year
-        const displayedYear = this.currentDate.getFullYear(); // Year being displayed
+        const currentYear = new Date().getFullYear();
+        const displayedYear = this.currentDate.getFullYear();
         
-        // Show range: current year -10 to current year +5
-        // This ensures we always have past data and some future flexibility
         const startYear = currentYear - 10;
         const endYear = currentYear + 5;
         
@@ -2680,7 +3499,6 @@ permalink: /dashboard/
       this.loadAdvisoriesForMonth();
     },
 
-    // Calendar generation and management
     generateCalendar: function(year, month) {
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
@@ -2860,7 +3678,6 @@ permalink: /dashboard/
         details.classList.remove('cve-show');
         item.classList.remove('expanded');
       } else {
-        // Close all other details first
         document.querySelectorAll('.cve-advisory-details.cve-show').forEach(el => {
           el.classList.remove('cve-show');
           if (el.closest('.cve-advisory-item')) {
@@ -2873,7 +3690,6 @@ permalink: /dashboard/
       }
     },
 
-    // API functions with improved rate limiting
     loadAdvisoriesForMonth: async function() {
       if (this.isLoading) return;
       this.isLoading = true;
@@ -2942,7 +3758,7 @@ permalink: /dashboard/
         this.updateStats();
         
       } catch (error) {
-        console.error('❌ GitHub CVE API Error:', error);
+        console.error('⚠ GitHub CVE API Error:', error);
         document.getElementById('cve-calendar-content').innerHTML = `
           <div class="cve-error">
             <strong>Unable to load security advisories</strong><br>
@@ -2983,11 +3799,9 @@ permalink: /dashboard/
       document.getElementById('cve-high-count').textContent = highCount;
     },
 
-    // Initialize CVE dashboard
     initDashboard: async function() {
       console.log('🚀 Initializing CVE tracker dashboard...');
       
-      // Add click listener to close year picker when clicking outside
       document.addEventListener('click', (event) => {
         const yearPicker = document.getElementById('cve-year-picker');
         const monthContainer = document.getElementById('cve-current-month-container');
@@ -3012,7 +3826,6 @@ permalink: /dashboard/
     currentPage: 1,
     pageSize: 20,
 
-    // Full month names for MSRC API (it expects full month names)
     monthNames: ['January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'],
 
@@ -3039,12 +3852,10 @@ permalink: /dashboard/
       messageArea.style.display = 'block';
     },
 
-    // Generate month options dynamically - now properly synchronized
     populateMonthSelector: function() {
       const selector = document.getElementById('msrc-monthSelector');
       const options = [];
 
-      // Generate 24 months back from current month for better coverage
       for (let i = 0; i < 24; i++) {
         const date = new Date();
         date.setMonth(date.getMonth() - i);
@@ -3053,7 +3864,6 @@ permalink: /dashboard/
         const monthIndex = date.getMonth();
         const monthName = this.monthNames[monthIndex];
         
-        // MSRC API format: "2024-Aug" (year-shortMonth)
         const shortMonth = monthName.substring(0, 3);
         const apiFormat = `${year}-${shortMonth}`;
         const displayFormat = `${monthName} ${year}`;
@@ -3061,7 +3871,7 @@ permalink: /dashboard/
         options.push({
           value: apiFormat,
           label: displayFormat,
-          date: new Date(date) // Create a copy to avoid reference issues
+          date: new Date(date)
         });
       }
 
@@ -3069,34 +3879,27 @@ permalink: /dashboard/
         `<option value="${opt.value}">${opt.label}</option>`
       ).join('');
 
-      // Set current month as default
       const currentYear = new Date().getFullYear();
       const currentMonthName = this.monthNames[new Date().getMonth()];
       const currentShort = currentMonthName.substring(0, 3);
       const currentApiFormat = `${currentYear}-${currentShort}`;
       
       selector.value = currentApiFormat;
-      
-      // Update currentDate to match the selected option
       this.currentDate = new Date();
     },
 
-    // Handle dropdown selection change
     onMonthSelectorChange: function() {
       const selector = document.getElementById('msrc-monthSelector');
       const selectedValue = selector.value;
       
-      // Parse the selected value (e.g., "2024-Aug")
       const [year, shortMonth] = selectedValue.split('-');
       const monthIndex = this.monthNames.findIndex(month => month.startsWith(shortMonth));
       
-      // Update currentDate to match selection
       this.currentDate = new Date(parseInt(year), monthIndex, 1);
       
       console.log('Month selector changed:', selectedValue, '-> Date:', this.currentDate);
     },
 
-    // Month navigation
     previousMonth: function() {
       this.currentDate.setMonth(this.currentDate.getMonth() - 1);
       this.updateMonthSelector();
@@ -3114,7 +3917,6 @@ permalink: /dashboard/
       const shortMonth = monthName.substring(0, 3);
       const apiFormat = `${year}-${shortMonth}`;
       
-      // Check if this month exists in selector, if not add it
       if (!selector.querySelector(`option[value="${apiFormat}"]`)) {
         const displayFormat = `${monthName} ${year}`;
         const option = new Option(displayFormat, apiFormat);
@@ -3125,12 +3927,10 @@ permalink: /dashboard/
       console.log('Updated month selector to:', apiFormat);
     },
 
-    // Get MSRC URL for a CVE
     getMSRCUrl: function(cveId) {
       return `https://msrc.microsoft.com/update-guide/vulnerability/${cveId}`;
     },
 
-    // Fetch CVE data using CorsProxy.io with enhanced error handling
     fetchMonthData: async function() {
       const monthSelector = document.getElementById('msrc-monthSelector');
       const selectedMonth = monthSelector.value;
@@ -3156,8 +3956,7 @@ permalink: /dashboard/
             'Accept': 'application/json',
             'Origin': window.location.origin
           },
-          // Add timeout to prevent hanging
-          signal: AbortSignal.timeout(30000) // 30 second timeout
+          signal: AbortSignal.timeout(30000)
         });
 
         this.apiCallCount++;
@@ -3184,7 +3983,6 @@ permalink: /dashboard/
 
         const responseText = await response.text();
         
-        // Check if the proxy returned an error page instead of JSON
         if (responseText.trim().startsWith('<') || responseText.includes('<!DOCTYPE')) {
           if (responseText.includes('blocked') || responseText.includes('403') || responseText.includes('access denied')) {
             this.showMessage('Access blocked by CORS proxy. The service may have restrictions in your region. You can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
@@ -3208,7 +4006,6 @@ permalink: /dashboard/
         this.filteredCveData = [...cves];
         this.currentPage = 1;
         
-        // Show filter controls if we have data
         const filterControls = document.getElementById('msrc-filterControls');
         if (filterControls) {
           filterControls.style.display = cves.length > 0 ? 'flex' : 'none';
@@ -3218,13 +4015,11 @@ permalink: /dashboard/
         this.updateStats();
         this.updateResultsSummary();
 
-        // Clear the main message area since we now show results summary
         this.showMessage('', 'info');
 
       } catch (error) {
         console.error('Error fetching CVE data:', error);
         
-        // Provide specific error messages based on error type
         if (error.name === 'AbortError') {
           this.showMessage('Request timed out. The CORS proxy service may be slow or unavailable. You can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
         } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
@@ -3241,7 +4036,6 @@ permalink: /dashboard/
       }
     },
 
-    // Parse MSRC CVRF data structure and filter to only the selected month
     parseMSRCData: function(data) {
       console.log('Parsing MSRC data...');
       
@@ -3253,14 +4047,12 @@ permalink: /dashboard/
       const vulnerabilities = data.Vulnerability;
       const cves = [];
       
-      // Get the selected month/year for filtering
       const selectedMonth = document.getElementById('msrc-monthSelector').value;
       const [selectedYear, selectedShortMonth] = selectedMonth.split('-');
       const selectedMonthIndex = this.monthNames.findIndex(month => month.startsWith(selectedShortMonth));
       
       console.log(`Filtering for month: ${selectedYear}-${selectedShortMonth} (index: ${selectedMonthIndex})`);
       
-      // Get default release date from document tracking
       const defaultReleaseDate = data.DocumentTracking ? 
         new Date(data.DocumentTracking.CurrentReleaseDate || data.DocumentTracking.InitialReleaseDate) : 
         new Date();
@@ -3268,26 +4060,21 @@ permalink: /dashboard/
       vulnerabilities.forEach((vuln, index) => {
         const cveId = vuln.CVE || '';
         
-        // Filter out invalid CVEs
         if (!cveId || !cveId.startsWith('CVE-') || cveId === 'CVE-' || cveId.length < 8) {
           return;
         }
         
-        // Extract title
         let title = 'Security Update';
         if (vuln.Title && vuln.Title.Value) {
           title = vuln.Title.Value;
         }
         
-        // Skip if title is generic/placeholder
         if (title === 'Security Update' || title === '' || title === 'Unknown') {
           return;
         }
 
-        // Try to extract individual CVE date from RevisionHistory
         let cveDate = defaultReleaseDate;
         if (vuln.RevisionHistory && Array.isArray(vuln.RevisionHistory)) {
-          // Find the initial release revision (usually the first one)
           const initialRevision = vuln.RevisionHistory.find(rev => 
             rev.Description && rev.Description.Value && 
             rev.Description.Value.toLowerCase().includes('published')
@@ -3296,12 +4083,10 @@ permalink: /dashboard/
           if (initialRevision && initialRevision.Date) {
             cveDate = new Date(initialRevision.Date);
           } else if (vuln.RevisionHistory.length > 0 && vuln.RevisionHistory[0].Date) {
-            // Fallback to first revision
             cveDate = new Date(vuln.RevisionHistory[0].Date);
           }
         }
 
-        // **KEY FIX**: Only include CVEs that were actually published in the selected month
         const cveYear = cveDate.getFullYear();
         const cveMonth = cveDate.getMonth();
         
@@ -3310,7 +4095,6 @@ permalink: /dashboard/
           return;
         }
 
-        // Extract CVSS score
         let maxScore = null;
         if (vuln.CVSSScoreSets && Array.isArray(vuln.CVSSScoreSets)) {
           vuln.CVSSScoreSets.forEach(scoreSet => {
@@ -3320,7 +4104,6 @@ permalink: /dashboard/
           });
         }
 
-        // Extract severity from Threats
         let severityText = 'Unknown';
         if (vuln.Threats && Array.isArray(vuln.Threats)) {
           const severityThreat = vuln.Threats.find(threat => 
@@ -3336,7 +4119,6 @@ permalink: /dashboard/
           }
         }
 
-        // Extract description from Notes
         let description = '';
         if (vuln.Notes && Array.isArray(vuln.Notes)) {
           const descNote = vuln.Notes.find(note => note.Type === 1);
@@ -3345,7 +4127,6 @@ permalink: /dashboard/
           }
         }
 
-        // Add the CVE since it passed all filters
         cves.push({
           id: cveId,
           title: title,
@@ -3356,14 +4137,12 @@ permalink: /dashboard/
         });
       });
 
-      // Sort by date descending (most recent first)
       cves.sort((a, b) => b.date - a.date);
 
       console.log(`Successfully parsed ${cves.length} CVEs for ${selectedYear}-${selectedShortMonth} (filtered out ${vulnerabilities.length - cves.length} from other months)`);
       return cves;
     },
 
-    // Update results summary
     updateResultsSummary: function() {
       const summaryDiv = document.getElementById('msrc-resultsSummary');
       if (!summaryDiv) return;
@@ -3382,7 +4161,6 @@ permalink: /dashboard/
       summaryDiv.style.display = total > 0 ? 'block' : 'none';
     },
 
-    // Apply filters to CVE data
     applyFilters: function() {
       const severityFilterSelect = document.getElementById('msrc-severityFilter');
       const pageSizeSelect = document.getElementById('msrc-pageSize');
@@ -3392,10 +4170,8 @@ permalink: /dashboard/
       const severityFilter = severityFilterSelect.value;
       const pageSizeValue = pageSizeSelect.value;
       
-      // Update page size
       this.pageSize = pageSizeValue === 'all' ? this.currentCveData.length : parseInt(pageSizeValue);
       
-      // Filter by severity
       this.filteredCveData = this.currentCveData.filter(cve => {
         if (severityFilter === 'all') return true;
         
@@ -3408,7 +4184,6 @@ permalink: /dashboard/
       this.updateResultsSummary();
     },
 
-    // Reset all filters
     resetFilters: function() {
       const severityFilterSelect = document.getElementById('msrc-severityFilter');
       const pageSizeSelect = document.getElementById('msrc-pageSize');
@@ -3423,7 +4198,6 @@ permalink: /dashboard/
       this.updateResultsSummary();
     },
 
-    // Pagination functions
     changePage: function(delta) {
       const totalPages = Math.ceil(this.filteredCveData.length / this.pageSize);
       const newPage = this.currentPage + delta;
@@ -3462,7 +4236,6 @@ permalink: /dashboard/
       }
     },
 
-    // Display CVE data in grid format with clickable links
     displayCVEs: function(cves) {
       const grid = document.getElementById('msrc-cveGrid');
       
@@ -3503,7 +4276,6 @@ permalink: /dashboard/
       grid.innerHTML = html;
     },
 
-    // Get severity category from CVSS score or text
     getSeverityCategory: function(score) {
       if (!score) return 'unknown';
       if (score >= 9.0) return 'critical';
@@ -3512,7 +4284,6 @@ permalink: /dashboard/
       return 'low';
     },
 
-    // Update statistics
     updateStats: function() {
       const criticalCves = this.currentCveData.filter(cve => this.getSeverityCategory(cve.severity) === 'critical');
       
@@ -3520,7 +4291,6 @@ permalink: /dashboard/
       document.getElementById('msrc-criticalCount').textContent = criticalCves.length;
     },
 
-    // Initialize
     init: function() {
       console.log('Initializing MSRC CVE Dashboard...');
       this.updateApiCallCount();
@@ -3529,8 +4299,7 @@ permalink: /dashboard/
   };
 
   // Initialize flags
-  window.cveInitialized = false;
-  window.msrcInitialized = false;
+  window.cveToolsInitialized = false;
 </script>
 </body>
 </html>
