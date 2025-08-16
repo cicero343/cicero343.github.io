@@ -100,11 +100,20 @@ permalink: /dashboard/
 
   @media (max-width: 768px) {
     .cve-secondary-nav a {
-      flex: 0 0 calc(33.333% - 6px);
+      flex: 0 0 calc(50% - 6px);
       padding: 6px 8px;
       margin: 2px;
       font-size: 0.8em;
       text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .cve-secondary-nav a {
+      flex: 0 0 calc(50% - 4px);
+      padding: 5px 4px;
+      margin: 1px;
+      font-size: 0.75em;
     }
   }
 
@@ -1833,6 +1842,489 @@ permalink: /dashboard/
     padding: 30px;
   }
 
+  /* Shodan CVEDB Styles */
+  .shodan-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    margin: -20px;
+    border-radius: 0;
+  }
+
+  .shodan-inner-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .shodan-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 30px 40px;
+    text-align: center;
+  }
+
+  .shodan-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+
+  .shodan-header p {
+    opacity: 0.9;
+    font-size: 1.1em;
+  }
+
+  .shodan-search-section {
+    padding: 40px;
+    background: white;
+    border-bottom: 1px solid #e1e8ed;
+  }
+
+  .shodan-search-controls {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 15px;
+    margin-bottom: 30px;
+    align-items: end;
+  }
+
+  .shodan-form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .shodan-form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-size: 0.9em;
+  }
+
+  .shodan-form-group select,
+  .shodan-form-group input {
+    padding: 12px 15px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+  }
+
+  .shodan-form-group select:focus,
+  .shodan-form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .shodan-search-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 25px;
+  }
+
+  .shodan-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .shodan-search-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .shodan-disclaimer {
+    background: #e8f4fd;
+    border-left: 4px solid #0084ff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-top: 25px;
+    font-size: 0.9em;
+    color: #2c3e50;
+    line-height: 1.5;
+  }
+
+  .shodan-disclaimer code {
+    background: rgba(0, 132, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #0056b3;
+  }
+
+  .shodan-disclaimer strong {
+    color: #0056b3;
+  }
+
+  .shodan-results-section {
+    padding: 40px;
+  }
+
+  .shodan-loading {
+    text-align: center;
+    padding: 60px;
+    color: #6c757d;
+  }
+
+  .shodan-loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+  }
+
+  .shodan-error {
+    background: #fee;
+    color: #c33;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid #c33;
+    margin-bottom: 20px;
+  }
+
+  .shodan-results-summary {
+    background: #e8f4fd;
+    border-left: 5px solid #0084ff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    font-weight: 500;
+  }
+
+  .shodan-vulnerability-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #667eea;
+    transition: all 0.3s ease;
+  }
+
+  .shodan-vulnerability-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+
+  .shodan-cve-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .shodan-cve-id {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #2c3e50;
+  }
+
+  .shodan-badges {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .shodan-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .shodan-badge.kev {
+    background: #ff4757;
+    color: white;
+  }
+
+  .shodan-badge.epss-high {
+    background: #ff6b6b;
+    color: white;
+  }
+
+  .shodan-badge.epss-medium {
+    background: #ffa726;
+    color: white;
+  }
+
+  .shodan-badge.epss-low {
+    background: #66bb6a;
+    color: white;
+  }
+
+  .shodan-badge.cvss {
+    background: #5c6bc0;
+    color: white;
+  }
+
+  .shodan-vulnerability-summary {
+    margin-bottom: 25px;
+    line-height: 1.6;
+    color: #4a5568;
+    font-size: 1.1em;
+  }
+
+  .shodan-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+  }
+
+  .shodan-metric {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+
+  .shodan-metric-value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #2c3e50;
+    display: block;
+  }
+
+  .shodan-metric-label {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-top: 5px;
+  }
+
+  .shodan-proposed-action {
+    background: #e8f5e8;
+    border-left: 4px solid #28a745;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .shodan-proposed-action h4 {
+    color: #155724;
+    margin-bottom: 8px;
+    font-size: 1em;
+  }
+
+  .shodan-proposed-action p {
+    color: #155724;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .shodan-published-date {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-top: 15px;
+  }
+
+  .shodan-additional-info {
+    margin: 25px 0;
+  }
+
+  .shodan-expand-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+  }
+
+  .shodan-expand-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+  }
+
+  .shodan-details-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .shodan-detail-block {
+    margin-bottom: 20px;
+  }
+
+  .shodan-detail-block h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1em;
+  }
+
+  .shodan-cpe-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .shodan-cpe-tag {
+    background: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-family: 'Courier New', monospace;
+  }
+
+  .shodan-cpe-more {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9em;
+  }
+
+  .shodan-references-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .shodan-reference-link {
+    color: #0084ff;
+    text-decoration: none;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 5px;
+    border-left: 3px solid #0084ff;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+  }
+
+  .shodan-reference-link:hover {
+    background: #f0f8ff;
+    transform: translateX(5px);
+  }
+
+  .shodan-ref-more {
+    color: #6c757d;
+    font-style: italic;
+    margin: 5px 0 0 0;
+  }
+
+  .shodan-cvss-versions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .shodan-cvss-tag {
+    background: #5c6bc0;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+
+  .shodan-external-links {
+    display: flex;
+    gap: 15px;
+    margin: 25px 0 15px 0;
+    flex-wrap: wrap;
+  }
+
+  .shodan-external-link {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .shodan-external-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .shodan-no-results {
+    text-align: center;
+    padding: 60px;
+    color: #6c757d;
+  }
+
+  .shodan-no-results h3 {
+    margin-bottom: 15px;
+    color: #495057;
+  }
+
+  .shodan-results-list {
+    display: grid;
+    gap: 20px;
+  }
+
+  .shodan-list-item {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+  }
+
+  .shodan-list-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+
+  .shodan-list-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .shodan-list-item-cve {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.1em;
+  }
+
+  .shodan-list-item-summary {
+    color: #4a5568;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .shodan-list-item-metrics {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+  }
+
+  .shodan-list-metric {
+    background: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+
   /* Combined Dark Mode Overrides */
   [data-theme="dark"] .dashboard-content,
   [data-theme="dark"] .dashboard-tabs a,
@@ -1920,6 +2412,14 @@ permalink: /dashboard/
       grid-template-columns: 1fr;
       gap: 10px;
     }
+
+    .shodan-search-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .shodan-metrics {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media (max-width: 768px) {
@@ -1971,6 +2471,11 @@ permalink: /dashboard/
       margin: 10px;
       width: calc(100% - 20px);
     }
+
+    .shodan-cve-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>
 </head>
@@ -1995,13 +2500,14 @@ permalink: /dashboard/
     <a href="#" class="active" data-cve-tab="nvd">NVD Lookup</a>
     <a href="#" data-cve-tab="ghsa">GHSA Tracker</a>
     <a href="#" data-cve-tab="msrc">MSRC Tracker</a>
+    <a href="#" data-cve-tab="shodan">Shodan CVEDB</a>
   </nav>
 
   <div class="dashboard-content">
 
     <!-- World Clock Tab -->
     <section id="world" class="tab-content active">
-      <h2>📍 World Clock & Weather</h2>
+      <h2>🌍 World Clock & Weather</h2>
       <div class="grid" id="dashboard-grid"></div>
     </section>
 
@@ -2246,6 +2752,43 @@ permalink: /dashboard/
         </div>
       </div>
 
+      <!-- Shodan CVEDB Sub-tab -->
+      <div id="shodan" class="cve-sub-tab">
+        <div class="shodan-container">
+          <div class="shodan-inner-container">
+            <div class="shodan-header">
+              <h1>CVEDB Dashboard</h1>
+              <p>Powered by Shodan - CVE Lookup with EPSS Risk Intelligence & KEV Status</p>
+            </div>
+
+            <div class="shodan-search-section">
+              <div class="shodan-search-controls">
+                <div class="shodan-form-group">
+                  <label for="shodan-searchQuery">CVE ID</label>
+                  <input type="text" id="shodan-searchQuery" placeholder="Enter CVE-2024-1234...">
+                </div>
+                <button class="shodan-search-btn" onclick="shodanTool.performSearch()">Search</button>
+              </div>
+
+              <div class="shodan-disclaimer">
+                This page uses <code>CorsProxy.io</code> to access the CVEDB API directly from your browser.<br>
+                <strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.
+              </div>
+            </div>
+
+            <div class="shodan-results-section">
+              <div id="shodan-results">
+                <div class="shodan-no-results">
+                  <h3>Welcome to CVEDB Dashboard</h3>
+                  <p>Search for vulnerabilities by CVE ID to get started.</p>
+                  <p><strong>Examples:</strong> CVE-2024-21413, CVE-2021-44228, CVE-2023-23397</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- UK Foodbanks Tab -->
@@ -2434,6 +2977,7 @@ permalink: /dashboard/
           cveTool.initDashboard();
           msrcTool.init();
           nvdTool.init();
+          shodanTool.init();
         }, 100);
       }
     });
@@ -4295,6 +4839,256 @@ permalink: /dashboard/
       console.log('Initializing MSRC CVE Dashboard...');
       this.updateApiCallCount();
       this.populateMonthSelector();
+    }
+  };
+
+  // Shodan CVEDB Tool functionality
+  const shodanTool = {
+    allResults: [],
+
+    init: function() {
+      console.log('Initializing Shodan CVEDB Tool...');
+      
+      // Add event listener for Enter key
+      document.getElementById('shodan-searchQuery').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.performSearch();
+        }
+      });
+    },
+
+    async performSearch() {
+      const query = document.getElementById('shodan-searchQuery').value.trim();
+      
+      if (!query) {
+        alert('Please enter a CVE ID');
+        return;
+      }
+
+      const resultsDiv = document.getElementById('shodan-results');
+      resultsDiv.innerHTML = '<div class="shodan-loading">Searching CVEDB...</div>';
+
+      try {
+        // Remove CVE- prefix if present for cleaner lookup
+        const cveId = query.toUpperCase().replace(/^CVE-/, '');
+        const targetUrl = `https://cvedb.shodan.io/cve/CVE-${cveId}`;
+
+        // Use CORS proxy 
+        const corsProxyUrl = 'https://corsproxy.io/';
+        const url = corsProxyUrl + targetUrl;
+
+        console.log('Fetching URL:', url); // Debug log
+        
+        const response = await fetch(url);
+        
+        console.log('Response status:', response.status); // Debug log
+        console.log('Response headers:', response.headers); // Debug log
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.log('Error response:', errorText); // Debug log
+          throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
+        }
+
+        const responseText = await response.text();
+        console.log('Raw response:', responseText); // Debug log
+        
+        const data = JSON.parse(responseText);
+        
+        // Handle single CVE result
+        if (data.cve_id || data.cve) {
+          this.allResults = [data];
+          this.displayResults();
+        } else {
+          throw new Error('CVE not found in database');
+        }
+        
+      } catch (error) {
+        console.error('Search error:', error);
+        resultsDiv.innerHTML = `
+          <div class="shodan-error">
+            <h4>CVE Search Error</h4>
+            <p>${error.message}</p>
+            <p><strong>Common issues:</strong></p>
+            <ul>
+              <li>CVE might not exist in CVEDB (try a well-known CVE like CVE-2024-21413)</li>
+              <li>Check that CVE format is correct (CVE-YYYY-NNNNN)</li>
+              <li>CORS proxy might be temporarily unavailable</li>
+            </ul>
+            <p><strong>Examples:</strong> CVE-2024-21413, CVE-2021-44228, CVE-2023-23397</p>
+          </div>
+        `;
+      }
+    },
+
+    displayResults() {
+      const resultsDiv = document.getElementById('shodan-results');
+      
+      if (this.allResults.length === 0) {
+        resultsDiv.innerHTML = `
+          <div class="shodan-no-results">
+            <h3>No Results Found</h3>
+            <p>CVE not found in the CVEDB database.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Since we only have one result, show detailed view
+      let html = this.renderDetailedCard(this.allResults[0]);
+      resultsDiv.innerHTML = html;
+    },
+
+    renderDetailedCard(item) {
+      const epssLevel = this.getEPSSLevel(item.epss);
+      const publishedDate = item.published_time ? new Date(item.published_time).toLocaleDateString() : 'Unknown';
+
+      return `
+        <div class="shodan-vulnerability-card">
+          <div class="shodan-cve-header">
+            <div class="shodan-cve-id">${item.cve_id || item.cve || 'Unknown CVE'}</div>
+            <div class="shodan-badges">
+              ${item.kev ? '<span class="shodan-badge kev">🚨 KEV</span>' : ''}
+              ${item.epss ? `<span class="shodan-badge epss-${epssLevel}">EPSS ${(item.epss * 100).toFixed(1)}%</span>` : ''}
+              ${item.cvss ? `<span class="shodan-badge cvss">CVSS ${item.cvss}</span>` : ''}
+            </div>
+          </div>
+
+          <div class="shodan-vulnerability-summary">
+            ${item.summary || 'No summary available'}
+          </div>
+
+          <div class="shodan-metrics">
+            <div class="shodan-metric">
+              <span class="shodan-metric-value">${item.cvss || 'N/A'}</span>
+              <div class="shodan-metric-label">CVSS Score</div>
+            </div>
+            <div class="shodan-metric">
+              <span class="shodan-metric-value">${item.epss ? (item.epss * 100).toFixed(2) + '%' : 'N/A'}</span>
+              <div class="shodan-metric-label">EPSS (Exploit Probability)</div>
+            </div>
+            <div class="shodan-metric">
+              <span class="shodan-metric-value">${item.ranking_epss ? (item.ranking_epss * 100).toFixed(1) + '%' : 'N/A'}</span>
+              <div class="shodan-metric-label">EPSS Percentile</div>
+            </div>
+            <div class="shodan-metric">
+              <span class="shodan-metric-value">${item.kev ? 'YES' : 'NO'}</span>
+              <div class="shodan-metric-label">CISA KEV Listed</div>
+            </div>
+          </div>
+
+          ${item.propose_action ? `
+            <div class="shodan-proposed-action">
+              <h4>🔧 Recommended Action</h4>
+              <p>${item.propose_action}</p>
+            </div>
+          ` : ''}
+
+          <div class="shodan-additional-info">
+            <button class="shodan-expand-btn" onclick="shodanTool.toggleDetails('${item.cve_id || item.cve}')">
+              <span id="shodan-toggle-text-${(item.cve_id || item.cve).replace(/[^a-zA-Z0-9]/g, '')}">Show More Details</span>
+            </button>
+            
+            <div class="shodan-details-section" id="shodan-details-${(item.cve_id || item.cve).replace(/[^a-zA-Z0-9]/g, '')}" style="display: none;">
+              
+              ${item.cpes && item.cpes.length > 0 ? `
+                <div class="shodan-detail-block">
+                  <h4>📦 Affected Products (CPEs)</h4>
+                  <div class="shodan-cpe-list">
+                    ${item.cpes.slice(0, 10).map(cpe => `<span class="shodan-cpe-tag">${cpe}</span>`).join('')}
+                    ${item.cpes.length > 10 ? `<span class="shodan-cpe-more">... and ${item.cpes.length - 10} more</span>` : ''}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${item.references && item.references.length > 0 ? `
+                <div class="shodan-detail-block">
+                  <h4>🔗 References & Advisories</h4>
+                  <div class="shodan-references-list">
+                    ${item.references.slice(0, 5).map(ref => `
+                      <a href="${ref}" target="_blank" class="shodan-reference-link">
+                        ${ref.length > 60 ? ref.substring(0, 60) + '...' : ref}
+                      </a>
+                    `).join('')}
+                    ${item.references.length > 5 ? `<p class="shodan-ref-more">... and ${item.references.length - 5} more references</p>` : ''}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${item.cvss_v2 ? `
+                <div class="shodan-detail-block">
+                  <h4>📊 Additional CVSS Scores</h4>
+                  <div class="shodan-cvss-versions">
+                    <span class="shodan-cvss-tag">CVSS v2: ${item.cvss_v2}</span>
+                    ${item.cvss_v3 ? `<span class="shodan-cvss-tag">CVSS v3: ${item.cvss_v3}</span>` : ''}
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="shodan-external-links">
+            <a href="https://cvedb.shodan.io/cve/${item.cve_id || item.cve}" target="_blank" class="shodan-external-link">
+              🌐 View on CVEDB Shodan
+            </a>
+            <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=${item.cve_id || item.cve}" target="_blank" class="shodan-external-link">
+              📋 View on CVE MITRE
+            </a>
+          </div>
+
+          <div class="shodan-published-date">
+            📅 Published: ${publishedDate}
+            ${item.ransomware_campaign && item.ransomware_campaign !== 'Unknown' ? 
+              `| 🦠 Ransomware: ${item.ransomware_campaign}` : ''}
+          </div>
+        </div>
+      `;
+    },
+
+    renderListItem(item) {
+      const epssLevel = this.getEPSSLevel(item.epss);
+      const publishedDate = item.published_time ? new Date(item.published_time).toLocaleDateString() : 'Unknown';
+
+      return `
+        <div class="shodan-list-item">
+          <div class="shodan-list-item-header">
+            <div class="shodan-list-item-cve">${item.cve_id || item.cve || 'Unknown CVE'}</div>
+            <div class="shodan-badges">
+              ${item.kev ? '<span class="shodan-badge kev">KEV</span>' : ''}
+              ${item.epss ? `<span class="shodan-badge epss-${epssLevel}">EPSS ${(item.epss * 100).toFixed(1)}%</span>` : ''}
+            </div>
+          </div>
+          <div class="shodan-list-item-summary">
+            ${item.summary ? item.summary.substring(0, 200) + (item.summary.length > 200 ? '...' : '') : 'No summary available'}
+          </div>
+          <div class="shodan-list-item-metrics">
+            <span class="shodan-list-metric">CVSS: ${item.cvss || 'N/A'}</span>
+            <span class="shodan-list-metric">EPSS: ${item.epss ? (item.epss * 100).toFixed(2) + '%' : 'N/A'}</span>
+            <span class="shodan-list-metric">Published: ${publishedDate}</span>
+          </div>
+        </div>
+      `;
+    },
+
+    getEPSSLevel(epss) {
+      if (!epss) return 'low';
+      if (epss >= 0.7) return 'high';
+      if (epss >= 0.3) return 'medium';
+      return 'low';
+    },
+
+    toggleDetails(cveId) {
+      const cleanId = cveId.replace(/[^a-zA-Z0-9]/g, '');
+      const detailsSection = document.getElementById(`shodan-details-${cleanId}`);
+      const toggleText = document.getElementById(`shodan-toggle-text-${cleanId}`);
+      
+      if (detailsSection.style.display === 'none') {
+        detailsSection.style.display = 'block';
+        toggleText.textContent = 'Hide Details';
+      } else {
+        detailsSection.style.display = 'none';
+        toggleText.textContent = 'Show More Details';
+      }
     }
   };
 
