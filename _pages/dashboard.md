@@ -99,21 +99,31 @@ permalink: /dashboard/
   }
 
   @media (max-width: 768px) {
+    .cve-secondary-nav {
+      padding: 6px 4px;
+    }
+    
     .cve-secondary-nav a {
-      flex: 0 0 calc(50% - 6px);
-      padding: 6px 8px;
+      flex: 0 0 calc(50% - 8px);
+      width: calc(50% - 8px);
+      padding: 10px 4px;
       margin: 2px;
-      font-size: 0.8em;
+      font-size: 0.75em;
       text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
     }
   }
 
   @media (max-width: 480px) {
     .cve-secondary-nav a {
-      flex: 0 0 calc(50% - 4px);
-      padding: 5px 4px;
+      flex: 0 0 calc(50% - 6px);
+      width: calc(50% - 6px);
+      padding: 8px 2px;
       margin: 1px;
-      font-size: 0.75em;
+      font-size: 0.7em;
     }
   }
 
