@@ -1613,13 +1613,17 @@ permalink: /dashboard/
     margin-bottom: 40px;
   }
   
-  .nvd-header h1 {
-    color: #2d3748;
+  .nvd-header h1.auto-adjust {
     font-size: 2.5em;
     margin-bottom: 10px;
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(45deg,
+    hsl(245, 80%, 70%),
+    hsl(270, 60%, 75%),
+    hsl(320, 80%, 70%)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
   .nvd-status-badge {
