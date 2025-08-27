@@ -474,16 +474,15 @@ permalink: /dashboard/
 /* Mobile styles */
 @media (max-width: 576px) {
   .currency-control-panel {
-    padding: 16px;
+    padding: 10px;
   }
-
-.currency-controls {
-  grid-template-columns: 1fr; /* Change this line */
-  gap: 10px;
-}
-
+  .currency-controls {
+    grid-template-columns: 60px 1fr auto; /* Smaller amount field on mobile */
+    gap: 6px;
+  }
   .currency-convert-btn {
-    padding: 12px;
+    padding: 8px 12px;
+    font-size: 13px;
   }
 
   .currency-rate-row {
