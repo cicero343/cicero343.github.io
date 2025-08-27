@@ -292,41 +292,26 @@ permalink: /dashboard/
 }
 
 .currency-controls {
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 80px 1fr auto; /* Amount, Currency, Convert button */
+  gap: 8px;
   align-items: end;
-}
-
-.currency-control-group {
-  flex: 1;
-}
-
-.currency-control-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-  color: #495057;
-  margin-bottom: 4px;
 }
 
 .currency-control-group select, .currency-control-group input {
   width: 100%;
-  padding: 8px 10px;
+  padding: 6px 8px;
   border: 1px solid #ced4da;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 6px;
+  font-size: 14px;
   background: white;
   color: #495057;
-}
-
-.currency-control-group select:focus, .currency-control-group input:focus {
-  outline: none;
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+  box-sizing: border-box;
 }
 
 .currency-control-group input[type="number"] {
   text-align: center;
+  max-width: 80px; /* Constrains the amount field */
 }
 
 .currency-convert-btn {
@@ -492,13 +477,12 @@ permalink: /dashboard/
     padding: 16px;
   }
 
-  .currency-controls {
-    flex-direction: column;
-    gap: 16px;
-  }
+.currency-controls {
+  grid-template-columns: 1fr; /* Change this line */
+  gap: 10px;
+}
 
   .currency-convert-btn {
-    align-self: stretch;
     padding: 12px;
   }
 
@@ -3088,7 +3072,7 @@ permalink: /dashboard/
           <input type="number" id="currencyAmount" value="1" min="0.01" step="0.01">
         </div>
         <div class="currency-control-group">
-          <label>From</label>
+          <label>Currency</label>
           <select id="currencyBaseCurrency">
             <option value="GBP">GBP</option>
             <option value="USD">USD</option>
