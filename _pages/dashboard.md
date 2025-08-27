@@ -258,21 +258,266 @@ permalink: /dashboard/
     }
   }
 
-  /* Exchange Rates specific styles */
-  table caption {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #666;
+ /* Currency Exchange Dashboard Styles */
+.currency-exchange-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 8px 16px 16px 16px;
+}
+
+.currency-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.currency-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 2px;
+}
+
+.currency-header p {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.currency-control-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #e9ecef;
+}
+
+.currency-controls {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.currency-control-group {
+  flex: 1;
+}
+
+.currency-control-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.currency-control-group select, .currency-control-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  color: #495057;
+}
+
+.currency-control-group select:focus, .currency-control-group input:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+.currency-control-group input[type="number"] {
+  text-align: center;
+}
+
+.currency-convert-btn {
+  padding: 8px 14px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.currency-convert-btn:hover {
+  background: #0b5ed7;
+}
+
+.currency-convert-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.currency-rates-container {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+}
+
+.currency-rates-header {
+  background: #f8f9fa;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.currency-base-amount {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.currency-last-updated {
+  font-size: 12px;
+  color: #6c757d;
+  text-align: right;
+}
+
+.currency-rate-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.currency-rate-row:last-child {
+  border-bottom: none;
+}
+
+.currency-rate-row:active {
+  background-color: #f8f9fa;
+}
+
+.currency-flag {
+  width: 24px;
+  height: 18px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.currency-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.currency-code {
+  font-weight: 600;
+  font-size: 15px;
+  color: #212529;
+  line-height: 1.2;
+  min-width: 45px; /* Ensures consistent spacing */
+}
+
+.currency-name {
+  color: #6c757d;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.currency-rate-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.currency-loading, .currency-error {
+  text-align: center;
+  padding: 32px 20px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.currency-error {
+  color: #dc3545;
+  background: #f8d7da;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .currency-header h2 {
+  color: #00ff00 !important;
+}
+
+[data-theme="dark"] .currency-header p {
+  color: #00aa00 !important;
+}
+
+[data-theme="dark"] .currency-control-panel,
+[data-theme="dark"] .currency-rates-container,
+[data-theme="dark"] .currency-rates-header {
+  background: #111 !important;
+  border-color: #333 !important;
+}
+
+[data-theme="dark"] .currency-control-group label,
+[data-theme="dark"] .currency-base-amount,
+[data-theme="dark"] .currency-code {
+  color: #00ff00 !important;
+}
+
+[data-theme="dark"] .currency-control-group select,
+[data-theme="dark"] .currency-control-group input {
+  background: #111 !important;
+  color: #00ff00 !important;
+  border-color: #333 !important;
+}
+
+[data-theme="dark"] .currency-last-updated,
+[data-theme="dark"] .currency-name {
+  color: #00aa00 !important;
+}
+
+[data-theme="dark"] .currency-rate-value {
+  color: #00ff00 !important;
+}
+
+[data-theme="dark"] .currency-convert-btn {
+  background: #006400 !important;
+  color: #00ff00 !important;
+}
+
+/* Mobile styles */
+@media (max-width: 576px) {
+  .currency-control-panel {
+    padding: 16px;
   }
-  
-  img.flag {
-    width: 24px;
-    height: 18px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    vertical-align: middle;
-    margin-right: 0.5rem;
+
+  .currency-controls {
+    flex-direction: column;
+    gap: 16px;
   }
+
+  .currency-convert-btn {
+    align-self: stretch;
+    padding: 12px;
+  }
+
+  .currency-rate-row {
+    padding: 16px;
+  }
+
+  .currency-rates-header {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .currency-last-updated {
+    text-align: left;
+  }
+}
+
 
   /* Foodbanks Finder styles */
   form {
@@ -2829,22 +3074,50 @@ permalink: /dashboard/
     </section>
 
     <!-- Exchange Rates Tab -->
-    <section id="exchange" class="tab-content">
-      <h2>Exchange Rates (Base: GBP)</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Flag</th>
-            <th>Currency Code</th>
-            <th>Rate (vs GBP)</th>
-          </tr>
-        </thead>
-        <tbody id="exchange-body">
-          <!-- Injected by JS -->
-        </tbody>
-        <caption>Rates pulled from Fawaz Exchange API</caption>
-      </table>
-    </section>
+<section id="exchange" class="tab-content">
+  <div class="currency-exchange-container">
+    <div class="currency-header">
+      <h2>Currency Exchange</h2>
+      <p>Real-time exchange rates via Frankfurter API</p>
+    </div>
+
+    <div class="currency-control-panel">
+      <div class="currency-controls">
+        <div class="currency-control-group">
+          <label>Amount</label>
+          <input type="number" id="currencyAmount" value="1" min="0.01" step="0.01">
+        </div>
+        <div class="currency-control-group">
+          <label>From</label>
+          <select id="currencyBaseCurrency">
+            <option value="GBP">GBP</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="JPY">JPY</option>
+            <option value="AUD">AUD</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="CNY">CNY</option>
+          </select>
+        </div>
+        <button class="currency-convert-btn" onclick="convertCurrency()" id="currencyConvertBtn">
+          Convert
+        </button>
+      </div>
+    </div>
+
+    <div class="currency-rates-container">
+      <div class="currency-rates-header">
+        <div class="currency-base-amount" id="currencyBaseAmount">1 GBP equals:</div>
+        <div class="currency-last-updated" id="currencyLastUpdated">Loading...</div>
+      </div>
+
+      <div class="currency-rates-table" id="currencyRatesTable">
+        <div class="currency-loading">Loading exchange rates...</div>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- Food Recipes Tab -->
     <section id="recipes" class="tab-content">
@@ -3198,71 +3471,142 @@ permalink: /dashboard/
     });
   }
 
-  // --- Exchange Rates Script ---
-  const preferredCurrencies = ["usd", "eur", "jpy", "aud", "cad", "inr", "cny", "chf", "zar", "btc", "eth"];
-
-  const currencyToCountry = {
-    usd: "us",
-    eur: "eu",
-    jpy: "jp",
-    aud: "au",
-    cad: "ca",
-    inr: "in",
-    cny: "cn",
-    chf: "ch",
-    zar: "za"
-  };
-
-  async function fetchRates() {
-    const fallbackURL = "https://latest.currency-api.pages.dev/v1/currencies/gbp.json";
-    const mainURL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/gbp.json";
-
-    try {
-      const res = await fetch(mainURL);
-      if (!res.ok) throw new Error("Primary failed");
-      const data = await res.json();
-      updateTable(data.gbp);
-    } catch (err) {
-      console.warn("Falling back to Cloudflare:", err.message);
-      try {
-        const fallbackRes = await fetch(fallbackURL);
-        if (!fallbackRes.ok) throw new Error("Fallback failed");
-        const fallbackData = await fallbackRes.json();
-        updateTable(fallbackData.gbp);
-      } catch (fallbackErr) {
-        document.getElementById("exchange-body").innerHTML = `
-          <tr><td colspan="3">Failed to load exchange rates.</td></tr>`;
-      }
-    }
+  // --- Currency Exchange Script ---
+  const targetCurrencies = [
+    { code: 'GBP', name: 'British Pound', country: 'gb' },
+    { code: 'USD', name: 'US Dollar', country: 'us' },
+    { code: 'EUR', name: 'Euro', country: 'eu' },
+    { code: 'JPY', name: 'Japanese Yen', country: 'jp' },
+    { code: 'AUD', name: 'Australian Dollar', country: 'au' },
+    { code: 'CAD', name: 'Canadian Dollar', country: 'ca' },
+    { code: 'INR', name: 'Indian Rupee', country: 'in' },
+    { code: 'CNY', name: 'Chinese Yuan', country: 'cn' },
+    { code: 'CHF', name: 'Swiss Franc', country: 'ch' },
+    { code: 'ZAR', name: 'South African Rand', country: 'za' },
+    { code: 'SEK', name: 'Swedish Krona', country: 'se' },
+    { code: 'NOK', name: 'Norwegian Krone', country: 'no' }
+  ];
+  
+  function formatNumber(num) {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 4
+    }).format(num);
   }
-
-  function updateTable(rates) {
-    const tbody = document.getElementById("exchange-body");
-    tbody.innerHTML = "";
-
-    preferredCurrencies.forEach(code => {
-      if (rates[code]) {
-        let flagCellContent = '';
-        if (code === 'btc' || code === 'eth') {
-          flagCellContent = '💰';
-        } else {
-          const countryCode = currencyToCountry[code] || "un";
-          const flagUrl = `https://flagcdn.com/w20/${countryCode}.png`;
-          flagCellContent = `<img class="flag" src="${flagUrl}" alt="${code.toUpperCase()} flag">`;
-        }
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${flagCellContent}</td>
-          <td>${code.toUpperCase()}</td>
-          <td>${rates[code].toFixed(4)}</td>
-        `;
-        tbody.appendChild(tr);
-      }
+  
+  function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
   }
-
-  fetchRates();
+  
+  async function convertCurrency() {
+    const amount = parseFloat(document.getElementById('currencyAmount').value);
+    const baseCurrency = document.getElementById('currencyBaseCurrency').value;
+    const convertBtn = document.getElementById('currencyConvertBtn');
+    const ratesTable = document.getElementById('currencyRatesTable');
+    const baseAmount = document.getElementById('currencyBaseAmount');
+    const lastUpdated = document.getElementById('currencyLastUpdated');
+  
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
+      return;
+    }
+  
+    // Show loading state
+    convertBtn.disabled = true;
+    convertBtn.textContent = 'Loading...';
+    ratesTable.innerHTML = '<div class="currency-loading">Fetching latest rates...</div>';
+  
+    try {
+      // Get the symbols we want to convert to (excluding the base currency)
+      const symbols = targetCurrencies
+        .filter(currency => currency.code !== baseCurrency)
+        .map(currency => currency.code)
+        .join(',');
+  
+      const response = await fetch(`https://api.frankfurter.dev/v1/latest?base=${baseCurrency}&symbols=${symbols}`);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      // Update header
+      baseAmount.textContent = `${formatNumber(amount)} ${baseCurrency} equals:`;
+      lastUpdated.textContent = `Updated ${formatDate(data.date)}`;
+  
+      // Build the rates table - exclude the selected base currency
+      let tableHTML = '';
+  
+      targetCurrencies.forEach(currency => {
+        // Skip the base currency since we're showing conversions FROM it
+        if (currency.code === baseCurrency) {
+          return;
+        }
+  
+        if (data.rates[currency.code]) {
+          const rate = data.rates[currency.code];
+          const convertedAmount = amount * rate;
+          const flagUrl = `https://flagcdn.com/w20/${currency.country}.png`;
+  
+          tableHTML += `
+            <div class="currency-rate-row">
+              <img class="currency-flag" src="${flagUrl}" alt="${currency.code} flag" loading="lazy">
+              <div class="currency-info">
+                <div class="currency-code">${currency.code}</div>
+                <div class="currency-name">(${currency.name})</div>
+              </div>
+              <div class="currency-rate-value">${formatNumber(convertedAmount)}</div>
+            </div>
+          `;
+        }
+      });
+  
+      ratesTable.innerHTML = tableHTML;
+  
+    } catch (error) {
+      console.error('Error fetching exchange rates:', error);
+      ratesTable.innerHTML = `<div class="currency-error">Failed to load rates. Please try again.</div>`;
+    } finally {
+      convertBtn.disabled = false;
+      convertBtn.textContent = 'Convert';
+    }
+  }
+  
+  // Load default rates on page load
+  if (typeof window !== 'undefined') {
+    const originalOnLoad = window.onload;
+    window.onload = function() {
+      if (originalOnLoad) originalOnLoad();
+      // Only convert if currency elements exist
+      if (document.getElementById('currencyAmount')) {
+        convertCurrency();
+      }
+    };
+  }
+  
+  // Allow Enter key to trigger conversion
+  document.addEventListener('DOMContentLoaded', function() {
+    const amountInput = document.getElementById('currencyAmount');
+    const baseCurrencySelect = document.getElementById('currencyBaseCurrency');
+  
+    if (amountInput) {
+      amountInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          convertCurrency();
+        }
+      });
+    }
+  
+    // Auto-convert when base currency changes
+    if (baseCurrencySelect) {
+      baseCurrencySelect.addEventListener('change', convertCurrency);
+    }
+  });  
 
   // --- Foodbanks Finder Script ---
   // Haversine formula to calculate distance between 2 lat/lng points in miles
