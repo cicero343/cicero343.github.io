@@ -3397,7 +3397,7 @@ permalink: /dashboard/
 <section id="domain" class="tab-content">
   <div class="domain-container">
     <div class="domain-header">
-      <h1>🔍 Domain Intelligence</h1>
+      <h1>🔍 Domain Lookup</h1>
       <p>Domain analysis using Cloudflare DNS over HTTPS, crt.sh Certificate Transparency, and Wayback Machine API</p>
     </div>
 
