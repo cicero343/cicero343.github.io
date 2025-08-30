@@ -127,6 +127,65 @@ permalink: /dashboard/
     }
   }
 
+/* Secondary Tools Navigation */
+  .tools-secondary-nav {
+    display: none;
+    justify-content: center;
+    background: #1976d2;
+    padding: 8px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .tools-secondary-nav.show {
+    display: flex;
+  }
+
+  .tools-secondary-nav a {
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    margin: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .tools-secondary-nav a.active,
+  .tools-secondary-nav a:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  @media (max-width: 768px) {
+  .tools-secondary-nav {
+      padding: 6px 4px;
+    }
+    
+  .tools-secondary-nav a {
+      flex: 0 0 calc(50% - 8px);
+      width: calc(50% - 8px);
+      padding: 10px 4px;
+      margin: 2px;
+      font-size: 0.75em;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-sizing: border-box;
+    }
+  }
+
+  @media (max-width: 480px) {
+  .tools-secondary-nav a {
+      flex: 0 0 calc(50% - 6px);
+      width: calc(50% - 6px);
+      padding: 8px 2px;
+      margin: 1px;
+      font-size: 0.7em;
+    }
+  }
+
   .dashboard-content {
     max-width: 1000px;
     margin: 30px auto;
@@ -150,6 +209,15 @@ permalink: /dashboard/
   }
 
   .cve-sub-tab.active {
+    display: block;
+  }
+
+  /* Tools Sub-tab styles */
+  .tools-sub-tab {
+    display: none;
+  }
+
+  .tools-sub-tab.active {
     display: block;
   }
 
@@ -2732,9 +2800,7 @@ permalink: /dashboard/
     <a href="#" data-tab="foodbanks">UK Foodbanks</a>
     <a href="#" data-tab="exchange">Exchange Rates</a>
     <a href="#" data-tab="recipes">Food Recipes</a>
-    <a href="#" data-tab="notes">Notes</a>
-    <a href="#" data-tab="sheet">Spreadsheet</a>
-    <a href="#" data-tab="canvas">Canvas</a>
+    <a href="#" data-tab="tools">Notes & Tools</a>
   </nav>
 
   <!-- Secondary CVE Navigation -->
@@ -2744,6 +2810,13 @@ permalink: /dashboard/
     <a href="#" data-cve-tab="msrc">MSRC Tracker</a>
     <a href="#" data-cve-tab="shodan">Shodan CVEDB</a>
   </nav>
+
+  <!-- Secondary Tools Navigation -->
+<nav class="tools-secondary-nav" id="tools-secondary-nav">
+  <a href="#" class="active" data-tools-tab="notes">Notes</a>
+  <a href="#" data-tools-tab="sheet">Spreadsheet</a>
+  <a href="#" data-tools-tab="canvas">Canvas</a>
+</nav>
 
   <div class="dashboard-content">
 
@@ -3154,59 +3227,58 @@ permalink: /dashboard/
       </div>
     </section>
 
-    <!-- Notes Tab -->
-    <section id="notes" class="tab-content">
-      <h2>Quick Notes</h2>
-      <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
-      <button class="export-btn" onclick="exportText('notesArea', 'notes.txt')">Export Notes</button>
-    </section>
-
-    <!-- Spreadsheet Tab -->
-    <section id="sheet" class="tab-content">
-      <h2>Spreadsheet</h2>
-      <button class="table-btn" onclick="addRow()">Add Row</button>
-      <button class="table-btn" onclick="addColumn()">Add Column</button>
-      <button class="export-btn" onclick="exportCSV()">Export CSV</button>
-
-      <table id="spreadsheet">
-        <thead>
-          <tr id="header-row">
-            <th contenteditable="true">Item</th>
-            <th contenteditable="true">Quantity</th>
-            <th contenteditable="true">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td contenteditable="true">Apples</td>
-            <td contenteditable="true">10</td>
-            <td contenteditable="true">Fresh</td>
-          </tr>
-          <tr>
-            <td contenteditable="true">Bananas</td>
-            <td contenteditable="true">5</td>
-            <td contenteditable="true">Ripe</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- Canvas Tab -->
-    <section id="canvas" class="tab-content">
-      <h2>Canvas Drawing Tool</h2>
-      <div class="canvas-controls">
-        <label>Color: <input type="color" id="colorPicker" value="#000000"></label>
-        <label>Size: <input type="range" id="brushSize" min="1" max="50" value="5"></label>
-      </div>
-      <canvas id="drawCanvas" width="800" height="400"></canvas>
-      <div class="canvas-controls">
-        <button onclick="clearCanvas()">Clear</button>
-        <button onclick="saveImage()">Export PNG</button>
-      </div>
-    </section>
-
+<!-- Notes & Tools Tab -->
+<section id="tools" class="tab-content">
+  <div id="notes" class="tools-sub-tab active">
+    <h2>Quick Notes</h2>
+    <textarea id="notesArea" placeholder="Write your notes here..."></textarea>
+    <button class="export-btn" onclick="exportText('notesArea', 'notes.txt')">Export Notes</button>
   </div>
-</div>
+
+  <div id="sheet" class="tools-sub-tab">
+    <h2>Spreadsheet</h2>
+    <button class="table-btn" onclick="addRow()">Add Row</button>
+    <button class="table-btn" onclick="addColumn()">Add Column</button>
+    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+    <table id="spreadsheet">
+      <thead>
+        <tr id="header-row">
+          <th contenteditable="true">Item</th>
+          <th contenteditable="true">Quantity</th>
+          <th contenteditable="true">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td contenteditable="true">Apples</td>
+          <td contenteditable="true">10</td>
+          <td contenteditable="true">Fresh</td>
+        </tr>
+        <tr>
+          <td contenteditable="true">Bananas</td>
+          <td contenteditable="true">5</td>
+          <td contenteditable="true">Ripe</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="canvas" class="tools-sub-tab">
+    <h2>Canvas Drawing Tool</h2>
+    <div class="canvas-controls">
+      <label>Color: <input type="color" id="colorPicker" value="#000000"></label>
+      <label>Size: <input type="range" id="brushSize" min="1" max="50" value="5"></label>
+    </div>
+    <canvas id="drawCanvas" width="700" height="400"></canvas>
+    <div class="canvas-controls">
+      <button onclick="clearCanvas()">Clear</button>
+      <button onclick="saveImage()">Export PNG</button>
+    </div>
+  </div>
+</section>
+
+  </div> <!-- Close dashboard-content -->
+</div> <!-- Close dashboard-app -->
 
 <!-- NVD Popup Overlay - Moved outside dashboard-content to avoid width restrictions -->
 <div id="nvd-popupOverlay" class="nvd-popup-overlay" onclick="nvdTool.closePopup(event)">
@@ -3219,54 +3291,82 @@ permalink: /dashboard/
 </div>
 
 <script>
-  // Tab switching logic for primary navigation
-  document.querySelectorAll('.dashboard-tabs a').forEach(tabLink => {
-    tabLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Update primary tab styling
-      document.querySelectorAll('.dashboard-tabs a').forEach(a => a.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      this.classList.add('active');
-      
-      // Show/hide secondary nav based on CVE tracker
-      const cveSecondaryNav = document.getElementById('cve-secondary-nav');
-      if (this.dataset.tab === 'cve') {
-        cveSecondaryNav.classList.add('show');
-      } else {
-        cveSecondaryNav.classList.remove('show');
-      }
-      
-      // Show the selected tab content
-      document.getElementById(this.dataset.tab).classList.add('active');
-      
-      // Initialize tools when first accessed
-      if (this.dataset.tab === 'cve' && !window.cveToolsInitialized) {
-        window.cveToolsInitialized = true;
-        setTimeout(() => {
-          cveTool.initDashboard();
-          msrcTool.init();
-          nvdTool.init();
-          shodanTool.init();
-        }, 100);
-      }
-    });
-  });
 
-  // Secondary CVE navigation
-  document.querySelectorAll('.cve-secondary-nav a').forEach(cveTabLink => {
-    cveTabLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      // Update secondary tab styling
-      document.querySelectorAll('.cve-secondary-nav a').forEach(a => a.classList.remove('active'));
-      document.querySelectorAll('.cve-sub-tab').forEach(c => c.classList.remove('active'));
-      this.classList.add('active');
-      
-      // Show the selected CVE sub-tab
-      document.getElementById(this.dataset.cveTab).classList.add('active');
-    });
+// Tab switching logic for primary navigation
+document.querySelectorAll('.dashboard-tabs a').forEach(tabLink => {
+  tabLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Update primary tab styling
+    document.querySelectorAll('.dashboard-tabs a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    
+    // Show/hide secondary navs
+    const cveSecondaryNav = document.getElementById('cve-secondary-nav');
+    const toolsSecondaryNav = document.getElementById('tools-secondary-nav');
+
+    if (this.dataset.tab === 'cve') {
+      cveSecondaryNav.classList.add('show');
+      toolsSecondaryNav.classList.remove('show');
+    } else if (this.dataset.tab === 'tools') {
+      toolsSecondaryNav.classList.add('show');
+      cveSecondaryNav.classList.remove('show');
+    } else {
+      cveSecondaryNav.classList.remove('show');
+      toolsSecondaryNav.classList.remove('show');
+    }
+    
+    // Show the selected tab content
+    document.getElementById(this.dataset.tab).classList.add('active');
+    
+    // Initialize tools when first accessed
+    if (this.dataset.tab === 'cve' && !window.cveToolsInitialized) {
+      window.cveToolsInitialized = true;
+      setTimeout(() => {
+        cveTool.initDashboard();
+        msrcTool.init();
+        nvdTool.init();
+        shodanTool.init();
+      }, 100);
+    }
   });
+});
+
+// Secondary CVE navigation
+document.querySelectorAll('.cve-secondary-nav a').forEach(cveTabLink => {
+  cveTabLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Update secondary tab styling
+    document.querySelectorAll('.cve-secondary-nav a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.cve-sub-tab').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    
+    // Show the selected CVE sub-tab
+    document.getElementById(this.dataset.cveTab).classList.add('active');
+  });
+});
+
+// Secondary Tools navigation
+document.querySelectorAll('.tools-secondary-nav a').forEach(toolsTabLink => {
+  toolsTabLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Update secondary tab styling
+    document.querySelectorAll('.tools-secondary-nav a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.tools-sub-tab').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    
+// Show the selected tools sub-tab
+const targetTab = document.getElementById(this.dataset.toolsTab);
+if (targetTab) {
+  targetTab.classList.add('active');
+} else {
+  console.error('Target tab not found:', this.dataset.toolsTab);
+}
+  });
+});
 
   // Export functions for notes
   function exportText(id, filename) {
