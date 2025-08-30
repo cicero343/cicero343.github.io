@@ -496,49 +496,6 @@ permalink: /dashboard/
   background: #f8d7da;
 }
 
-/* Dark mode styles */
-[data-theme="dark"] .currency-header h2 {
-  color: #00ff00 !important;
-}
-
-[data-theme="dark"] .currency-header p {
-  color: #00aa00 !important;
-}
-
-[data-theme="dark"] .currency-control-panel,
-[data-theme="dark"] .currency-rates-container,
-[data-theme="dark"] .currency-rates-header {
-  background: #111 !important;
-  border-color: #333 !important;
-}
-
-[data-theme="dark"] .currency-control-group label,
-[data-theme="dark"] .currency-base-amount,
-[data-theme="dark"] .currency-code {
-  color: #00ff00 !important;
-}
-
-[data-theme="dark"] .currency-control-group select,
-[data-theme="dark"] .currency-control-group input {
-  background: #111 !important;
-  color: #00ff00 !important;
-  border-color: #333 !important;
-}
-
-[data-theme="dark"] .currency-last-updated,
-[data-theme="dark"] .currency-name {
-  color: #00aa00 !important;
-}
-
-[data-theme="dark"] .currency-rate-value {
-  color: #00ff00 !important;
-}
-
-[data-theme="dark"] .currency-convert-btn {
-  background: #006400 !important;
-  color: #00ff00 !important;
-}
-
 /* Mobile styles */
 @media (max-width: 576px) {
   .currency-control-panel {
@@ -568,7 +525,6 @@ permalink: /dashboard/
     text-align: left;
   }
 }
-
 
   /* Foodbanks Finder styles */
   form {
@@ -954,6 +910,176 @@ permalink: /dashboard/
     
     .ingredients-list {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Domain Intelligence Styles */
+  .domain-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  
+  .domain-header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .domain-search-section {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .domain-search-box {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  #domain-input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  #analyze-btn {
+    padding: 12px 25px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  #analyze-btn:hover {
+    background: #2980b9;
+  }
+  
+  #analyze-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+  }
+  
+  .domain-results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .domain-result-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .domain-card-header {
+    background: #34495e;
+    color: white;
+    padding: 15px;
+    font-weight: bold;
+  }
+  
+  .domain-card-content {
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .domain-dns-record {
+    background: #ecf0f1;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+  
+  .domain-cert-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+  }
+  
+  .domain-cert-item:last-child {
+    border-bottom: none;
+  }
+  
+  .domain-cert-cn {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  .domain-cert-dates {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin: 5px 0;
+  }
+  
+  .domain-cert-issuer {
+    font-size: 12px;
+    color: #27ae60;
+  }
+  
+  .domain-archive-info {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .domain-archive-link {
+    display: inline-block;
+    background: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .domain-archive-link:hover {
+    background: #c0392b;
+  }
+  
+  .domain-loading {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    padding: 20px;
+  }
+  
+  .domain-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+  }
+  
+  .domain-status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .domain-status-online { background: #27ae60; }
+  .domain-status-offline { background: #e74c3c; }
+  
+  @media (max-width: 768px) {
+    .domain-results-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .domain-search-box {
+      flex-direction: column;
     }
   }
 
@@ -2635,6 +2761,49 @@ permalink: /dashboard/
     font-weight: 600;
   }
 
+  /* Dark mode styles for Currency Exchange */
+  [data-theme="dark"] .currency-header h2 {
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .currency-header p {
+    color: #00aa00 !important;
+  }
+
+  [data-theme="dark"] .currency-control-panel,
+  [data-theme="dark"] .currency-rates-container,
+  [data-theme="dark"] .currency-rates-header {
+    background: #111 !important;
+    border-color: #333 !important;
+  }
+
+  [data-theme="dark"] .currency-control-group label,
+  [data-theme="dark"] .currency-base-amount,
+  [data-theme="dark"] .currency-code {
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .currency-control-group select,
+  [data-theme="dark"] .currency-control-group input {
+    background: #111 !important;
+    color: #00ff00 !important;
+    border-color: #333 !important;
+  }
+
+  [data-theme="dark"] .currency-last-updated,
+  [data-theme="dark"] .currency-name {
+    color: #00aa00 !important;
+  }
+
+  [data-theme="dark"] .currency-rate-value {
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .currency-convert-btn {
+    background: #006400 !important;
+    color: #00ff00 !important;
+  }
+
   /* Combined Dark Mode Overrides */
   [data-theme="dark"] .dashboard-content,
   [data-theme="dark"] .dashboard-tabs a,
@@ -2677,6 +2846,45 @@ permalink: /dashboard/
   [data-theme="dark"] .recipe-modal-body {
     background-color: #111 !important;
     color: #00ff00 !important;
+  }
+
+  /* Dark mode styles for Domain Intelligence */
+  [data-theme="dark"] .domain-container,
+  [data-theme="dark"] .domain-header,
+  [data-theme="dark"] .domain-search-section,
+  [data-theme="dark"] .domain-result-card,
+  [data-theme="dark"] .domain-card-header,
+  [data-theme="dark"] .domain-card-content {
+    background: #111 !important;
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] #domain-input {
+    background: #111 !important;
+    color: #00ff00 !important;
+    border-color: #333 !important;
+  }
+
+  [data-theme="dark"] #analyze-btn {
+    background: #006400 !important;
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .domain-dns-record {
+    background: #222 !important;
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .domain-cert-cn {
+    color: #00ff00 !important;
+  }
+
+  [data-theme="dark"] .domain-cert-dates {
+    color: #00aa00 !important;
+  }
+
+  [data-theme="dark"] .domain-cert-issuer {
+    color: #00aa00 !important;
   }
 
   @media (max-width: 1200px) {
@@ -2786,6 +2994,14 @@ permalink: /dashboard/
       flex-direction: column;
       align-items: flex-start;
     }
+
+    .domain-results-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .domain-search-box {
+      flex-direction: column;
+    }
   }
 </style>
 </head>
@@ -2799,6 +3015,7 @@ permalink: /dashboard/
     <a href="#" data-tab="cve">CVE Tracker</a>
     <a href="#" data-tab="foodbanks">UK Foodbanks</a>
     <a href="#" data-tab="exchange">Exchange Rates</a>
+    <a href="#" data-tab="domain">Domain Lookup</a>
     <a href="#" data-tab="recipes">Food Recipes</a>
     <a href="#" data-tab="tools">Notes & Tools</a>
   </nav>
@@ -3134,7 +3351,7 @@ permalink: /dashboard/
   <div class="currency-exchange-container">
     <div class="currency-header">
       <h2>Currency Exchange</h2>
-      <p>Exchange rates via Frankfurter API</p>
+      <p>Real-time exchange rates via Frankfurter API</p>
     </div>
 
     <div class="currency-control-panel">
@@ -3174,6 +3391,55 @@ permalink: /dashboard/
     </div>
   </div>
 </section>
+
+
+<!-- Domain Lookup Tab -->
+<section id="domain" class="tab-content">
+  <div class="domain-container">
+    <div class="domain-header">
+      <h1>🔍 Domain Intelligence</h1>
+      <p>Domain analysis using Cloudflare DNS over HTTPS, crt.sh Certificate Transparency, and Wayback Machine API</p>
+    </div>
+
+    <div class="domain-search-section">
+      <div class="domain-search-box">
+        <input type="text" id="domain-input" placeholder="Enter domain (e.g., google.com)" value="">
+        <button id="analyze-btn" onclick="analyzeDomain()">Analyze Domain</button>
+      </div>
+    </div>
+
+    <div class="domain-results-grid" id="results-grid" style="display: none;">
+      <div class="domain-result-card">
+        <div class="domain-card-header">🌐 DNS Resolution</div>
+        <div class="domain-card-content" id="dns-content">
+          <div class="domain-loading">Enter a domain to analyze...</div>
+        </div>
+      </div>
+
+      <div class="domain-result-card">
+        <div class="domain-card-header">🔒 SSL Certificates</div>
+        <div class="domain-card-content" id="cert-content">
+          <div class="domain-loading">Enter a domain to analyze...</div>
+        </div>
+      </div>
+
+      <div class="domain-result-card">
+        <div class="domain-card-header">📚 Archive History</div>
+        <div class="domain-card-content" id="archive-content">
+          <div class="domain-loading">Enter a domain to analyze...</div>
+        </div>
+      </div>
+
+      <div class="domain-result-card">
+        <div class="domain-card-header">📊 Domain Summary</div>
+        <div class="domain-card-content" id="summary-content">
+          <div class="domain-loading">Enter a domain to analyze...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <!-- Food Recipes Tab -->
     <section id="recipes" class="tab-content">
@@ -5535,6 +5801,188 @@ if (targetTab) {
 
   // Initialize flags
   window.cveToolsInitialized = false;
+
+  // Domain Intelligence script
+          let currentDomain = '';
+
+        // Main analysis function
+        async function analyzeDomain() {
+            const domain = document.getElementById('domain-input').value.trim();
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+
+            // Clean domain input
+            currentDomain = domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+            
+            // Show results grid and disable button
+            document.getElementById('results-grid').style.display = 'grid';
+            document.getElementById('analyze-btn').disabled = true;
+            document.getElementById('analyze-btn').textContent = 'Analyzing...';
+
+            // Reset all content areas to loading
+            const contentAreas = ['dns-content', 'cert-content', 'archive-content', 'summary-content'];
+            contentAreas.forEach(id => {
+                document.getElementById(id).innerHTML = '<div class="loading">Analyzing...</div>';
+            });
+
+            // Run all analyses in parallel
+            await Promise.all([
+                analyzeDNS(),
+                analyzeCertificates(),
+                analyzeArchive(),
+                generateSummary()
+            ]);
+
+            // Re-enable button
+            document.getElementById('analyze-btn').disabled = false;
+            document.getElementById('analyze-btn').textContent = 'Analyze Domain';
+        }
+
+        // DNS Analysis
+        async function analyzeDNS() {
+            try {
+                const response = await fetch(`https://cloudflare-dns.com/dns-query?name=${currentDomain}&type=A`, {
+                    headers: { 'Accept': 'application/dns-json' }
+                });
+                const data = await response.json();
+                
+                let html = '';
+                if (data.Status === 0 && data.Answer) {
+                    html += `<div><span class="domain-status-indicator domain-status-online"></span><strong>Domain Resolves</strong></div>`;
+                    html += `<h4>IP Addresses (${data.Answer.length}):</h4>`;
+                    data.Answer.forEach(record => {
+                        html += `<div class="domain-dns-record">${record.data} (TTL: ${record.TTL}s)</div>`;
+                    });
+                } else {
+                    html += `<div><span class="status-indicator status-offline"></span><strong>Domain Does Not Resolve</strong></div>`;
+                    html += `<div class="error">No A records found for ${currentDomain}</div>`;
+                }
+                
+                document.getElementById('dns-content').innerHTML = html;
+            } catch (error) {
+                document.getElementById('dns-content').innerHTML = 
+                    `<div class="error">DNS lookup failed: ${error.message}</div>`;
+            }
+        }
+
+        // Certificate Analysis
+        async function analyzeCertificates() {
+            try {
+                const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(`https://crt.sh/?q=${currentDomain}&output=json`)}`);
+                const data = await response.json();
+                
+                // Store certificate count globally for summary
+                window.certificateCount = (data && data.length > 0) ? data.length : 0;
+                
+                let html = '';
+                if (data && data.length > 0) {
+                    // Sort by most recent first
+                    const sortedCerts = data.sort((a, b) => new Date(b.entry_timestamp) - new Date(a.entry_timestamp));
+                    const recentCerts = sortedCerts.slice(0, 10); // Show top 10
+                    
+                    html += `<div><strong>Found ${data.length} certificates (showing 10 most recent)</strong></div><br>`;
+                    
+                    recentCerts.forEach(cert => {
+                        const entryDate = new Date(cert.entry_timestamp).toLocaleDateString();
+                        const notBefore = new Date(cert.not_before).toLocaleDateString();
+                        const notAfter = new Date(cert.not_after).toLocaleDateString();
+                        
+                        html += `<div class="domain-cert-item">`;
+                        html += `<div class="domain-cert-cn">${cert.common_name}</div>`;
+                        html += `<div class="domain-cert-dates">Valid: ${notBefore} - ${notAfter}</div>`;
+                        html += `<div class="domain-cert-issuer">Issuer: ${cert.issuer_name.split(',')[0]}</div>`;
+                        html += `<div class="domain-cert-dates">Logged: ${entryDate}</div>`;
+                        html += `</div>`;
+                    });
+                } else {
+                    html = '<div class="error">No certificates found in transparency logs</div>';
+                }
+                
+                document.getElementById('cert-content').innerHTML = html;
+            } catch (error) {
+                window.certificateCount = 0;
+                document.getElementById('cert-content').innerHTML = 
+                    `<div class="error">Certificate lookup failed: ${error.message}</div>`;
+            }
+        }
+
+        // Wayback Machine Analysis
+        async function analyzeArchive() {
+            try {
+                const response = await fetch(`https://archive.org/wayback/available?url=https://${currentDomain}`);
+                const data = await response.json();
+                
+                let html = '';
+                if (data.archived_snapshots && data.archived_snapshots.closest && data.archived_snapshots.closest.available) {
+                    const snapshot = data.archived_snapshots.closest;
+                    const archiveDate = new Date(
+                        snapshot.timestamp.substr(0,4) + '-' + 
+                        snapshot.timestamp.substr(4,2) + '-' + 
+                        snapshot.timestamp.substr(6,2)
+                    ).toLocaleDateString();
+                    
+                    html += `<div class="domain-archive-info">`;
+                    html += `<div><span class="status-indicator status-online"></span><strong>Archive Available</strong></div>`;
+                    html += `<div><strong>Last Archived:</strong> ${archiveDate}</div>`;
+                    html += `<a href="${snapshot.url}" target="_blank" class="domain-archive-link">View Archive</a>`;
+                    html += `</div>`;
+                } else {
+                    html += `<div class="domain-archive-info">`;
+                    html += `<div><span class="status-indicator status-offline"></span><strong>No Archive Found</strong></div>`;
+                    html += `<div>This domain has not been archived by the Wayback Machine</div>`;
+                    html += `</div>`;
+                }
+                
+                document.getElementById('archive-content').innerHTML = html;
+            } catch (error) {
+                document.getElementById('archive-content').innerHTML = 
+                    `<div class="error">Archive lookup failed: ${error.message}</div>`;
+            }
+        }
+
+        // Generate Summary
+        async function generateSummary() {
+            // Wait a moment for other analyses to complete
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            let html = `<div><strong>Domain:</strong> ${currentDomain}</div><br>`;
+            
+            // Check DNS status
+            const dnsContent = document.getElementById('dns-content').innerHTML;
+            const dnsOnline = dnsContent.includes('status-online');
+            
+            // Get certificate count from global variable
+            const certCount = window.certificateCount || 0;
+            
+            // Check archive status
+            const archiveContent = document.getElementById('archive-content').innerHTML;
+            const archiveAvailable = archiveContent.includes('status-online');
+            
+            html += `<div><strong>Status:</strong> ${dnsOnline ? '🟢 Online' : '🔴 Offline'}</div>`;
+            html += `<div><strong>SSL Certificates:</strong> ${certCount} found</div>`;
+            html += `<div><strong>Archive Status:</strong> ${archiveAvailable ? '📚 Archived' : '❌ Not Archived'}</div><br>`;
+            
+            // Risk assessment
+            html += `<div><strong>Assessment:</strong></div>`;
+            if (dnsOnline && certCount > 0) {
+                html += `<div style="color: #27ae60;">✓ Active domain with SSL certificates</div>`;
+            } else if (dnsOnline) {
+                html += `<div style="color: #f39c12;">⚠ Domain resolves but no certificates found</div>`;
+            } else {
+                html += `<div style="color: #e74c3c;">⚠ Domain does not resolve</div>`;
+            }
+            
+            document.getElementById('summary-content').innerHTML = html;
+        }
+
+        // Allow Enter key to trigger analysis
+        document.getElementById('domain-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeDomain();
+            }
+        });
 </script>
 </body>
 </html>
