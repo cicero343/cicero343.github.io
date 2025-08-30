@@ -3351,7 +3351,7 @@ permalink: /dashboard/
   <div class="currency-exchange-container">
     <div class="currency-header">
       <h2>Currency Exchange</h2>
-      <p>Real-time exchange rates via Frankfurter API</p>
+      <p>Exchange rates via Frankfurter API</p>
     </div>
 
     <div class="currency-control-panel">
