@@ -28,6 +28,12 @@ navbar:
     url: /about/
   - title: "All Posts"
     url: /posts/
+  - title: "Dashboard"
+    url: /dashboard/
+  - title: "Cyber News"
+    url: /cybernews/
+  - title: "Terminal"
+    url: /terminal/
 
 # Exclude from processing
 exclude:
@@ -37,3 +43,4 @@ exclude:
   - vendor/
   - Gemfile
   - Gemfile.lock
+
