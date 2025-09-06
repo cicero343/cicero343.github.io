@@ -10,9 +10,18 @@ permalink: /cybernews/
 </head>
 
 <style>
-/* Ensure no interference with site navigation */
+/* Ensure cybernews page doesn't interfere with site navigation */
 body {
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+}
+
+/* Ensure dropdown stays within viewport */
+.dropdown-content {
+    position: absolute !important;
+    right: 0 !important;
+    left: auto !important;
+    max-width: calc(100vw - 20px) !important;
+    z-index: 9999 !important;
 }
 
 .cybernews-container {
