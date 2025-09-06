@@ -605,24 +605,92 @@ permalink: /cybernews/
 }
 
 @media (max-width: 768px) {
+    /* Fix hamburger menu overflow */
+    .cybernews-container {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    
+    /* Mobile button layout - arrange in 2 rows */
     .controls-row {
         justify-content: center;
-        gap: 5px;
-        flex-direction: column;
-        align-items: stretch;
+        gap: 4px;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
     }
     
-    .controls-row > * {
-        margin: 2px 0;
+    /* Create visual separation between button groups */
+    .controls-row .refresh-btn,
+    .controls-row #debug-btn,
+    .controls-row #btn-1d,
+    .controls-row #btn-3d,
+    .controls-row #btn-7d,
+    .controls-row #btn-14d {
+        order: 1;
+        margin: 2px 1px;
     }
     
-    .controls-row > span {
-        text-align: center;
-        margin: 5px 0;
+    /* Force line break before sources dropdown */
+    .controls-row .cyber-dropdown,
+    .controls-row span[style*="color: #888"],
+    .controls-row #btn-30,
+    .controls-row #btn-50,
+    .controls-row #pagination-nav {
+        order: 2;
+        margin: 2px 1px;
+    }
+    
+    /* Add line break between the two groups */
+    .controls-row .cyber-dropdown {
+        margin-left: 8px;
+    }
+    
+    /* Force wrap after timeframe buttons */
+    .controls-row #btn-14d::after {
+        content: "";
+        flex-basis: 100%;
+        height: 0;
+    }
+    
+    /* Smaller buttons on mobile */
+    .cyber-btn,
+    .refresh-btn,
+    .dropdown-btn {
+        font-size: 0.7em;
+        padding: 2px 6px;
+    }
+    
+    /* Constrain dropdown width */
+    .dropdown-content {
+        min-width: 160px;
+        max-width: 90vw;
+        left: 0;
+        right: auto;
+    }
+    
+    /* Make sure dropdown doesn't overflow */
+    .cyber-dropdown {
+        position: relative;
+    }
+    
+    .cyber-dropdown.open .dropdown-content {
+        position: absolute;
+        z-index: 1000;
     }
     
     .story-meta {
-        gap: 8px;
+        gap: 6px;
+    }
+    
+    /* Stack story meta on very small screens */
+    @media (max-width: 480px) {
+        .story-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
     }
 }
 
