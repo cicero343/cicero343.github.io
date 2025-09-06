@@ -5,6 +5,11 @@ permalink: /cybernews/
 ---
 
 <style>
+/* Ensure no interference with site navigation */
+body {
+    overflow-x: hidden;
+}
+
 .cybernews-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -13,6 +18,8 @@ permalink: /cybernews/
     overflow: hidden;
     font-family: 'Courier New', monospace;
     color: var(--txt-color-dark, #e0e0e0);
+    position: relative;
+    z-index: 1;
 }
 
 [data-theme="light"] .cybernews-container {
