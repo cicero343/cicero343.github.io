@@ -3,6 +3,10 @@ title: Cyber News
 layout: default
 permalink: /cybernews/
 ---
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Enhanced cybersecurity news aggregator with 3-tier reliability system">
+</head>
 
 <style>
 /* Ensure no interference with site navigation */
@@ -782,6 +786,9 @@ body {
         </div>
     </div>
 </div>
+
+</body>
+</html>
 
 <!-- RSS Parser Library -->
 <script src="https://unpkg.com/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
