@@ -4,26 +4,7 @@ layout: default
 permalink: /cybernews/
 ---
 
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Enhanced cybersecurity news aggregator with 3-tier reliability system">
-</head>
-
 <style>
-/* Ensure cybernews page doesn't interfere with site navigation */
-body {
-    overflow-x: hidden !important;
-}
-
-/* Ensure dropdown stays within viewport */
-.dropdown-content {
-    position: absolute !important;
-    right: 0 !important;
-    left: auto !important;
-    max-width: calc(100vw - 20px) !important;
-    z-index: 9999 !important;
-}
-
 .cybernews-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -32,8 +13,6 @@ body {
     overflow: hidden;
     font-family: 'Courier New', monospace;
     color: var(--txt-color-dark, #e0e0e0);
-    position: relative;
-    z-index: 1;
 }
 
 [data-theme="light"] .cybernews-container {
@@ -625,6 +604,57 @@ body {
     margin-left: 5px;
 }
 
+/* Header dropdown fixes - NEW SECTION */
+.site-header {
+    position: relative;
+    z-index: 2000;
+}
+
+.dropdown {
+    position: relative;
+    z-index: 2001;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--navbar-bg-color);
+    min-width: 160px;
+    max-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2002;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--txt-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--hover-bg-color);
+}
+
+/* Ensure cybernews container doesn't interfere */
+.cybernews-container {
+    position: relative;
+    z-index: 1;
+    margin-top: 0;
+}
+
 @media (max-width: 768px) {
     /* Fix hamburger menu overflow */
     .cybernews-container {
@@ -703,6 +733,31 @@ body {
     
     .story-meta {
         gap: 6px;
+    }
+    
+    /* Header dropdown mobile fixes - NEW SECTION */
+    .site-header {
+        overflow: visible;
+        position: relative;
+    }
+    
+    .dropdown {
+        position: relative;
+    }
+    
+    .dropdown-content {
+        position: absolute;
+        right: 0;
+        left: auto;
+        width: auto;
+        min-width: 160px;
+        max-width: calc(100vw - 40px);
+        box-sizing: border-box;
+    }
+    
+    /* Prevent body overflow when dropdown is open */
+    body.dropdown-open {
+        overflow-x: hidden;
     }
     
     /* Stack story meta on very small screens */
@@ -1655,6 +1710,31 @@ body {
         fetchStories();
     }
     
+    // Enhanced dropdown handling for mobile
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdown-content');
+        const isOpen = dropdown.classList.contains('show');
+        
+        if (isOpen) {
+            dropdown.classList.remove('show');
+            document.body.classList.remove('dropdown-open');
+        } else {
+            dropdown.classList.add('show');
+            document.body.classList.add('dropdown-open');
+        }
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.querySelector('.dropdown');
+        const dropdownContent = document.getElementById('dropdown-content');
+        
+        if (dropdown && !dropdown.contains(event.target)) {
+            dropdownContent.classList.remove('show');
+            document.body.classList.remove('dropdown-open');
+        }
+    });
+    
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.cyber-dropdown')) {
             document.querySelectorAll('.cyber-dropdown').forEach(d => d.classList.remove('open'));
@@ -1671,6 +1751,3 @@ body {
         }, 1000);
     });
 </script>
-
-</body>
-</html>
