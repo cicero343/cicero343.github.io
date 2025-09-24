@@ -32,8 +32,8 @@ navbar:
     url: /dashboard/
   - title: "Cyber News"
     url: /cybernews/
-  - title: "Terminal"
-    url: /terminal/
+  - title: "Admin Login"
+    url: /admin/
 
 # Exclude from processing
 exclude:
@@ -43,4 +43,5 @@ exclude:
   - vendor/
   - Gemfile
   - Gemfile.lock
+
 
