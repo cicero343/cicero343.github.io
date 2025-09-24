@@ -607,9 +607,15 @@
             
             console.log('Assigned player number:', playerNumber);
             
-            // Set color based on player number
-            myColor = colors[(playerNumber - 1) % colors.length];
+            // Set color based on player number with fallback
+            myColor = colors[(playerNumber - 1) % colors.length] || '#ff6b6b'; // Fallback to red
             console.log('Assigned color:', myColor);
+            
+            // Ensure color is valid - additional fallback
+            if (!myColor || myColor === '') {
+                myColor = '#ff6b6b'; // Force red as backup
+                console.log('Using fallback color:', myColor);
+            }
             
             // Find starting position
             let startPos;
@@ -2775,7 +2781,7 @@
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
                 
                 // Main instruction text with word wrapping
-                const mainText = 'I can cook food here - Press TAB to cycle options, Press Enter to select option';
+                const mainText = 'I can cook food here';
                 const wrappedMainLines = wrapText(mainText, maxTextWidth, '16px Courier New');
                 
                 ctx.fillStyle = '#e8f5e8';
@@ -3512,6 +3518,14 @@
         gameLoop();
         updateHeartDisplay();
         updateGoldDisplay();
+
+        // Emergency fallback if Firebase doesn't respond within 5 seconds
+        setTimeout(() => {
+            if (!isPlayerCreated) {
+                console.log('Firebase timeout - creating player manually with fallback');
+                createPlayerWithFirebaseData({});
+            }
+        }, 5000);
 
         console.log('🌲 Game loaded successfully!');
     </script>
