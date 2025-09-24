@@ -1,0 +1,3519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cozy Multiplayer Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #1a2817;
+            color: #e8f5e8;
+            font-family: 'Courier New', monospace;
+            background-image: 
+                radial-gradient(circle at 25% 25%, #2d4a2a 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #1f3a1c 0%, transparent 50%);
+        }
+        canvas {
+            border: 3px solid #4a6b47;
+            background-color: #0f1f0c;
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(74, 107, 71, 0.3);
+            position: relative;
+        }
+        .info {
+            text-align: center;
+            margin: 10px;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px;
+            background-color: #2d4a2a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #4a6b47;
+        }
+        .player-info {
+            display: inline-block;
+            margin: 0 20px;
+            padding: 10px;
+            background-color: #1f3a1c;
+            border-radius: 5px;
+            border: 1px solid #4a6b47;
+        }
+        .status {
+            text-align: center;
+            margin: 10px;
+            font-size: 14px;
+            color: #a8c5a8;
+        }
+        .hearts {
+            display: inline-block;
+            margin-left: 30px;
+            font-size: 24px;
+            background-color: rgba(45, 74, 42, 0.8);
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 2px solid #4a6b47;
+            vertical-align: middle;
+        }
+        h1 {
+            color: #9fd89f;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .inventory-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+        }
+        .skills-panel {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            width: 200px;
+            height: 400px;
+            background-color: #2d4a2a;
+            border: 3px solid #4a6b47;
+            border-radius: 8px;
+            padding: 15px;
+            color: #e8f5e8;
+            font-family: 'Courier New', monospace;
+        }
+        .inventory-panel {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 300px;
+            height: 280px;
+            background-color: #2d4a2a;
+            border: 3px solid #4a6b47;
+            border-radius: 8px;
+            padding: 15px;
+            color: #e8f5e8;
+            font-family: 'Courier New', monospace;
+        }
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 40px);
+            grid-template-rows: repeat(4, 40px);
+            gap: 2px;
+            margin-top: 10px;
+        }
+        .inventory-slot {
+            width: 40px;
+            height: 40px;
+            background-color: #1f3a1c;
+            border: 2px solid #4a6b47;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+        }
+        .inventory-slot.selected {
+            border-color: #9fd89f;
+            background-color: #3a5a37;
+        }
+        .inventory-slot.equipped {
+            border-color: #ffd700;
+            background-color: #5a5a37;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        .inventory-slot.occupied {
+            background-color: #4a6b47;
+        }
+        .item-description {
+            position: absolute;
+            bottom: 15px;
+            right: 50px;
+            width: 300px;
+            height: 80px;
+            background-color: #2d4a2a;
+            border: 3px solid #4a6b47;
+            border-radius: 8px;
+            padding: 15px;
+            color: #e8f5e8;
+            font-family: 'Courier New', monospace;
+        }
+        .skill-line {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .skill-name {
+            display: inline-block;
+            width: 110px;
+        }
+        .item-stack {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .quick-chat-overlay {
+            position: absolute;
+            width: 280px;
+            background-color: rgba(45, 74, 42, 0.95);
+            border: 2px solid #4a6b47;
+            border-radius: 6px;
+            padding: 10px;
+            color: #e8f5e8;
+            font-family: 'Courier New', monospace;
+            z-index: 1000;
+            display: none;
+            /* Position at bottom left of canvas */
+            bottom: 20px;
+            left: 20px;
+        }
+        .quick-chat-header {
+            text-align: center;
+            color: #9fd89f;
+            margin: 0 0 8px 0;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .quick-chat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+        .quick-chat-message {
+            padding: 6px 2px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+            border: 1px solid transparent;
+            text-align: center;
+            background-color: rgba(31, 58, 28, 0.8);
+        }
+        .quick-chat-message.selected {
+            background-color: #3a5a37;
+            border-color: #9fd89f;
+        }
+        .quick-chat-message:hover {
+            background-color: #2d4a2a;
+        }
+        .quick-chat-instructions {
+            text-align: center;
+            font-size: 9px;
+            color: #a8c5a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+            <a href="https://cicero343.github.io" target="_blank" style="text-decoration: none;">
+                <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Logo" style="width: 60px; height: 60px; border-radius: 50%; cursor: pointer; border: 3px solid #9fd89f; transition: border-color 0.3s ease;">
+            </a>
+            <h1 style="margin: 0;">🌲 Cozy Multiplayer Adventure 🔥</h1>
+        </div>
+        <p>Grid-based movement • Talk to NPCs • Cast fireballs • Hunt mobs • Go fishing!</p>
+    </div>
+
+    <div class="controls">
+        <div class="player-info">
+            <strong>Your Character:</strong> <span id="playerColor">●</span>
+            <br><strong>WASD:</strong> Move | <strong>SPACE:</strong> Fireball | <strong>F:</strong> Melee | <strong>E:</strong> Interact
+        </div>
+        <div class="player-info">
+            <strong>Health:</strong> <span id="healthDisplay">4/4</span>
+            <br><strong>I:</strong> Inventory | <strong>Q:</strong> Quick Chat | <strong>ESC:</strong> Close
+        </div>
+        <div class="player-info">
+            <strong>Zone:</strong> <span id="zoneDisplay">Town</span>
+            <br><strong>Gold:</strong> <span id="goldDisplay">0</span> 💰
+        </div>
+    </div>
+
+    <div style="position: relative; width: 800px; height: 600px; margin: 20px auto;">
+        <canvas id="gameCanvas" width="800" height="600" style="position: absolute; top: 0; left: 0;"></canvas>
+        
+        <!-- Quick Chat Overlay positioned within canvas area -->
+        <div class="quick-chat-overlay" id="quickChatOverlay">
+            <div class="quick-chat-header">Quick Chat</div>
+            <div class="quick-chat-grid">
+                <div class="quick-chat-message selected" data-index="0"><strong>Hi!</strong></div>
+                <div class="quick-chat-message" data-index="1"><strong>Bye!</strong></div>
+                <div class="quick-chat-message" data-index="2"><strong>Thanks!</strong></div>
+                <div class="quick-chat-message" data-index="3"><strong>Sorry!</strong></div>
+                <div class="quick-chat-message" data-index="4"><strong>LOL</strong></div>
+                <div class="quick-chat-message" data-index="5"><strong>Let's go!</strong></div>
+                <div class="quick-chat-message" data-index="6"><strong>Stop!</strong></div>
+                <div class="quick-chat-message" data-index="7"><strong>Help!</strong></div>
+                <div class="quick-chat-message" data-index="8"><strong>Attack!</strong></div>
+                <div class="quick-chat-message" data-index="9"><strong>Nice!</strong></div>
+            </div>
+            <div class="quick-chat-instructions">Q: Cycle | ENTER: Send | WASD: Cancel</div>
+        </div>
+        
+        <!-- Inventory Overlay inside canvas area -->
+        <div class="inventory-overlay" id="inventoryOverlay" style="position: absolute; top: 0; left: 0; width: 800px; height: 600px;">
+            <div class="skills-panel">
+                <h3 style="margin: 0 0 15px 0; text-align: center; color: #9fd89f;">Skills</h3>
+                <div class="skill-line"><span class="skill-name">Level</span><span id="playerLevel">1</span></div>
+                <div class="skill-line"><span class="skill-name">Life</span><span id="playerLife">4/4</span></div>
+                <div class="skill-line"><span class="skill-name">Magic</span><span id="playerMagic">1</span></div>
+                <div class="skill-line"><span class="skill-name">Attack</span><span id="playerAttack">1</span></div>
+                <div class="skill-line"><span class="skill-name">Fishing</span><span id="playerFishing">1</span></div>
+                <div class="skill-line"><span class="skill-name">Cooking</span><span id="playerCooking">1</span></div>
+                <div class="skill-line"><span class="skill-name">Woodcutting</span><span id="playerWoodcutting">1</span></div>
+                <div class="skill-line"><span class="skill-name">EXP</span><span id="playerEXP">0</span></div>
+                <div class="skill-line"><span class="skill-name">Gold</span><span id="playerGoldInv">0</span></div>
+            </div>
+            
+            <div class="inventory-panel">
+                <h3 style="margin: 0 0 10px 0; text-align: center; color: #9fd89f;">Inventory</h3>
+                <p style="margin: 0 0 10px 0; font-size: 12px; color: #a8c5a8; text-align: center;">Press SPACE/ENTER to equip or use items</p>
+                <div class="inventory-grid" id="inventoryGrid">
+                    <!-- 20 inventory slots will be generated here -->
+                </div>
+            </div>
+            
+            <div class="item-description" id="itemDescription">
+                <h4 style="margin: 0 0 10px 0; color: #9fd89f;">[Empty Slot]</h4>
+                <p style="margin: 0; font-size: 12px;">Select an item to view its description.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="status">
+        <div style="display: inline-block;">Connected Adventurers: <span id="playerCount">0</span></div>
+        <div class="hearts" id="hearts">❤️❤️❤️❤️</div>
+        <div style="display: inline-block; margin-left: 30px;">💰 Gold: <span id="goldCounter">0</span></div>
+        <div style="display: inline-block; margin-left: 30px;">Grid Position: <span id="gridPos">10, 7</span></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4TEgmhq4vCdb6lty0XwXObx21MEGzELo",
+            authDomain: "dot-multiplayer-game.firebaseapp.com",
+            databaseURL: "https://dot-multiplayer-game-default-rtdb.firebaseio.com",
+            projectId: "dot-multiplayer-game",
+            storageBucket: "dot-multiplayer-game.firebasestorage.app",
+            messagingSenderId: "155804791894",
+            appId: "1:155804791894:web:75c96073046a40ed8bb7f7",
+            measurementId: "G-WC2Q2PRTGV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const GRID_SIZE = 40;
+        const GRID_WIDTH = Math.floor(canvas.width / GRID_SIZE);
+        const GRID_HEIGHT = Math.floor(canvas.height / GRID_SIZE);
+        
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a29bfe'];
+        
+        let playerId = null;
+        let playerNumber = 1;
+        let players = {};
+        let fireballs = {};
+        let mobs = {};
+        let drops = {};
+        let myColor = '';
+        let myGridPos = { x: 10, y: 7 };
+        let myHealth = 4;
+        let myGold = 0;
+        let myDirection = 'right';
+        let myZone = 1;
+        let showDialog = false;
+        let dialogText = '';
+        let isRespawning = false;
+        let isPlayerCreated = false;
+        
+        // Quick chat system
+        let showQuickChat = false;
+        let selectedChatMessage = 0;
+        let playerMessages = {}; // Store player chat messages
+        const chatMessages = [
+            'Hi!', 'Bye!', 'Thanks!', 'Sorry!', 'LOL',
+            'Let\'s go!', 'Stop!', 'Help!', 'Attack!', 'Nice!'
+        ];
+        
+        // Inventory, skills, and equipment system
+        let showInventory = false;
+        let selectedInventorySlot = 0;
+        let playerLevel = 1;
+        let playerEXP = 0;
+        let playerMagic = 1;
+        let playerAttack = 1;
+        let playerFishing = 1;
+        let playerCooking = 1;
+        let playerWoodcutting = 1;
+        let inventory = new Array(20).fill(null);
+        let equippedWeapon = null;
+        let equippedTool = null;
+        
+        // Fishing system
+        let isFishing = false;
+        let fishingStartTime = 0;
+        let nextFishTime = 0;
+        
+        // Cooking system
+        let isCooking = false;
+        let cookingStartTime = 0;
+        let nextCookTime = 0;
+        let showCookingDialog = false;
+        let selectedCookingOption = 0;
+        let cookingOptions = [];
+        
+        // Woodcutting system
+        let isWoodcutting = false;
+        let woodcuttingStartTime = 0;
+        let nextWoodcutTime = 0;
+        let showWoodcuttingDialog = false;
+        let selectedWoodcuttingOption = 0; // 0 = Yes, 1 = No
+        let currentTree = null;
+        
+        // Level up popup variables
+        let showLevelUpPopup = false;
+        let levelUpPopupTimer = 0;
+        let newLevel = 1;
+        
+        // Fish catch popup variables
+        let showFishCatchPopup = false;
+        let fishCatchPopupTimer = 0;
+        
+        // Cooking popup variables
+        let showCookingPopup = false;
+        let cookingPopupTimer = 0;
+        let cookedItemName = '';
+        
+        // Woodcutting popup variables
+        let showWoodcuttingPopup = false;
+        let woodcuttingPopupTimer = 0;
+        
+        // Melee attack system
+        let isAttacking = false;
+        let attackStartTime = 0;
+        let attackDuration = 300; // Attack animation lasts 300ms
+        
+        // Merchant trading system
+        let showMerchantDialog = false;
+        let showTradeScreen = false;
+        let selectedTradeOption = 0; // 0 = Buy, 1 = Sell
+        let tradeMode = 'buy'; // 'buy' or 'sell'
+        let selectedTradeSlot = 0;
+        
+        // Firemaking system - UPDATED for inventory-based interface
+        let isSelectingFiremaking = false; // New state for tinderbox selection
+        let firemakingStep = 0; // 0 = selecting logs, 1 = selecting quantity
+        let selectedFiremakingOption = 0;
+        let firemakingOptions = [];
+        let selectedQuantity = 0; // 0 = 1x, 1 = All
+        let selectedLogsSlot = 0;
+        let isFiremaking = false;
+        let firemakingDirection = 'down'; // Direction to place fires
+        let firemakingCount = 0;
+        let targetFireCount = 0;
+        let nextFireTime = 0;
+        
+        // Player-created campfires
+        let playerCampfires = [];
+        
+        // Initialize starting items
+        inventory[0] = {
+            id: 'sword',
+            name: 'Old Sword',
+            description: 'An old rusty sword. Still sharp enough to hurt.',
+            icon: '⚔️',
+            type: 'weapon'
+        };
+        
+        inventory[1] = {
+            id: 'fishing_rod',
+            name: 'Old Fishing Rod',
+            description: 'An old fishing rod. Perfect for catching fish in the lake.',
+            icon: '🎣',
+            type: 'tool'
+        };
+        
+        inventory[2] = {
+            id: 'iron_axe',
+            name: 'Iron Axe',
+            description: 'An iron axe. Perfect for chopping trees.',
+            icon: '🪓',
+            type: 'tool'
+        };
+        
+        const expRequirements = [
+            0, 10, 25, 45, 70, 100, 140, 190, 250, 320, 
+            400, 500, 620, 760, 920, 1100, 1300, 1520, 1760, 2000
+        ];
+
+        const npc = { x: 5, y: 5, color: '#ffd700' };
+        const fireplace = { x: 16, y: 9, color: '#ff6600' };
+        const merchant = { x: 11, y: 3, color: '#ff8c00' };
+        
+        // Trees in Town Zone
+        const trees = [
+            { x: 12, y: 9, chopped: false },
+            { x: 16, y: 9, chopped: false },
+            { x: 12, y: 12, chopped: false },
+            { x: 16, y: 12, chopped: false }
+        ];
+
+        // Lake water area (7x7 grid in center)
+        const LAKE_CENTER_X = Math.floor(GRID_WIDTH / 2);
+        const LAKE_CENTER_Y = Math.floor(GRID_HEIGHT / 2);
+        const LAKE_SIZE = 7;
+        const LAKE_MIN_X = LAKE_CENTER_X - Math.floor(LAKE_SIZE / 2);
+        const LAKE_MAX_X = LAKE_CENTER_X + Math.floor(LAKE_SIZE / 2);
+        const LAKE_MIN_Y = LAKE_CENTER_Y - Math.floor(LAKE_SIZE / 2);
+        const LAKE_MAX_Y = LAKE_CENTER_Y + Math.floor(LAKE_SIZE / 2);
+
+        function gridToPixel(gridX, gridY) {
+            return {
+                x: gridX * GRID_SIZE + GRID_SIZE / 2,
+                y: gridY * GRID_SIZE + GRID_SIZE / 2
+            };
+        }
+
+        function isWaterTile(gridX, gridY) {
+            return myZone === 3 && 
+                   gridX >= LAKE_MIN_X && gridX <= LAKE_MAX_X &&
+                   gridY >= LAKE_MIN_Y && gridY <= LAKE_MAX_Y;
+        }
+
+        function isAdjacentToWater(gridX, gridY) {
+            for (let dx = -1; dx <= 1; dx++) {
+                for (let dy = -1; dy <= 1; dy++) {
+                    if (isWaterTile(gridX + dx, gridY + dy)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function isAdjacentToFireplace(gridX, gridY) {
+            if (myZone !== 3) return false;
+            const distance = Math.abs(gridX - fireplace.x) + Math.abs(gridY - fireplace.y);
+            return distance <= 1;
+        }
+
+        function findAdjacentTree(gridX, gridY) {
+            if (myZone !== 1) return null;
+            
+            for (let tree of trees) {
+                if (!tree.chopped) {
+                    const distance = Math.abs(gridX - tree.x) + Math.abs(gridY - tree.y);
+                    if (distance <= 1) {
+                        return tree;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function wrapText(text, maxWidth, font) {
+            ctx.font = font;
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+            
+            for (let word of words) {
+                const testLine = currentLine + (currentLine ? ' ' : '') + word;
+                const metrics = ctx.measureText(testLine);
+                
+                if (metrics.width > maxWidth && currentLine) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
+            }
+            
+            if (currentLine) {
+                lines.push(currentLine);
+            }
+            
+            return lines;
+        }
+
+        // FIXED: This function waits for Firebase data before creating the player
+        function initializeGame() {
+            console.log('=== INITIALIZING GAME ===');
+            
+            // Create unique player ID
+            playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            console.log('Generated Player ID:', playerId);
+            
+            // Set up the players listener - this will fire immediately with current data
+            const playersRef = ref(database, 'players');
+            onValue(playersRef, (snapshot) => {
+                const currentPlayers = snapshot.val() || {};
+                console.log('Firebase players data received:', currentPlayers);
+                
+                // Update local players object
+                players = currentPlayers;
+                document.getElementById('playerCount').textContent = Object.keys(players).length;
+                
+                // Clean up old players
+                const now = Date.now();
+                Object.entries(players).forEach(([id, player]) => {
+                    if (player && player.lastSeen && (now - player.lastSeen) > 30000) {
+                        console.log('Removing old player:', id);
+                        const inactivePlayerRef = ref(database, `players/${id}`);
+                        remove(inactivePlayerRef);
+                    }
+                });
+                
+                // IMPORTANT: Only create our player once, when we first get Firebase data
+                if (!isPlayerCreated) {
+                    createPlayerWithFirebaseData(currentPlayers);
+                    isPlayerCreated = true;
+                }
+            });
+        }
+
+        function createPlayerWithFirebaseData(currentPlayers) {
+            console.log('=== CREATING PLAYER WITH FIREBASE DATA ===');
+            console.log('Current Firebase players:', currentPlayers);
+            
+            // Get existing player numbers from Firebase data
+            const existingNumbers = Object.values(currentPlayers)
+                .filter(p => p && typeof p.playerNumber === 'number' && p.playerNumber > 0)
+                .map(p => p.playerNumber);
+            
+            console.log('Existing player numbers from Firebase:', existingNumbers);
+            
+            // Find first available number
+            playerNumber = 1;
+            while (existingNumbers.includes(playerNumber) && playerNumber <= 20) {
+                playerNumber++;
+            }
+            if (playerNumber > 20) {
+                playerNumber = Math.floor(Math.random() * 1000) + 21;
+            }
+            
+            console.log('Assigned player number:', playerNumber);
+            
+            // Set color based on player number
+            myColor = colors[(playerNumber - 1) % colors.length];
+            console.log('Assigned color:', myColor);
+            
+            // Find starting position
+            let startPos;
+            do {
+                startPos = {
+                    x: Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1,
+                    y: Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1
+                };
+            } while (isPositionOccupied(startPos.x, startPos.y));
+            
+            myGridPos = startPos;
+            console.log('Starting position:', myGridPos);
+            
+            // Update UI
+            document.getElementById('playerColor').innerHTML = '●';
+            document.getElementById('playerColor').style.color = myColor;
+            document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
+            updateZoneDisplay();
+            updateHeartDisplay();
+            updateGoldDisplay();
+            updateSkillsDisplay();
+            
+            // Create player in Firebase
+            updatePlayerData();
+            
+            // Set up cleanup
+            const playerRef = ref(database, `players/${playerId}`);
+            onDisconnect(playerRef).remove();
+            window.addEventListener('beforeunload', () => remove(playerRef));
+            
+            console.log('Player created successfully!');
+        }
+
+        function updateZoneDisplay() {
+            const zoneNames = { 1: 'Town', 2: 'Wilderness', 3: 'Lake' };
+            document.getElementById('zoneDisplay').textContent = zoneNames[myZone];
+        }
+
+        function updatePlayerData() {
+            if (playerId && isPlayerCreated) {
+                const playerRef = ref(database, `players/${playerId}`);
+                set(playerRef, {
+                    gridX: myGridPos.x,
+                    gridY: myGridPos.y,
+                    color: myColor,
+                    health: myHealth,
+                    gold: myGold,
+                    direction: myDirection,
+                    zone: myZone,
+                    playerNumber: playerNumber,
+                    isRespawning: isRespawning,
+                    isFishing: isFishing,
+                    isCooking: isCooking,
+                    isWoodcutting: isWoodcutting,
+                    isAttacking: isAttacking,
+                    isFiremaking: isFiremaking,
+                    level: playerLevel,
+                    exp: playerEXP,
+                    magic: playerMagic,
+                    attack: playerAttack,
+                    fishing: playerFishing,
+                    cooking: playerCooking,
+                    woodcutting: playerWoodcutting,
+                    lastSeen: serverTimestamp()
+                });
+            }
+        }
+
+        function isPositionOccupied(gridX, gridY) {
+            if (isWaterTile(gridX, gridY)) {
+                return true;
+            }
+            
+            // Check for trees in Town Zone
+            if (myZone === 1) {
+                for (let tree of trees) {
+                    if (!tree.chopped && tree.x === gridX && tree.y === gridY) {
+                        return true;
+                    }
+                }
+            }
+            
+            // Player campfires are passable - don't check them here
+            // Only permanent structures block movement
+            
+            return Object.values(players).some(player => 
+                player && player.gridX === gridX && player.gridY === gridY && player.zone === myZone
+            ) || (myZone === 1 && npc.x === gridX && npc.y === gridY) || 
+               (myZone === 1 && merchant.x === gridX && merchant.y === gridY) ||
+               (myZone === 3 && fireplace.x === gridX && fireplace.y === gridY);
+        }
+
+        function addItemToInventory(item) {
+            if (item.stackable) {
+                for (let i = 0; i < inventory.length; i++) {
+                    if (inventory[i] && inventory[i].id === item.id) {
+                        const newStack = inventory[i].stack + item.stack;
+                        if (newStack <= item.maxStack) {
+                            inventory[i].stack = newStack;
+                            return true;
+                        } else if (inventory[i].stack < item.maxStack) {
+                            const remainder = newStack - item.maxStack;
+                            inventory[i].stack = item.maxStack;
+                            item.stack = remainder;
+                        }
+                    }
+                }
+            }
+            
+            for (let i = 0; i < inventory.length; i++) {
+                if (!inventory[i]) {
+                    inventory[i] = item;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function startFishing() {
+            if (equippedTool && equippedTool.id === 'fishing_rod' && isAdjacentToWater(myGridPos.x, myGridPos.y)) {
+                isFishing = true;
+                fishingStartTime = Date.now();
+                nextFishTime = fishingStartTime + 3000 + Math.random() * 2000;
+                updatePlayerData();
+                console.log('Started fishing...');
+            }
+        }
+
+        function stopFishing() {
+            if (isFishing) {
+                isFishing = false;
+                updatePlayerData();
+                console.log('Stopped fishing.');
+            }
+        }
+
+        function startCooking() {
+            // Check if adjacent to Lake fireplace
+            if (myZone === 3 && isAdjacentToFireplace(myGridPos.x, myGridPos.y)) {
+                // Find cookable items in inventory
+                cookingOptions = [];
+                inventory.forEach((item, index) => {
+                    if (item && item.id === 'fish' && item.stack > 0) {
+                        cookingOptions.push({
+                            name: 'Fresh Fish',
+                            description: 'Cook into Cooked Fresh Fish (+1 Health when eaten)',
+                            icon: '🐟',
+                            requiredItem: 'fish',
+                            resultItem: {
+                                id: 'cooked_fish',
+                                name: 'Cooked Fresh Fish',
+                                description: 'A cooked fresh-water fish. Smells yummy!',
+                                icon: '🍖',
+                                type: 'food',
+                                stackable: true,
+                                stack: 1,
+                                maxStack: 250,
+                                healAmount: 1
+                            },
+                            expGain: 3
+                        });
+                    }
+                });
+                
+                if (cookingOptions.length > 0) {
+                    showCookingDialog = true;
+                    selectedCookingOption = 0;
+                } else {
+                    showDialog = true;
+                    dialogText = "I need some raw food to cook here. Maybe I should try fishing first!";
+                }
+                return;
+            }
+            
+            // Check if adjacent to player campfire
+            let nearCampfire = false;
+            for (let campfire of playerCampfires) {
+                if (campfire.zone === myZone) {
+                    const distance = Math.abs(myGridPos.x - campfire.x) + Math.abs(myGridPos.y - campfire.y);
+                    if (distance <= 1) {
+                        nearCampfire = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (nearCampfire) {
+                // Find cookable items in inventory
+                cookingOptions = [];
+                inventory.forEach((item, index) => {
+                    if (item && item.id === 'fish' && item.stack > 0) {
+                        cookingOptions.push({
+                            name: 'Fresh Fish',
+                            description: 'Cook into Cooked Fresh Fish (+1 Health when eaten)',
+                            icon: '🐟',
+                            requiredItem: 'fish',
+                            resultItem: {
+                                id: 'cooked_fish',
+                                name: 'Cooked Fresh Fish',
+                                description: 'A cooked fresh-water fish. Smells yummy!',
+                                icon: '🍖',
+                                type: 'food',
+                                stackable: true,
+                                stack: 1,
+                                maxStack: 250,
+                                healAmount: 1
+                            },
+                            expGain: 3
+                        });
+                    }
+                });
+                
+                if (cookingOptions.length > 0) {
+                    showCookingDialog = true;
+                    selectedCookingOption = 0;
+                } else {
+                    showDialog = true;
+                    dialogText = "I need some raw food to cook here. Maybe I should try fishing first!";
+                }
+            }
+        }
+
+        function stopCooking() {
+            if (isCooking) {
+                isCooking = false;
+                showCookingDialog = false;
+                updatePlayerData();
+                console.log('Stopped cooking.');
+            }
+        }
+
+        function processCooking() {
+            if (isCooking && Date.now() >= nextCookTime) {
+                const option = cookingOptions[selectedCookingOption];
+                if (!option) {
+                    // No more cooking options available, stop cooking
+                    stopCooking();
+                    return;
+                }
+                
+                // Find the required item in inventory
+                let foundItem = false;
+                for (let i = 0; i < inventory.length; i++) {
+                    if (inventory[i] && inventory[i].id === option.requiredItem && inventory[i].stack > 0) {
+                        // Remove one raw item
+                        inventory[i].stack--;
+                        if (inventory[i].stack <= 0) {
+                            inventory[i] = null;
+                        }
+                        
+                        // Add cooked item
+                        if (addItemToInventory(option.resultItem)) {
+                            console.log(`Cooked ${option.name}!`);
+                            
+                            // Show cooking popup
+                            cookedItemName = option.name;
+                            showCookingPopup = true;
+                            cookingPopupTimer = 1500;
+                            
+                            // Give cooking XP
+                            if (playerCooking < 20) {
+                                playerCooking += 1;
+                                console.log(`Cooking skill increased to ${playerCooking}!`);
+                            }
+                            
+                            givePlayerEXP(option.expGain);
+                            updatePlayerData();
+                            foundItem = true;
+                        }
+                        break;
+                    }
+                }
+                
+                // Check if we still have items to cook after this cooking action
+                let hasMoreItems = false;
+                for (let i = 0; i < inventory.length; i++) {
+                    if (inventory[i] && inventory[i].id === option.requiredItem && inventory[i].stack > 0) {
+                        hasMoreItems = true;
+                        break;
+                    }
+                }
+                
+                if (!hasMoreItems || !foundItem) {
+                    // No more items to cook, stop cooking
+                    stopCooking();
+                    return;
+                }
+                
+                nextCookTime = Date.now() + 2000 + Math.random() * 1000;
+            }
+        }
+
+        function cycleCookingOption() {
+            if (cookingOptions.length > 0) {
+                selectedCookingOption = (selectedCookingOption + 1) % cookingOptions.length;
+            }
+        }
+
+        function selectCookingOption() {
+            if (cookingOptions.length > 0 && cookingOptions[selectedCookingOption]) {
+                isCooking = true;
+                showCookingDialog = false;
+                cookingStartTime = Date.now();
+                nextCookTime = cookingStartTime + 2000 + Math.random() * 1000;
+                updatePlayerData();
+                console.log(`Started cooking ${cookingOptions[selectedCookingOption].name}...`);
+            }
+        }
+
+        function startWoodcutting() {
+            const nearbyTree = findAdjacentTree(myGridPos.x, myGridPos.y);
+            if (nearbyTree && equippedTool && equippedTool.id === 'iron_axe') {
+                currentTree = nearbyTree;
+                showWoodcuttingDialog = true;
+                selectedWoodcuttingOption = 0; // Default to "Yes"
+            } else if (!equippedTool || equippedTool.id !== 'iron_axe') {
+                showDialog = true;
+                dialogText = "I need to equip my axe first before I can chop down trees!";
+            }
+        }
+
+        function stopWoodcutting() {
+            if (isWoodcutting) {
+                isWoodcutting = false;
+                showWoodcuttingDialog = false;
+                currentTree = null;
+                updatePlayerData();
+                console.log('Stopped woodcutting.');
+            }
+        }
+
+        function processWoodcutting() {
+            if (isWoodcutting && currentTree && Date.now() >= nextWoodcutTime) {
+                // Create logs item
+                const logs = {
+                    id: 'logs',
+                    name: 'Logs',
+                    description: 'Fresh wood logs. I could make a fire with these.',
+                    icon: '🪵',
+                    type: 'resource',
+                    stackable: true,
+                    stack: 1,
+                    maxStack: 250
+                };
+                
+                if (addItemToInventory(logs)) {
+                    console.log('Chopped down tree and got logs!');
+                    
+                    // Show woodcutting popup
+                    showWoodcuttingPopup = true;
+                    woodcuttingPopupTimer = 1500;
+                    
+                    // Mark tree as chopped and record time
+                    currentTree.chopped = true;
+                    currentTree.choppedTime = Date.now();
+                    
+                    // Give woodcutting XP
+                    if (playerWoodcutting < 20) {
+                        playerWoodcutting += 1;
+                        console.log(`Woodcutting skill increased to ${playerWoodcutting}!`);
+                    }
+                    
+                    givePlayerEXP(4);
+                    updatePlayerData();
+                }
+                
+                // Stop woodcutting after tree is chopped
+                stopWoodcutting();
+            }
+        }
+
+        function cycleWoodcuttingOption() {
+            selectedWoodcuttingOption = (selectedWoodcuttingOption + 1) % 2; // 0 = Yes, 1 = No
+        }
+
+        function selectWoodcuttingOption() {
+            if (selectedWoodcuttingOption === 0) { // Yes
+                isWoodcutting = true;
+                showWoodcuttingDialog = false;
+                woodcuttingStartTime = Date.now();
+                nextWoodcutTime = woodcuttingStartTime + 3000 + Math.random() * 1000; // 3-4 seconds
+                updatePlayerData();
+                console.log('Started woodcutting...');
+            } else { // No
+                showWoodcuttingDialog = false;
+                currentTree = null;
+            }
+        }
+
+        function performMeleeAttack() {
+            if (myHealth <= 0 || isRespawning || isFishing || isCooking || isWoodcutting || isAttacking) return;
+            
+            // Check if sword is equipped
+            if (!equippedWeapon || equippedWeapon.id !== 'sword') {
+                return; // No sword equipped, can't attack
+            }
+            
+            isAttacking = true;
+            attackStartTime = Date.now();
+            updatePlayerData();
+            
+            // Calculate attack position based on direction
+            const directions = {
+                'up': { x: 0, y: -1 },
+                'down': { x: 0, y: 1 },
+                'left': { x: -1, y: 0 },
+                'right': { x: 1, y: 0 }
+            };
+            
+            const dir = directions[myDirection];
+            const attackX = myGridPos.x + dir.x;
+            const attackY = myGridPos.y + dir.y;
+            
+            console.log(`Melee attack targeting position: ${attackX}, ${attackY}`);
+            
+            // Check for mobs in attack range (only in Wilderness)
+            if (myZone === 2) {
+                Object.entries(mobs).forEach(([mobId, mob]) => {
+                    if (mob && mob.health > 0 && 
+                        mob.x === attackX && 
+                        mob.y === attackY) {
+                        
+                        console.log(`Melee attack hit mob at ${mob.x}, ${mob.y}`);
+                        
+                        const newHealth = Math.max(0, mob.health - 1);
+                        const mobRef = ref(database, `mobs/${mobId}`);
+                        
+                        if (newHealth <= 0) {
+                            console.log(`Mob ${mobId} (${mob.type}) killed by melee attack - creating drops`);
+                            
+                            // Give attack skill XP
+                            if (playerAttack < 20) {
+                                playerAttack += 1;
+                                console.log(`Attack skill increased to ${playerAttack}!`);
+                            }
+                            
+                            const expValue = mob.type === 'chicken' ? 8 : 6;
+                            const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
+                            set(expDropRef, {
+                                x: mob.x,
+                                y: mob.y,
+                                zone: 2,
+                                type: 'exp',
+                                value: expValue,
+                                createdAt: Date.now()
+                            });
+                            
+                            if (Math.random() < 0.8) {
+                                const goldValue = Math.floor(Math.random() * 6) + 5;
+                                const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
+                                set(goldDropRef, {
+                                    x: mob.x,
+                                    y: mob.y,
+                                    zone: 2,
+                                    type: 'gold',
+                                    value: goldValue,
+                                    createdAt: Date.now()
+                                });
+                            }
+                            
+                            set(mobRef, null);
+                        } else {
+                            set(mobRef, { ...mob, health: newHealth });
+                        }
+                        
+                        givePlayerEXP(3); // Give some general XP for combat
+                        updatePlayerData();
+                    }
+                });
+            }
+            
+            // Attack animation will be handled in the draw function
+            setTimeout(() => {
+                isAttacking = false;
+                updatePlayerData();
+            }, attackDuration);
+        }
+
+        function processFishing() {
+            if (isFishing && Date.now() >= nextFishTime) {
+                const fish = {
+                    id: 'fish',
+                    name: 'Fresh Fish',
+                    description: 'A fresh-water fish. Can be cooked or sold.',
+                    icon: '🐟',
+                    type: 'resource',
+                    stackable: true,
+                    stack: 1,
+                    maxStack: 250
+                };
+                
+                if (addItemToInventory(fish)) {
+                    console.log('Caught a fish!');
+                    showFishCatchPopup = true;
+                    fishCatchPopupTimer = 1500;
+                    
+                    if (playerFishing < 20) {
+                        playerFishing += 1;
+                        console.log(`Fishing skill increased to ${playerFishing}!`);
+                    }
+                    
+                    givePlayerEXP(2);
+                    updatePlayerData();
+                }
+                
+                nextFishTime = Date.now() + 3000 + Math.random() * 2000;
+            }
+        }
+
+        function equipItem(slotIndex) {
+            const item = inventory[slotIndex];
+            if (!item) return;
+            
+            // Special handling for tinderbox - start firemaking selection within inventory
+            if (item.id === 'tinderbox') {
+                if (!isSelectingFiremaking) {
+                    // Find logs in inventory for firemaking
+                    firemakingOptions = [];
+                    inventory.forEach((invItem, index) => {
+                        if (invItem && invItem.id === 'logs' && invItem.stack > 0) {
+                            firemakingOptions.push({
+                                name: 'Logs',
+                                description: 'Light these logs to create campfires for cooking.',
+                                icon: '🪵',
+                                slotIndex: index,
+                                stack: invItem.stack
+                            });
+                        }
+                    });
+                    
+                    if (firemakingOptions.length > 0) {
+                        isSelectingFiremaking = true;
+                        firemakingStep = 0; // Start with log selection
+                        selectedFiremakingOption = 0;
+                        updateItemDescription();
+                    } else {
+                        // No logs available - this will be handled in updateItemDescription()
+                        isSelectingFiremaking = true;
+                        firemakingStep = 0;
+                        updateItemDescription();
+                    }
+                }
+                return;
+            }
+            
+            if (item.type === 'weapon') {
+                if (equippedWeapon) {
+                    equippedWeapon = null;
+                }
+                equippedWeapon = item;
+                console.log(`Equipped weapon: ${item.name}`);
+            } else if (item.type === 'tool') {
+                if (equippedTool) {
+                    equippedTool = null;
+                }
+                equippedTool = item;
+                console.log(`Equipped tool: ${item.name}`);
+            } else if (item.type === 'food' && item.healAmount && myHealth < 4) {
+                // Consume food item
+                const healAmount = Math.min(item.healAmount, 4 - myHealth);
+                myHealth = Math.min(4, myHealth + healAmount);
+                
+                // Remove one from stack
+                inventory[slotIndex].stack--;
+                if (inventory[slotIndex].stack <= 0) {
+                    inventory[slotIndex] = null;
+                }
+                
+                updateHeartDisplay();
+                updatePlayerData();
+                console.log(`Consumed ${item.name} and restored ${healAmount} health!`);
+            }
+            
+            initializeInventory();
+        }
+
+        function isItemEquipped(item) {
+            return (equippedWeapon && equippedWeapon.id === item.id) ||
+                   (equippedTool && equippedTool.id === item.id);
+        }
+
+        function castFireball() {
+            if (myHealth <= 0 || isRespawning || isFishing) return;
+            
+            const fireballId = 'fireball_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            const directions = {
+                'up': { x: 0, y: -1 },
+                'down': { x: 0, y: 1 },
+                'left': { x: -1, y: 0 },
+                'right': { x: 1, y: 0 }
+            };
+            
+            const dir = directions[myDirection];
+            const fireballRef = ref(database, `fireballs/${fireballId}`);
+            
+            set(fireballRef, {
+                x: myGridPos.x,
+                y: myGridPos.y,
+                dirX: dir.x,
+                dirY: dir.y,
+                ownerId: playerId,
+                zone: myZone,
+                createdAt: Date.now(),
+                lastMove: Date.now()
+            });
+            
+            setTimeout(() => {
+                set(fireballRef, null);
+            }, 5000);
+        }
+
+        function takeDamage() {
+            if (isRespawning || myHealth <= 0) return;
+            
+            myHealth = Math.max(0, myHealth - 1);
+            updateHeartDisplay();
+            updatePlayerData();
+            
+            if (myHealth <= 0) {
+                startRespawn();
+            }
+        }
+
+        function startRespawn() {
+            isRespawning = true;
+            myHealth = 0;
+            stopFishing();
+            stopCooking();
+            stopWoodcutting();
+            updatePlayerData();
+            updateHeartDisplay();
+            
+            setTimeout(() => {
+                myHealth = 4;
+                isRespawning = false;
+                
+                let newPos;
+                do {
+                    newPos = {
+                        x: Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1,
+                        y: Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1
+                    };
+                } while (isPositionOccupied(newPos.x, newPos.y));
+                
+                myGridPos = newPos;
+                document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
+                updateHeartDisplay();
+                updatePlayerData();
+            }, 3000);
+        }
+
+        function updateHeartDisplay() {
+            const hearts = '❤️'.repeat(myHealth) + '🖤'.repeat(4 - myHealth);
+            document.getElementById('hearts').textContent = hearts;
+            document.getElementById('healthDisplay').textContent = `${myHealth}/4`;
+        }
+
+        function updateGoldDisplay() {
+            document.getElementById('goldCounter').textContent = myGold;
+            document.getElementById('goldDisplay').textContent = myGold;
+            document.getElementById('playerGoldInv').textContent = myGold;
+        }
+
+        function givePlayerEXP(expAmount) {
+            playerEXP += expAmount;
+            
+            if (playerMagic < 20) {
+                playerMagic += 1;
+            }
+            
+            const oldLevel = playerLevel;
+            while (playerLevel < 20 && playerEXP >= expRequirements[playerLevel]) {
+                playerLevel++;
+            }
+            
+            if (playerLevel > oldLevel) {
+                newLevel = playerLevel;
+                showLevelUpPopup = true;
+                levelUpPopupTimer = 3000;
+                console.log('LEVEL UP! Now level ' + playerLevel);
+            }
+            
+            updateSkillsDisplay();
+            updatePlayerData();
+        }
+
+        function initializeInventory() {
+            const inventoryGrid = document.getElementById('inventoryGrid');
+            inventoryGrid.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'inventory-slot';
+                slot.dataset.index = i;
+                
+                if (inventory[i]) {
+                    slot.classList.add('occupied');
+                    slot.textContent = inventory[i].icon;
+                    
+                    if (inventory[i].stackable && inventory[i].stack > 1) {
+                        const stackDiv = document.createElement('div');
+                        stackDiv.className = 'item-stack';
+                        stackDiv.textContent = inventory[i].stack;
+                        slot.appendChild(stackDiv);
+                    }
+                    
+                    if (isItemEquipped(inventory[i])) {
+                        slot.classList.add('equipped');
+                    }
+                }
+                
+                if (i === selectedInventorySlot) {
+                    slot.classList.add('selected');
+                }
+                
+                inventoryGrid.appendChild(slot);
+            }
+            
+            updateItemDescription();
+        }
+
+        function updateItemDescription() {
+            const descriptionDiv = document.getElementById('itemDescription');
+            const selectedItem = inventory[selectedInventorySlot];
+            
+            // Check if we're in firemaking selection mode
+            if (isSelectingFiremaking && selectedItem && selectedItem.id === 'tinderbox') {
+                if (firemakingStep === 0) {
+                    // Selecting logs
+                    if (firemakingOptions.length > 0) {
+                        const option = firemakingOptions[selectedFiremakingOption];
+                        descriptionDiv.innerHTML = `
+                            <h4 style="margin: 0 0 10px 0; color: #9fd89f;">Light Logs</h4>
+                            <p style="margin: 0 0 5px 0; font-size: 12px;">${option.icon} ${option.name} (${option.stack})</p>
+                            <p style="margin: 0 0 5px 0; font-size: 11px; color: #a8c5a8;">TAB: Cycle logs | ENTER: Select</p>
+                        `;
+                    } else {
+                        descriptionDiv.innerHTML = `
+                            <h4 style="margin: 0 0 10px 0; color: #ff6b6b;">No Logs Available</h4>
+                            <p style="margin: 0; font-size: 12px;">I need some logs to make a fire with the tinderbox! Try chopping down trees first.</p>
+                        `;
+                    }
+                } else if (firemakingStep === 1) {
+                    // Selecting quantity
+                    const quantityText = selectedQuantity === 0 ? '1x log' : 'All logs';
+                    descriptionDiv.innerHTML = `
+                        <h4 style="margin: 0 0 10px 0; color: #9fd89f;">Quantity: ${quantityText}</h4>
+                        <p style="margin: 0 0 5px 0; font-size: 12px;">How many fires to light?</p>
+                        <p style="margin: 0; font-size: 11px; color: #a8c5a8;">TAB: 1x/All | ENTER: Start | ESC: Cancel</p>
+                    `;
+                }
+                return;
+            }
+            
+            // Normal item description
+            if (selectedItem) {
+                let stackText = '';
+                if (selectedItem.stackable) {
+                    stackText = ` (${selectedItem.stack}/${selectedItem.maxStack})`;
+                }
+                
+                descriptionDiv.innerHTML = `
+                    <h4 style="margin: 0 0 10px 0; color: #9fd89f;">[${selectedItem.name}]${stackText}</h4>
+                    <p style="margin: 0; font-size: 12px;">${selectedItem.description}</p>
+                `;
+            } else {
+                descriptionDiv.innerHTML = `
+                    <h4 style="margin: 0 0 10px 0; color: #9fd89f;">[Empty Slot]</h4>
+                    <p style="margin: 0; font-size: 12px;">Select an item to view its description.</p>
+                `;
+            }
+        }
+
+        function updateSkillsDisplay() {
+            document.getElementById('playerLevel').textContent = playerLevel;
+            document.getElementById('playerLife').textContent = `${myHealth}/4`;
+            document.getElementById('playerMagic').textContent = playerMagic;
+            document.getElementById('playerAttack').textContent = playerAttack;
+            document.getElementById('playerFishing').textContent = playerFishing;
+            document.getElementById('playerCooking').textContent = playerCooking;
+            document.getElementById('playerWoodcutting').textContent = playerWoodcutting;
+            document.getElementById('playerEXP').textContent = playerEXP;
+            document.getElementById('playerGoldInv').textContent = myGold;
+        }
+
+        function toggleQuickChat() {
+            showQuickChat = !showQuickChat;
+            const overlay = document.getElementById('quickChatOverlay');
+            
+            if (showQuickChat) {
+                overlay.style.display = 'block';
+                selectedChatMessage = 0;
+                updateQuickChatSelection();
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function updateQuickChatSelection() {
+            const messages = document.querySelectorAll('.quick-chat-message');
+            messages.forEach((msg, index) => {
+                if (index === selectedChatMessage) {
+                    msg.classList.add('selected');
+                } else {
+                    msg.classList.remove('selected');
+                }
+            });
+        }
+
+        function cycleChatMessage() {
+            selectedChatMessage = (selectedChatMessage + 1) % chatMessages.length;
+            updateQuickChatSelection();
+        }
+
+        function sendChatMessage() {
+            if (showQuickChat && isPlayerCreated && playerId) {
+                const message = chatMessages[selectedChatMessage];
+                console.log('Sending chat message:', message);
+                console.log('Player ID:', playerId);
+                console.log('Player position:', myGridPos);
+                
+                // Store the message with timestamp in Firebase
+                const messageRef = ref(database, `playerMessages/${playerId}`);
+                const messageData = {
+                    message: message,
+                    timestamp: serverTimestamp(),
+                    gridX: myGridPos.x,
+                    gridY: myGridPos.y,
+                    zone: myZone,
+                    playerNumber: playerNumber,
+                    color: myColor
+                };
+                
+                console.log('Sending message data:', messageData);
+                
+                set(messageRef, messageData).then(() => {
+                    console.log('Message sent successfully to Firebase');
+                }).catch((error) => {
+                    console.error('Error sending message:', error);
+                });
+                
+                // Auto-remove message after 3 seconds
+                setTimeout(() => {
+                    set(messageRef, null);
+                }, 3000);
+                
+                toggleQuickChat();
+            } else {
+                console.log('Cannot send message - conditions not met:', {
+                    showQuickChat,
+                    isPlayerCreated,
+                    playerId
+                });
+            }
+        }
+
+        function toggleInventory() {
+            showInventory = !showInventory;
+            const overlay = document.getElementById('inventoryOverlay');
+            
+            if (showInventory) {
+                overlay.style.display = 'block';
+                initializeInventory();
+                updateSkillsDisplay();
+            } else {
+                overlay.style.display = 'none';
+                // Reset firemaking selection when closing inventory
+                if (isSelectingFiremaking) {
+                    isSelectingFiremaking = false;
+                    firemakingStep = 0;
+                }
+            }
+        }
+
+        function navigateInventory(direction) {
+            if (!showInventory) return;
+            
+            let newSlot = selectedInventorySlot;
+            
+            switch (direction) {
+                case 'up':
+                    newSlot = Math.max(0, selectedInventorySlot - 5);
+                    break;
+                case 'down':
+                    newSlot = Math.min(19, selectedInventorySlot + 5);
+                    break;
+                case 'left':
+                    if (selectedInventorySlot % 5 !== 0) {
+                        newSlot = selectedInventorySlot - 1;
+                    }
+                    break;
+                case 'right':
+                    if ((selectedInventorySlot + 1) % 5 !== 0) {
+                        newSlot = selectedInventorySlot + 1;
+                    }
+                    break;
+            }
+            
+            selectedInventorySlot = newSlot;
+            initializeInventory();
+        }
+
+        function initializeMobs() {
+            if (myZone === 2) {
+                const mobsRef = ref(database, 'mobs');
+                onValue(mobsRef, (snapshot) => {
+                    const currentMobs = snapshot.val() || {};
+                    
+                    if (Object.keys(currentMobs).length === 0) {
+                        for (let i = 1; i <= 6; i++) {
+                            const mobId = `mob_${i}_${Date.now()}`;
+                            const mobRef = ref(database, `mobs/${mobId}`);
+                            
+                            const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
+                            const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
+                            const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
+                            const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
+                            
+                            set(mobRef, {
+                                x: Math.floor(Math.random() * (fenceMaxX - fenceMinX)) + fenceMinX,
+                                y: Math.floor(Math.random() * (fenceMaxY - fenceMinY)) + fenceMinY,
+                                health: 2,
+                                maxHealth: 2,
+                                type: i <= 3 ? 'chicken' : 'mouse',
+                                lastMove: Date.now(),
+                                moveCounter: 0
+                            });
+                        }
+                    }
+                }, { onlyOnce: true });
+            }
+        }
+
+        function checkZoneTransition() {
+            if (myZone === 1 && myGridPos.x >= GRID_WIDTH - 1) {
+                myZone = 2;
+                myGridPos.x = 1;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+                initializeMobs();
+            }
+            else if (myZone === 2 && myGridPos.x <= 0) {
+                myZone = 1;
+                myGridPos.x = GRID_WIDTH - 2;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+            }
+            else if (myZone === 1 && myGridPos.x <= 0) {
+                myZone = 3;
+                myGridPos.x = GRID_WIDTH - 2;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+            }
+            else if (myZone === 3 && myGridPos.x >= GRID_WIDTH - 1) {
+                myZone = 1;
+                myGridPos.x = 1;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+            }
+        }
+
+        function checkNPCInteraction() {
+            if (myZone === 1) {
+                // Check regular NPC
+                const npcDistance = Math.abs(myGridPos.x - npc.x) + Math.abs(myGridPos.y - npc.y);
+                if (npcDistance <= 1) {
+                    showDialog = true;
+                    dialogText = "Hello there, brave adventurer! Head east to the wilderness for adventure, or west to the peaceful lake for fishing!";
+                    return;
+                }
+                
+                // Check merchant cat
+                const merchantDistance = Math.abs(myGridPos.x - merchant.x) + Math.abs(myGridPos.y - merchant.y);
+                if (merchantDistance <= 1) {
+                    showMerchantDialog = true;
+                    selectedTradeOption = 0; // Default to "Buy"
+                    return;
+                }
+            }
+        }
+
+        function checkFireplaceInteraction() {
+            if (myZone === 3 && isAdjacentToFireplace(myGridPos.x, myGridPos.y)) {
+                startCooking();
+            } else if (isAdjacentToPlayerCampfire(myGridPos.x, myGridPos.y)) {
+                startCooking();
+            }
+        }
+
+        function checkTreeInteraction() {
+            if (myZone === 1) {
+                const nearbyTree = findAdjacentTree(myGridPos.x, myGridPos.y);
+                if (nearbyTree) {
+                    startWoodcutting();
+                }
+            }
+        }
+
+        function checkMerchantInteraction() {
+            if (myZone === 1) {
+                const distance = Math.abs(myGridPos.x - merchant.x) + Math.abs(myGridPos.y - merchant.y);
+                if (distance <= 1) {
+                    showMerchantDialog = true;
+                    selectedTradeOption = 0; // Default to "Buy"
+                }
+            }
+        }
+
+        // Merchant inventory (infinite items)
+        const merchantInventory = [
+            {
+                id: 'tinderbox',
+                name: 'Tinderbox',
+                description: 'A small box with flint and steel. Useful for starting fires.',
+                icon: '📦',
+                type: 'tool',
+                price: 15,
+                stock: 999, // Infinite
+                untradeable: true // Cannot be sold back
+            },
+            {
+                id: 'health_potion',
+                name: 'Health Potion',
+                description: 'A red potion that restores 1 health. Cannot be traded.',
+                icon: '🧪',
+                type: 'potion',
+                price: 25,
+                stock: 999, // Infinite
+                untradeable: true
+            }
+        ];
+
+        function getMerchantStock() {
+            return merchantInventory;
+        }
+
+        function getPlayerSellableItems() {
+            const sellableItems = [];
+            inventory.forEach((item, index) => {
+                if (item && !item.untradeable) {
+                    let price = 1; // Base price
+                    
+                    // Set prices based on item type and ID
+                    switch (item.id) {
+                        case 'fish': price = 3; break;
+                        case 'cooked_fish': price = 8; break;
+                        case 'logs': price = 5; break;
+                        case 'sword': price = 50; break;
+                        case 'fishing_rod': price = 30; break;
+                        case 'iron_axe': price = 45; break;
+                        default: price = Math.max(1, Math.floor(Math.random() * 10) + 1);
+                    }
+                    
+                    sellableItems.push({
+                        ...item,
+                        slotIndex: index,
+                        sellPrice: price
+                    });
+                }
+            });
+            return sellableItems;
+        }
+
+        function cycleMerchantOption() {
+            selectedTradeOption = (selectedTradeOption + 1) % 2; // 0 = Buy, 1 = Sell
+        }
+
+        function selectMerchantOption() {
+            if (selectedTradeOption === 0) { // Buy
+                tradeMode = 'buy';
+                showMerchantDialog = false;
+                showTradeScreen = true;
+                selectedTradeSlot = 0;
+            } else { // Sell
+                tradeMode = 'sell';
+                showMerchantDialog = false;
+                showTradeScreen = true;
+                selectedTradeSlot = 0;
+            }
+        }
+
+        function navigateTrade(direction) {
+            const items = tradeMode === 'buy' ? getMerchantStock() : getPlayerSellableItems();
+            const maxSlots = Math.max(0, items.length - 1);
+            
+            if (direction === 'up') {
+                selectedTradeSlot = Math.max(0, selectedTradeSlot - 1);
+            } else if (direction === 'down') {
+                selectedTradeSlot = Math.min(maxSlots, selectedTradeSlot + 1);
+            }
+        }
+
+        function executeTrade() {
+            if (tradeMode === 'buy') {
+                const merchantItems = getMerchantStock();
+                const item = merchantItems[selectedTradeSlot];
+                
+                if (item && myGold >= item.price) {
+                    // Create the item to add to inventory
+                    const itemToAdd = {
+                        id: item.id,
+                        name: item.name,
+                        description: item.description,
+                        icon: item.icon,
+                        type: item.type,
+                        stackable: item.type === 'potion',
+                        stack: item.type === 'potion' ? 1 : undefined,
+                        maxStack: item.type === 'potion' ? 50 : undefined,
+                        healAmount: item.id === 'health_potion' ? 1 : undefined,
+                        untradeable: item.untradeable || false
+                    };
+                    
+                    if (addItemToInventory(itemToAdd)) {
+                        myGold -= item.price;
+                        updateGoldDisplay();
+                        updatePlayerData();
+                        console.log(`Bought ${item.name} for ${item.price} gold`);
+                    }
+                }
+            } else { // sell
+                const sellableItems = getPlayerSellableItems();
+                const item = sellableItems[selectedTradeSlot];
+                
+                if (item) {
+                    // Remove item from inventory
+                    if (item.stackable && item.stack > 1) {
+                        inventory[item.slotIndex].stack--;
+                    } else {
+                        inventory[item.slotIndex] = null;
+                    }
+                    
+                    myGold += item.sellPrice;
+                    updateGoldDisplay();
+                    updatePlayerData();
+                    console.log(`Sold ${item.name} for ${item.sellPrice} gold`);
+                    
+                    // Refresh the trade screen
+                    if (getPlayerSellableItems().length === 0) {
+                        showTradeScreen = false;
+                    } else if (selectedTradeSlot >= getPlayerSellableItems().length) {
+                        selectedTradeSlot = Math.max(0, getPlayerSellableItems().length - 1);
+                    }
+                }
+            }
+        }
+
+        function closeTradeScreen() {
+            showTradeScreen = false;
+            showMerchantDialog = false;
+        }
+
+        function processFiremaking() {
+            if (!isFiremaking || Date.now() < nextFireTime) return;
+            
+            const logsItem = inventory[selectedLogsSlot];
+            if (!logsItem || logsItem.stack <= 0) {
+                stopFiremaking();
+                return;
+            }
+            
+            // Calculate fire position (place at current position)
+            const fireX = myGridPos.x;
+            const fireY = myGridPos.y;
+            
+            // Create temporary campfire (lasts 90 seconds, enough for 8-10 cooking actions)
+            playerCampfires.push({
+                x: fireX,
+                y: fireY,
+                zone: myZone,
+                createdAt: Date.now(),
+                duration: 90000 // 90 seconds in milliseconds
+            });
+            
+            // Remove one log from inventory
+            logsItem.stack--;
+            if (logsItem.stack <= 0) {
+                inventory[selectedLogsSlot] = null;
+            }
+            
+            firemakingCount++;
+            console.log(`Placed campfire ${firemakingCount}/${targetFireCount} at ${fireX}, ${fireY}`);
+            
+            // Move player to next position for additional fires
+            if (firemakingCount < targetFireCount) {
+                const directions = {
+                    'up': { x: 0, y: -1 },
+                    'down': { x: 0, y: 1 },
+                    'left': { x: -1, y: 0 },
+                    'right': { x: 1, y: 0 }
+                };
+                
+                const dir = directions[firemakingDirection];
+                const nextX = myGridPos.x + dir.x;
+                const nextY = myGridPos.y + dir.y;
+                
+                // Check if player can move to next position
+                if (nextX < 0 || nextX >= GRID_WIDTH || nextY < 0 || nextY >= GRID_HEIGHT ||
+                    isPositionOccupied(nextX, nextY)) {
+                    console.log('Cannot move player - stopping firemaking');
+                    stopFiremaking();
+                    return;
+                }
+                
+                myGridPos.x = nextX;
+                myGridPos.y = nextY;
+                document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
+                nextFireTime = Date.now() + 1000;
+            } else {
+                stopFiremaking();
+            }
+            
+            updatePlayerData();
+        }
+
+        function stopFiremaking() {
+            if (isFiremaking) {
+                isFiremaking = false;
+                firemakingCount = 0;
+                targetFireCount = 0;
+                updatePlayerData();
+                console.log('Stopped firemaking');
+            }
+        }
+
+        function isAdjacentToPlayerCampfire(gridX, gridY) {
+            for (let campfire of playerCampfires) {
+                if (campfire.zone === myZone) {
+                    // Check if player is on the campfire tile OR adjacent to it
+                    const distance = Math.abs(gridX - campfire.x) + Math.abs(gridY - campfire.y);
+                    if (distance <= 1) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function checkDropPickup() {
+            Object.entries(drops).forEach(([dropId, drop]) => {
+                if (drop && 
+                    drop.x === myGridPos.x && 
+                    drop.y === myGridPos.y &&
+                    drop.zone === myZone) {
+                    
+                    if (drop.type === 'heart' && myHealth < 4) {
+                        myHealth = Math.min(4, myHealth + 1);
+                        updateHeartDisplay();
+                        console.log('Health restored!');
+                    } else if (drop.type === 'gold') {
+                        myGold += drop.value;
+                        updateGoldDisplay();
+                        console.log('Found ' + drop.value + ' gold!');
+                    } else if (drop.type === 'exp') {
+                        givePlayerEXP(drop.value);
+                        console.log('Gained ' + drop.value + ' EXP from orb! Magic also increased.');
+                    }
+                    
+                    const dropRef = ref(database, `drops/${dropId}`);
+                    set(dropRef, null);
+                    updatePlayerData();
+                }
+            });
+        }
+
+        function listenToGameData() {
+            const fireballsRef = ref(database, 'fireballs');
+            onValue(fireballsRef, (snapshot) => {
+                fireballs = snapshot.val() || {};
+            });
+
+            const mobsRef = ref(database, 'mobs');
+            onValue(mobsRef, (snapshot) => {
+                mobs = snapshot.val() || {};
+            });
+
+            const dropsRef = ref(database, 'drops');
+            onValue(dropsRef, (snapshot) => {
+                drops = snapshot.val() || {};
+            });
+
+            const messagesRef = ref(database, 'playerMessages');
+            onValue(messagesRef, (snapshot) => {
+                playerMessages = snapshot.val() || {};
+            });
+        }
+
+        function drawChicken(x, y) {
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(x, y + 2, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(x, y - 5, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ff8c00';
+            ctx.beginPath();
+            ctx.moveTo(x - 7, y - 5);
+            ctx.lineTo(x - 3, y - 3);
+            ctx.lineTo(x - 7, y - 1);
+            ctx.fill();
+            
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x - 2, y - 6, 1, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.moveTo(x - 2, y - 10);
+            ctx.lineTo(x, y - 12);
+            ctx.lineTo(x + 2, y - 10);
+            ctx.lineTo(x + 1, y - 8);
+            ctx.fill();
+        }
+
+        function drawMouse(x, y) {
+            ctx.fillStyle = '#888';
+            ctx.beginPath();
+            ctx.arc(x, y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#888';
+            ctx.beginPath();
+            ctx.arc(x - 3, y - 2, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ffb6c1';
+            ctx.beginPath();
+            ctx.arc(x - 5, y - 6, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x - 1, y - 6, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x - 5, y - 3, 1, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.strokeStyle = '#888';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x + 8, y + 2, 4, Math.PI, Math.PI * 1.5);
+            ctx.stroke();
+        }
+
+        function drawSparkles(x, y, time) {
+            const sparkleCount = 8;
+            for (let i = 0; i < sparkleCount; i++) {
+                const angle = (i / sparkleCount) * Math.PI * 2 + time * 0.1;
+                const distance = 10 + Math.sin(time * 0.05 + i) * 5;
+                const sparkleX = x + Math.cos(angle) * distance;
+                const sparkleY = y + Math.sin(angle) * distance;
+                
+                ctx.fillStyle = `rgba(255, ${150 + Math.sin(time * 0.1 + i) * 50}, 0, ${0.7 + Math.sin(time * 0.15 + i) * 0.3})`;
+                ctx.beginPath();
+                ctx.arc(sparkleX, sparkleY, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawWaterSparkles(x, y, time, gridX, gridY) {
+            const seed = gridX * 1000 + gridY;
+            const sparkleCount = 4;
+            
+            for (let i = 0; i < sparkleCount; i++) {
+                const seedOffset = seed + i * 123;
+                const pseudoRandom1 = (seedOffset % 1000) / 1000;
+                const pseudoRandom2 = ((seedOffset + 456) % 1000) / 1000;
+                
+                const angle = pseudoRandom1 * Math.PI * 2 + time * 0.002;
+                const distance = pseudoRandom2 * 15;
+                const sparkleX = x + Math.cos(angle) * distance;
+                const sparkleY = y + Math.sin(angle) * distance;
+                
+                const opacity = 0.3 + Math.sin(time * 0.003 + pseudoRandom1 * Math.PI * 2) * 0.2;
+                ctx.fillStyle = `rgba(173, 216, 230, ${opacity})`;
+                ctx.beginPath();
+                ctx.arc(sparkleX, sparkleY, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawGame() {
+            ctx.fillStyle = '#0f1f0c';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#1a2817';
+            ctx.lineWidth = 1;
+            for (let x = 0; x <= GRID_WIDTH; x++) {
+                ctx.beginPath();
+                ctx.moveTo(x * GRID_SIZE, 0);
+                ctx.lineTo(x * GRID_SIZE, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y <= GRID_HEIGHT; y++) {
+                ctx.beginPath();
+                ctx.moveTo(0, y * GRID_SIZE);
+                ctx.lineTo(canvas.width, y * GRID_SIZE);
+                ctx.stroke();
+            }
+
+            if (myZone === 1) {
+                const npcPixel = gridToPixel(npc.x, npc.y);
+                ctx.fillStyle = npc.color;
+                ctx.beginPath();
+                ctx.arc(npcPixel.x, npcPixel.y, 15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffed4e';
+                ctx.fillRect(npcPixel.x - 10, npcPixel.y - 25, 20, 10);
+                ctx.fillRect(npcPixel.x - 5, npcPixel.y - 30, 10, 5);
+                
+                // Draw merchant cat
+                const merchantPixel = gridToPixel(merchant.x, merchant.y);
+                
+                // Cat body
+                ctx.fillStyle = '#ff8c00';
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x, merchantPixel.y, 18, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Cat stripes
+                ctx.fillStyle = '#e07000';
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x - 8, merchantPixel.y - 5, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x + 8, merchantPixel.y - 5, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x, merchantPixel.y + 8, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Cat ears
+                ctx.fillStyle = '#ff8c00';
+                ctx.beginPath();
+                ctx.moveTo(merchantPixel.x - 10, merchantPixel.y - 18);
+                ctx.lineTo(merchantPixel.x - 15, merchantPixel.y - 25);
+                ctx.lineTo(merchantPixel.x - 5, merchantPixel.y - 22);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(merchantPixel.x + 10, merchantPixel.y - 18);
+                ctx.lineTo(merchantPixel.x + 15, merchantPixel.y - 25);
+                ctx.lineTo(merchantPixel.x + 5, merchantPixel.y - 22);
+                ctx.fill();
+                
+                // Inner ears
+                ctx.fillStyle = '#ffb347';
+                ctx.beginPath();
+                ctx.moveTo(merchantPixel.x - 8, merchantPixel.y - 20);
+                ctx.lineTo(merchantPixel.x - 11, merchantPixel.y - 24);
+                ctx.lineTo(merchantPixel.x - 7, merchantPixel.y - 22);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(merchantPixel.x + 8, merchantPixel.y - 20);
+                ctx.lineTo(merchantPixel.x + 11, merchantPixel.y - 24);
+                ctx.lineTo(merchantPixel.x + 7, merchantPixel.y - 22);
+                ctx.fill();
+                
+                // Cat face
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x - 6, merchantPixel.y - 5, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x + 6, merchantPixel.y - 5, 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Cat nose
+                ctx.fillStyle = '#ffb6c1';
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x, merchantPixel.y - 2, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Cat mouth
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x, merchantPixel.y + 2, 4, 0, Math.PI);
+                ctx.stroke();
+                
+                // Cat whiskers
+                ctx.beginPath();
+                ctx.moveTo(merchantPixel.x - 15, merchantPixel.y - 2);
+                ctx.lineTo(merchantPixel.x - 8, merchantPixel.y - 1);
+                ctx.moveTo(merchantPixel.x + 15, merchantPixel.y - 2);
+                ctx.lineTo(merchantPixel.x + 8, merchantPixel.y - 1);
+                ctx.moveTo(merchantPixel.x - 15, merchantPixel.y + 2);
+                ctx.lineTo(merchantPixel.x - 8, merchantPixel.y + 1);
+                ctx.moveTo(merchantPixel.x + 15, merchantPixel.y + 2);
+                ctx.lineTo(merchantPixel.x + 8, merchantPixel.y + 1);
+                ctx.stroke();
+                
+                // Cat tail
+                ctx.strokeStyle = '#ff8c00';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.arc(merchantPixel.x + 20, merchantPixel.y + 10, 8, Math.PI, Math.PI * 1.5);
+                ctx.stroke();
+                
+                // Trees
+                trees.forEach(tree => {
+                    if (!tree.chopped) {
+                        const treePixel = gridToPixel(tree.x, tree.y);
+                        
+                        // Draw trunk
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(treePixel.x - 6, treePixel.y - 5, 12, 20);
+                        
+                        // Draw leaves
+                        ctx.fillStyle = '#228B22';
+                        ctx.beginPath();
+                        ctx.arc(treePixel.x, treePixel.y - 15, 18, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Draw inner leaves (lighter)
+                        ctx.fillStyle = '#32CD32';
+                        ctx.beginPath();
+                        ctx.arc(treePixel.x - 4, treePixel.y - 18, 12, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else {
+                        // Draw tree stump
+                        const treePixel = gridToPixel(tree.x, tree.y);
+                        ctx.fillStyle = '#654321';
+                        ctx.fillRect(treePixel.x - 8, treePixel.y + 5, 16, 8);
+                        
+                        // Draw rings on stump
+                        ctx.strokeStyle = '#8B4513';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(treePixel.x, treePixel.y + 9, 5, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(treePixel.x, treePixel.y + 9, 3, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                });
+            }
+
+            // Draw zone transition arrows
+            if (myZone === 1) {
+                const rightArrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
+                const rightArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('>', rightArrowX, rightArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Wilderness', rightArrowX, rightArrowY + 20);
+                
+                const leftArrowX = GRID_SIZE / 2;
+                const leftArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('<', leftArrowX, leftArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Lake', leftArrowX, leftArrowY + 20);
+                
+            } else if (myZone === 2) {
+                const arrowX = GRID_SIZE / 2;
+                const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('<', arrowX, arrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', arrowX, arrowY + 20);
+                
+            } else if (myZone === 3) {
+                const arrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
+                const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('>', arrowX, arrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', arrowX, arrowY + 20);
+            }
+
+            if (myZone === 3) {
+                const currentTime = Date.now();
+                for (let x = LAKE_MIN_X; x <= LAKE_MAX_X; x++) {
+                    for (let y = LAKE_MIN_Y; y <= LAKE_MAX_Y; y++) {
+                        const pixel = gridToPixel(x, y);
+                        
+                        ctx.fillStyle = '#4169E1';
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                        
+                        const waveOffset = Math.sin(currentTime * 0.001 + x * 0.5 + y * 0.3) * 10;
+                        ctx.fillStyle = 'rgba(135, 206, 235, 0.5)';
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2 + waveOffset, GRID_SIZE, GRID_SIZE/3);
+                        
+                        drawWaterSparkles(pixel.x, pixel.y, currentTime, x, y);
+                    }
+                }
+                
+                // Draw fireplace
+                const fireplacePixel = gridToPixel(fireplace.x, fireplace.y);
+                
+                // Draw base stones
+                ctx.fillStyle = '#666';
+                ctx.fillRect(fireplacePixel.x - 15, fireplacePixel.y - 5, 30, 20);
+                
+                // Draw fire
+                const fireFlicker = Math.sin(currentTime * 0.01) * 3;
+                ctx.fillStyle = '#ff6600';
+                ctx.beginPath();
+                ctx.moveTo(fireplacePixel.x - 10, fireplacePixel.y + 10);
+                ctx.lineTo(fireplacePixel.x - 5, fireplacePixel.y - 10 + fireFlicker);
+                ctx.lineTo(fireplacePixel.x, fireplacePixel.y - 15 + fireFlicker);
+                ctx.lineTo(fireplacePixel.x + 5, fireplacePixel.y - 10 + fireFlicker);
+                ctx.lineTo(fireplacePixel.x + 10, fireplacePixel.y + 10);
+                ctx.fill();
+                
+                // Draw inner flame
+                ctx.fillStyle = '#ffaa00';
+                ctx.beginPath();
+                ctx.moveTo(fireplacePixel.x - 7, fireplacePixel.y + 5);
+                ctx.lineTo(fireplacePixel.x - 3, fireplacePixel.y - 5 + fireFlicker);
+                ctx.lineTo(fireplacePixel.x, fireplacePixel.y - 8 + fireFlicker);
+                ctx.lineTo(fireplacePixel.x + 3, fireplacePixel.y - 5 + fireFlicker);
+                ctx.lineTo(fireplacePixel.x + 7, fireplacePixel.y + 5);
+                ctx.fill();
+                
+                // Draw sparks
+                for (let i = 0; i < 5; i++) {
+                    const sparkX = fireplacePixel.x + (Math.sin(currentTime * 0.005 + i) * 8);
+                    const sparkY = fireplacePixel.y - 20 + (Math.cos(currentTime * 0.007 + i) * 5);
+                    ctx.fillStyle = `rgba(255, ${100 + i * 30}, 0, ${0.6 + Math.sin(currentTime * 0.01 + i) * 0.4})`;
+                    ctx.beginPath();
+                    ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Draw player-created campfires
+                playerCampfires.forEach(campfire => {
+                    if (campfire.zone === myZone) {
+                        const campfirePixel = gridToPixel(campfire.x, campfire.y);
+                        const currentTime = Date.now();
+                        
+                        // Draw base stones
+                        ctx.fillStyle = '#666';
+                        ctx.fillRect(campfirePixel.x - 12, campfirePixel.y - 3, 24, 16);
+                        
+                        // Draw fire with flicker animation
+                        const fireFlicker = Math.sin(currentTime * 0.01 + campfire.x + campfire.y) * 3;
+                        ctx.fillStyle = '#ff6600';
+                        ctx.beginPath();
+                        ctx.moveTo(campfirePixel.x - 8, campfirePixel.y + 8);
+                        ctx.lineTo(campfirePixel.x - 4, campfirePixel.y - 8 + fireFlicker);
+                        ctx.lineTo(campfirePixel.x, campfirePixel.y - 12 + fireFlicker);
+                        ctx.lineTo(campfirePixel.x + 4, campfirePixel.y - 8 + fireFlicker);
+                        ctx.lineTo(campfirePixel.x + 8, campfirePixel.y + 8);
+                        ctx.fill();
+                        
+                        // Draw inner flame
+                        ctx.fillStyle = '#ffaa00';
+                        ctx.beginPath();
+                        ctx.moveTo(campfirePixel.x - 5, campfirePixel.y + 3);
+                        ctx.lineTo(campfirePixel.x - 2, campfirePixel.y - 3 + fireFlicker);
+                        ctx.lineTo(campfirePixel.x, campfirePixel.y - 6 + fireFlicker);
+                        ctx.lineTo(campfirePixel.x + 2, campfirePixel.y - 3 + fireFlicker);
+                        ctx.lineTo(campfirePixel.x + 5, campfirePixel.y + 3);
+                        ctx.fill();
+                        
+                        // Draw sparks
+                        for (let i = 0; i < 3; i++) {
+                            const sparkX = campfirePixel.x + (Math.sin(currentTime * 0.005 + i + campfire.x) * 6);
+                            const sparkY = campfirePixel.y - 15 + (Math.cos(currentTime * 0.007 + i + campfire.y) * 4);
+                            ctx.fillStyle = `rgba(255, ${100 + i * 40}, 0, ${0.6 + Math.sin(currentTime * 0.01 + i) * 0.4})`;
+                            ctx.beginPath();
+                            ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                });
+            }
+
+            // Draw player-created campfires in ALL zones
+            playerCampfires.forEach(campfire => {
+                if (campfire.zone === myZone) {
+                    const campfirePixel = gridToPixel(campfire.x, campfire.y);
+                    const currentTime = Date.now();
+                    
+                    // Draw base stones
+                    ctx.fillStyle = '#666';
+                    ctx.fillRect(campfirePixel.x - 12, campfirePixel.y - 3, 24, 16);
+                    
+                    // Draw fire with flicker animation
+                    const fireFlicker = Math.sin(currentTime * 0.01 + campfire.x + campfire.y) * 3;
+                    ctx.fillStyle = '#ff6600';
+                    ctx.beginPath();
+                    ctx.moveTo(campfirePixel.x - 8, campfirePixel.y + 8);
+                    ctx.lineTo(campfirePixel.x - 4, campfirePixel.y - 8 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x, campfirePixel.y - 12 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x + 4, campfirePixel.y - 8 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x + 8, campfirePixel.y + 8);
+                    ctx.fill();
+                    
+                    // Draw inner flame
+                    ctx.fillStyle = '#ffaa00';
+                    ctx.beginPath();
+                    ctx.moveTo(campfirePixel.x - 5, campfirePixel.y + 3);
+                    ctx.lineTo(campfirePixel.x - 2, campfirePixel.y - 3 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x, campfirePixel.y - 6 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x + 2, campfirePixel.y - 3 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x + 5, campfirePixel.y + 3);
+                    ctx.fill();
+                    
+                    // Draw sparks
+                    for (let i = 0; i < 3; i++) {
+                        const sparkX = campfirePixel.x + (Math.sin(currentTime * 0.005 + i + campfire.x) * 6);
+                        const sparkY = campfirePixel.y - 15 + (Math.cos(currentTime * 0.007 + i + campfire.y) * 4);
+                        ctx.fillStyle = `rgba(255, ${100 + i * 40}, 0, ${0.6 + Math.sin(currentTime * 0.01 + i) * 0.4})`;
+                        ctx.beginPath();
+                        ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            });
+
+            function drawGrassTexture(x, y, gridSize) {
+                const pixel = gridToPixel(x, y);
+                const centerX = pixel.x;
+                const centerY = pixel.y;
+                
+                const seed = x * 1000 + y;
+                
+                ctx.fillStyle = 'rgba(20, 60, 20, 0.1)';
+                ctx.fillRect(centerX - gridSize/2, centerY - gridSize/2, gridSize, gridSize);
+                
+                for (let i = 0; i < 3; i++) {
+                    const pseudoRandom1 = (seed + i * 123) % 1000 / 1000;
+                    const pseudoRandom2 = (seed + i * 456 + 789) % 1000 / 1000;
+                    
+                    const offsetX = (pseudoRandom1 - 0.5) * gridSize * 0.6;
+                    const offsetY = (pseudoRandom2 - 0.5) * gridSize * 0.6;
+                    
+                    ctx.fillStyle = `rgba(${25 + (pseudoRandom1 * 15)}, ${70 + (pseudoRandom2 * 20)}, ${25 + (pseudoRandom1 * 10)}, 0.2)`;
+                    ctx.beginPath();
+                    ctx.arc(centerX + offsetX, centerY + offsetY, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            if (myZone === 2) {
+                const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
+                const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
+                const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
+                const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
+                
+                for (let x = fenceMinX - 2; x <= fenceMaxX + 2; x++) {
+                    for (let y = fenceMinY - 2; y <= fenceMaxY + 2; y++) {
+                        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT) {
+                            const distanceFromFence = Math.min(
+                                Math.abs(x - fenceMinX), Math.abs(x - fenceMaxX),
+                                Math.abs(y - fenceMinY), Math.abs(y - fenceMaxY)
+                            );
+                            
+                            if (distanceFromFence <= 3) {
+                                drawGrassTexture(x, y, GRID_SIZE);
+                            }
+                        }
+                    }
+                }
+                
+                ctx.strokeStyle = '#8B4513';
+                ctx.lineWidth = 3;
+                
+                for (let x = fenceMinX; x <= fenceMaxX; x++) {
+                    const topPixel = gridToPixel(x, fenceMinY);
+                    ctx.beginPath();
+                    ctx.moveTo(topPixel.x, topPixel.y - GRID_SIZE/2);
+                    ctx.lineTo(topPixel.x, topPixel.y + GRID_SIZE/2);
+                    ctx.stroke();
+                    
+                    const bottomPixel = gridToPixel(x, fenceMaxY);
+                    ctx.beginPath();
+                    ctx.moveTo(bottomPixel.x, bottomPixel.y - GRID_SIZE/2);
+                    ctx.lineTo(bottomPixel.x, bottomPixel.y + GRID_SIZE/2);
+                    ctx.stroke();
+                }
+                
+                for (let y = fenceMinY; y <= fenceMaxY; y++) {
+                    const leftPixel = gridToPixel(fenceMinX, y);
+                    ctx.beginPath();
+                    ctx.moveTo(leftPixel.x - GRID_SIZE/2, leftPixel.y);
+                    ctx.lineTo(leftPixel.x + GRID_SIZE/2, leftPixel.y);
+                    ctx.stroke();
+                    
+                    const rightPixel = gridToPixel(fenceMaxX, y);
+                    ctx.beginPath();
+                    ctx.moveTo(rightPixel.x - GRID_SIZE/2, rightPixel.y);
+                    ctx.lineTo(rightPixel.x + GRID_SIZE/2, rightPixel.y);
+                    ctx.stroke();
+                }
+                
+                Object.entries(mobs).forEach(([mobId, mob]) => {
+                    if (mob && mob.health > 0) {
+                        const mobPixel = gridToPixel(mob.x, mob.y);
+                        
+                        if (mob.type === 'chicken') {
+                            drawChicken(mobPixel.x, mobPixel.y);
+                        } else {
+                            drawMouse(mobPixel.x, mobPixel.y);
+                        }
+                        
+                        if (mob.health < mob.maxHealth) {
+                            const barWidth = 20;
+                            const barHeight = 3;
+                            const barX = mobPixel.x - barWidth / 2;
+                            const barY = mobPixel.y - 20;
+                            
+                            ctx.fillStyle = '#333';
+                            ctx.fillRect(barX, barY, barWidth, barHeight);
+                            
+                            ctx.fillStyle = '#ff4444';
+                            ctx.fillRect(barX, barY, (mob.health / mob.maxHealth) * barWidth, barHeight);
+                        }
+                    }
+                });
+            }
+
+            Object.entries(drops).forEach(([dropId, drop]) => {
+                if (drop && drop.zone === myZone) {
+                    const dropPixel = gridToPixel(drop.x, drop.y);
+                    
+                    if (drop.type === 'heart') {
+                        ctx.fillStyle = '#ff69b4';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('❤️', dropPixel.x, dropPixel.y + 5);
+                    } else if (drop.type === 'gold') {
+                        ctx.fillStyle = '#ffd700';
+                        ctx.font = '12px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(`${drop.value}💰`, dropPixel.x, dropPixel.y + 5);
+                    } else if (drop.type === 'exp') {
+                        ctx.fillStyle = '#00ffff';
+                        ctx.beginPath();
+                        ctx.arc(dropPixel.x, dropPixel.y, 8, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        const shimmer = Math.sin(Date.now() * 0.01) * 0.3 + 0.7;
+                        ctx.fillStyle = `rgba(255, 255, 255, ${shimmer})`;
+                        ctx.beginPath();
+                        ctx.arc(dropPixel.x, dropPixel.y, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '10px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(`${drop.value}`, dropPixel.x, dropPixel.y + 15);
+                    }
+                }
+            });
+
+            const currentTime = Date.now();
+            Object.entries(fireballs).forEach(([fireballId, fireball]) => {
+                if (fireball && fireball.zone === myZone) {
+                    const firePixel = gridToPixel(fireball.x, fireball.y);
+                    
+                    ctx.fillStyle = '#ff4500';
+                    ctx.beginPath();
+                    ctx.arc(firePixel.x, firePixel.y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    drawSparkles(firePixel.x, firePixel.y, currentTime);
+                    
+                    Object.entries(players).forEach(([targetPlayerId, targetPlayer]) => {
+                        if (targetPlayer && 
+                            targetPlayerId !== fireball.ownerId && 
+                            targetPlayer.gridX === fireball.x && 
+                            targetPlayer.gridY === fireball.y && 
+                            targetPlayer.zone === fireball.zone &&
+                            !targetPlayer.isRespawning &&
+                            targetPlayer.health > 0) {
+                            
+                            if (targetPlayerId === playerId) {
+                                takeDamage();
+                            }
+                            
+                            const fireballRef = ref(database, `fireballs/${fireballId}`);
+                            set(fireballRef, null);
+                        }
+                    });
+                }
+            });
+
+            Object.entries(players).forEach(([id, player]) => {
+                if (player && player.zone === myZone && typeof player.gridX === 'number' && typeof player.gridY === 'number') {
+                    const playerPixel = gridToPixel(player.gridX, player.gridY);
+                    
+                    if (player.isRespawning && Math.floor(Date.now() / 200) % 2) {
+                        return;
+                    }
+                    
+                    ctx.fillStyle = player.color || '#fff';
+                    ctx.beginPath();
+                    ctx.arc(playerPixel.x, playerPixel.y, 15, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (id === playerId) {
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(playerPixel.x, playerPixel.y, 18, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+
+                    if (player.isFishing) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        ctx.beginPath();
+                        ctx.arc(playerPixel.x, playerPixel.y - 35, 12, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = '#4169E1';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🎣', playerPixel.x, playerPixel.y - 28);
+                    }
+
+                    if (player.isCooking) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        ctx.beginPath();
+                        ctx.arc(playerPixel.x, playerPixel.y - 35, 12, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = '#ff6600';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🔥', playerPixel.x, playerPixel.y - 28);
+                    }
+
+                    if (player.isWoodcutting) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        ctx.beginPath();
+                        ctx.arc(playerPixel.x, playerPixel.y - 35, 12, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = '#228B22';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🌳', playerPixel.x, playerPixel.y - 28);
+                    }
+
+                    if (player.isFiremaking) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                        ctx.beginPath();
+                        ctx.arc(playerPixel.x, playerPixel.y - 35, 12, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = '#ff8c00';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🏕️', playerPixel.x, playerPixel.y - 28);
+                    }
+
+                    // Draw sword attack animation
+                    if (player.isAttacking) {
+                        const direction = player.direction || 'right';
+                        const attackElapsed = Date.now() - (attackStartTime || Date.now());
+                        const attackProgress = Math.min(attackElapsed / attackDuration, 1);
+                        
+                        // Simple stab animation - extend sword forward and back
+                        const stabDistance = Math.sin(attackProgress * Math.PI) * 25; // Stab forward and back
+                        let swordX = playerPixel.x;
+                        let swordY = playerPixel.y;
+                        
+                        // Calculate sword position based on direction
+                        switch (direction) {
+                            case 'up':
+                                swordX = playerPixel.x;
+                                swordY = playerPixel.y - 15 - stabDistance;
+                                break;
+                            case 'down':
+                                swordX = playerPixel.x;
+                                swordY = playerPixel.y + 15 + stabDistance;
+                                break;
+                            case 'left':
+                                swordX = playerPixel.x - 15 - stabDistance;
+                                swordY = playerPixel.y;
+                                break;
+                            case 'right':
+                                swordX = playerPixel.x + 15 + stabDistance;
+                                swordY = playerPixel.y;
+                                break;
+                        }
+                        
+                        // Draw simple sword/stick
+                        ctx.fillStyle = '#8B4513'; // Brown handle
+                        if (direction === 'up' || direction === 'down') {
+                            ctx.fillRect(swordX - 2, swordY - 10, 4, 20); // Vertical sword
+                        } else {
+                            ctx.fillRect(swordX - 10, swordY - 2, 20, 4); // Horizontal sword
+                        }
+                        
+                        // Draw blade tip
+                        ctx.fillStyle = '#C0C0C0'; // Silver tip
+                        if (direction === 'up') {
+                            ctx.fillRect(swordX - 1, swordY - 12, 2, 5);
+                        } else if (direction === 'down') {
+                            ctx.fillRect(swordX - 1, swordY + 7, 2, 5);
+                        } else if (direction === 'left') {
+                            ctx.fillRect(swordX - 12, swordY - 1, 5, 2);
+                        } else if (direction === 'right') {
+                            ctx.fillRect(swordX + 7, swordY - 1, 5, 2);
+                        }
+                    }
+
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px Courier New';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`P${player.playerNumber || '?'}`, playerPixel.x, playerPixel.y + 35);
+                    
+                    // Draw chat message if exists
+                    const playerMessage = playerMessages[id];
+                    if (playerMessage && playerMessage.zone === myZone) {
+                        // Handle both server timestamp objects and regular timestamps
+                        let messageTimestamp;
+                        if (typeof playerMessage.timestamp === 'object' && playerMessage.timestamp !== null) {
+                            // This is a server timestamp object, use current time as fallback
+                            messageTimestamp = Date.now() - 100; // Show immediately
+                        } else {
+                            messageTimestamp = playerMessage.timestamp || Date.now();
+                        }
+                        
+                        const messageAge = Date.now() - messageTimestamp;
+                        console.log('Drawing message for player', id, 'age:', messageAge, 'message:', playerMessage.message);
+                        
+                        if (messageAge < 3000 && messageAge >= 0) { // Show for 3 seconds
+                            // Message background
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                            ctx.font = '12px Courier New';
+                            const messageWidth = Math.max(ctx.measureText(playerMessage.message).width + 16, 60);
+                            const messageHeight = 20;
+                            const messageX = playerPixel.x - messageWidth / 2;
+                            const messageY = playerPixel.y - 65;
+                            
+                            ctx.fillRect(messageX, messageY, messageWidth, messageHeight);
+                            ctx.strokeStyle = '#9fd89f';
+                            ctx.lineWidth = 2;
+                            ctx.strokeRect(messageX, messageY, messageWidth, messageHeight);
+                            
+                            // Message text
+                            ctx.fillStyle = '#e8f5e8';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(playerMessage.message, playerPixel.x, playerPixel.y - 50);
+                        }
+                    }
+                    
+                    if (player.health < 4) {
+                        const barWidth = 30;
+                        const barHeight = 4;
+                        const barX = playerPixel.x - barWidth / 2;
+                        const barY = playerPixel.y - 28;
+                        
+                        ctx.fillStyle = '#333';
+                        ctx.fillRect(barX, barY, barWidth, barHeight);
+                        
+                        ctx.fillStyle = '#ff4444';
+                        ctx.fillRect(barX, barY, (player.health / 4) * barWidth, barHeight);
+                    }
+                    
+                    // Check for melee attack damage (only for local player)
+                    if (id === playerId) {
+                        Object.entries(players).forEach(([attackerId, attacker]) => {
+                            if (attacker && 
+                                attackerId !== playerId && 
+                                attacker.isAttacking && 
+                                attacker.zone === myZone &&
+                                !attacker.isRespawning &&
+                                attacker.health > 0) {
+                                
+                                // Calculate attacker's attack position
+                                const directions = {
+                                    'up': { x: 0, y: -1 },
+                                    'down': { x: 0, y: 1 },
+                                    'left': { x: -1, y: 0 },
+                                    'right': { x: 1, y: 0 }
+                                };
+                                
+                                const dir = directions[attacker.direction || 'right'];
+                                const attackX = attacker.gridX + dir.x;
+                                const attackY = attacker.gridY + dir.y;
+                                
+                                // Check if we're in the attack position
+                                if (myGridPos.x === attackX && myGridPos.y === attackY && !isRespawning && myHealth > 0) {
+                                    takeDamage();
+                                    console.log('Took melee damage from player', attackerId);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            if (showDialog) {
+                const dialogBoxX = 50;
+                const dialogBoxY = canvas.height - 150;
+                const dialogBoxWidth = canvas.width - 100;
+                const dialogBoxHeight = 100;
+                const textStartX = dialogBoxX + 20;
+                const textStartY = dialogBoxY + 30;
+                const maxTextWidth = dialogBoxWidth - 40;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.strokeStyle = '#4a6b47';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                const wrappedLines = wrapText(dialogText, maxTextWidth, '16px Courier New');
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '16px Courier New';
+                ctx.textAlign = 'left';
+                
+                wrappedLines.forEach((line, index) => {
+                    ctx.fillText(line, textStartX, textStartY + (index * 20));
+                });
+                
+                ctx.font = '12px Courier New';
+                ctx.fillStyle = '#a8c5a8';
+                ctx.fillText('Press ESC or any movement key to close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+            }
+
+            if (showCookingDialog) {
+                const dialogBoxX = 50;
+                const dialogBoxY = canvas.height - 150;
+                const dialogBoxWidth = canvas.width - 100;
+                const dialogBoxHeight = 100;
+                const textStartX = dialogBoxX + 20;
+                const textStartY = dialogBoxY + 30;
+                const maxTextWidth = dialogBoxWidth - 40;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.strokeStyle = '#4a6b47';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                // Main instruction text with word wrapping
+                const mainText = 'I can cook food here - Press TAB to cycle options, Press Enter to select option';
+                const wrappedMainLines = wrapText(mainText, maxTextWidth, '16px Courier New');
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '16px Courier New';
+                ctx.textAlign = 'left';
+                
+                wrappedMainLines.forEach((line, index) => {
+                    ctx.fillText(line, textStartX, textStartY + (index * 18));
+                });
+                
+                if (cookingOptions.length > 0) {
+                    const option = cookingOptions[selectedCookingOption];
+                    const iconStartY = textStartY + (wrappedMainLines.length * 18) + 8;
+                    
+                    // Draw food icon
+                    ctx.font = '24px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(option.icon, textStartX, iconStartY);
+                    
+                    // Draw food description with word wrapping
+                    const descText = `${option.name}: ${option.description}`;
+                    const wrappedDescLines = wrapText(descText, maxTextWidth - 35, '14px Courier New');
+                    
+                    ctx.font = '14px Courier New';
+                    wrappedDescLines.forEach((line, index) => {
+                        ctx.fillText(line, textStartX + 35, iconStartY - 8 + (index * 16));
+                    });
+                }
+                
+                ctx.font = '12px Courier New';
+                ctx.fillStyle = '#a8c5a8';
+                ctx.fillText('TAB: Cycle | ENTER: Cook | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+            }
+
+            if (showLevelUpPopup && levelUpPopupTimer > 0) {
+                const popupX = canvas.width - 200;
+                const popupY = 50;
+                const popupWidth = 150;
+                const popupHeight = 60;
+                
+                const pulseAlpha = 0.8 + Math.sin(Date.now() * 0.01) * 0.2;
+                ctx.fillStyle = `rgba(255, 215, 0, ${pulseAlpha})`;
+                ctx.fillRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 20px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText('LEVEL UP!', popupX + popupWidth/2, popupY + 25);
+                
+                ctx.fillStyle = '#8B4513';
+                ctx.font = 'bold 16px Courier New';
+                ctx.fillText(`Level ${newLevel}`, popupX + popupWidth/2, popupY + 45);
+            }
+
+            if (showFishCatchPopup && fishCatchPopupTimer > 0) {
+                const popupX = canvas.width - 280;
+                const popupY = 120;
+                const popupWidth = 230;
+                const popupHeight = 50;
+                
+                ctx.fillStyle = 'rgba(45, 74, 42, 0.95)';
+                ctx.fillRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.strokeStyle = '#9fd89f';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '14px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText('🎣 You caught a Fresh Fish!', popupX + popupWidth/2, popupY + 30);
+            }
+
+            if (showCookingPopup && cookingPopupTimer > 0) {
+                const popupX = canvas.width - 280;
+                const popupY = 180;
+                const popupWidth = 230;
+                const popupHeight = 50;
+                
+                ctx.fillStyle = 'rgba(74, 45, 42, 0.95)';
+                ctx.fillRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.strokeStyle = '#ff9f9f';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '14px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText(`🔥 You cooked a ${cookedItemName}!`, popupX + popupWidth/2, popupY + 30);
+            }
+
+            if (showWoodcuttingPopup && woodcuttingPopupTimer > 0) {
+                const popupX = canvas.width - 280;
+                const popupY = 240;
+                const popupWidth = 230;
+                const popupHeight = 50;
+                
+                ctx.fillStyle = 'rgba(45, 74, 45, 0.95)';
+                ctx.fillRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.strokeStyle = '#9fff9f';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(popupX, popupY, popupWidth, popupHeight);
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '14px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText('🪓 You chopped down a tree!', popupX + popupWidth/2, popupY + 30);
+            }
+
+            if (showWoodcuttingDialog) {
+                const dialogBoxX = 50;
+                const dialogBoxY = canvas.height - 150;
+                const dialogBoxWidth = canvas.width - 100;
+                const dialogBoxHeight = 100;
+                const textStartX = dialogBoxX + 20;
+                const textStartY = dialogBoxY + 30;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.strokeStyle = '#4a6b47';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '16px Courier New';
+                ctx.textAlign = 'left';
+                ctx.fillText('Chop down the tree?', textStartX, textStartY);
+                
+                // Draw options side by side
+                const yesText = selectedWoodcuttingOption === 0 ? '> Yes' : '  Yes';
+                const noText = selectedWoodcuttingOption === 1 ? '> No' : '  No';
+                
+                ctx.font = '14px Courier New';
+                ctx.fillText(yesText, textStartX + 50, textStartY + 30);
+                ctx.fillText(noText, textStartX + 150, textStartY + 30);
+                
+                ctx.font = '12px Courier New';
+                ctx.fillStyle = '#a8c5a8';
+                ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+            }
+
+            if (showMerchantDialog) {
+                const dialogBoxX = 50;
+                const dialogBoxY = canvas.height - 150;
+                const dialogBoxWidth = canvas.width - 100;
+                const dialogBoxHeight = 100;
+                const textStartX = dialogBoxX + 20;
+                const textStartY = dialogBoxY + 30;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.strokeStyle = '#4a6b47';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '16px Courier New';
+                ctx.textAlign = 'left';
+                ctx.fillText('*meow* hey, wanna trade? ;3', textStartX, textStartY);
+                
+                // Draw options side by side
+                const buyText = selectedTradeOption === 0 ? '> Buy' : '  Buy';
+                const sellText = selectedTradeOption === 1 ? '> Sell' : '  Sell';
+                
+                ctx.font = '14px Courier New';
+                ctx.fillText(buyText, textStartX + 50, textStartY + 30);
+                ctx.fillText(sellText, textStartX + 150, textStartY + 30);
+                
+                ctx.font = '12px Courier New';
+                ctx.fillStyle = '#a8c5a8';
+                ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+            }
+
+            if (showTradeScreen) {
+                // Draw trade screen overlay
+                const overlayX = 50;
+                const overlayY = 50;
+                const overlayWidth = canvas.width - 100;
+                const overlayHeight = canvas.height - 100;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                ctx.fillRect(overlayX, overlayY, overlayWidth, overlayHeight);
+                
+                ctx.strokeStyle = '#4a6b47';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(overlayX, overlayY, overlayWidth, overlayHeight);
+                
+                // Draw header
+                const headerText = tradeMode === 'buy' ? 'Buy from Merchant' : 'Sell to Merchant';
+                ctx.fillStyle = '#9fd89f';
+                ctx.font = 'bold 20px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText(headerText, overlayX + overlayWidth / 2, overlayY + 40);
+                
+                // Draw gold display
+                ctx.fillStyle = '#ffd700';
+                ctx.font = '16px Courier New';
+                ctx.fillText(`Your Gold: ${myGold} 💰`, overlayX + overlayWidth / 2, overlayY + 65);
+                
+                // Get items to display
+                const items = tradeMode === 'buy' ? getMerchantStock() : getPlayerSellableItems();
+                
+                if (items.length === 0) {
+                    ctx.fillStyle = '#e8f5e8';
+                    ctx.font = '16px Courier New';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Nothing to ' + tradeMode, overlayX + overlayWidth / 2, overlayY + 150);
+                } else {
+                    // Draw items list
+                    const startY = overlayY + 100;
+                    const itemHeight = 40;
+                    
+                    items.forEach((item, index) => {
+                        const itemY = startY + (index * itemHeight);
+                        const isSelected = index === selectedTradeSlot;
+                        
+                        // Draw selection background
+                        if (isSelected) {
+                            ctx.fillStyle = 'rgba(159, 216, 159, 0.3)';
+                            ctx.fillRect(overlayX + 20, itemY - 15, overlayWidth - 40, 35);
+                        }
+                        
+                        // Draw item icon
+                        ctx.font = '24px Arial';
+                        ctx.fillStyle = '#e8f5e8';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(item.icon, overlayX + 40, itemY + 5);
+                        
+                        // Draw item name
+                        ctx.font = '16px Courier New';
+                        ctx.fillStyle = isSelected ? '#9fd89f' : '#e8f5e8';
+                        let displayName = item.name;
+                        if (item.stackable && item.stack) {
+                            displayName += ` (${item.stack})`;
+                        }
+                        ctx.fillText(displayName, overlayX + 80, itemY);
+                        
+                        // Draw price
+                        const price = tradeMode === 'buy' ? item.price : item.sellPrice;
+                        ctx.fillStyle = '#ffd700';
+                        ctx.textAlign = 'right';
+                        ctx.fillText(`${price} 💰`, overlayX + overlayWidth - 60, itemY);
+                        
+                        // Draw affordability indicator for buy mode
+                        if (tradeMode === 'buy' && myGold < item.price) {
+                            ctx.fillStyle = '#ff4444';
+                            ctx.font = '12px Courier New';
+                            ctx.fillText('(Can\'t afford)', overlayX + overlayWidth - 180, itemY);
+                        }
+                    });
+                    
+                    // Draw selected item description
+                    if (items[selectedTradeSlot]) {
+                        const selectedItem = items[selectedTradeSlot];
+                        const descY = overlayY + overlayHeight - 80;
+                        
+                        ctx.fillStyle = 'rgba(45, 74, 42, 0.8)';
+                        ctx.fillRect(overlayX + 20, descY - 30, overlayWidth - 40, 60);
+                        
+                        ctx.strokeStyle = '#4a6b47';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(overlayX + 20, descY - 30, overlayWidth - 40, 60);
+                        
+                        ctx.fillStyle = '#e8f5e8';
+                        ctx.font = '14px Courier New';
+                        ctx.textAlign = 'left';
+                        ctx.fillText(selectedItem.description, overlayX + 30, descY - 10);
+                    }
+                }
+                
+                // Draw instructions
+                ctx.fillStyle = '#a8c5a8';
+                ctx.font = '12px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText('W/S: Navigate | ENTER: ' + (tradeMode === 'buy' ? 'Buy' : 'Sell') + ' | ESC: Close', overlayX + overlayWidth / 2, overlayY + overlayHeight - 15);
+            }
+        }
+
+        const keys = {};
+        document.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            
+            if (e.key.toLowerCase() === 'i') {
+                if (!showQuickChat && !showCookingDialog) {
+                    toggleInventory();
+                }
+                return;
+            }
+            
+            if (e.key.toLowerCase() === 'q') {
+                if (showInventory || showCookingDialog) return; // Don't allow quick chat while inventory or cooking dialog is open
+                if (!showQuickChat) {
+                    toggleQuickChat();
+                } else {
+                    cycleChatMessage();
+                }
+                return;
+            }
+            
+            if (e.key === 'Tab') {
+                e.preventDefault(); // Prevent default tab behavior
+                if (showInventory && isSelectingFiremaking) {
+                    // Handle firemaking TAB cycling
+                    if (firemakingStep === 0 && firemakingOptions.length > 0) {
+                        selectedFiremakingOption = (selectedFiremakingOption + 1) % firemakingOptions.length;
+                        updateItemDescription();
+                    } else if (firemakingStep === 1) {
+                        selectedQuantity = (selectedQuantity + 1) % 2;
+                        updateItemDescription();
+                    }
+                } else if (showCookingDialog) {
+                    cycleCookingOption();
+                } else if (showWoodcuttingDialog) {
+                    cycleWoodcuttingOption();
+                } else if (showMerchantDialog) {
+                    cycleMerchantOption();
+                }
+                return;
+            }
+            
+            if (e.key === 'Enter') {
+                if (showInventory && isSelectingFiremaking) {
+                    // Handle firemaking ENTER selection
+                    if (firemakingStep === 0 && firemakingOptions.length > 0) {
+                        // Selected logs, move to quantity selection
+                        selectedLogsSlot = firemakingOptions[selectedFiremakingOption].slotIndex;
+                        firemakingStep = 1;
+                        selectedQuantity = 0;
+                        updateItemDescription();
+                    } else if (firemakingStep === 1) {
+                        // Selected quantity, start firemaking
+                        const logsItem = inventory[selectedLogsSlot];
+                        if (logsItem) {
+                            targetFireCount = selectedQuantity === 0 ? 1 : logsItem.stack;
+                            firemakingCount = 0;
+                            
+                            // Determine direction to place fires (opposite of current facing direction)
+                            const oppositeDirections = {
+                                'up': 'down',
+                                'down': 'up', 
+                                'left': 'right',
+                                'right': 'left'
+                            };
+                            firemakingDirection = oppositeDirections[myDirection] || 'down';
+                            
+                            isSelectingFiremaking = false;
+                            firemakingStep = 0;
+                            toggleInventory(); // Close inventory
+                            isFiremaking = true;
+                            nextFireTime = Date.now() + 1000;
+                            updatePlayerData();
+                            
+                            console.log(`Starting firemaking: ${targetFireCount} fires in ${firemakingDirection} direction`);
+                        }
+                    }
+                    return;
+                } else if (showQuickChat) {
+                    sendChatMessage();
+                    return;
+                } else if (showCookingDialog) {
+                    selectCookingOption();
+                    return;
+                } else if (showWoodcuttingDialog) {
+                    selectWoodcuttingOption();
+                    return;
+                } else if (showMerchantDialog) {
+                    selectMerchantOption();
+                    return;
+                } else if (showTradeScreen) {
+                    executeTrade();
+                    return;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                if (showInventory) {
+                    if (isSelectingFiremaking) {
+                        // Cancel firemaking selection
+                        isSelectingFiremaking = false;
+                        firemakingStep = 0;
+                        updateItemDescription();
+                    } else {
+                        toggleInventory();
+                    }
+                } else if (showQuickChat) {
+                    toggleQuickChat();
+                } else if (showCookingDialog) {
+                    showCookingDialog = false;
+                } else if (showWoodcuttingDialog) {
+                    showWoodcuttingDialog = false;
+                    currentTree = null;
+                } else if (showMerchantDialog) {
+                    showMerchantDialog = false;
+                } else if (showTradeScreen) {
+                    closeTradeScreen();
+                } else if (showDialog) {
+                    showDialog = false;
+                }
+                return;
+            }
+            
+            if (e.key.toLowerCase() === 'e') {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen) {
+                    if (isAdjacentToWater(myGridPos.x, myGridPos.y) && equippedTool && equippedTool.id === 'fishing_rod') {
+                        startFishing();
+                    } else {
+                        // Try cooking interaction (handles both lake fireplace and player campfires)
+                        startCooking();
+                        
+                        // If no cooking happened, check other interactions
+                        if (!showCookingDialog && !showDialog) {
+                            if (findAdjacentTree(myGridPos.x, myGridPos.y)) {
+                                checkTreeInteraction();
+                            } else if (myZone === 1) {
+                                // Check for merchant manually with E key
+                                const merchantDistance = Math.abs(myGridPos.x - merchant.x) + Math.abs(myGridPos.y - merchant.y);
+                                if (merchantDistance <= 1) {
+                                    showMerchantDialog = true;
+                                    selectedTradeOption = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+            
+            if (e.key.toLowerCase() === 'f') {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen) {
+                    performMeleeAttack();
+                }
+                return;
+            }
+            
+            // Cancel quick chat, cooking, woodcutting, or merchant if movement keys are pressed
+            if ((showQuickChat || showCookingDialog || showWoodcuttingDialog || showMerchantDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+                if (showQuickChat) {
+                    toggleQuickChat();
+                }
+                if (showCookingDialog) {
+                    showCookingDialog = false;
+                }
+                if (showWoodcuttingDialog) {
+                    showWoodcuttingDialog = false;
+                    currentTree = null;
+                }
+                if (showMerchantDialog) {
+                    showMerchantDialog = false;
+                }
+                return;
+            }
+            
+            if ((showDialog || showCookingDialog || showWoodcuttingDialog || showMerchantDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+                showDialog = false;
+                showCookingDialog = false;
+                showWoodcuttingDialog = false;
+                showMerchantDialog = false;
+                currentTree = null;
+                stopFishing();
+                stopCooking();
+                stopWoodcutting();
+                if (!showInventory && !showQuickChat && !showTradeScreen) {
+                    return;
+                }
+            }
+            
+            if (showInventory) {
+                if (e.key.toLowerCase() === 'w') {
+                    navigateInventory('up');
+                } else if (e.key.toLowerCase() === 's') {
+                    navigateInventory('down');
+                } else if (e.key.toLowerCase() === 'a') {
+                    navigateInventory('left');
+                } else if (e.key.toLowerCase() === 'd') {
+                    navigateInventory('right');
+                } else if (e.key === ' ' || e.key === 'Enter') {
+                    equipItem(selectedInventorySlot);
+                }
+                return;
+            }
+            
+            if (showTradeScreen) {
+                if (e.key.toLowerCase() === 'w') {
+                    navigateTrade('up');
+                } else if (e.key.toLowerCase() === 's') {
+                    navigateTrade('down');
+                }
+                return;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+
+        let lastMoveTime = 0;
+        let lastHeartbeat = 0;
+        function gameLoop() {
+            const currentTime = Date.now();
+            
+            if (currentTime - lastHeartbeat > 10000) {
+                updatePlayerData();
+                lastHeartbeat = currentTime;
+            }
+            
+            processFishing();
+            processCooking();
+            processWoodcutting();
+            processFiremaking();
+            
+            // Clean up expired campfires
+            const now = Date.now();
+            playerCampfires = playerCampfires.filter(campfire => {
+                const age = now - campfire.createdAt;
+                return age < campfire.duration;
+            });
+            
+            // Respawn chopped trees every 10 seconds
+            trees.forEach(tree => {
+                if (tree.chopped && (!tree.choppedTime || (now - tree.choppedTime) > 10000)) {
+                    tree.chopped = false;
+                    tree.choppedTime = null;
+                    console.log(`Tree at ${tree.x}, ${tree.y} has regrown!`);
+                }
+            });
+            
+            if (showLevelUpPopup && levelUpPopupTimer > 0) {
+                levelUpPopupTimer -= 16;
+                if (levelUpPopupTimer <= 0) {
+                    showLevelUpPopup = false;
+                }
+            }
+            
+            if (showFishCatchPopup && fishCatchPopupTimer > 0) {
+                fishCatchPopupTimer -= 16;
+                if (fishCatchPopupTimer <= 0) {
+                    showFishCatchPopup = false;
+                }
+            }
+            
+            if (showCookingPopup && cookingPopupTimer > 0) {
+                cookingPopupTimer -= 16;
+                if (cookingPopupTimer <= 0) {
+                    showCookingPopup = false;
+                }
+            }
+            
+            if (showWoodcuttingPopup && woodcuttingPopupTimer > 0) {
+                woodcuttingPopupTimer -= 16;
+                if (woodcuttingPopupTimer <= 0) {
+                    showWoodcuttingPopup = false;
+                }
+            }
+            
+            if (myHealth > 0 && !isRespawning && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && currentTime - lastMoveTime > 200) {
+                let moved = false;
+                let newPos = { ...myGridPos };
+
+                if (keys['w']) {
+                    newPos.y = Math.max(0, newPos.y - 1);
+                    myDirection = 'up';
+                    moved = true;
+                }
+                if (keys['s']) {
+                    newPos.y = Math.min(GRID_HEIGHT - 1, newPos.y + 1);
+                    myDirection = 'down';
+                    moved = true;
+                }
+                if (keys['a']) {
+                    newPos.x = Math.max(0, newPos.x - 1);
+                    myDirection = 'left';
+                    moved = true;
+                }
+                if (keys['d']) {
+                    newPos.x = Math.min(GRID_WIDTH - 1, newPos.x + 1);
+                    myDirection = 'right';
+                    moved = true;
+                }
+
+                if (moved && !isPositionOccupied(newPos.x, newPos.y)) {
+                    myGridPos = newPos;
+                    document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
+                    checkZoneTransition();
+                    updatePlayerData();
+                    checkNPCInteraction();
+                    checkDropPickup();
+                    lastMoveTime = currentTime;
+                }
+            }
+            
+            if ((isFishing || isCooking || isWoodcutting) && (keys['w'] || keys['s'] || keys['a'] || keys['d'])) {
+                stopFishing();
+                stopCooking();
+                stopWoodcutting();
+            }
+
+            if (keys[' '] && !showInventory && !isFishing) {
+                castFireball();
+                keys[' '] = false;
+            }
+
+            Object.entries(fireballs).forEach(([id, fireball]) => {
+                if (fireball && fireball.ownerId === playerId) {
+                    const timeSinceLastMove = currentTime - (fireball.lastMove || 0);
+                    
+                    if (timeSinceLastMove >= 500) {
+                        const newX = fireball.x + fireball.dirX;
+                        const newY = fireball.y + fireball.dirY;
+                        
+                        if (newX < 0 || newX >= GRID_WIDTH || newY < 0 || newY >= GRID_HEIGHT) {
+                            const fireballRef = ref(database, `fireballs/${id}`);
+                            set(fireballRef, null);
+                        } else {
+                            const fireballRef = ref(database, `fireballs/${id}`);
+                            set(fireballRef, {
+                                ...fireball,
+                                x: newX,
+                                y: newY,
+                                lastMove: currentTime
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (myZone === 2) {
+                Object.entries(fireballs).forEach(([fireballId, fireball]) => {
+                    if (fireball && fireball.zone === 2) {
+                        Object.entries(mobs).forEach(([mobId, mob]) => {
+                            if (mob && mob.health > 0 && 
+                                mob.x === fireball.x && 
+                                mob.y === fireball.y) {
+                                
+                                console.log(`Fireball hit mob at ${mob.x}, ${mob.y}`);
+                                
+                                const newHealth = Math.max(0, mob.health - 1);
+                                const mobRef = ref(database, `mobs/${mobId}`);
+                                
+                                if (newHealth <= 0) {
+                                    console.log(`Mob ${mobId} (${mob.type}) killed - creating drops`);
+                                    
+                                    const expValue = mob.type === 'chicken' ? 8 : 6;
+                                    const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
+                                    set(expDropRef, {
+                                        x: mob.x,
+                                        y: mob.y,
+                                        zone: 2,
+                                        type: 'exp',
+                                        value: expValue,
+                                        createdAt: Date.now()
+                                    });
+                                    
+                                    if (Math.random() < 0.8) {
+                                        const goldValue = Math.floor(Math.random() * 6) + 5;
+                                        const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
+                                        set(goldDropRef, {
+                                            x: mob.x,
+                                            y: mob.y,
+                                            zone: 2,
+                                            type: 'gold',
+                                            value: goldValue,
+                                            createdAt: Date.now()
+                                        });
+                                    }
+                                    
+                                    set(mobRef, null);
+                                } else {
+                                    set(mobRef, { ...mob, health: newHealth });
+                                }
+                                
+                                const fireballRef = ref(database, `fireballs/${fireballId}`);
+                                set(fireballRef, null);
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (myZone === 2 && currentTime % 500 < 50) {
+                Object.entries(mobs).forEach(([mobId, mob]) => {
+                    if (mob && mob.health > 0) {
+                        const timeSinceLastMove = currentTime - (mob.lastMove || 0);
+                        const moveCounter = mob.moveCounter || 0;
+                        
+                        const stayDuration = 3000 + (moveCounter % 3) * 1000;
+                        
+                        if (timeSinceLastMove >= stayDuration) {
+                            const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1 + 1;
+                            const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1 - 1;
+                            const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1 + 1;
+                            const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1 - 1;
+                            
+                            const directions = [
+                                { x: 0, y: -1 }, { x: 0, y: 1 }, 
+                                { x: -1, y: 0 }, { x: 1, y: 0 },
+                                { x: 0, y: 0 }, { x: 0, y: 0 }
+                            ];
+                            
+                            const dir = directions[Math.floor(Math.random() * directions.length)];
+                            let newX = mob.x + dir.x;
+                            let newY = mob.y + dir.y;
+                            
+                            newX = Math.max(fenceMinX, Math.min(fenceMaxX, newX));
+                            newY = Math.max(fenceMinY, Math.min(fenceMaxY, newY));
+                            
+                            const mobRef = ref(database, `mobs/${mobId}`);
+                            set(mobRef, {
+                                ...mob,
+                                x: newX,
+                                y: newY,
+                                lastMove: currentTime,
+                                moveCounter: moveCounter + 1
+                            });
+                        }
+                    }
+                });
+            }
+
+            drawGame();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize game
+        initializeGame();
+        listenToGameData();
+        gameLoop();
+        updateHeartDisplay();
+        updateGoldDisplay();
+
+        console.log('🌲 Game loaded successfully!');
+    </script>
+</body>
+</html>
