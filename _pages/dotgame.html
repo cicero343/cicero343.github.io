@@ -656,8 +656,9 @@
 
         function updatePlayerData() {
             if (playerId && isPlayerCreated) {
+                console.log('Attempting to write player data to Firebase...');
                 const playerRef = ref(database, `players/${playerId}`);
-                set(playerRef, {
+                const playerData = {
                     gridX: myGridPos.x,
                     gridY: myGridPos.y,
                     color: myColor,
@@ -680,7 +681,19 @@
                     cooking: playerCooking,
                     woodcutting: playerWoodcutting,
                     lastSeen: serverTimestamp()
+                };
+                
+                console.log('Writing player data:', playerData);
+                
+                set(playerRef, playerData).then(() => {
+                    console.log('Successfully wrote to Firebase!');
+                }).catch((error) => {
+                    console.error('Firebase write failed:', error);
+                    console.error('Error code:', error.code);
+                    console.error('Error message:', error.message);
                 });
+            } else {
+                console.log('Cannot update player data - missing playerId or not created');
             }
         }
 
@@ -2781,7 +2794,7 @@
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
                 
                 // Main instruction text with word wrapping
-                const mainText = 'I can cook food here';
+                const mainText = 'I can cook food here - Press TAB to cycle options, Press Enter to select option';
                 const wrappedMainLines = wrapText(mainText, maxTextWidth, '16px Courier New');
                 
                 ctx.fillStyle = '#e8f5e8';
