@@ -1,6 +1,6 @@
 ---
-title: Terminal
-permalink: /terminal/
+title: Admin Login
+permalink: /admin/
 layout: default
 ---
 
