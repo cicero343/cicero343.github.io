@@ -3537,6 +3537,8 @@
             if (!isPlayerCreated) {
                 console.log('Firebase timeout - creating player manually with fallback');
                 createPlayerWithFirebaseData({});
+                // IMPORTANT: Set the flag to true so updatePlayerData() will work
+                isPlayerCreated = true;
             }
         }, 5000);
 
