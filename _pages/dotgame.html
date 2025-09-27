@@ -413,6 +413,20 @@
         let tradeMode = 'buy'; // 'buy' or 'sell'
         let selectedTradeSlot = 0;
         
+        // Quest system
+        let questNPCCompleted = false; // Track if player completed the fish quest this session
+        let showQuestDialog = false;
+        let selectedQuestOption = 0; // 0 = Accept, 1 = Decline or 0 = Yes, 1 = No for completion
+        let questDialogType = 'initial'; // 'initial', 'completion', 'completed'
+        
+        // Butterflies in Town Zone
+        let townButterflies = [
+            { x: 5, y: 11, offsetX: 0, offsetY: 0, time: 0 },
+            { x: 8, y: 11, offsetX: 0, offsetY: 0, time: Math.PI },
+            { x: 5, y: 9, offsetX: 0, offsetY: 0, time: Math.PI * 0.5 },
+            { x: 8, y: 9, offsetX: 0, offsetY: 0, time: Math.PI * 1.5 }
+        ];
+        
         // Firemaking system - UPDATED for inventory-based interface
         let isSelectingFiremaking = false; // New state for tinderbox selection
         let firemakingStep = 0; // 0 = selecting logs, 1 = selecting quantity
@@ -462,6 +476,7 @@
         const npc = { x: 5, y: 5, color: '#ffd700' };
         const fireplace = { x: 16, y: 9, color: '#ff6600' };
         const merchant = { x: 11, y: 3, color: '#ff8c00' };
+        const questNPC = { x: 15, y: 9, color: '#4169E1' }; // Quest NPC in Lake Zone
         
         // Trees in Town Zone
         const trees = [
@@ -718,7 +733,8 @@
                 player && player.gridX === gridX && player.gridY === gridY && player.zone === myZone
             ) || (myZone === 1 && npc.x === gridX && npc.y === gridY) || 
                (myZone === 1 && merchant.x === gridX && merchant.y === gridY) ||
-               (myZone === 3 && fireplace.x === gridX && fireplace.y === gridY);
+               (myZone === 3 && fireplace.x === gridX && fireplace.y === gridY) ||
+               (myZone === 3 && questNPC.x === gridX && questNPC.y === gridY);
         }
 
         function addItemToInventory(item) {
@@ -1076,8 +1092,9 @@
                                 createdAt: Date.now()
                             });
                             
+                            // FIXED: Gold drops now 2-4 instead of 5-10
                             if (Math.random() < 0.8) {
-                                const goldValue = Math.floor(Math.random() * 6) + 5;
+                                const goldValue = Math.floor(Math.random() * 3) + 2; // 2-4 gold
                                 const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                 set(goldDropRef, {
                                     x: mob.x,
@@ -1085,6 +1102,19 @@
                                     zone: 2,
                                     type: 'gold',
                                     value: goldValue,
+                                    createdAt: Date.now()
+                                });
+                            }
+                            
+                            // NEW: Chicken feather drops
+                            if (mob.type === 'chicken' && Math.random() < 0.8) {
+                                const featherDropRef = ref(database, `drops/feather_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
+                                set(featherDropRef, {
+                                    x: mob.x,
+                                    y: mob.y,
+                                    zone: 2,
+                                    type: 'feather',
+                                    value: 1,
                                     createdAt: Date.now()
                                 });
                             }
@@ -1292,12 +1322,9 @@
             document.getElementById('playerGoldInv').textContent = myGold;
         }
 
+        // FIXED: Magic skill now works like attack skill - only levels from killing mobs with magic
         function givePlayerEXP(expAmount) {
             playerEXP += expAmount;
-            
-            if (playerMagic < 20) {
-                playerMagic += 1;
-            }
             
             const oldLevel = playerLevel;
             while (playerLevel < 20 && playerEXP >= expRequirements[playerLevel]) {
@@ -1611,6 +1638,33 @@
                     selectedTradeOption = 0; // Default to "Buy"
                     return;
                 }
+            } else if (myZone === 3) {
+                // Check quest NPC in Lake Zone
+                const questNPCDistance = Math.abs(myGridPos.x - questNPC.x) + Math.abs(myGridPos.y - questNPC.y);
+                if (questNPCDistance <= 1) {
+                    if (questNPCCompleted) {
+                        showDialog = true;
+                        dialogText = "Thanks for helping me catch those fish, this stew is going to be delicious!";
+                    } else {
+                        // Check if player has 5 fish
+                        let fishCount = 0;
+                        inventory.forEach(item => {
+                            if (item && item.id === 'fish') {
+                                fishCount += item.stack || 1;
+                            }
+                        });
+                        
+                        if (fishCount >= 5) {
+                            questDialogType = 'completion';
+                            selectedQuestOption = 0;
+                        } else {
+                            questDialogType = 'initial';
+                            selectedQuestOption = 0;
+                        }
+                        showQuestDialog = true;
+                    }
+                    return;
+                }
             }
         }
 
@@ -1641,7 +1695,7 @@
             }
         }
 
-        // Merchant inventory (infinite items)
+        // Merchant inventory (infinite items) - UPDATED with feathers
         const merchantInventory = [
             {
                 id: 'tinderbox',
@@ -1680,6 +1734,7 @@
                         case 'fish': price = 3; break;
                         case 'cooked_fish': price = 8; break;
                         case 'logs': price = 5; break;
+                        case 'feathers': price = 2; break; // NEW: Feathers sell for 2 gold
                         case 'sword': price = 50; break;
                         case 'fishing_rod': price = 30; break;
                         case 'iron_axe': price = 45; break;
@@ -1887,7 +1942,23 @@
                         console.log('Found ' + drop.value + ' gold!');
                     } else if (drop.type === 'exp') {
                         givePlayerEXP(drop.value);
-                        console.log('Gained ' + drop.value + ' EXP from orb! Magic also increased.');
+                        console.log('Gained ' + drop.value + ' EXP from orb!');
+                    } else if (drop.type === 'feather') {
+                        // NEW: Handle feather drops
+                        const feather = {
+                            id: 'feathers',
+                            name: 'Feathers',
+                            description: 'Soft chicken feathers. Light and fluffy.',
+                            icon: '🪶',
+                            type: 'resource',
+                            stackable: true,
+                            stack: 1,
+                            maxStack: 250
+                        };
+                        
+                        if (addItemToInventory(feather)) {
+                            console.log('Picked up feather!');
+                        }
                     }
                     
                     const dropRef = ref(database, `drops/${dropId}`);
@@ -1982,6 +2053,53 @@
             ctx.stroke();
         }
 
+        // NEW: Draw butterfly function
+        function drawButterfly(x, y, time) {
+            // Draw butterfly body
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(x - 1, y - 3, 2, 6);
+            
+            // Draw butterfly wings with flutter animation
+            const wingFlutter = Math.sin(time * 20) * 0.3;
+            
+            // Left wing
+            ctx.fillStyle = '#FFB6C1';
+            ctx.save();
+            ctx.translate(x - 3, y - 2);
+            ctx.rotate(wingFlutter);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            
+            // Right wing
+            ctx.save();
+            ctx.translate(x + 3, y - 2);
+            ctx.rotate(-wingFlutter);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            
+            // Wing patterns
+            ctx.fillStyle = '#FF69B4';
+            ctx.save();
+            ctx.translate(x - 3, y - 2);
+            ctx.rotate(wingFlutter);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 1.5, 2.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+            
+            ctx.save();
+            ctx.translate(x + 3, y - 2);
+            ctx.rotate(-wingFlutter);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 1.5, 2.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
         function drawSparkles(x, y, time) {
             const sparkleCount = 8;
             for (let i = 0; i < sparkleCount; i++) {
@@ -2048,6 +2166,20 @@
                 ctx.fillStyle = '#ffed4e';
                 ctx.fillRect(npcPixel.x - 10, npcPixel.y - 25, 20, 10);
                 ctx.fillRect(npcPixel.x - 5, npcPixel.y - 30, 10, 5);
+                
+                // NEW: Draw animated butterflies in Town Zone
+                const currentTime = Date.now();
+                townButterflies.forEach(butterfly => {
+                    butterfly.time += 0.02;
+                    butterfly.offsetX = Math.sin(butterfly.time) * 8;
+                    butterfly.offsetY = Math.cos(butterfly.time * 0.7) * 5;
+                    
+                    const butterflyPixel = gridToPixel(butterfly.x, butterfly.y);
+                    const finalX = butterflyPixel.x + butterfly.offsetX;
+                    const finalY = butterflyPixel.y + butterfly.offsetY;
+                    
+                    drawButterfly(finalX, finalY, currentTime * 0.001);
+                });
                 
                 // Draw merchant cat
                 const merchantPixel = gridToPixel(merchant.x, merchant.y);
@@ -2284,48 +2416,23 @@
                     ctx.fill();
                 }
                 
-                // Draw player-created campfires
-                playerCampfires.forEach(campfire => {
-                    if (campfire.zone === myZone) {
-                        const campfirePixel = gridToPixel(campfire.x, campfire.y);
-                        const currentTime = Date.now();
-                        
-                        // Draw base stones
-                        ctx.fillStyle = '#666';
-                        ctx.fillRect(campfirePixel.x - 12, campfirePixel.y - 3, 24, 16);
-                        
-                        // Draw fire with flicker animation
-                        const fireFlicker = Math.sin(currentTime * 0.01 + campfire.x + campfire.y) * 3;
-                        ctx.fillStyle = '#ff6600';
-                        ctx.beginPath();
-                        ctx.moveTo(campfirePixel.x - 8, campfirePixel.y + 8);
-                        ctx.lineTo(campfirePixel.x - 4, campfirePixel.y - 8 + fireFlicker);
-                        ctx.lineTo(campfirePixel.x, campfirePixel.y - 12 + fireFlicker);
-                        ctx.lineTo(campfirePixel.x + 4, campfirePixel.y - 8 + fireFlicker);
-                        ctx.lineTo(campfirePixel.x + 8, campfirePixel.y + 8);
-                        ctx.fill();
-                        
-                        // Draw inner flame
-                        ctx.fillStyle = '#ffaa00';
-                        ctx.beginPath();
-                        ctx.moveTo(campfirePixel.x - 5, campfirePixel.y + 3);
-                        ctx.lineTo(campfirePixel.x - 2, campfirePixel.y - 3 + fireFlicker);
-                        ctx.lineTo(campfirePixel.x, campfirePixel.y - 6 + fireFlicker);
-                        ctx.lineTo(campfirePixel.x + 2, campfirePixel.y - 3 + fireFlicker);
-                        ctx.lineTo(campfirePixel.x + 5, campfirePixel.y + 3);
-                        ctx.fill();
-                        
-                        // Draw sparks
-                        for (let i = 0; i < 3; i++) {
-                            const sparkX = campfirePixel.x + (Math.sin(currentTime * 0.005 + i + campfire.x) * 6);
-                            const sparkY = campfirePixel.y - 15 + (Math.cos(currentTime * 0.007 + i + campfire.y) * 4);
-                            ctx.fillStyle = `rgba(255, ${100 + i * 40}, 0, ${0.6 + Math.sin(currentTime * 0.01 + i) * 0.4})`;
-                            ctx.beginPath();
-                            ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                    }
-                });
+                // NEW: Draw quest NPC at (15, 9) with cooking animation
+                const questNPCPixel = gridToPixel(questNPC.x, questNPC.y);
+                ctx.fillStyle = questNPC.color;
+                ctx.beginPath();
+                ctx.arc(questNPCPixel.x, questNPCPixel.y, 15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw permanent cooking animation above quest NPC
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(questNPCPixel.x, questNPCPixel.y - 35, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#ff6600';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('🔥', questNPCPixel.x, questNPCPixel.y - 28);
             }
 
             // Draw player-created campfires in ALL zones
@@ -2503,6 +2610,12 @@
                         ctx.font = '10px Arial';
                         ctx.textAlign = 'center';
                         ctx.fillText(`${drop.value}`, dropPixel.x, dropPixel.y + 15);
+                    } else if (drop.type === 'feather') {
+                        // NEW: Draw feather drops
+                        ctx.fillStyle = '#e8e8e8';
+                        ctx.font = '16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('🪶', dropPixel.x, dropPixel.y + 5);
                     }
                 }
             });
@@ -2976,6 +3089,50 @@
                 ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
             }
 
+            // NEW: Draw quest dialog
+            if (showQuestDialog) {
+                const dialogBoxX = 50;
+                const dialogBoxY = canvas.height - 150;
+                const dialogBoxWidth = canvas.width - 100;
+                const dialogBoxHeight = 100;
+                const textStartX = dialogBoxX + 20;
+                const textStartY = dialogBoxY + 30;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.strokeStyle = '#4a6b47';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
+                
+                ctx.fillStyle = '#e8f5e8';
+                ctx.font = '16px Courier New';
+                ctx.textAlign = 'left';
+                
+                if (questDialogType === 'initial') {
+                    ctx.fillText('I need some more fish for this stew, would you mind bringing me 5 fish?', textStartX, textStartY);
+                    ctx.fillText('I\'ll give you a nice reward!', textStartX, textStartY + 20);
+                } else if (questDialogType === 'completion') {
+                    ctx.fillText('Perfect! You have the fish I need. Trade 5 fish for 30 gold?', textStartX, textStartY);
+                    
+                    // Draw options side by side
+                    const yesText = selectedQuestOption === 0 ? '> Yes (30 gold)' : '  Yes (30 gold)';
+                    const noText = selectedQuestOption === 1 ? '> No' : '  No';
+                    
+                    ctx.font = '14px Courier New';
+                    ctx.fillText(yesText, textStartX + 50, textStartY + 40);
+                    ctx.fillText(noText, textStartX + 250, textStartY + 40);
+                }
+                
+                ctx.font = '12px Courier New';
+                ctx.fillStyle = '#a8c5a8';
+                if (questDialogType === 'initial') {
+                    ctx.fillText('Press ESC or movement keys to close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                } else {
+                    ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                }
+            }
+
             if (showTradeScreen) {
                 // Draw trade screen overlay
                 const overlayX = 50;
@@ -3086,14 +3243,14 @@
             keys[e.key.toLowerCase()] = true;
             
             if (e.key.toLowerCase() === 'i') {
-                if (!showQuickChat && !showCookingDialog) {
+                if (!showQuickChat && !showCookingDialog && !showQuestDialog) {
                     toggleInventory();
                 }
                 return;
             }
             
             if (e.key.toLowerCase() === 'q') {
-                if (showInventory || showCookingDialog) return; // Don't allow quick chat while inventory or cooking dialog is open
+                if (showInventory || showCookingDialog || showQuestDialog) return; // Don't allow quick chat while inventory or dialogs are open
                 if (!showQuickChat) {
                     toggleQuickChat();
                 } else {
@@ -3119,6 +3276,8 @@
                     cycleWoodcuttingOption();
                 } else if (showMerchantDialog) {
                     cycleMerchantOption();
+                } else if (showQuestDialog && questDialogType === 'completion') {
+                    selectedQuestOption = (selectedQuestOption + 1) % 2; // 0 = Yes, 1 = No
                 }
                 return;
             }
@@ -3174,6 +3333,35 @@
                 } else if (showTradeScreen) {
                     executeTrade();
                     return;
+                } else if (showQuestDialog) {
+                    if (questDialogType === 'initial') {
+                        showQuestDialog = false;
+                    } else if (questDialogType === 'completion' && selectedQuestOption === 0) {
+                        // Complete quest - remove 5 fish and give 30 gold
+                        let fishRemoved = 0;
+                        for (let i = 0; i < inventory.length && fishRemoved < 5; i++) {
+                            if (inventory[i] && inventory[i].id === 'fish') {
+                                const removeAmount = Math.min(5 - fishRemoved, inventory[i].stack);
+                                inventory[i].stack -= removeAmount;
+                                fishRemoved += removeAmount;
+                                
+                                if (inventory[i].stack <= 0) {
+                                    inventory[i] = null;
+                                }
+                            }
+                        }
+                        
+                        myGold += 30;
+                        questNPCCompleted = true;
+                        updateGoldDisplay();
+                        
+                        showDialog = true;
+                        dialogText = "Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!";
+                        showQuestDialog = false;
+                    } else {
+                        showQuestDialog = false;
+                    }
+                    return;
                 }
             }
             
@@ -3198,6 +3386,8 @@
                     showMerchantDialog = false;
                 } else if (showTradeScreen) {
                     closeTradeScreen();
+                } else if (showQuestDialog) {
+                    showQuestDialog = false;
                 } else if (showDialog) {
                     showDialog = false;
                 }
@@ -3205,7 +3395,7 @@
             }
             
             if (e.key.toLowerCase() === 'e') {
-                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen) {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog) {
                     if (isAdjacentToWater(myGridPos.x, myGridPos.y) && equippedTool && equippedTool.id === 'fishing_rod') {
                         startFishing();
                     } else {
@@ -3231,14 +3421,14 @@
             }
             
             if (e.key.toLowerCase() === 'f') {
-                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen) {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog) {
                     performMeleeAttack();
                 }
                 return;
             }
             
-            // Cancel quick chat, cooking, woodcutting, or merchant if movement keys are pressed
-            if ((showQuickChat || showCookingDialog || showWoodcuttingDialog || showMerchantDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+            // Cancel dialogs if movement keys are pressed
+            if ((showQuickChat || showCookingDialog || showWoodcuttingDialog || showMerchantDialog || showQuestDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
                 if (showQuickChat) {
                     toggleQuickChat();
                 }
@@ -3252,14 +3442,18 @@
                 if (showMerchantDialog) {
                     showMerchantDialog = false;
                 }
+                if (showQuestDialog) {
+                    showQuestDialog = false;
+                }
                 return;
             }
             
-            if ((showDialog || showCookingDialog || showWoodcuttingDialog || showMerchantDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
+            if ((showDialog || showCookingDialog || showWoodcuttingDialog || showMerchantDialog || showQuestDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
                 showDialog = false;
                 showCookingDialog = false;
                 showWoodcuttingDialog = false;
                 showMerchantDialog = false;
+                showQuestDialog = false;
                 currentTree = null;
                 stopFishing();
                 stopCooking();
@@ -3357,7 +3551,7 @@
                 }
             }
             
-            if (myHealth > 0 && !isRespawning && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && currentTime - lastMoveTime > 200) {
+            if (myHealth > 0 && !isRespawning && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !showQuestDialog && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && currentTime - lastMoveTime > 200) {
                 let moved = false;
                 let newPos = { ...myGridPos };
 
@@ -3444,6 +3638,12 @@
                                 if (newHealth <= 0) {
                                     console.log(`Mob ${mobId} (${mob.type}) killed - creating drops`);
                                     
+                                    // Give magic skill XP for fireball kills (same as attack skill for melee kills)
+                                    if (playerMagic < 20) {
+                                        playerMagic += 1;
+                                        console.log(`Magic skill increased to ${playerMagic}!`);
+                                    }
+                                    
                                     const expValue = mob.type === 'chicken' ? 8 : 6;
                                     const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                     set(expDropRef, {
@@ -3455,8 +3655,9 @@
                                         createdAt: Date.now()
                                     });
                                     
+                                    // FIXED: Gold drops now 2-4 instead of 5-10
                                     if (Math.random() < 0.8) {
-                                        const goldValue = Math.floor(Math.random() * 6) + 5;
+                                        const goldValue = Math.floor(Math.random() * 3) + 2; // 2-4 gold
                                         const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                         set(goldDropRef, {
                                             x: mob.x,
@@ -3464,6 +3665,19 @@
                                             zone: 2,
                                             type: 'gold',
                                             value: goldValue,
+                                            createdAt: Date.now()
+                                        });
+                                    }
+                                    
+                                    // NEW: Chicken feather drops from fireballs too
+                                    if (mob.type === 'chicken' && Math.random() < 0.8) {
+                                        const featherDropRef = ref(database, `drops/feather_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
+                                        set(featherDropRef, {
+                                            x: mob.x,
+                                            y: mob.y,
+                                            zone: 2,
+                                            type: 'feather',
+                                            value: 1,
                                             createdAt: Date.now()
                                         });
                                     }
