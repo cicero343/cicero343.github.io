@@ -210,6 +210,66 @@
             font-size: 9px;
             color: #a8c5a8;
         }
+        
+        /* Game layout container - keeps canvas centered */
+        .game-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Quest Panel - positioned as overlay to the right of screen */
+        .quest-panel {
+            position: fixed;
+            top: 300px;
+            right: 20px;
+            width: 200px;
+            background-color: rgba(45, 74, 42, 0.95);
+            border: 3px solid #4a6b47;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e8f5e8;
+            font-family: 'Courier New', monospace;
+            display: none;
+            max-height: 350px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .quest-panel h3 {
+            margin: 0 0 12px 0;
+            text-align: center;
+            color: #9fd89f;
+            font-size: 16px;
+        }
+        
+        .quest-item {
+            background-color: rgba(31, 58, 28, 0.8);
+            border: 2px solid #4a6b47;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .quest-title {
+            color: #e8f5e8;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        
+        .quest-description {
+            color: #a8c5a8;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        /* Canvas wrapper for relative positioning */
+        .canvas-wrapper {
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -238,53 +298,63 @@
         </div>
     </div>
 
-    <div style="position: relative; width: 800px; height: 600px; margin: 20px auto;">
-        <canvas id="gameCanvas" width="800" height="600" style="position: absolute; top: 0; left: 0;"></canvas>
-        
-        <!-- Quick Chat Overlay positioned within canvas area -->
-        <div class="quick-chat-overlay" id="quickChatOverlay">
-            <div class="quick-chat-header">Quick Chat</div>
-            <div class="quick-chat-grid">
-                <div class="quick-chat-message selected" data-index="0"><strong>Hi!</strong></div>
-                <div class="quick-chat-message" data-index="1"><strong>Bye!</strong></div>
-                <div class="quick-chat-message" data-index="2"><strong>Thanks!</strong></div>
-                <div class="quick-chat-message" data-index="3"><strong>Sorry!</strong></div>
-                <div class="quick-chat-message" data-index="4"><strong>LOL</strong></div>
-                <div class="quick-chat-message" data-index="5"><strong>Let's go!</strong></div>
-                <div class="quick-chat-message" data-index="6"><strong>Stop!</strong></div>
-                <div class="quick-chat-message" data-index="7"><strong>Help!</strong></div>
-                <div class="quick-chat-message" data-index="8"><strong>Attack!</strong></div>
-                <div class="quick-chat-message" data-index="9"><strong>Nice!</strong></div>
-            </div>
-            <div class="quick-chat-instructions">Q: Cycle | ENTER: Send | WASD: Cancel</div>
-        </div>
-        
-        <!-- Inventory Overlay inside canvas area -->
-        <div class="inventory-overlay" id="inventoryOverlay" style="position: absolute; top: 0; left: 0; width: 800px; height: 600px;">
-            <div class="skills-panel">
-                <h3 style="margin: 0 0 15px 0; text-align: center; color: #9fd89f;">Skills</h3>
-                <div class="skill-line"><span class="skill-name">Level</span><span id="playerLevel">1</span></div>
-                <div class="skill-line"><span class="skill-name">Life</span><span id="playerLife">4/4</span></div>
-                <div class="skill-line"><span class="skill-name">Magic</span><span id="playerMagic">1</span></div>
-                <div class="skill-line"><span class="skill-name">Attack</span><span id="playerAttack">1</span></div>
-                <div class="skill-line"><span class="skill-name">Fishing</span><span id="playerFishing">1</span></div>
-                <div class="skill-line"><span class="skill-name">Cooking</span><span id="playerCooking">1</span></div>
-                <div class="skill-line"><span class="skill-name">Woodcutting</span><span id="playerWoodcutting">1</span></div>
-                <div class="skill-line"><span class="skill-name">EXP</span><span id="playerEXP">0</span></div>
-                <div class="skill-line"><span class="skill-name">Gold</span><span id="playerGoldInv">0</span></div>
+    <div class="game-container">
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            
+            <!-- Quick Chat Overlay positioned within canvas area -->
+            <div class="quick-chat-overlay" id="quickChatOverlay">
+                <div class="quick-chat-header">Quick Chat</div>
+                <div class="quick-chat-grid">
+                    <div class="quick-chat-message selected" data-index="0"><strong>Hi!</strong></div>
+                    <div class="quick-chat-message" data-index="1"><strong>Bye!</strong></div>
+                    <div class="quick-chat-message" data-index="2"><strong>Thanks!</strong></div>
+                    <div class="quick-chat-message" data-index="3"><strong>Sorry!</strong></div>
+                    <div class="quick-chat-message" data-index="4"><strong>LOL</strong></div>
+                    <div class="quick-chat-message" data-index="5"><strong>Let's go!</strong></div>
+                    <div class="quick-chat-message" data-index="6"><strong>Stop!</strong></div>
+                    <div class="quick-chat-message" data-index="7"><strong>Help!</strong></div>
+                    <div class="quick-chat-message" data-index="8"><strong>Attack!</strong></div>
+                    <div class="quick-chat-message" data-index="9"><strong>Nice!</strong></div>
+                </div>
+                <div class="quick-chat-instructions">Q: Cycle | ENTER: Send | WASD: Cancel</div>
             </div>
             
-            <div class="inventory-panel">
-                <h3 style="margin: 0 0 10px 0; text-align: center; color: #9fd89f;">Inventory</h3>
-                <p style="margin: 0 0 10px 0; font-size: 12px; color: #a8c5a8; text-align: center;">Press SPACE/ENTER to equip or use items</p>
-                <div class="inventory-grid" id="inventoryGrid">
-                    <!-- 20 inventory slots will be generated here -->
+            <!-- Inventory Overlay inside canvas area -->
+            <div class="inventory-overlay" id="inventoryOverlay">
+                <div class="skills-panel">
+                    <h3 style="margin: 0 0 15px 0; text-align: center; color: #9fd89f;">Skills</h3>
+                    <div class="skill-line"><span class="skill-name">Level</span><span id="playerLevel">1</span></div>
+                    <div class="skill-line"><span class="skill-name">Life</span><span id="playerLife">4/4</span></div>
+                    <div class="skill-line"><span class="skill-name">Magic</span><span id="playerMagic">1</span></div>
+                    <div class="skill-line"><span class="skill-name">Attack</span><span id="playerAttack">1</span></div>
+                    <div class="skill-line"><span class="skill-name">Fishing</span><span id="playerFishing">1</span></div>
+                    <div class="skill-line"><span class="skill-name">Cooking</span><span id="playerCooking">1</span></div>
+                    <div class="skill-line"><span class="skill-name">Woodcutting</span><span id="playerWoodcutting">1</span></div>
+                    <div class="skill-line"><span class="skill-name">EXP</span><span id="playerEXP">0</span></div>
+                    <div class="skill-line"><span class="skill-name">Gold</span><span id="playerGoldInv">0</span></div>
+                </div>
+                
+                <div class="inventory-panel">
+                    <h3 style="margin: 0 0 10px 0; text-align: center; color: #9fd89f;">Inventory</h3>
+                    <p style="margin: 0 0 10px 0; font-size: 12px; color: #a8c5a8; text-align: center;">Press SPACE/ENTER to equip or use items</p>
+                    <div class="inventory-grid" id="inventoryGrid">
+                        <!-- 20 inventory slots will be generated here -->
+                    </div>
+                </div>
+                
+                <div class="item-description" id="itemDescription">
+                    <h4 style="margin: 0 0 10px 0; color: #9fd89f;">[Empty Slot]</h4>
+                    <p style="margin: 0; font-size: 12px;">Select an item to view its description.</p>
                 </div>
             </div>
-            
-            <div class="item-description" id="itemDescription">
-                <h4 style="margin: 0 0 10px 0; color: #9fd89f;">[Empty Slot]</h4>
-                <p style="margin: 0; font-size: 12px;">Select an item to view its description.</p>
+        </div>
+
+        <!-- Quest Panel - positioned as fixed overlay to the right of screen -->
+        <div class="quest-panel" id="questPanel">
+            <h3>Active Quests</h3>
+            <div id="questList">
+                <!-- Quests will be dynamically added here -->
             </div>
         </div>
     </div>
@@ -413,11 +483,14 @@
         let tradeMode = 'buy'; // 'buy' or 'sell'
         let selectedTradeSlot = 0;
         
-        // Quest system
+        // Quest system - Enhanced with proper tracking
         let questNPCCompleted = false; // Track if player completed the fish quest this session
+        let questNPCActive = false; // Track if player has the fish quest active
         let showQuestDialog = false;
         let selectedQuestOption = 0; // 0 = Accept, 1 = Decline or 0 = Yes, 1 = No for completion
-        let questDialogType = 'initial'; // 'initial', 'completion', 'completed'
+        let questDialogType = 'initial'; // 'initial', 'during', 'completion', 'completed'
+        let activeQuests = []; // Array to store active quests (max 5)
+        let currentDialogNPC = ''; // Track which NPC is talking
         
         // Butterflies in Town Zone
         let townButterflies = [
@@ -791,13 +864,13 @@
                         cookingOptions.push({
                             name: 'Fresh Fish',
                             description: 'Cook into Cooked Fresh Fish (+1 Health when eaten)',
-                            icon: '🐟',
+                            icon: '🟤',
                             requiredItem: 'fish',
                             resultItem: {
                                 id: 'cooked_fish',
                                 name: 'Cooked Fresh Fish',
                                 description: 'A cooked fresh-water fish. Smells yummy!',
-                                icon: '🍖',
+                                icon: '🖖',
                                 type: 'food',
                                 stackable: true,
                                 stack: 1,
@@ -839,13 +912,13 @@
                         cookingOptions.push({
                             name: 'Fresh Fish',
                             description: 'Cook into Cooked Fresh Fish (+1 Health when eaten)',
-                            icon: '🐟',
+                            icon: '🟤',
                             requiredItem: 'fish',
                             resultItem: {
                                 id: 'cooked_fish',
                                 name: 'Cooked Fresh Fish',
                                 description: 'A cooked fresh-water fish. Smells yummy!',
-                                icon: '🍖',
+                                icon: '🖖',
                                 type: 'food',
                                 stackable: true,
                                 stack: 1,
@@ -1143,7 +1216,7 @@
                     id: 'fish',
                     name: 'Fresh Fish',
                     description: 'A fresh-water fish. Can be cooked or sold.',
-                    icon: '🐟',
+                    icon: '🟤',
                     type: 'resource',
                     stackable: true,
                     stack: 1,
@@ -1621,12 +1694,132 @@
             }
         }
 
+        // Quest management functions
+        function addQuest(quest) {
+            // Check if quest already exists
+            const existingIndex = activeQuests.findIndex(q => q.id === quest.id);
+            if (existingIndex !== -1) {
+                return; // Quest already active
+            }
+            
+            // Add quest to beginning of list
+            activeQuests.unshift(quest);
+            
+            // If more than 5 quests, remove the oldest one
+            if (activeQuests.length > 5) {
+                const droppedQuest = activeQuests.pop();
+                console.log(`Quest "${droppedQuest.title}" was dropped due to quest limit`);
+                
+                // Reset quest availability for dropped quest
+                if (droppedQuest.id === 'fish_quest') {
+                    questNPCCompleted = false;
+                    questNPCActive = false;
+                }
+            }
+            
+            updateQuestPanel();
+        }
+        
+        function removeQuest(questId) {
+            const index = activeQuests.findIndex(q => q.id === questId);
+            if (index !== -1) {
+                activeQuests.splice(index, 1);
+            }
+            updateQuestPanel();
+        }
+        
+        function updateQuestPanel() {
+            const questPanel = document.getElementById('questPanel');
+            const questList = document.getElementById('questList');
+            
+            if (activeQuests.length === 0) {
+                questPanel.style.display = 'none';
+            } else {
+                questPanel.style.display = 'block';
+                questList.innerHTML = '';
+                
+                activeQuests.forEach((quest, index) => {
+                    if (index >= 5) return; // Only show first 5
+                    
+                    const questItem = document.createElement('div');
+                    questItem.className = 'quest-item';
+                    
+                    questItem.innerHTML = `
+                        <div class="quest-title">${quest.title}</div>
+                        <div class="quest-description">${quest.description}</div>
+                    `;
+                    
+                    questList.appendChild(questItem);
+                });
+            }
+        }
+        
+        function updateQuestProgress(questId, progress) {
+            const quest = activeQuests.find(q => q.id === questId);
+            if (quest) {
+                quest.progress = progress;
+            }
+        }
+        
+        function checkQuestCompletion(questId) {
+            const quest = activeQuests.find(q => q.id === questId);
+            if (!quest) return false;
+            
+            if (questId === 'fish_quest') {
+                let fishCount = 0;
+                inventory.forEach(item => {
+                    if (item && item.id === 'fish') {
+                        fishCount += item.stack || 1;
+                    }
+                });
+                quest.progress = `${Math.min(fishCount, 5)}/5`;
+                return fishCount >= 5;
+            }
+            
+            return false;
+        }
+        
+        // Draw NPC name tab above dialog
+        function drawNPCNameTab(npcName, dialogBoxX, dialogBoxY, dialogBoxWidth) {
+            const tabWidth = 120;
+            const tabHeight = 25;
+            const tabX = dialogBoxX + 20;
+            const tabY = dialogBoxY - tabHeight;
+            
+            // Tab background
+            ctx.fillStyle = 'rgba(45, 74, 42, 0.95)';
+            ctx.fillRect(tabX, tabY, tabWidth, tabHeight);
+            
+            // Tab border
+            ctx.strokeStyle = '#4a6b47';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(tabX, tabY + tabHeight);
+            ctx.lineTo(tabX, tabY);
+            ctx.lineTo(tabX + tabWidth, tabY);
+            ctx.lineTo(tabX + tabWidth, tabY + tabHeight);
+            ctx.stroke();
+            
+            // NPC name text
+            ctx.fillStyle = '#9fd89f';
+            ctx.font = 'bold 14px Courier New';
+            ctx.textAlign = 'center';
+            ctx.fillText(npcName, tabX + tabWidth/2, tabY + 17);
+        }
+        
+        // Draw quest tracking panel
+        function drawQuestPanel() {
+            // This function is no longer needed since we moved to HTML-based panel
+            // But keeping it empty in case it's called elsewhere
+        }
+
         function checkNPCInteraction() {
             if (myZone === 1) {
                 // Check regular NPC
                 const npcDistance = Math.abs(myGridPos.x - npc.x) + Math.abs(myGridPos.y - npc.y);
                 if (npcDistance <= 1) {
                     showDialog = true;
+                    currentDialogNPC = 'Mayor';
                     dialogText = "Hello there, brave adventurer! Head east to the wilderness for adventure, or west to the peaceful lake for fishing!";
                     return;
                 }
@@ -1643,10 +1836,12 @@
                 const questNPCDistance = Math.abs(myGridPos.x - questNPC.x) + Math.abs(myGridPos.y - questNPC.y);
                 if (questNPCDistance <= 1) {
                     if (questNPCCompleted) {
+                        // Quest completed state
                         showDialog = true;
+                        currentDialogNPC = 'Sam';
                         dialogText = "Thanks for helping me catch those fish, this stew is going to be delicious!";
-                    } else {
-                        // Check if player has 5 fish
+                    } else if (questNPCActive) {
+                        // Check if player has 5 fish for completion
                         let fishCount = 0;
                         inventory.forEach(item => {
                             if (item && item.id === 'fish') {
@@ -1655,12 +1850,20 @@
                         });
                         
                         if (fishCount >= 5) {
+                            // Player has enough fish - offer completion
                             questDialogType = 'completion';
                             selectedQuestOption = 0;
+                            showQuestDialog = true;
                         } else {
-                            questDialogType = 'initial';
-                            selectedQuestOption = 0;
+                            // Quest is active but player doesn't have enough fish
+                            showDialog = true;
+                            currentDialogNPC = 'Sam';
+                            dialogText = "Come back to me when you've caught 5 fish!";
                         }
+                    } else {
+                        // Initial quest offering
+                        questDialogType = 'initial';
+                        selectedQuestOption = 0;
                         showQuestDialog = true;
                     }
                     return;
@@ -2718,7 +2921,7 @@
                         ctx.fillStyle = '#ff8c00';
                         ctx.font = '16px Arial';
                         ctx.textAlign = 'center';
-                        ctx.fillText('🏕️', playerPixel.x, playerPixel.y - 28);
+                        ctx.fillText('🕯️', playerPixel.x, playerPixel.y - 28);
                     }
 
                     // Draw sword attack animation
@@ -2868,6 +3071,11 @@
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
                 const maxTextWidth = dialogBoxWidth - 40;
+                
+                // Draw NPC name tab
+                if (currentDialogNPC) {
+                    drawNPCNameTab(currentDialogNPC, dialogBoxX, dialogBoxY, dialogBoxWidth);
+                }
                 
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
@@ -3064,6 +3272,9 @@
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
                 
+                // Draw NPC name tab
+                drawNPCNameTab('Merchant', dialogBoxX, dialogBoxY, dialogBoxWidth);
+                
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
                 
@@ -3089,7 +3300,7 @@
                 ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
             }
 
-            // NEW: Draw quest dialog
+            // NEW: Draw quest dialog with improved system
             if (showQuestDialog) {
                 const dialogBoxX = 50;
                 const dialogBoxY = canvas.height - 150;
@@ -3097,6 +3308,9 @@
                 const dialogBoxHeight = 100;
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
+                
+                // Draw NPC name tab
+                drawNPCNameTab('Sam', dialogBoxX, dialogBoxY, dialogBoxWidth);
                 
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
@@ -3110,8 +3324,15 @@
                 ctx.textAlign = 'left';
                 
                 if (questDialogType === 'initial') {
-                    ctx.fillText('I need some more fish for this stew, would you mind bringing me 5 fish?', textStartX, textStartY);
-                    ctx.fillText('I\'ll give you a nice reward!', textStartX, textStartY + 20);
+                    ctx.fillText('Would you mind bringing me 5 fish? I\'ll give you a nice reward!', textStartX, textStartY);
+                    
+                    // Draw options side by side
+                    const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
+                    const noText = selectedQuestOption === 1 ? '> No' : '  No';
+                    
+                    ctx.font = '14px Courier New';
+                    ctx.fillText(yesText, textStartX + 50, textStartY + 40);
+                    ctx.fillText(noText, textStartX + 150, textStartY + 40);
                 } else if (questDialogType === 'completion') {
                     ctx.fillText('Perfect! You have the fish I need. Trade 5 fish for 30 gold?', textStartX, textStartY);
                     
@@ -3127,7 +3348,7 @@
                 ctx.font = '12px Courier New';
                 ctx.fillStyle = '#a8c5a8';
                 if (questDialogType === 'initial') {
-                    ctx.fillText('Press ESC or movement keys to close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                    ctx.fillText('TAB: Cycle | ENTER: Select | ESC: Close', textStartX, dialogBoxY + dialogBoxHeight - 15);
                 } else {
                     ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
                 }
@@ -3238,6 +3459,9 @@
             }
         }
 
+        // Draw quest tracking panel
+        drawQuestPanel();
+
         const keys = {};
         document.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
@@ -3276,7 +3500,7 @@
                     cycleWoodcuttingOption();
                 } else if (showMerchantDialog) {
                     cycleMerchantOption();
-                } else if (showQuestDialog && questDialogType === 'completion') {
+                } else if (showQuestDialog && (questDialogType === 'completion' || questDialogType === 'initial')) {
                     selectedQuestOption = (selectedQuestOption + 1) % 2; // 0 = Yes, 1 = No
                 }
                 return;
@@ -3335,6 +3559,23 @@
                     return;
                 } else if (showQuestDialog) {
                     if (questDialogType === 'initial') {
+                        if (selectedQuestOption === 0) { // Accept quest
+                            const fishQuest = {
+                                id: 'fish_quest',
+                                title: 'Gone Fishing!',
+                                description: 'Bring 5 fish to Sam in the Lake Zone'
+                            };
+                            addQuest(fishQuest);
+                            questNPCActive = true;
+                            showDialog = true;
+                            currentDialogNPC = 'Sam';
+                            dialogText = "Wonderful! I'll be waiting here for those 5 fish.";
+                        } else {
+                            // Declined quest
+                            showDialog = true;
+                            currentDialogNPC = 'Sam';
+                            dialogText = "If you change your mind I'll be right here!";
+                        }
                         showQuestDialog = false;
                     } else if (questDialogType === 'completion' && selectedQuestOption === 0) {
                         // Complete quest - remove 5 fish and give 30 gold
@@ -3353,9 +3594,12 @@
                         
                         myGold += 30;
                         questNPCCompleted = true;
+                        questNPCActive = false;
+                        removeQuest('fish_quest');
                         updateGoldDisplay();
                         
                         showDialog = true;
+                        currentDialogNPC = 'Sam';
                         dialogText = "Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!";
                         showQuestDialog = false;
                     } else {
@@ -3506,6 +3750,13 @@
             processCooking();
             processWoodcutting();
             processFiremaking();
+            
+            // Update quest progress
+            activeQuests.forEach(quest => {
+                if (quest.id === 'fish_quest') {
+                    checkQuestCompletion('fish_quest');
+                }
+            });
             
             // Clean up expired campfires
             const now = Date.now();
