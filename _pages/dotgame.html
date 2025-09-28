@@ -1219,7 +1219,7 @@
                                 console.log(`Goblin killed! Progress: ${goblinKillCount}/4`);
                             }
                             
-                            // FIXED: Set goblin respawn timer instead of permanent deletion
+                            // FIXED: Set respawn timer for ALL mobs (goblins, chickens, mice)
                             set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
                         } else {
                             set(mobRef, { ...mob, health: newHealth });
@@ -4117,13 +4117,13 @@
                 }
             });
             
-            // FIXED: Handle all mob respawning (including farm mobs)
+            // FIXED: Handle all mob respawning with proper position reset
             Object.entries(mobs).forEach(([mobId, mob]) => {
                 if (mob && mob.health === 0 && mob.respawnTime && now >= mob.respawnTime) {
                     console.log(`Respawning ${mob.type} ${mobId}`);
                     
                     if (mob.type === 'goblin') {
-                        // Goblin respawn in Forest
+                        // Goblin respawn in Forest at original positions
                         const mobRef = ref(database, `forestMobs/${mobId}`);
                         const originalPositions = {
                             'goblin_1': { x: 5, y: 4 },
@@ -4148,11 +4148,23 @@
                             respawnTime: null
                         });
                     } else {
-                        // Farm mob respawn (chickens and mice)
+                        // Farm mob respawn (chickens and mice) - respawn in fence area
                         const mobRef = ref(database, `mobs/${mobId}`);
+                        
+                        // Generate new random position within the fence
+                        const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
+                        const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
+                        const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
+                        const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
+                        
+                        const newX = Math.floor(Math.random() * (fenceMaxX - fenceMinX)) + fenceMinX;
+                        const newY = Math.floor(Math.random() * (fenceMaxY - fenceMinY)) + fenceMinY;
+                        
                         set(mobRef, {
                             ...mob,
-                            health: 2, // Restore full health
+                            x: newX,
+                            y: newY,
+                            health: 2, // Restore full health for farm mobs
                             respawnTime: null, // Clear respawn timer
                         });
                     }
@@ -4382,7 +4394,7 @@
                                         console.log(`Goblin killed by fireball! Progress: ${goblinKillCount}/4`);
                                     }
                                     
-                                    // FIXED: Set goblin respawn timer instead of permanent deletion
+                                    // FIXED: Set respawn timer for ALL mobs killed by fireballs
                                     set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
                                 } else {
                                     set(mobRef, { ...mob, health: newHealth });
