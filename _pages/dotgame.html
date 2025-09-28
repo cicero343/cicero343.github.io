@@ -554,6 +554,74 @@
             }
         }
 
+        // Generate cooking fire crackling sound effect (improved crackling)
+        function playCookingSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Resume audio context if suspended (browser autoplay policy)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            try {
+                // Create more realistic crackling fire sound
+                const bufferSize = audioContext.sampleRate * 0.25; // 250ms
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = buffer.getChannelData(0);
+                
+                // Generate more realistic crackling pattern
+                for (let i = 0; i < bufferSize; i++) {
+                    // Create multiple layers of crackling at different frequencies
+                    const time = i / audioContext.sampleRate;
+                    
+                    // Multiple random pops at different intervals for realistic crackling
+                    const pop1 = Math.random() > 0.98 ? (Math.random() - 0.5) * 0.8 : 0; // Sharp pops
+                    const pop2 = Math.random() > 0.96 ? (Math.random() - 0.5) * 0.4 : 0; // Medium pops  
+                    const pop3 = Math.random() > 0.92 ? (Math.random() - 0.5) * 0.2 : 0; // Small pops
+                    
+                    // Continuous low-level crackling background
+                    const baseCrackle = (Math.random() - 0.5) * 0.1 * Math.sin(time * 2000 + Math.random());
+                    
+                    // Gentle overall decay
+                    const decay = Math.exp(-time * 2); // Slower decay for more crackling time
+                    
+                    output[i] = (pop1 + pop2 + pop3 + baseCrackle) * decay;
+                }
+                
+                // Create audio nodes
+                const noiseSource = audioContext.createBufferSource();
+                const gainNode = audioContext.createGain();
+                const filterNode = audioContext.createBiquadFilter();
+                
+                // Connect: noise -> filter -> gain -> speakers
+                noiseSource.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Configure filter for realistic fire crackling
+                filterNode.type = 'highpass';  // Changed to highpass to remove muddy low end
+                filterNode.frequency.setValueAtTime(300, audioContext.currentTime); // Remove very low frequencies
+                filterNode.Q.setValueAtTime(0.7, audioContext.currentTime); // Gentle slope
+                
+                // Volume envelope - much louder and more gradual (less "slap-like")
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.7, now + 0.01); // Much louder (0.7) and gentler attack
+                gainNode.gain.linearRampToValueAtTime(0.6, now + 0.1); // Sustain the crackling
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25); // Gentle fade
+                
+                // Play the crackling sound
+                noiseSource.buffer = buffer;
+                noiseSource.start(now);
+                noiseSource.stop(now + 0.25);
+                
+                console.log('Cooking crackling played');
+                
+            } catch (error) {
+                console.error('Error playing cooking sound:', error);
+            }
+        }
+
         // Fishing system
         let isFishing = false;
         let fishingStartTime = 0;
@@ -1135,6 +1203,9 @@
                         // Add cooked item
                         if (addItemToInventory(option.resultItem)) {
                             console.log(`Cooked ${option.name}!`);
+                            
+                            // PLAY COOKING SOUND each time something is cooked (like woodcutting)
+                            playCookingSound();
                             
                             // Show cooking popup
                             cookedItemName = option.name;
