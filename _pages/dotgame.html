@@ -2891,6 +2891,9 @@
                     ctx.fillStyle = '#ff6600';
                     ctx.beginPath();
                     ctx.moveTo(campfirePixel.x - 8, campfirePixel.y + 8);
+                    ctx.lineTo(campfirePixel.x - 4, campfirePixel.y - 8 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x, campfirePixel.y - 12 + fireFlicker);
+                    ctx.lineTo(campfirePixel.x + 4, campfirePixel.y - 8 + fireFlicker);
                     ctx.lineTo(campfirePixel.x + 8, campfirePixel.y + 8);
                     ctx.fill();
                     
