@@ -486,6 +486,9 @@
         // Quest system - Enhanced with proper tracking
         let questNPCCompleted = false; // Track if player completed the fish quest this session
         let questNPCActive = false; // Track if player has the fish quest active
+        let skyQuestCompleted = false; // Track if player completed Sky's goblin quest this session
+        let skyQuestActive = false; // Track if player has Sky's goblin quest active
+        let goblinKillCount = 0; // Track how many goblins player has killed
         let showQuestDialog = false;
         let selectedQuestOption = 0; // 0 = Accept, 1 = Decline or 0 = Yes, 1 = No for completion
         let questDialogType = 'initial'; // 'initial', 'during', 'completion', 'completed'
@@ -550,6 +553,7 @@
         const fireplace = { x: 16, y: 9, color: '#ff6600' };
         const merchant = { x: 11, y: 3, color: '#ff8c00' };
         const questNPC = { x: 15, y: 9, color: '#4169E1' }; // Quest NPC in Lake Zone
+        const skyNPC = { x: 16, y: 2, color: '#87CEEB' }; // Sky NPC in Town Zone
         
         // Trees in Town Zone
         const trees = [
@@ -738,7 +742,7 @@
         }
 
         function updateZoneDisplay() {
-            const zoneNames = { 1: 'Town', 2: 'Wilderness', 3: 'Lake' };
+            const zoneNames = { 1: 'Town', 2: 'Farm', 3: 'Lake', 4: 'Forest' };
             document.getElementById('zoneDisplay').textContent = zoneNames[myZone];
         }
 
@@ -799,6 +803,16 @@
                 }
             }
             
+            // Check for goblins in Forest Zone - they now block movement
+            if (myZone === 4) {
+                for (let [mobId, mob] of Object.entries(mobs)) {
+                    if (mob && mob.type === 'goblin' && mob.health > 0 && 
+                        mob.x === gridX && mob.y === gridY) {
+                        return true; // Goblins block movement
+                    }
+                }
+            }
+            
             // Player campfires are passable - don't check them here
             // Only permanent structures block movement
             
@@ -806,6 +820,7 @@
                 player && player.gridX === gridX && player.gridY === gridY && player.zone === myZone
             ) || (myZone === 1 && npc.x === gridX && npc.y === gridY) || 
                (myZone === 1 && merchant.x === gridX && merchant.y === gridY) ||
+               (myZone === 1 && skyNPC.x === gridX && skyNPC.y === gridY) ||
                (myZone === 3 && fireplace.x === gridX && fireplace.y === gridY) ||
                (myZone === 3 && questNPC.x === gridX && questNPC.y === gridY);
         }
@@ -864,13 +879,13 @@
                         cookingOptions.push({
                             name: 'Fresh Fish',
                             description: 'Cook into Cooked Fresh Fish (+1 Health when eaten)',
-                            icon: '🟤',
+                            icon: '🐟',
                             requiredItem: 'fish',
                             resultItem: {
                                 id: 'cooked_fish',
                                 name: 'Cooked Fresh Fish',
                                 description: 'A cooked fresh-water fish. Smells yummy!',
-                                icon: '🖖',
+                                icon: '🍖',
                                 type: 'food',
                                 stackable: true,
                                 stack: 1,
@@ -918,7 +933,7 @@
                                 id: 'cooked_fish',
                                 name: 'Cooked Fresh Fish',
                                 description: 'A cooked fresh-water fish. Smells yummy!',
-                                icon: '🖖',
+                                icon: '🍖',
                                 type: 'food',
                                 stackable: true,
                                 stack: 1,
@@ -1133,20 +1148,24 @@
             
             console.log(`Melee attack targeting position: ${attackX}, ${attackY}`);
             
-            // Check for mobs in attack range (only in Wilderness)
-            if (myZone === 2) {
+            // Check for mobs in attack range (Wilderness and Forest zones)
+            if (myZone === 2 || myZone === 4) {
                 Object.entries(mobs).forEach(([mobId, mob]) => {
                     if (mob && mob.health > 0 && 
                         mob.x === attackX && 
                         mob.y === attackY) {
                         
-                        console.log(`Melee attack hit mob at ${mob.x}, ${mob.y}`);
+                        // Only attack mobs in current zone
+                        const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
+                        if (mobZone !== myZone) return;
+                        
+                        console.log(`Melee attack hit ${mob.type} at ${mob.x}, ${mob.y}`);
                         
                         const newHealth = Math.max(0, mob.health - 1);
-                        const mobRef = ref(database, `mobs/${mobId}`);
+                        const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
                         
                         if (newHealth <= 0) {
-                            console.log(`Mob ${mobId} (${mob.type}) killed by melee attack - creating drops`);
+                            console.log(`${mob.type} ${mobId} killed by melee attack - creating drops`);
                             
                             // Give attack skill XP
                             if (playerAttack < 20) {
@@ -1154,45 +1173,54 @@
                                 console.log(`Attack skill increased to ${playerAttack}!`);
                             }
                             
-                            const expValue = mob.type === 'chicken' ? 8 : 6;
+                            const expValue = mob.type === 'goblin' ? 12 : (mob.type === 'chicken' ? 8 : 6);
                             const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                             set(expDropRef, {
                                 x: mob.x,
                                 y: mob.y,
-                                zone: 2,
+                                zone: myZone,
                                 type: 'exp',
                                 value: expValue,
                                 createdAt: Date.now()
                             });
                             
-                            // FIXED: Gold drops now 2-4 instead of 5-10
+                            // Gold drops - goblins drop more gold (4-5) than chickens/mice (2-4)
                             if (Math.random() < 0.8) {
-                                const goldValue = Math.floor(Math.random() * 3) + 2; // 2-4 gold
+                                const goldValue = mob.type === 'goblin' ? 
+                                    Math.floor(Math.random() * 2) + 4 : // 4-5 gold
+                                    Math.floor(Math.random() * 3) + 2; // 2-4 gold
                                 const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                 set(goldDropRef, {
                                     x: mob.x,
                                     y: mob.y,
-                                    zone: 2,
+                                    zone: myZone,
                                     type: 'gold',
                                     value: goldValue,
                                     createdAt: Date.now()
                                 });
                             }
                             
-                            // NEW: Chicken feather drops
+                            // Chicken feather drops
                             if (mob.type === 'chicken' && Math.random() < 0.8) {
                                 const featherDropRef = ref(database, `drops/feather_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                 set(featherDropRef, {
                                     x: mob.x,
                                     y: mob.y,
-                                    zone: 2,
+                                    zone: myZone,
                                     type: 'feather',
                                     value: 1,
                                     createdAt: Date.now()
                                 });
                             }
                             
-                            set(mobRef, null);
+                            // Track goblin kills for Sky's quest
+                            if (mob.type === 'goblin' && skyQuestActive) {
+                                goblinKillCount++;
+                                console.log(`Goblin killed! Progress: ${goblinKillCount}/4`);
+                            }
+                            
+                            // FIXED: Set goblin respawn timer instead of permanent deletion
+                            set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
                         } else {
                             set(mobRef, { ...mob, health: newHealth });
                         }
@@ -1216,7 +1244,7 @@
                     id: 'fish',
                     name: 'Fresh Fish',
                     description: 'A fresh-water fish. Can be cooked or sold.',
-                    icon: '🟤',
+                    icon: '🐟',
                     type: 'resource',
                     stackable: true,
                     stack: 1,
@@ -1633,13 +1661,15 @@
 
         function initializeMobs() {
             if (myZone === 2) {
+                // Initialize Farm Zone mobs (chickens and mice)
                 const mobsRef = ref(database, 'mobs');
                 onValue(mobsRef, (snapshot) => {
                     const currentMobs = snapshot.val() || {};
                     
                     if (Object.keys(currentMobs).length === 0) {
+                        console.log('Creating Farm Zone mobs...');
                         for (let i = 1; i <= 6; i++) {
-                            const mobId = `mob_${i}_${Date.now()}`;
+                            const mobId = `farm_mob_${i}`;  // Consistent ID
                             const mobRef = ref(database, `mobs/${mobId}`);
                             
                             const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
@@ -1659,6 +1689,45 @@
                         }
                     }
                 }, { onlyOnce: true });
+            } else if (myZone === 4) {
+                // FIXED: Simple Forest Zone goblin initialization - only create if none exist
+                console.log('Checking Forest Zone goblins...');
+                const forestMobsRef = ref(database, 'forestMobs');
+                
+                // Use onlyOnce to prevent duplicate creation
+                onValue(forestMobsRef, (snapshot) => {
+                    const currentMobs = snapshot.val() || {};
+                    console.log('Current Forest Mobs:', Object.keys(currentMobs));
+                    
+                    // Only create if completely empty
+                    if (Object.keys(currentMobs).length === 0) {
+                        console.log('Creating initial 4 goblins...');
+                        
+                        const goblinPositions = [
+                            { x: 5, y: 4, id: 'goblin_1' },   
+                            { x: 15, y: 4, id: 'goblin_2' },  
+                            { x: 5, y: 11, id: 'goblin_3' },  
+                            { x: 15, y: 11, id: 'goblin_4' } 
+                        ];
+                        
+                        goblinPositions.forEach((pos) => {
+                            const mobRef = ref(database, `forestMobs/${pos.id}`);
+                            console.log(`Creating goblin ${pos.id} at ${pos.x}, ${pos.y}`);
+                            set(mobRef, {
+                                x: pos.x,
+                                y: pos.y,
+                                health: 3,
+                                maxHealth: 3,
+                                type: 'goblin',
+                                lastMove: Date.now(),
+                                moveCounter: 0,
+                                aggroTarget: null,
+                                aggroRange: 3,
+                                isAggro: false
+                            });
+                        });
+                    }
+                }, { onlyOnce: true }); // IMPORTANT: Only run once per zone entry
             }
         }
 
@@ -1692,6 +1761,21 @@
                 updateZoneDisplay();
                 updatePlayerData();
             }
+            else if (myZone === 1 && myGridPos.y <= 0) {
+                myZone = 4;
+                myGridPos.y = GRID_HEIGHT - 2;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+                initializeMobs();
+            }
+            else if (myZone === 4 && myGridPos.y >= GRID_HEIGHT - 1) {
+                myZone = 1;
+                myGridPos.y = 1;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+            }
         }
 
         // Quest management functions
@@ -1714,6 +1798,10 @@
                 if (droppedQuest.id === 'fish_quest') {
                     questNPCCompleted = false;
                     questNPCActive = false;
+                } else if (droppedQuest.id === 'goblin_quest') {
+                    skyQuestCompleted = false;
+                    skyQuestActive = false;
+                    goblinKillCount = 0;
                 }
             }
             
@@ -1774,6 +1862,9 @@
                 });
                 quest.progress = `${Math.min(fishCount, 5)}/5`;
                 return fishCount >= 5;
+            } else if (questId === 'goblin_quest') {
+                quest.progress = `${Math.min(goblinKillCount, 4)}/4`;
+                return goblinKillCount >= 4;
             }
             
             return false;
@@ -1815,12 +1906,12 @@
 
         function checkNPCInteraction() {
             if (myZone === 1) {
-                // Check regular NPC
+                // Check regular NPC (Mayor)
                 const npcDistance = Math.abs(myGridPos.x - npc.x) + Math.abs(myGridPos.y - npc.y);
                 if (npcDistance <= 1) {
                     showDialog = true;
                     currentDialogNPC = 'Mayor';
-                    dialogText = "Hello there, brave adventurer! Head east to the wilderness for adventure, or west to the peaceful lake for fishing!";
+                    dialogText = "Hello there, brave adventurer! Head east to the Farm for adventure, west to the peaceful lake for fishing, or north to the dangerous forest!";
                     return;
                 }
                 
@@ -1831,8 +1922,40 @@
                     selectedTradeOption = 0; // Default to "Buy"
                     return;
                 }
+                
+                // FIXED: Check Sky NPC for goblin quest (separate from Sam)
+                const skyDistance = Math.abs(myGridPos.x - skyNPC.x) + Math.abs(myGridPos.y - skyNPC.y);
+                if (skyDistance <= 1) {
+                    if (skyQuestCompleted) {
+                        // Quest completed state
+                        showDialog = true;
+                        currentDialogNPC = 'Sky';
+                        dialogText = "Thank you for clearing out those goblins! The forest is safe again.";
+                    } else if (skyQuestActive) {
+                        // Check if player has killed 4 goblins for completion
+                        if (goblinKillCount >= 4) {
+                            // Player has killed enough goblins - offer completion
+                            questDialogType = 'completion';
+                            selectedQuestOption = 0;
+                            currentDialogNPC = 'Sky';
+                            showQuestDialog = true;
+                        } else {
+                            // Quest is active but player hasn't killed enough goblins
+                            showDialog = true;
+                            currentDialogNPC = 'Sky';
+                            dialogText = `Come back to me once you've cleared out those goblins! (${goblinKillCount}/4 killed)`;
+                        }
+                    } else {
+                        // Initial quest offering
+                        questDialogType = 'initial';
+                        selectedQuestOption = 0;
+                        currentDialogNPC = 'Sky';
+                        showQuestDialog = true;
+                    }
+                    return;
+                }
             } else if (myZone === 3) {
-                // Check quest NPC in Lake Zone
+                // FIXED: Check Sam quest NPC in Lake Zone (separate from Sky)
                 const questNPCDistance = Math.abs(myGridPos.x - questNPC.x) + Math.abs(myGridPos.y - questNPC.y);
                 if (questNPCDistance <= 1) {
                     if (questNPCCompleted) {
@@ -1853,6 +1976,7 @@
                             // Player has enough fish - offer completion
                             questDialogType = 'completion';
                             selectedQuestOption = 0;
+                            currentDialogNPC = 'Sam';
                             showQuestDialog = true;
                         } else {
                             // Quest is active but player doesn't have enough fish
@@ -1864,6 +1988,7 @@
                         // Initial quest offering
                         questDialogType = 'initial';
                         selectedQuestOption = 0;
+                        currentDialogNPC = 'Sam';
                         showQuestDialog = true;
                     }
                     return;
@@ -2182,6 +2307,18 @@
                 mobs = snapshot.val() || {};
             });
 
+            // Listen to Forest Zone goblins
+            const forestMobsRef = ref(database, 'forestMobs');
+            onValue(forestMobsRef, (snapshot) => {
+                const forestMobs = snapshot.val() || {};
+                // Merge forest mobs with regular mobs for unified handling
+                Object.entries(forestMobs).forEach(([id, mob]) => {
+                    if (mob) {
+                        mobs[id] = { ...mob, zone: 4 }; // Mark as forest zone
+                    }
+                });
+            });
+
             const dropsRef = ref(database, 'drops');
             onValue(dropsRef, (snapshot) => {
                 drops = snapshot.val() || {};
@@ -2303,6 +2440,51 @@
             ctx.restore();
         }
 
+        function drawGoblin(x, y) {
+            // Draw goblin body (green)
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.arc(x, y, 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw goblin head (darker green)
+            ctx.fillStyle = '#006400';
+            ctx.beginPath();
+            ctx.arc(x, y - 8, 8, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw pointed ears
+            ctx.fillStyle = '#228B22';
+            ctx.beginPath();
+            ctx.moveTo(x - 10, y - 8);
+            ctx.lineTo(x - 14, y - 12);
+            ctx.lineTo(x - 8, y - 10);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.moveTo(x + 10, y - 8);
+            ctx.lineTo(x + 14, y - 12);
+            ctx.lineTo(x + 8, y - 10);
+            ctx.fill();
+            
+            // Draw red eyes
+            ctx.fillStyle = '#FF0000';
+            ctx.beginPath();
+            ctx.arc(x - 3, y - 10, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 3, y - 10, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw small club/weapon
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(x + 12, y - 15, 3, 15);
+            ctx.fillStyle = '#654321';
+            ctx.beginPath();
+            ctx.arc(x + 13, y - 17, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
         function drawSparkles(x, y, time) {
             const sparkleCount = 8;
             for (let i = 0; i < sparkleCount; i++) {
@@ -2369,6 +2551,25 @@
                 ctx.fillStyle = '#ffed4e';
                 ctx.fillRect(npcPixel.x - 10, npcPixel.y - 25, 20, 10);
                 ctx.fillRect(npcPixel.x - 5, npcPixel.y - 30, 10, 5);
+                
+                // Draw Sky NPC at (16, 2)
+                const skyNPCPixel = gridToPixel(skyNPC.x, skyNPC.y);
+                ctx.fillStyle = skyNPC.color;
+                ctx.beginPath();
+                ctx.arc(skyNPCPixel.x, skyNPCPixel.y, 15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // FIXED: Draw quest marker above Sky NPC with visible red exclamation mark
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(skyNPCPixel.x, skyNPCPixel.y - 35, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Red exclamation mark (no black outline)
+                ctx.fillStyle = '#FF0000';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('!', skyNPCPixel.x, skyNPCPixel.y - 26);
                 
                 // NEW: Draw animated butterflies in Town Zone
                 const currentTime = Date.now();
@@ -2523,7 +2724,7 @@
                 
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
-                ctx.fillText('Wilderness', rightArrowX, rightArrowY + 20);
+                ctx.fillText('Farm', rightArrowX, rightArrowY + 20);
                 
                 const leftArrowX = GRID_SIZE / 2;
                 const leftArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
@@ -2536,6 +2737,19 @@
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Lake', leftArrowX, leftArrowY + 20);
+                
+                // Draw north arrow to Forest
+                const northArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
+                const northArrowY = GRID_SIZE / 2;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('^', northArrowX, northArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Forest', northArrowX, northArrowY + 20);
                 
             } else if (myZone === 2) {
                 const arrowX = GRID_SIZE / 2;
@@ -2562,6 +2776,19 @@
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Town', arrowX, arrowY + 20);
+            } else if (myZone === 4) {
+                // Forest Zone - draw south arrow back to Town
+                const southArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
+                const southArrowY = (GRID_HEIGHT - 1) * GRID_SIZE + GRID_SIZE / 2;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('v', southArrowX, southArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', southArrowX, southArrowY + 20);
             }
 
             if (myZone === 3) {
@@ -2619,14 +2846,14 @@
                     ctx.fill();
                 }
                 
-                // NEW: Draw quest NPC at (15, 9) with cooking animation
+                // NEW: Draw quest NPC (Sam) at (15, 9) with cooking animation
                 const questNPCPixel = gridToPixel(questNPC.x, questNPC.y);
                 ctx.fillStyle = questNPC.color;
                 ctx.beginPath();
                 ctx.arc(questNPCPixel.x, questNPCPixel.y, 15, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Draw permanent cooking animation above quest NPC
+                // Draw permanent cooking animation above quest NPC (Sam)
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                 ctx.beginPath();
                 ctx.arc(questNPCPixel.x, questNPCPixel.y - 35, 12, 0, Math.PI * 2);
@@ -2756,17 +2983,27 @@
                     ctx.lineTo(rightPixel.x + GRID_SIZE/2, rightPixel.y);
                     ctx.stroke();
                 }
-                
+            }
+            
+            if (myZone === 2 || myZone === 4) {
+                // Draw mobs for both Wilderness (zone 2) and Forest (zone 4)
                 Object.entries(mobs).forEach(([mobId, mob]) => {
                     if (mob && mob.health > 0) {
+                        // Only draw mobs that belong to current zone
+                        const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
+                        if (mobZone !== myZone) return;
+                        
                         const mobPixel = gridToPixel(mob.x, mob.y);
                         
                         if (mob.type === 'chicken') {
                             drawChicken(mobPixel.x, mobPixel.y);
-                        } else {
+                        } else if (mob.type === 'mouse') {
                             drawMouse(mobPixel.x, mobPixel.y);
+                        } else if (mob.type === 'goblin') {
+                            drawGoblin(mobPixel.x, mobPixel.y);
                         }
                         
+                        // Draw health bar if damaged
                         if (mob.health < mob.maxHealth) {
                             const barWidth = 20;
                             const barHeight = 3;
@@ -2778,6 +3015,14 @@
                             
                             ctx.fillStyle = '#ff4444';
                             ctx.fillRect(barX, barY, (mob.health / mob.maxHealth) * barWidth, barHeight);
+                        }
+                        
+                        // Draw aggro indicator for goblins
+                        if (mob.type === 'goblin' && mob.isAggro) {
+                            ctx.fillStyle = '#FF0000';
+                            ctx.font = '12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('!', mobPixel.x, mobPixel.y - 25);
                         }
                     }
                 });
@@ -3300,7 +3545,7 @@
                 ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
             }
 
-            // NEW: Draw quest dialog with improved system
+            // FIXED: Draw quest dialog with Sky NPC providing the Goblin Slayer quest
             if (showQuestDialog) {
                 const dialogBoxX = 50;
                 const dialogBoxY = canvas.height - 150;
@@ -3310,7 +3555,8 @@
                 const textStartY = dialogBoxY + 30;
                 
                 // Draw NPC name tab
-                drawNPCNameTab('Sam', dialogBoxX, dialogBoxY, dialogBoxWidth);
+                const npcName = currentDialogNPC === 'Sky' ? 'Sky' : 'Sam';
+                drawNPCNameTab(npcName, dialogBoxX, dialogBoxY, dialogBoxWidth);
                 
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
@@ -3323,26 +3569,52 @@
                 ctx.font = '16px Courier New';
                 ctx.textAlign = 'left';
                 
-                if (questDialogType === 'initial') {
-                    ctx.fillText('Would you mind bringing me 5 fish? I\'ll give you a nice reward!', textStartX, textStartY);
-                    
-                    // Draw options side by side
-                    const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
-                    const noText = selectedQuestOption === 1 ? '> No' : '  No';
-                    
-                    ctx.font = '14px Courier New';
-                    ctx.fillText(yesText, textStartX + 50, textStartY + 40);
-                    ctx.fillText(noText, textStartX + 150, textStartY + 40);
-                } else if (questDialogType === 'completion') {
-                    ctx.fillText('Perfect! You have the fish I need. Trade 5 fish for 30 gold?', textStartX, textStartY);
-                    
-                    // Draw options side by side
-                    const yesText = selectedQuestOption === 0 ? '> Yes (30 gold)' : '  Yes (30 gold)';
-                    const noText = selectedQuestOption === 1 ? '> No' : '  No';
-                    
-                    ctx.font = '14px Courier New';
-                    ctx.fillText(yesText, textStartX + 50, textStartY + 40);
-                    ctx.fillText(noText, textStartX + 250, textStartY + 40);
+                if (currentDialogNPC === 'Sky') {
+                    // FIXED: Sky's goblin quest dialog
+                    if (questDialogType === 'initial') {
+                        ctx.fillText('The forest is overrun with goblins! Clear out 4 of them for a reward!', textStartX, textStartY);
+                        
+                        // Draw options side by side
+                        const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
+                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
+                        
+                        ctx.font = '14px Courier New';
+                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
+                        ctx.fillText(noText, textStartX + 150, textStartY + 40);
+                    } else if (questDialogType === 'completion') {
+                        ctx.fillText('Excellent work! You\'ve cleared the goblins. Here\'s your 40 gold reward!', textStartX, textStartY);
+                        
+                        // Draw options side by side
+                        const yesText = selectedQuestOption === 0 ? '> Yes (40 gold)' : '  Yes (40 gold)';
+                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
+                        
+                        ctx.font = '14px Courier New';
+                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
+                        ctx.fillText(noText, textStartX + 270, textStartY + 40);
+                    }
+                } else {
+                    // Sam's fish quest dialog
+                    if (questDialogType === 'initial') {
+                        ctx.fillText('Would you mind bringing me 5 fish? I\'ll give you a nice reward!', textStartX, textStartY);
+                        
+                        // Draw options side by side
+                        const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
+                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
+                        
+                        ctx.font = '14px Courier New';
+                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
+                        ctx.fillText(noText, textStartX + 150, textStartY + 40);
+                    } else if (questDialogType === 'completion') {
+                        ctx.fillText('Perfect! You have the fish I need. Trade 5 fish for 30 gold?', textStartX, textStartY);
+                        
+                        // Draw options side by side
+                        const yesText = selectedQuestOption === 0 ? '> Yes (30 gold)' : '  Yes (30 gold)';
+                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
+                        
+                        ctx.font = '14px Courier New';
+                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
+                        ctx.fillText(noText, textStartX + 250, textStartY + 40);
+                    }
                 }
                 
                 ctx.font = '12px Courier New';
@@ -3560,47 +3832,75 @@
                 } else if (showQuestDialog) {
                     if (questDialogType === 'initial') {
                         if (selectedQuestOption === 0) { // Accept quest
-                            const fishQuest = {
-                                id: 'fish_quest',
-                                title: 'Gone Fishing!',
-                                description: 'Bring 5 fish to Sam in the Lake Zone'
-                            };
-                            addQuest(fishQuest);
-                            questNPCActive = true;
-                            showDialog = true;
-                            currentDialogNPC = 'Sam';
-                            dialogText = "Wonderful! I'll be waiting here for those 5 fish.";
+                            if (currentDialogNPC === 'Sky') {
+                                // FIXED: Sky's goblin quest
+                                const goblinQuest = {
+                                    id: 'goblin_quest',
+                                    title: 'Goblin Slayer',
+                                    description: 'Clear out the goblin den in the Forest Zone for Sky'
+                                };
+                                addQuest(goblinQuest);
+                                skyQuestActive = true;
+                                showDialog = true;
+                                currentDialogNPC = 'Sky';
+                                dialogText = "Perfect! Head north to the forest and clear out those goblins. I'll be waiting!";
+                            } else {
+                                // Sam's fish quest
+                                const fishQuest = {
+                                    id: 'fish_quest',
+                                    title: 'Gone Fishing!',
+                                    description: 'Bring 5 fish to Sam in the Lake Zone'
+                                };
+                                addQuest(fishQuest);
+                                questNPCActive = true;
+                                showDialog = true;
+                                currentDialogNPC = 'Sam';
+                                dialogText = "Wonderful! I'll be waiting here for those 5 fish.";
+                            }
                         } else {
                             // Declined quest
                             showDialog = true;
-                            currentDialogNPC = 'Sam';
                             dialogText = "If you change your mind I'll be right here!";
                         }
                         showQuestDialog = false;
                     } else if (questDialogType === 'completion' && selectedQuestOption === 0) {
-                        // Complete quest - remove 5 fish and give 30 gold
-                        let fishRemoved = 0;
-                        for (let i = 0; i < inventory.length && fishRemoved < 5; i++) {
-                            if (inventory[i] && inventory[i].id === 'fish') {
-                                const removeAmount = Math.min(5 - fishRemoved, inventory[i].stack);
-                                inventory[i].stack -= removeAmount;
-                                fishRemoved += removeAmount;
-                                
-                                if (inventory[i].stack <= 0) {
-                                    inventory[i] = null;
+                        if (currentDialogNPC === 'Sky') {
+                            // Complete Sky's goblin quest - give 40 gold
+                            myGold += 40;
+                            skyQuestCompleted = true;
+                            skyQuestActive = false;
+                            goblinKillCount = 0; // Reset counter
+                            removeQuest('goblin_quest');
+                            updateGoldDisplay();
+                            
+                            showDialog = true;
+                            currentDialogNPC = 'Sky';
+                            dialogText = "Excellent! Here's your reward. Thank you for clearing out those goblins!";
+                        } else {
+                            // Complete Sam's fish quest - remove 5 fish and give 30 gold
+                            let fishRemoved = 0;
+                            for (let i = 0; i < inventory.length && fishRemoved < 5; i++) {
+                                if (inventory[i] && inventory[i].id === 'fish') {
+                                    const removeAmount = Math.min(5 - fishRemoved, inventory[i].stack);
+                                    inventory[i].stack -= removeAmount;
+                                    fishRemoved += removeAmount;
+                                    
+                                    if (inventory[i].stack <= 0) {
+                                        inventory[i] = null;
+                                    }
                                 }
                             }
+                            
+                            myGold += 30;
+                            questNPCCompleted = true;
+                            questNPCActive = false;
+                            removeQuest('fish_quest');
+                            updateGoldDisplay();
+                            
+                            showDialog = true;
+                            currentDialogNPC = 'Sam';
+                            dialogText = "Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!";
                         }
-                        
-                        myGold += 30;
-                        questNPCCompleted = true;
-                        questNPCActive = false;
-                        removeQuest('fish_quest');
-                        updateGoldDisplay();
-                        
-                        showDialog = true;
-                        currentDialogNPC = 'Sam';
-                        dialogText = "Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!";
                         showQuestDialog = false;
                     } else {
                         showQuestDialog = false;
@@ -3755,6 +4055,8 @@
             activeQuests.forEach(quest => {
                 if (quest.id === 'fish_quest') {
                     checkQuestCompletion('fish_quest');
+                } else if (quest.id === 'goblin_quest') {
+                    checkQuestCompletion('goblin_quest');
                 }
             });
             
@@ -3773,6 +4075,90 @@
                     console.log(`Tree at ${tree.x}, ${tree.y} has regrown!`);
                 }
             });
+            
+            // FIXED: Better goblin respawn system with cleanup
+            Object.entries(mobs).forEach(([mobId, mob]) => {
+                if (mob && mob.type === 'goblin') {
+                    if (mob.health === 0 && mob.respawnTime && now >= mob.respawnTime) {
+                        // Respawn the goblin
+                        console.log(`Respawning goblin ${mobId}`);
+                        const mobRef = ref(database, `forestMobs/${mobId}`);
+                        
+                        // Reset to original position and full health
+                        const originalPositions = {
+                            'goblin_1': { x: 5, y: 4 },
+                            'goblin_2': { x: 15, y: 4 },
+                            'goblin_3': { x: 5, y: 11 },
+                            'goblin_4': { x: 15, y: 11 }
+                        };
+                        
+                        const respawnPos = originalPositions[mobId] || { x: mob.x, y: mob.y };
+                        
+                        set(mobRef, {
+                            x: respawnPos.x,
+                            y: respawnPos.y,
+                            health: 3,
+                            maxHealth: 3,
+                            type: 'goblin',
+                            lastMove: Date.now(),
+                            moveCounter: 0,
+                            aggroTarget: null,
+                            aggroRange: 3,
+                            isAggro: false,
+                            respawnTime: null
+                        });
+                    } else if (mob.health === 0 && !mob.respawnTime) {
+                        // Dead goblin without respawn timer - this shouldn't happen, fix it
+                        console.log(`Found dead goblin ${mobId} without respawn timer, fixing...`);
+                        const mobRef = ref(database, `forestMobs/${mobId}`);
+                        set(mobRef, {
+                            ...mob,
+                            respawnTime: now + 15000 // Set respawn for 15 seconds from now
+                        });
+                    }
+                }
+            });
+            
+            // FIXED: Goblin maintenance - ensure we always have 4 goblins in forest
+            if (myZone === 4) {
+                const forestGoblins = Object.entries(mobs).filter(([id, mob]) => 
+                    mob && mob.type === 'goblin'
+                );
+                
+                // If we have fewer than 4 goblin entries, create missing ones
+                if (forestGoblins.length < 4) {
+                    console.log(`Only ${forestGoblins.length} goblins found, creating missing ones...`);
+                    const existingIds = forestGoblins.map(([id]) => id);
+                    const expectedIds = ['goblin_1', 'goblin_2', 'goblin_3', 'goblin_4'];
+                    
+                    expectedIds.forEach(expectedId => {
+                        if (!existingIds.includes(expectedId)) {
+                            console.log(`Creating missing goblin ${expectedId}`);
+                            const positions = {
+                                'goblin_1': { x: 5, y: 4 },
+                                'goblin_2': { x: 15, y: 4 },
+                                'goblin_3': { x: 5, y: 11 },
+                                'goblin_4': { x: 15, y: 11 }
+                            };
+                            
+                            const pos = positions[expectedId];
+                            const mobRef = ref(database, `forestMobs/${expectedId}`);
+                            set(mobRef, {
+                                x: pos.x,
+                                y: pos.y,
+                                health: 3,
+                                maxHealth: 3,
+                                type: 'goblin',
+                                lastMove: Date.now(),
+                                moveCounter: 0,
+                                aggroTarget: null,
+                                aggroRange: 3,
+                                isAggro: false
+                            });
+                        }
+                    });
+                }
+            }
             
             if (showLevelUpPopup && levelUpPopupTimer > 0) {
                 levelUpPopupTimer -= 16;
@@ -3873,67 +4259,80 @@
                 }
             });
 
-            if (myZone === 2) {
+            if ((myZone === 2 || myZone === 4)) {
                 Object.entries(fireballs).forEach(([fireballId, fireball]) => {
-                    if (fireball && fireball.zone === 2) {
+                    if (fireball && fireball.zone === myZone) {
                         Object.entries(mobs).forEach(([mobId, mob]) => {
                             if (mob && mob.health > 0 && 
                                 mob.x === fireball.x && 
                                 mob.y === fireball.y) {
                                 
-                                console.log(`Fireball hit mob at ${mob.x}, ${mob.y}`);
+                                // Only hit mobs in current zone
+                                const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
+                                if (mobZone !== myZone) return;
+                                
+                                console.log(`Fireball hit ${mob.type} at ${mob.x}, ${mob.y}`);
                                 
                                 const newHealth = Math.max(0, mob.health - 1);
-                                const mobRef = ref(database, `mobs/${mobId}`);
+                                const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
                                 
                                 if (newHealth <= 0) {
-                                    console.log(`Mob ${mobId} (${mob.type}) killed - creating drops`);
+                                    console.log(`${mob.type} killed - creating drops`);
                                     
-                                    // Give magic skill XP for fireball kills (same as attack skill for melee kills)
+                                    // Give magic skill XP for fireball kills
                                     if (playerMagic < 20) {
                                         playerMagic += 1;
                                         console.log(`Magic skill increased to ${playerMagic}!`);
                                     }
                                     
-                                    const expValue = mob.type === 'chicken' ? 8 : 6;
+                                    const expValue = mob.type === 'goblin' ? 12 : (mob.type === 'chicken' ? 8 : 6);
                                     const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                     set(expDropRef, {
                                         x: mob.x,
                                         y: mob.y,
-                                        zone: 2,
+                                        zone: myZone,
                                         type: 'exp',
                                         value: expValue,
                                         createdAt: Date.now()
                                     });
                                     
-                                    // FIXED: Gold drops now 2-4 instead of 5-10
+                                    // Gold drops - goblins drop more gold (4-5) than chickens/mice (2-4)
                                     if (Math.random() < 0.8) {
-                                        const goldValue = Math.floor(Math.random() * 3) + 2; // 2-4 gold
+                                        const goldValue = mob.type === 'goblin' ? 
+                                            Math.floor(Math.random() * 2) + 4 : // 4-5 gold
+                                            Math.floor(Math.random() * 3) + 2; // 2-4 gold
                                         const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                         set(goldDropRef, {
                                             x: mob.x,
                                             y: mob.y,
-                                            zone: 2,
+                                            zone: myZone,
                                             type: 'gold',
                                             value: goldValue,
                                             createdAt: Date.now()
                                         });
                                     }
                                     
-                                    // NEW: Chicken feather drops from fireballs too
+                                    // Chicken feather drops from fireballs too
                                     if (mob.type === 'chicken' && Math.random() < 0.8) {
                                         const featherDropRef = ref(database, `drops/feather_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                         set(featherDropRef, {
                                             x: mob.x,
                                             y: mob.y,
-                                            zone: 2,
+                                            zone: myZone,
                                             type: 'feather',
                                             value: 1,
                                             createdAt: Date.now()
                                         });
                                     }
                                     
-                                    set(mobRef, null);
+                                    // Track goblin kills for Sky's quest
+                                    if (mob.type === 'goblin' && skyQuestActive) {
+                                        goblinKillCount++;
+                                        console.log(`Goblin killed by fireball! Progress: ${goblinKillCount}/4`);
+                                    }
+                                    
+                                    // FIXED: Set goblin respawn timer instead of permanent deletion
+                                    set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
                                 } else {
                                     set(mobRef, { ...mob, health: newHealth });
                                 }
@@ -3946,41 +4345,125 @@
                 });
             }
 
-            if (myZone === 2 && currentTime % 500 < 50) {
+            if ((myZone === 2 || myZone === 4) && currentTime % 500 < 50) {
                 Object.entries(mobs).forEach(([mobId, mob]) => {
                     if (mob && mob.health > 0) {
+                        const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
+                        if (mobZone !== myZone) return; // Only process mobs in current zone
+                        
                         const timeSinceLastMove = currentTime - (mob.lastMove || 0);
                         const moveCounter = mob.moveCounter || 0;
                         
-                        const stayDuration = 3000 + (moveCounter % 3) * 1000;
-                        
-                        if (timeSinceLastMove >= stayDuration) {
-                            const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1 + 1;
-                            const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1 - 1;
-                            const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1 + 1;
-                            const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1 - 1;
+                        if (mob.type === 'goblin') {
+                            // Goblin AI - aggro behavior
+                            const playerDistance = Math.abs(mob.x - myGridPos.x) + Math.abs(mob.y - myGridPos.y);
                             
-                            const directions = [
-                                { x: 0, y: -1 }, { x: 0, y: 1 }, 
-                                { x: -1, y: 0 }, { x: 1, y: 0 },
-                                { x: 0, y: 0 }, { x: 0, y: 0 }
-                            ];
+                            if (playerDistance <= (mob.aggroRange || 3)) {
+                                // Player in aggro range - set aggro and move towards player
+                                const wasAggro = mob.isAggro;
+                                mob.isAggro = true;
+                                
+                                if (timeSinceLastMove >= 800) { // Goblins move every 800ms when aggro
+                                    let newX = mob.x;
+                                    let newY = mob.y;
+                                    
+                                    // Move towards player
+                                    if (mob.x < myGridPos.x) newX++;
+                                    else if (mob.x > myGridPos.x) newX--;
+                                    
+                                    if (mob.y < myGridPos.y) newY++;
+                                    else if (mob.y > myGridPos.y) newY--;
+                                    
+                                    // Ensure goblin stays within bounds
+                                    newX = Math.max(1, Math.min(GRID_WIDTH - 2, newX));
+                                    newY = Math.max(1, Math.min(GRID_HEIGHT - 2, newY));
+                                    
+                                    // Check if target position is occupied
+                                    if (!isPositionOccupied(newX, newY) || (newX === myGridPos.x && newY === myGridPos.y)) {
+                                        const mobRef = ref(database, `forestMobs/${mobId}`);
+                                        set(mobRef, {
+                                            ...mob,
+                                            x: newX,
+                                            y: newY,
+                                            lastMove: currentTime,
+                                            moveCounter: moveCounter + 1,
+                                            isAggro: true
+                                        });
+                                        
+                                        // Check if goblin reached player for attack
+                                        if (newX === myGridPos.x && newY === myGridPos.y) {
+                                            takeDamage(); // Goblin attacks player
+                                            console.log('Goblin attacked player!');
+                                        }
+                                    }
+                                }
+                            } else if (mob.isAggro) {
+                                // Player left aggro range - stop being aggressive after a delay
+                                if (timeSinceLastMove >= 2000) {
+                                    const mobRef = ref(database, `forestMobs/${mobId}`);
+                                    set(mobRef, {
+                                        ...mob,
+                                        isAggro: false,
+                                        lastMove: currentTime
+                                    });
+                                }
+                            } else {
+                                // Normal goblin movement when not aggro
+                                const stayDuration = 4000 + (moveCounter % 3) * 1000; // Goblins move slower when not aggro
+                                
+                                if (timeSinceLastMove >= stayDuration) {
+                                    const directions = [
+                                        { x: 0, y: -1 }, { x: 0, y: 1 }, 
+                                        { x: -1, y: 0 }, { x: 1, y: 0 },
+                                        { x: 0, y: 0 }, { x: 0, y: 0 } // Stay in place sometimes
+                                    ];
+                                    
+                                    const dir = directions[Math.floor(Math.random() * directions.length)];
+                                    let newX = Math.max(1, Math.min(GRID_WIDTH - 2, mob.x + dir.x));
+                                    let newY = Math.max(1, Math.min(GRID_HEIGHT - 2, mob.y + dir.y));
+                                    
+                                    const mobRef = ref(database, `forestMobs/${mobId}`);
+                                    set(mobRef, {
+                                        ...mob,
+                                        x: newX,
+                                        y: newY,
+                                        lastMove: currentTime,
+                                        moveCounter: moveCounter + 1
+                                    });
+                                }
+                            }
+                        } else {
+                            // Regular mob movement (chickens and mice in wilderness)
+                            const stayDuration = 3000 + (moveCounter % 3) * 1000;
                             
-                            const dir = directions[Math.floor(Math.random() * directions.length)];
-                            let newX = mob.x + dir.x;
-                            let newY = mob.y + dir.y;
-                            
-                            newX = Math.max(fenceMinX, Math.min(fenceMaxX, newX));
-                            newY = Math.max(fenceMinY, Math.min(fenceMaxY, newY));
-                            
-                            const mobRef = ref(database, `mobs/${mobId}`);
-                            set(mobRef, {
-                                ...mob,
-                                x: newX,
-                                y: newY,
-                                lastMove: currentTime,
-                                moveCounter: moveCounter + 1
-                            });
+                            if (timeSinceLastMove >= stayDuration) {
+                                const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1 + 1;
+                                const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1 - 1;
+                                const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1 + 1;
+                                const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1 - 1;
+                                
+                                const directions = [
+                                    { x: 0, y: -1 }, { x: 0, y: 1 }, 
+                                    { x: -1, y: 0 }, { x: 1, y: 0 },
+                                    { x: 0, y: 0 }, { x: 0, y: 0 }
+                                ];
+                                
+                                const dir = directions[Math.floor(Math.random() * directions.length)];
+                                let newX = mob.x + dir.x;
+                                let newY = mob.y + dir.y;
+                                
+                                newX = Math.max(fenceMinX, Math.min(fenceMaxX, newX));
+                                newY = Math.max(fenceMinY, Math.min(fenceMaxY, newY));
+                                
+                                const mobRef = ref(database, `mobs/${mobId}`);
+                                set(mobRef, {
+                                    ...mob,
+                                    x: newX,
+                                    y: newY,
+                                    lastMove: currentTime,
+                                    moveCounter: moveCounter + 1
+                                });
+                            }
                         }
                     }
                 });
@@ -3990,7 +4473,35 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // Initialize game
+        // DEBUG: Manual goblin spawning function (can be called from browser console)
+        window.forceSpawnGoblins = function() {
+            console.log('🐉 FORCE SPAWNING GOBLINS...');
+            const goblinPositions = [
+                { x: 5, y: 4 },   // Top-left area
+                { x: 15, y: 4 },  // Top-right area  
+                { x: 5, y: 11 },  // Bottom-left area
+                { x: 15, y: 11 }  // Bottom-right area
+            ];
+            
+            goblinPositions.forEach((pos, index) => {
+                const mobId = `goblin_${index + 1}_${Date.now()}`;
+                const mobRef = ref(database, `forestMobs/${mobId}`);
+                
+                console.log(`🐉 Creating goblin ${index + 1} at position ${pos.x}, ${pos.y}`);
+                set(mobRef, {
+                    x: pos.x,
+                    y: pos.y,
+                    health: 3,
+                    maxHealth: 3,
+                    type: 'goblin',
+                    lastMove: Date.now(),
+                    moveCounter: 0,
+                    aggroTarget: null,
+                    aggroRange: 3,
+                    isAggro: false
+                });
+            });
+        };
         initializeGame();
         listenToGameData();
         gameLoop();
