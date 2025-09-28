@@ -481,6 +481,79 @@
             oscillator.stop(audioContext.currentTime + 0.15);
         }
 
+        // Generate sword hit/impact sound effect
+        function playSwordStabSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Resume audio context if suspended (browser autoplay policy)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            try {
+                // Create noise-based impact sound (more realistic hit sound)
+                const bufferSize = audioContext.sampleRate * 0.1; // 100ms of audio
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = buffer.getChannelData(0);
+                
+                // Generate white noise burst for impact
+                for (let i = 0; i < bufferSize; i++) {
+                    // Create decaying noise burst
+                    const decay = Math.exp(-i / (bufferSize * 0.1)); // Quick decay
+                    output[i] = (Math.random() * 2 - 1) * decay * 0.3;
+                }
+                
+                // Create buffer source
+                const noiseSource = audioContext.createBufferSource();
+                const gainNode = audioContext.createGain();
+                const filterNode = audioContext.createBiquadFilter();
+                
+                // Connect: noise -> filter -> gain -> speakers
+                noiseSource.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Configure filter to shape the hit sound
+                filterNode.type = 'highpass';
+                filterNode.frequency.setValueAtTime(800, audioContext.currentTime); // Remove muddy low frequencies
+                filterNode.Q.setValueAtTime(0.5, audioContext.currentTime);
+                
+                // Volume envelope - sharp impact with quick fade
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.6, now + 0.001); // Very sharp attack
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.08); // Quick fade
+                
+                // Play the noise burst
+                noiseSource.buffer = buffer;
+                noiseSource.start(now);
+                noiseSource.stop(now + 0.1);
+                
+                console.log('Sword hit played'); // Debug log
+                
+            } catch (error) {
+                console.error('Error playing sword hit sound:', error);
+                
+                // Fallback to simple click if noise generation fails
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(1500, audioContext.currentTime);
+                oscillator.type = 'square';
+                
+                const now = audioContext.currentTime;
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.35, now + 0.001);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.03);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.03);
+            }
+        }
+
         // Fishing system
         let isFishing = false;
         let fishingStartTime = 0;
@@ -697,7 +770,7 @@
         function initializeGame() {
             console.log('=== INITIALIZING GAME ===');
             initializeAudio();
-            
+
             // Create unique player ID
             playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             console.log('Generated Player ID:', playerId);
@@ -1140,7 +1213,7 @@
             }
         }
 
-        // REPLACE the existing processWoodcutting() function (around line 800)
+        // REPLACE the existing processWoodcutting() function
         function processWoodcutting() {
             if (isWoodcutting && currentTree && Date.now() >= nextWoodcutTime) {
                 // Create logs item
@@ -1188,7 +1261,7 @@
             selectedWoodcuttingOption = (selectedWoodcuttingOption + 1) % 2; // 0 = Yes, 1 = No
         }
 
-        // REPLACE the existing selectWoodcuttingOption() function (around line 840)
+        // REPLACE the existing selectWoodcuttingOption() function
         function selectWoodcuttingOption() {
             if (selectedWoodcuttingOption === 0) { // Yes
                 isWoodcutting = true;
@@ -1214,6 +1287,9 @@
             if (!equippedWeapon || equippedWeapon.id !== 'sword') {
                 return; // No sword equipped, can't attack
             }
+            
+            // PLAY SWORD SOUND when attacking with sword
+            playSwordStabSound();
             
             isAttacking = true;
             attackStartTime = Date.now();
