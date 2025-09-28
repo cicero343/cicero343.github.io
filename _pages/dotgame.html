@@ -641,6 +641,9 @@
             return lines;
         }
 
+        // Track previous player count for drop cleanup
+        let previousPlayerCount = 0;
+
         // FIXED: This function waits for Firebase data before creating the player
         function initializeGame() {
             console.log('=== INITIALIZING GAME ===');
@@ -657,7 +660,30 @@
                 
                 // Update local players object
                 players = currentPlayers;
-                document.getElementById('playerCount').textContent = Object.keys(players).length;
+                const currentPlayerCount = Object.keys(players).length;
+                document.getElementById('playerCount').textContent = currentPlayerCount;
+                
+                // FIXED: Enhanced cleanup when player count goes from >0 to 0
+                if (previousPlayerCount > 0 && currentPlayerCount === 0) {
+                    console.log('🧹 Player count dropped to 0 - cleaning up all drops and fireballs');
+
+                    // Clean up drops (existing functionality)
+                    const dropsRef = ref(database, 'drops');
+                    set(dropsRef, null).then(() => {
+                        console.log('✅ All drops cleaned up successfully');
+                    }).catch((error) => {
+                        console.error('❌ Failed to clean drops:', error);
+                    });
+
+                    // NEW: Clean up fireballs
+                    const fireballsRef = ref(database, 'fireballs');
+                    set(fireballsRef, null).then(() => {
+                        console.log('✅ All fireballs cleaned up successfully');
+                    }).catch((error) => {
+                        console.error('❌ Failed to clean fireballs:', error);
+                    });
+                }
+                previousPlayerCount = currentPlayerCount;
                 
                 // Clean up old players
                 const now = Date.now();
