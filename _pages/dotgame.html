@@ -1661,31 +1661,42 @@
 
         function initializeMobs() {
             if (myZone === 2) {
-                // Initialize Farm Zone mobs (chickens and mice)
+                // FIXED: Farm Zone mob initialization with better persistence
+                console.log('Checking Farm Zone mobs...');
                 const mobsRef = ref(database, 'mobs');
                 onValue(mobsRef, (snapshot) => {
                     const currentMobs = snapshot.val() || {};
+                    console.log('Current Farm Mobs:', Object.keys(currentMobs));
                     
-                    if (Object.keys(currentMobs).length === 0) {
-                        console.log('Creating Farm Zone mobs...');
+                    // Count current farm mobs (not goblins)
+                    const farmMobs = Object.entries(currentMobs).filter(([id, mob]) => 
+                        mob && mob.type !== 'goblin'
+                    );
+                    
+                    // If we have fewer than 6 farm mobs, create missing ones
+                    if (farmMobs.length < 6) {
+                        console.log(`Only ${farmMobs.length} farm mobs found, creating missing ones...`);
+                        
+                        const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
+                        const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
+                        const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
+                        const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
+                        
                         for (let i = 1; i <= 6; i++) {
-                            const mobId = `farm_mob_${i}`;  // Consistent ID
-                            const mobRef = ref(database, `mobs/${mobId}`);
-                            
-                            const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
-                            const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
-                            const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
-                            const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
-                            
-                            set(mobRef, {
-                                x: Math.floor(Math.random() * (fenceMaxX - fenceMinX)) + fenceMinX,
-                                y: Math.floor(Math.random() * (fenceMaxY - fenceMinY)) + fenceMinY,
-                                health: 2,
-                                maxHealth: 2,
-                                type: i <= 3 ? 'chicken' : 'mouse',
-                                lastMove: Date.now(),
-                                moveCounter: 0
-                            });
+                            const mobId = `farm_mob_${i}`;
+                            if (!currentMobs[mobId] || currentMobs[mobId].health <= 0) {
+                                const mobRef = ref(database, `mobs/${mobId}`);
+                                console.log(`Creating farm mob ${mobId}`);
+                                set(mobRef, {
+                                    x: Math.floor(Math.random() * (fenceMaxX - fenceMinX)) + fenceMinX,
+                                    y: Math.floor(Math.random() * (fenceMaxY - fenceMinY)) + fenceMinY,
+                                    health: 2,
+                                    maxHealth: 2,
+                                    type: i <= 3 ? 'chicken' : 'mouse',
+                                    lastMove: Date.now(),
+                                    moveCounter: 0
+                                });
+                            }
                         }
                     }
                 }, { onlyOnce: true });
@@ -2880,9 +2891,6 @@
                     ctx.fillStyle = '#ff6600';
                     ctx.beginPath();
                     ctx.moveTo(campfirePixel.x - 8, campfirePixel.y + 8);
-                    ctx.lineTo(campfirePixel.x - 4, campfirePixel.y - 8 + fireFlicker);
-                    ctx.lineTo(campfirePixel.x, campfirePixel.y - 12 + fireFlicker);
-                    ctx.lineTo(campfirePixel.x + 4, campfirePixel.y - 8 + fireFlicker);
                     ctx.lineTo(campfirePixel.x + 8, campfirePixel.y + 8);
                     ctx.fill();
                     
@@ -4060,7 +4068,37 @@
                 }
             });
             
-            // Clean up expired campfires
+            // FIXED: Enhanced drop cleanup with better logging and different timing
+            if (drops && typeof drops === 'object') {
+                Object.entries(drops).forEach(([dropId, drop]) => {
+                    try {
+                        if (drop && drop.createdAt) {
+                            const dropAge = now - drop.createdAt;
+                            const maxAge = 30000; // Reduced to 30 seconds for testing
+                            
+                            if (dropAge > maxAge) {
+                                console.log(`🧹 Cleaning up old ${drop.type || 'unknown'} drop (${Math.floor(dropAge/1000)}s old) at ${drop.x},${drop.y}`);
+                                const dropRef = ref(database, `drops/${dropId}`);
+                                set(dropRef, null).then(() => {
+                                    console.log(`✅ Successfully removed drop ${dropId}`);
+                                }).catch((error) => {
+                                    console.error(`❌ Failed to remove drop ${dropId}:`, error);
+                                });
+                            } else {
+                                // Log young drops for debugging
+                                if (Math.random() < 0.01) { // Only log 1% of the time to avoid spam
+                                    console.log(`📦 Drop ${dropId} is ${Math.floor(dropAge/1000)}s old (${drop.type} at ${drop.x},${drop.y})`);
+                                }
+                            }
+                        } else {
+                            // Log drops without timestamps
+                            console.log(`⚠️ Drop ${dropId} missing createdAt timestamp:`, drop);
+                        }
+                    } catch (error) {
+                        console.error('Error processing drop:', dropId, error);
+                    }
+                });
+            }
             const now = Date.now();
             playerCampfires = playerCampfires.filter(campfire => {
                 const age = now - campfire.createdAt;
@@ -4076,15 +4114,14 @@
                 }
             });
             
-            // FIXED: Better goblin respawn system with cleanup
+            // FIXED: Handle all mob respawning (including farm mobs)
             Object.entries(mobs).forEach(([mobId, mob]) => {
-                if (mob && mob.type === 'goblin') {
-                    if (mob.health === 0 && mob.respawnTime && now >= mob.respawnTime) {
-                        // Respawn the goblin
-                        console.log(`Respawning goblin ${mobId}`);
+                if (mob && mob.health === 0 && mob.respawnTime && now >= mob.respawnTime) {
+                    console.log(`Respawning ${mob.type} ${mobId}`);
+                    
+                    if (mob.type === 'goblin') {
+                        // Goblin respawn in Forest
                         const mobRef = ref(database, `forestMobs/${mobId}`);
-                        
-                        // Reset to original position and full health
                         const originalPositions = {
                             'goblin_1': { x: 5, y: 4 },
                             'goblin_2': { x: 15, y: 4 },
@@ -4107,15 +4144,26 @@
                             isAggro: false,
                             respawnTime: null
                         });
-                    } else if (mob.health === 0 && !mob.respawnTime) {
-                        // Dead goblin without respawn timer - this shouldn't happen, fix it
-                        console.log(`Found dead goblin ${mobId} without respawn timer, fixing...`);
-                        const mobRef = ref(database, `forestMobs/${mobId}`);
+                    } else {
+                        // Farm mob respawn (chickens and mice)
+                        const mobRef = ref(database, `mobs/${mobId}`);
                         set(mobRef, {
                             ...mob,
-                            respawnTime: now + 15000 // Set respawn for 15 seconds from now
+                            health: 2, // Restore full health
+                            respawnTime: null, // Clear respawn timer
                         });
                     }
+                } else if (mob && mob.health === 0 && !mob.respawnTime) {
+                    // Dead mob without respawn timer - fix it
+                    console.log(`Found dead ${mob.type} ${mobId} without respawn timer, fixing...`);
+                    const mobRef = mob.type === 'goblin' ? 
+                        ref(database, `forestMobs/${mobId}`) : 
+                        ref(database, `mobs/${mobId}`);
+                    
+                    set(mobRef, {
+                        ...mob,
+                        respawnTime: now + 15000 // Set respawn for 15 seconds from now
+                    });
                 }
             });
             
