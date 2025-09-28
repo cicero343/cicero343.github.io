@@ -432,6 +432,55 @@
         let equippedWeapon = null;
         let equippedTool = null;
         
+        // Sound system variables
+        let audioContext = null;
+        let soundEnabled = true;
+
+        // Initialize audio context (call this once during game initialization)
+        function initializeAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log('Audio system initialized');
+            } catch (error) {
+                console.log('Web Audio API not supported:', error);
+                soundEnabled = false;
+            }
+        }
+
+        // Generate woodcutting/chopping sound effect
+        function playChoppingSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Resume audio context if suspended (browser autoplay policy)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            // Create oscillator for the chopping sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            // Connect: oscillator -> gainNode -> speakers
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Configure the chopping sound (sharp attack, quick decay)
+            oscillator.frequency.setValueAtTime(150, audioContext.currentTime); // Low thump
+            oscillator.frequency.linearRampToValueAtTime(80, audioContext.currentTime + 0.05); // Quick drop
+            
+            // Volume envelope (sharp attack, quick fade)
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01); // Quick attack
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15); // Quick decay
+            
+            // Use square wave for woody sound
+            oscillator.type = 'square';
+            
+            // Play for 150ms
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.15);
+        }
+
         // Fishing system
         let isFishing = false;
         let fishingStartTime = 0;
@@ -647,6 +696,7 @@
         // FIXED: This function waits for Firebase data before creating the player
         function initializeGame() {
             console.log('=== INITIALIZING GAME ===');
+            initializeAudio();
             
             // Create unique player ID
             playerId = 'player_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1090,6 +1140,7 @@
             }
         }
 
+        // REPLACE the existing processWoodcutting() function (around line 800)
         function processWoodcutting() {
             if (isWoodcutting && currentTree && Date.now() >= nextWoodcutTime) {
                 // Create logs item
@@ -1106,6 +1157,9 @@
                 
                 if (addItemToInventory(logs)) {
                     console.log('Chopped down tree and got logs!');
+                    
+                    // PLAY FINAL CHOPPING SOUND when tree is successfully chopped
+                    playChoppingSound();
                     
                     // Show woodcutting popup
                     showWoodcuttingPopup = true;
@@ -1134,6 +1188,7 @@
             selectedWoodcuttingOption = (selectedWoodcuttingOption + 1) % 2; // 0 = Yes, 1 = No
         }
 
+        // REPLACE the existing selectWoodcuttingOption() function (around line 840)
         function selectWoodcuttingOption() {
             if (selectedWoodcuttingOption === 0) { // Yes
                 isWoodcutting = true;
@@ -1142,6 +1197,10 @@
                 nextWoodcutTime = woodcuttingStartTime + 3000 + Math.random() * 1000; // 3-4 seconds
                 updatePlayerData();
                 console.log('Started woodcutting...');
+                
+                // PLAY CHOPPING SOUND when woodcutting starts
+                playChoppingSound();
+                
             } else { // No
                 showWoodcuttingDialog = false;
                 currentTree = null;
