@@ -622,6 +622,162 @@
             }
         }
 
+        // Generate fireball blast sound effect (subtle, less intrusive)
+        function playFireballSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Resume audio context if suspended (browser autoplay policy)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            try {
+                // Create subtle whoosh sound
+                const bufferSize = audioContext.sampleRate * 0.4; // Shorter 400ms
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = buffer.getChannelData(0);
+                
+                // Generate smooth whooshing noise
+                for (let i = 0; i < bufferSize; i++) {
+                    const time = i / audioContext.sampleRate;
+                    
+                    // Gentler envelope
+                    const envelope = Math.min(time * 12, 1) * Math.exp(-time * 4);
+                    
+                    // Softer noise
+                    const noise = (Math.random() * 2 - 1) * envelope;
+                    
+                    output[i] = noise;
+                }
+                
+                // Create audio nodes for the whoosh
+                const noiseSource = audioContext.createBufferSource();
+                const noiseGain = audioContext.createGain();
+                const noiseFilter = audioContext.createBiquadFilter();
+                
+                // Connect: noise -> filter -> gain -> speakers
+                noiseSource.connect(noiseFilter);
+                noiseFilter.connect(noiseGain);
+                noiseGain.connect(audioContext.destination);
+                
+                // Bandpass filter for balanced sound
+                noiseFilter.type = 'bandpass';
+                noiseFilter.frequency.setValueAtTime(400, audioContext.currentTime); // Slightly higher for less bass-heavy
+                noiseFilter.Q.setValueAtTime(1, audioContext.currentTime);
+                
+                // Create softer bass rumble with varying pitch to avoid "note" feeling
+                const rumble = audioContext.createOscillator();
+                const rumbleGain = audioContext.createGain();
+                
+                rumble.connect(rumbleGain);
+                rumbleGain.connect(audioContext.destination);
+                
+                // Configure subtle varying bass (avoids single-note feeling)
+                rumble.type = 'sine'; // Back to sine for softer bass
+                rumble.frequency.setValueAtTime(100, audioContext.currentTime); // Start higher
+                rumble.frequency.exponentialRampToValueAtTime(60, audioContext.currentTime + 0.15); // Quick drop
+                rumble.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.3); // Slight rise for variation
+                
+                const now = audioContext.currentTime;
+                
+                // Whoosh envelope - reduced volume
+                noiseGain.gain.setValueAtTime(0, now);
+                noiseGain.gain.linearRampToValueAtTime(0.3, now + 0.06); // Reduced from 0.5 to 0.3
+                noiseGain.gain.linearRampToValueAtTime(0.25, now + 0.15); // Sustain lower
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.4); // Quicker fade
+                
+                // Bass rumble envelope - much softer and less prominent
+                rumbleGain.gain.setValueAtTime(0, now);
+                rumbleGain.gain.linearRampToValueAtTime(0.2, now + 0.04); // Much softer (was 0.5)
+                rumbleGain.gain.linearRampToValueAtTime(0.15, now + 0.15); // Lower sustain
+                rumbleGain.gain.exponentialRampToValueAtTime(0.01, now + 0.3); // Quicker fade
+                
+                // Play both sounds simultaneously
+                noiseSource.buffer = buffer;
+                noiseSource.start(now);
+                noiseSource.stop(now + 0.4);
+                
+                rumble.start(now);
+                rumble.stop(now + 0.3);
+                
+                console.log('Fireball whoosh played');
+                
+            } catch (error) {
+                console.error('Error playing fireball sound:', error);
+            }
+        }
+
+        // Generate water trickling/bubbling sound effect
+        function playFishingSound() {
+            if (!soundEnabled || !audioContext) return;
+            
+            // Resume audio context if suspended (browser autoplay policy)
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            try {
+                // Create longer water trickling sound
+                const bufferSize = audioContext.sampleRate * 0.6; // Longer 600ms for drawn-out effect
+                const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = buffer.getChannelData(0);
+                
+                // Generate water trickling with bubbles
+                for (let i = 0; i < bufferSize; i++) {
+                    const time = i / audioContext.sampleRate;
+                    
+                    // Multiple bubble frequencies for realistic water
+                    const bubble1 = Math.sin(time * 300 + Math.random() * 2) * 0.3;
+                    const bubble2 = Math.sin(time * 500 + Math.random() * 3) * 0.2;
+                    const bubble3 = Math.sin(time * 700 + Math.random() * 4) * 0.15;
+                    
+                    // Random pops/splashes for water texture
+                    const splash = Math.random() > 0.97 ? (Math.random() - 0.5) * 0.4 : 0;
+                    
+                    // Continuous noise for water texture
+                    const waterNoise = (Math.random() * 2 - 1) * 0.2;
+                    
+                    // Gentle envelope - sustained throughout
+                    const envelope = Math.min(time * 8, 1) * Math.exp(-time * 2);
+                    
+                    output[i] = (bubble1 + bubble2 + bubble3 + splash + waterNoise) * envelope;
+                }
+                
+                // Create audio nodes
+                const noiseSource = audioContext.createBufferSource();
+                const noiseGain = audioContext.createGain();
+                const noiseFilter = audioContext.createBiquadFilter();
+                
+                // Connect: noise -> filter -> gain -> speakers
+                noiseSource.connect(noiseFilter);
+                noiseFilter.connect(noiseGain);
+                noiseGain.connect(audioContext.destination);
+                
+                // Bandpass filter to keep mid-range bubbling frequencies
+                noiseFilter.type = 'bandpass';
+                noiseFilter.frequency.setValueAtTime(500, audioContext.currentTime); // Mid-range for bubbles
+                noiseFilter.Q.setValueAtTime(1.2, audioContext.currentTime); // Focused on bubble frequencies
+                
+                const now = audioContext.currentTime;
+                
+                // Much louder and more sustained volume envelope
+                noiseGain.gain.setValueAtTime(0, now);
+                noiseGain.gain.linearRampToValueAtTime(0.4, now + 0.05); // Much louder (0.4 vs 0.15)
+                noiseGain.gain.linearRampToValueAtTime(0.35, now + 0.3); // Sustained throughout
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.6); // Longer fade
+                
+                // Play the water trickling
+                noiseSource.buffer = buffer;
+                noiseSource.start(now);
+                noiseSource.stop(now + 0.6);
+                
+                console.log('Water trickling played');
+                
+            } catch (error) {
+                console.error('Error playing fishing sound:', error);
+            }
+        }
+
         // Fishing system
         let isFishing = false;
         let fishingStartTime = 0;
@@ -1485,6 +1641,10 @@
                 
                 if (addItemToInventory(fish)) {
                     console.log('Caught a fish!');
+                    
+                    // PLAY GENTLE FISHING SOUND when fish is caught
+                    playFishingSound();
+                    
                     showFishCatchPopup = true;
                     fishCatchPopupTimer = 1500;
                     
@@ -1575,6 +1735,9 @@
 
         function castFireball() {
             if (myHealth <= 0 || isRespawning || isFishing) return;
+            
+            // PLAY FIREBALL SOUND when casting
+            playFireballSound();
             
             const fireballId = 'fireball_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
             const directions = {
