@@ -296,6 +296,10 @@
             <strong>Zone:</strong> <span id="zoneDisplay">Town</span>
             <br><strong>Gold:</strong> <span id="goldDisplay">0</span> 💰
         </div>
+        <div class="player-info">
+            <strong>Music:</strong> <span id="musicToggle" style="cursor: pointer; user-select: none;">🔊 ON</span>
+            <br><strong>M:</strong> Toggle Music
+        </div>
     </div>
 
     <div class="game-container">
@@ -408,6 +412,19 @@
         let dialogText = '';
         let isRespawning = false;
         let isPlayerCreated = false;
+
+        // Music system variables
+        let currentMusicTrack = null;
+        let musicVolume = 0.2; // Adjust volume (0.0 to 1.0)
+        let isMusicEnabled = true;
+        
+        // Music track URLs - update these paths to match your hosting
+        const musicTracks = {
+            1: 'assets/music/town.mp3',    // Town Zone
+            2: 'assets/music/town.mp3',    // Farm Zone uses same file as Town Zone
+            3: 'assets/music/lake.mp3',    // Lake Zone
+            4: 'assets/music/forest.mp3'   // Forest Zone
+        };
         
         // Quick chat system
         let showQuickChat = false;
@@ -778,6 +795,51 @@
             }
         }
 
+        // Load and play zone music
+        function playZoneMusic(zoneId) {
+            if (!isMusicEnabled) return;
+            
+            const trackUrl = musicTracks[zoneId];
+            if (!trackUrl) {
+                console.log('No music track for zone', zoneId);
+                return;
+            }
+
+            // 🎵 NEW: Check if we're already playing this track
+            if (currentMusicTrack && currentMusicTrack.src.includes(trackUrl)) {
+                console.log(`Already playing music for zone ${zoneId}, continuing...`);
+                return; // Don't restart the same track
+            }
+            
+            // Stop current track if playing a different one
+            if (currentMusicTrack) {
+                currentMusicTrack.pause();
+                currentMusicTrack.currentTime = 0;
+            }
+            
+            // Create new audio element
+            currentMusicTrack = new Audio(trackUrl);
+            currentMusicTrack.loop = true; // Loop the music
+            currentMusicTrack.volume = musicVolume;
+            
+            // Play the music
+            currentMusicTrack.play().catch(error => {
+                console.log('Music playback failed:', error);
+                // Browser may block autoplay - user interaction required
+            });
+            
+            console.log(`Playing music for zone ${zoneId}`);
+        }
+        
+        // Stop zone music
+        function stopZoneMusic() {
+            if (currentMusicTrack) {
+                currentMusicTrack.pause();
+                currentMusicTrack.currentTime = 0;
+                currentMusicTrack = null;
+            }
+        }
+
         // Fishing system
         let isFishing = false;
         let fishingStartTime = 0;
@@ -1050,6 +1112,14 @@
             });
         }
 
+        // Start music after player is created
+        function startInitialMusic() {
+            setTimeout(() => {
+                playZoneMusic(myZone); // Start music for current zone
+                console.log('Initial zone music started');
+            }, 1000); // 1 second delay to help with autoplay policy
+        }
+
         function createPlayerWithFirebaseData(currentPlayers) {
             console.log('=== CREATING PLAYER WITH FIREBASE DATA ===');
             console.log('Current Firebase players:', currentPlayers);
@@ -1112,6 +1182,8 @@
             window.addEventListener('beforeunload', () => remove(playerRef));
             
             console.log('Player created successfully!');
+
+            startInitialMusic(); // Start the zone music
         }
 
         function updateZoneDisplay() {
@@ -2145,6 +2217,7 @@
                 updateZoneDisplay();
                 updatePlayerData();
                 initializeMobs();
+                playZoneMusic(2); // ADD THIS
             }
             else if (myZone === 2 && myGridPos.x <= 0) {
                 myZone = 1;
@@ -2152,6 +2225,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
+                playZoneMusic(1); // ADD THIS
             }
             else if (myZone === 1 && myGridPos.x <= 0) {
                 myZone = 3;
@@ -2159,6 +2233,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
+                playZoneMusic(3); // ADD THIS
             }
             else if (myZone === 3 && myGridPos.x >= GRID_WIDTH - 1) {
                 myZone = 1;
@@ -2166,6 +2241,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
+                playZoneMusic(1); // ADD THIS
             }
             else if (myZone === 1 && myGridPos.y <= 0) {
                 myZone = 4;
@@ -2174,6 +2250,7 @@
                 updateZoneDisplay();
                 updatePlayerData();
                 initializeMobs();
+                playZoneMusic(4); // ADD THIS
             }
             else if (myZone === 4 && myGridPos.y >= GRID_HEIGHT - 1) {
                 myZone = 1;
@@ -2181,6 +2258,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
+                playZoneMusic(1); // ADD THIS
             }
         }
 
@@ -4143,6 +4221,11 @@
         const keys = {};
         document.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
+
+            if (e.key.toLowerCase() === 'm') {
+                document.getElementById('musicToggle')?.click(); // Trigger the button click
+                return;
+            }
             
             if (e.key.toLowerCase() === 'i') {
                 if (!showQuickChat && !showCookingDialog && !showQuestDialog) {
@@ -4965,6 +5048,22 @@
         gameLoop();
         updateHeartDisplay();
         updateGoldDisplay();
+
+        // Music toggle button handler
+        document.getElementById('musicToggle')?.addEventListener('click', () => {
+            isMusicEnabled = !isMusicEnabled;
+            const toggleBtn = document.getElementById('musicToggle');
+            
+            if (isMusicEnabled) {
+                toggleBtn.textContent = '🔊 ON';
+                toggleBtn.style.color = '#e8f5e8';
+                playZoneMusic(myZone); // Resume music for current zone
+            } else {
+                toggleBtn.textContent = '🔇 OFF';
+                toggleBtn.style.color = '#ff6b6b';
+                stopZoneMusic(); // Stop music
+            }
+        });
 
         // Emergency fallback if Firebase doesn't respond within 5 seconds
         setTimeout(() => {
