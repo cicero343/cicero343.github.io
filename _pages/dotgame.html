@@ -53,12 +53,15 @@
         .hearts {
             display: inline-block;
             margin-left: 30px;
-            font-size: 24px;
+            font-size: 22px;
+            line-height: 1.2;
+            max-width: 320px;
             background-color: rgba(45, 74, 42, 0.8);
             padding: 8px 15px;
             border-radius: 15px;
             border: 2px solid #4a6b47;
             vertical-align: middle;
+            word-wrap: break-word;
         }
         h1 {
             color: #9fd89f;
@@ -415,7 +418,7 @@
 
         // Music system variables
         let currentMusicTrack = null;
-        let musicVolume = 0.15; // Adjust volume (0.0 to 1.0)
+        let musicVolume = 0.2; // Adjust volume (0.0 to 1.0)
         let isMusicEnabled = true;
         
         // Music track URLs - update these paths to match your hosting
@@ -1272,21 +1275,49 @@
 
         function addItemToInventory(item) {
             if (item.stackable) {
+                // Try to add to existing stacks first
                 for (let i = 0; i < inventory.length; i++) {
                     if (inventory[i] && inventory[i].id === item.id) {
-                        const newStack = inventory[i].stack + item.stack;
-                        if (newStack <= item.maxStack) {
-                            inventory[i].stack = newStack;
-                            return true;
-                        } else if (inventory[i].stack < item.maxStack) {
-                            const remainder = newStack - item.maxStack;
-                            inventory[i].stack = item.maxStack;
-                            item.stack = remainder;
+                        const spaceAvailable = item.maxStack - inventory[i].stack;
+                        if (spaceAvailable > 0) {
+                            const amountToAdd = Math.min(spaceAvailable, item.stack);
+                            inventory[i].stack += amountToAdd;
+                            item.stack -= amountToAdd;
+
+                            if (item.stack <= 0) {
+                                return true; // All items added
+                            }
                         }
                     }
                 }
+
+                // If we still have items left, create new stacks
+                while (item.stack > 0) {
+                    for (let i = 0; i < inventory.length; i++) {
+                        if (!inventory[i]) {
+                            const stackSize = Math.min(item.stack, item.maxStack);
+                            inventory[i] = {
+                                ...item,
+                                stack: stackSize
+                            };
+                            item.stack -= stackSize;
+
+                            if (item.stack <= 0) {
+                                return true;
+                            }
+                            break;
+                        }
+                    }
+
+                    // If we get here, inventory is full
+                    if (item.stack > 0) {
+                        return false;
+                    }
+                }
+                return true;
             }
-            
+
+            // Non-stackable items
             for (let i = 0; i < inventory.length; i++) {
                 if (!inventory[i]) {
                     inventory[i] = item;
@@ -1417,7 +1448,7 @@
                     stopCooking();
                     return;
                 }
-                
+
                 // Find the required item in inventory
                 let foundItem = false;
                 for (let i = 0; i < inventory.length; i++) {
@@ -1427,9 +1458,21 @@
                         if (inventory[i].stack <= 0) {
                             inventory[i] = null;
                         }
-                        
-                        // Add cooked item
-                        if (addItemToInventory(option.resultItem)) {
+
+                        // Add cooked item - create a fresh copy
+                        const cookedItem = {
+                            id: option.resultItem.id,
+                            name: option.resultItem.name,
+                            description: option.resultItem.description,
+                            icon: option.resultItem.icon,
+                            type: option.resultItem.type,
+                            stackable: option.resultItem.stackable,
+                            stack: 1,
+                            maxStack: option.resultItem.maxStack,
+                            healAmount: option.resultItem.healAmount
+                        };
+
+                        if (addItemToInventory(cookedItem)) {
                             console.log(`Cooked ${option.name}!`);
                             
                             // PLAY COOKING SOUND each time something is cooked (like woodcutting)
@@ -1858,11 +1901,12 @@
             stopWoodcutting();
             updatePlayerData();
             updateHeartDisplay();
-            
+
             setTimeout(() => {
-                myHealth = 4;
+                const maxHealth = 4 + Math.floor(playerLevel / 10);
+                myHealth = maxHealth;
                 isRespawning = false;
-                
+
                 let newPos;
                 do {
                     newPos = {
@@ -1879,9 +1923,11 @@
         }
 
         function updateHeartDisplay() {
-            const hearts = '❤️'.repeat(myHealth) + '🖤'.repeat(4 - myHealth);
+            const maxHealth = 4 + Math.floor(playerLevel / 10);
+            const hearts = '❤️'.repeat(myHealth) + '🖤'.repeat(maxHealth - myHealth);
             document.getElementById('hearts').textContent = hearts;
-            document.getElementById('healthDisplay').textContent = `${myHealth}/4`;
+            document.getElementById('healthDisplay').textContent = `${myHealth}/${maxHealth}`;
+            document.getElementById('playerLife').textContent = `${myHealth}/${maxHealth}`;
         }
 
         function updateGoldDisplay() {
@@ -1893,19 +1939,27 @@
         // FIXED: Magic skill now works like attack skill - only levels from killing mobs with magic
         function givePlayerEXP(expAmount) {
             playerEXP += expAmount;
-            
+
             const oldLevel = playerLevel;
             while (playerLevel < 20 && playerEXP >= expRequirements[playerLevel]) {
                 playerLevel++;
             }
-            
+
             if (playerLevel > oldLevel) {
                 newLevel = playerLevel;
                 showLevelUpPopup = true;
                 levelUpPopupTimer = 3000;
                 console.log('LEVEL UP! Now level ' + playerLevel);
+
+                // Award heart increases at levels 10 and 20
+                if (playerLevel === 10 || playerLevel === 20) {
+                    const maxHealth = 4 + Math.floor(playerLevel / 10);
+                    myHealth = Math.min(myHealth + 1, maxHealth);
+                    updateHeartDisplay();
+                    console.log(`Heart capacity increased! Now ${maxHealth} hearts maximum`);
+                }
             }
-            
+
             updateSkillsDisplay();
             updatePlayerData();
         }
@@ -3605,6 +3659,57 @@
                         ctx.stroke();
                     }
 
+                    // Draw direction arrow for local player only
+                    if (id === playerId) {
+                        // Calculate arrow position one tile ahead
+                        const arrowOffsets = {
+                            'up': { x: 0, y: -GRID_SIZE },
+                            'down': { x: 0, y: GRID_SIZE },
+                            'left': { x: -GRID_SIZE, y: 0 },
+                            'right': { x: GRID_SIZE, y: 0 }
+                        };
+
+                        const offset = arrowOffsets[myDirection] || arrowOffsets['right'];
+                        const arrowX = playerPixel.x + offset.x;
+                        const arrowY = playerPixel.y + offset.y;
+
+                        // Draw subtle arrow with slight glow
+                        const shimmer = 0.7 + Math.sin(Date.now() * 0.003) * 0.3;
+
+                        // Glow effect
+                        ctx.shadowBlur = 8;
+                        ctx.shadowColor = `rgba(255, 255, 255, ${shimmer * 0.5})`;
+
+                        // Arrow shape
+                        ctx.fillStyle = `rgba(255, 255, 255, ${shimmer})`;
+                        ctx.beginPath();
+
+                        const arrowSize = 8;
+                        if (myDirection === 'up') {
+                            ctx.moveTo(arrowX, arrowY - arrowSize);
+                            ctx.lineTo(arrowX - arrowSize/2, arrowY);
+                            ctx.lineTo(arrowX + arrowSize/2, arrowY);
+                        } else if (myDirection === 'down') {
+                            ctx.moveTo(arrowX, arrowY + arrowSize);
+                            ctx.lineTo(arrowX - arrowSize/2, arrowY);
+                            ctx.lineTo(arrowX + arrowSize/2, arrowY);
+                        } else if (myDirection === 'left') {
+                            ctx.moveTo(arrowX - arrowSize, arrowY);
+                            ctx.lineTo(arrowX, arrowY - arrowSize/2);
+                            ctx.lineTo(arrowX, arrowY + arrowSize/2);
+                        } else if (myDirection === 'right') {
+                            ctx.moveTo(arrowX + arrowSize, arrowY);
+                            ctx.lineTo(arrowX, arrowY - arrowSize/2);
+                            ctx.lineTo(arrowX, arrowY + arrowSize/2);
+                        }
+
+                        ctx.closePath();
+                        ctx.fill();
+
+                        // Reset shadow
+                        ctx.shadowBlur = 0;
+                    }
+
                     if (player.isFishing) {
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                         ctx.beginPath();
@@ -4354,38 +4459,40 @@
                         showQuestDialog = false;
                     } else if (questDialogType === 'completion' && selectedQuestOption === 0) {
                         if (currentDialogNPC === 'Sky') {
-                            // Complete Sky's goblin quest - give 40 gold
+                            // Complete Sky's goblin quest - give 40 gold + 50 XP
                             myGold += 40;
+                            givePlayerEXP(50); // Quest XP reward
                             skyQuestCompleted = true;
                             skyQuestActive = false;
                             goblinKillCount = 0; // Reset counter
                             removeQuest('goblin_quest');
                             updateGoldDisplay();
-                            
+
                             showDialog = true;
                             currentDialogNPC = 'Sky';
                             dialogText = "Excellent! Here's your reward. Thank you for clearing out those goblins!";
                         } else {
-                            // Complete Sam's fish quest - remove 5 fish and give 30 gold
+                            // Complete Sam's fish quest - remove 5 fish and give 30 gold + 20 XP
                             let fishRemoved = 0;
                             for (let i = 0; i < inventory.length && fishRemoved < 5; i++) {
                                 if (inventory[i] && inventory[i].id === 'fish') {
                                     const removeAmount = Math.min(5 - fishRemoved, inventory[i].stack);
                                     inventory[i].stack -= removeAmount;
                                     fishRemoved += removeAmount;
-                                    
+
                                     if (inventory[i].stack <= 0) {
                                         inventory[i] = null;
                                     }
                                 }
                             }
-                            
+
                             myGold += 30;
+                            givePlayerEXP(20); // Quest XP reward
                             questNPCCompleted = true;
                             questNPCActive = false;
                             removeQuest('fish_quest');
                             updateGoldDisplay();
-                            
+
                             showDialog = true;
                             currentDialogNPC = 'Sam';
                             dialogText = "Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!";
