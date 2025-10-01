@@ -960,7 +960,7 @@
             400, 500, 620, 760, 920, 1100, 1300, 1520, 1760, 2000
         ];
 
-        const npc = { x: 5, y: 5, color: '#ffd700' };
+        const npc = { x: 5, y: 4, color: '#ffd700' };
         const fireplace = { x: 16, y: 9, color: '#ff6600' };
         const merchant = { x: 11, y: 3, color: '#ff8c00' };
         const questNPC = { x: 15, y: 9, color: '#4169E1' }; // Quest NPC in Lake Zone
@@ -2444,11 +2444,11 @@
 
         function checkNPCInteraction() {
             if (myZone === 1) {
-                // Check regular NPC (Mayor)
+                // Check regular NPC (Town Crier)
                 const npcDistance = Math.abs(myGridPos.x - npc.x) + Math.abs(myGridPos.y - npc.y);
                 if (npcDistance <= 1) {
                     showDialog = true;
-                    currentDialogNPC = 'Mayor';
+                    currentDialogNPC = 'Town Crier';
                     dialogText = "Hello there, brave adventurer! Head east to the Farm for adventure, west to the peaceful lake for fishing, or north to the dangerous forest!";
                     return;
                 }
@@ -3023,6 +3023,993 @@
             ctx.fill();
         }
 
+        // Draw a cute Nintendo-style character sprite
+        function drawPlayerSprite(pixelX, pixelY, direction, color) {
+            ctx.save();
+
+            // More neutral color palette
+            const skinTone = '#ffdbac';
+            const hairColor = '#d4a574'; // Lighter, more neutral sandy brown
+            const topColor = color; // Uses player color (can be any color)
+            const bottomColor = '#a67c52'; // Neutral tan/brown shorts/pants
+
+            if (direction === 'down') {
+                // FRONT VIEW
+
+                // Body/top (rounded rectangle - neutral style)
+                ctx.fillStyle = topColor;
+                ctx.beginPath();
+                ctx.roundRect(pixelX - 8, pixelY - 2, 16, 12, 3);
+                ctx.fill();
+
+                // Shorts/pants (neutral tan/brown)
+                ctx.fillStyle = bottomColor;
+                ctx.fillRect(pixelX - 7, pixelY + 9, 6, 8);
+                ctx.fillRect(pixelX + 1, pixelY + 9, 6, 8);
+
+                // Shoes (neutral brown)
+                ctx.fillStyle = '#8B7355';
+                ctx.beginPath();
+                ctx.ellipse(pixelX - 4, pixelY + 17, 3, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(pixelX + 4, pixelY + 17, 3, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Head (slightly rounder/fuller)
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY - 7, 7.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Hair (medium length, gender-neutral)
+                ctx.fillStyle = hairColor;
+                ctx.beginPath();
+                // Arc only covers top of head
+                ctx.arc(pixelX, pixelY - 12, 8, Math.PI * 0.75, Math.PI * 2.25);
+                ctx.fill();
+                // Small side pieces
+                ctx.fillRect(pixelX - 8, pixelY - 12, 2, 5);
+                ctx.fillRect(pixelX + 6, pixelY - 12, 2, 5);
+
+                // Eyes (rounder, more friendly)
+                ctx.fillStyle = '#3d2817';
+                ctx.beginPath();
+                ctx.arc(pixelX - 3, pixelY - 8, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(pixelX + 3, pixelY - 8, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Eye highlights (makes eyes less hollow)
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(pixelX - 2.5, pixelY - 8.5, 0.8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(pixelX + 3.5, pixelY - 8.5, 0.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Subtle smile (small curve, not overly happy)
+                ctx.strokeStyle = '#3d2817';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY - 3.5, 2, 0.2, Math.PI - 0.2);
+                ctx.stroke();
+
+                // Rosy cheeks
+                ctx.fillStyle = 'rgba(255, 182, 193, 0.4)';
+                ctx.beginPath();
+                ctx.ellipse(pixelX - 6, pixelY - 5, 2, 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(pixelX + 6, pixelY - 5, 2, 1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Arms
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.ellipse(pixelX - 10, pixelY + 2, 2.5, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(pixelX + 10, pixelY + 2, 2.5, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+            } else if (direction === 'up') {
+                // BACK VIEW
+
+                // Body/top (back view)
+                ctx.fillStyle = topColor;
+                ctx.beginPath();
+                ctx.roundRect(pixelX - 8, pixelY - 2, 16, 12, 3);
+                ctx.fill();
+
+                // Shorts/pants
+                ctx.fillStyle = bottomColor;
+                ctx.fillRect(pixelX - 7, pixelY + 9, 6, 8);
+                ctx.fillRect(pixelX + 1, pixelY + 9, 6, 8);
+
+                // Shoes (back view)
+                ctx.fillStyle = '#8B7355';
+                ctx.fillRect(pixelX - 6, pixelY + 16, 5, 2);
+                ctx.fillRect(pixelX + 1, pixelY + 16, 5, 2);
+
+                // Head (back of head)
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY - 8, 7, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Hair (fuller on back, covers most of head)
+                ctx.fillStyle = hairColor;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY - 8, 7.5, 0, Math.PI * 2);
+                ctx.fill();
+                // Hair flowing down sides
+                ctx.fillRect(pixelX - 7, pixelY - 8, 3, 6);
+                ctx.fillRect(pixelX + 4, pixelY - 8, 3, 6);
+
+                // Arms (back view, less visible)
+                ctx.fillStyle = skinTone;
+                ctx.fillRect(pixelX - 10, pixelY, 2, 6);
+                ctx.fillRect(pixelX + 8, pixelY, 2, 6);
+
+            } else if (direction === 'left') {
+                // LEFT SIDE VIEW
+
+                // Body/top
+                ctx.fillStyle = topColor;
+                ctx.beginPath();
+                ctx.roundRect(pixelX - 5, pixelY - 2, 10, 12, 3);
+                ctx.fill();
+
+                // Shorts/pants (side view, stacked)
+                ctx.fillStyle = bottomColor;
+                ctx.fillRect(pixelX - 4, pixelY + 9, 8, 8);
+
+                // Shoe
+                ctx.fillStyle = '#8B7355';
+                ctx.beginPath();
+                ctx.ellipse(pixelX, pixelY + 17, 4, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Head
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY - 8, 7, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Hair (natural continuous coverage)
+                ctx.fillStyle = hairColor;
+                // Main hair mass covering top and back
+                ctx.beginPath();
+                ctx.arc(pixelX + 1, pixelY - 10, 8, Math.PI * 0.85, Math.PI * 1.95);
+                ctx.fill();
+                // Connect to create smooth coverage
+                ctx.fillRect(pixelX + 1, pixelY - 14, 7, 10);
+
+                // Eye (side view)
+                ctx.fillStyle = '#3d2817';
+                ctx.beginPath();
+                ctx.arc(pixelX - 3, pixelY - 8, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Eye highlight
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(pixelX - 2.5, pixelY - 8.5, 0.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Simple nose
+                ctx.fillStyle = '#3d2817';
+                ctx.fillRect(pixelX - 6, pixelY - 6, 1, 2);
+
+                // Subtle smile (side view)
+                ctx.strokeStyle = '#3d2817';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(pixelX - 6, pixelY - 3);
+                ctx.quadraticCurveTo(pixelX - 5, pixelY - 2.5, pixelX - 4, pixelY - 3);
+                ctx.stroke();
+
+                // Rosy cheek
+                ctx.fillStyle = 'rgba(255, 182, 193, 0.4)';
+                ctx.beginPath();
+                ctx.ellipse(pixelX - 5, pixelY - 4, 2.5, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Arm (front arm visible)
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.ellipse(pixelX - 8, pixelY + 2, 2, 5, -0.3, 0, Math.PI * 2);
+                ctx.fill();
+
+            } else if (direction === 'right') {
+                // RIGHT SIDE VIEW (mirrored)
+
+                // Body/top
+                ctx.fillStyle = topColor;
+                ctx.beginPath();
+                ctx.roundRect(pixelX - 5, pixelY - 2, 10, 12, 3);
+                ctx.fill();
+
+                // Shorts/pants (side view, stacked)
+                ctx.fillStyle = bottomColor;
+                ctx.fillRect(pixelX - 4, pixelY + 9, 8, 8);
+
+                // Shoe
+                ctx.fillStyle = '#8B7355';
+                ctx.beginPath();
+                ctx.ellipse(pixelX, pixelY + 17, 4, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Head
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.arc(pixelX, pixelY - 8, 7, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Hair (natural continuous coverage)
+                ctx.fillStyle = hairColor;
+                // Main hair mass covering top and back
+                ctx.beginPath();
+                ctx.arc(pixelX - 1, pixelY - 10, 8, Math.PI * 1.05, Math.PI * 2.15);
+                ctx.fill();
+                // Connect to create smooth coverage
+                ctx.fillRect(pixelX - 8, pixelY - 14, 7, 10);
+
+                // Eye (side view)
+                ctx.fillStyle = '#3d2817';
+                ctx.beginPath();
+                ctx.arc(pixelX + 3, pixelY - 8, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Eye highlight
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(pixelX + 3.5, pixelY - 8.5, 0.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Simple nose
+                ctx.fillStyle = '#3d2817';
+                ctx.fillRect(pixelX + 5, pixelY - 6, 1, 2);
+
+                // Subtle smile (side view)
+                ctx.strokeStyle = '#3d2817';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(pixelX + 4, pixelY - 3);
+                ctx.quadraticCurveTo(pixelX + 5, pixelY - 2.5, pixelX + 6, pixelY - 3);
+                ctx.stroke();
+
+                // Rosy cheek
+                ctx.fillStyle = 'rgba(255, 182, 193, 0.4)';
+                ctx.beginPath();
+                ctx.ellipse(pixelX + 5, pixelY - 4, 2.5, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Arm (front arm visible)
+                ctx.fillStyle = skinTone;
+                ctx.beginPath();
+                ctx.ellipse(pixelX + 8, pixelY + 2, 2, 5, 0.3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        // INSERT THE NEW drawMerchantCat FUNCTION HERE
+        function drawMerchantCat(pixelX, pixelY) {
+            ctx.save();
+
+            const catOrange = '#ff9f5a';
+            const catLightOrange = '#ffc89a';
+            const catDarkOrange = '#e08040';
+            const vestColor = '#8B6914'; // Golden brown merchant vest
+            const beltColor = '#654321';
+
+            // Body (standing upright) - round and chubby
+            ctx.fillStyle = vestColor;
+            ctx.beginPath();
+            ctx.roundRect(pixelX - 9, pixelY - 3, 18, 14, 5);
+            ctx.fill();
+
+            // Belt/sash (merchant detail)
+            ctx.fillStyle = beltColor;
+            ctx.fillRect(pixelX - 9, pixelY + 3, 18, 3);
+
+            // Gold buckle on belt
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(pixelX - 2, pixelY + 3, 4, 3);
+
+            // Legs (short, stubby cat legs)
+            ctx.fillStyle = catOrange;
+            ctx.fillRect(pixelX - 7, pixelY + 10, 5, 6);
+            ctx.fillRect(pixelX + 2, pixelY + 10, 5, 6);
+
+            // Paws/feet (rounded and cute)
+            ctx.fillStyle = catLightOrange;
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 4.5, pixelY + 16, 3.5, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 4.5, pixelY + 16, 3.5, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Head (larger, rounder - cute cat proportions)
+            ctx.fillStyle = catOrange;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 9, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ears (rounded triangles - softer)
+            ctx.fillStyle = catOrange;
+            ctx.beginPath();
+            ctx.arc(pixelX - 7, pixelY - 15, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 7, pixelY - 15, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Inner ears (pink, smaller)
+            ctx.fillStyle = '#ffb6c1';
+            ctx.beginPath();
+            ctx.arc(pixelX - 7, pixelY - 14, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 7, pixelY - 14, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cheek fluff (makes cat cuter)
+            ctx.fillStyle = catLightOrange;
+            ctx.beginPath();
+            ctx.arc(pixelX - 8, pixelY - 7, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 8, pixelY - 7, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Muzzle area (lighter patch)
+            ctx.fillStyle = catLightOrange;
+            ctx.beginPath();
+            ctx.ellipse(pixelX, pixelY - 7, 5, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes (big, round, cute cat eyes)
+            ctx.fillStyle = '#2d5016'; // Deep green
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 3.5, pixelY - 10, 2.5, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 3.5, pixelY - 10, 2.5, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pupils (vertical slits, but rounder)
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 3.5, pixelY - 10, 0.8, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 3.5, pixelY - 10, 0.8, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Large eye highlights (makes eyes sparkly and cute)
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(pixelX - 3, pixelY - 11, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 4, pixelY - 11, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Smaller eye highlights
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(pixelX - 4, pixelY - 9, 0.6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 3, pixelY - 9, 0.6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nose (pink triangle, nicely positioned)
+            ctx.fillStyle = '#ffb6c1';
+            ctx.beginPath();
+            ctx.moveTo(pixelX, pixelY - 7);
+            ctx.lineTo(pixelX - 1.5, pixelY - 5.5);
+            ctx.lineTo(pixelX + 1.5, pixelY - 5.5);
+            ctx.fill();
+
+            // Mouth (simple cute smile, HIGHER UP - closer to nose)
+            ctx.strokeStyle = '#3d2817';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(pixelX, pixelY - 5.5);
+            ctx.lineTo(pixelX, pixelY - 4.5);
+            ctx.stroke();
+
+            // Smile curves (higher placement, smaller)
+            ctx.beginPath();
+            ctx.arc(pixelX - 1.2, pixelY - 4.5, 1.2, 0, Math.PI);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(pixelX + 1.2, pixelY - 4.5, 1.2, 0, Math.PI);
+            ctx.stroke();
+
+            // Whiskers (thinner, more delicate)
+            ctx.strokeStyle = '#3d2817';
+            ctx.lineWidth = 0.8;
+            // Left whiskers
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 8, pixelY - 6);
+            ctx.lineTo(pixelX - 14, pixelY - 7);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 8, pixelY - 5);
+            ctx.lineTo(pixelX - 14, pixelY - 5);
+            ctx.stroke();
+
+            // Right whiskers
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 8, pixelY - 6);
+            ctx.lineTo(pixelX + 14, pixelY - 7);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 8, pixelY - 5);
+            ctx.lineTo(pixelX + 14, pixelY - 5);
+            ctx.stroke();
+
+            // Subtle stripes on head (tabby pattern, lighter)
+            ctx.strokeStyle = 'rgba(224, 128, 64, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 5, pixelY - 13);
+            ctx.lineTo(pixelX - 3, pixelY - 11);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 5, pixelY - 13);
+            ctx.lineTo(pixelX + 3, pixelY - 11);
+            ctx.stroke();
+
+            // Arms (cute little paws at sides)
+            ctx.fillStyle = catOrange;
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 11, pixelY + 2, 2.5, 5, -0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 11, pixelY + 2, 2.5, 5, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Paw pads (pink)
+            ctx.fillStyle = '#ffb6c1';
+            ctx.beginPath();
+            ctx.arc(pixelX - 11, pixelY + 4, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 11, pixelY + 4, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Tail (curled, fluffy)
+            ctx.strokeStyle = catOrange;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(pixelX + 13, pixelY + 6, 9, Math.PI * 0.9, Math.PI * 1.6);
+            ctx.stroke();
+
+            // Tail tip (lighter)
+            ctx.strokeStyle = catLightOrange;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(pixelX + 13, pixelY + 6, 9, Math.PI * 1.4, Math.PI * 1.6);
+            ctx.stroke();
+
+            // Merchant coin pouch
+            ctx.fillStyle = '#8B7355';
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 7, pixelY + 9, 3, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // String on pouch
+            ctx.strokeStyle = '#654321';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(pixelX + 7, pixelY + 7, 1.5, 0, Math.PI);
+            ctx.stroke();
+
+            // Coin symbol on pouch
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(pixelX + 7, pixelY + 10, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#daa520';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.arc(pixelX + 7, pixelY + 10, 1.5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // INSERT THE NEW drawTownCrier FUNCTION HERE
+        function drawTownCrier(pixelX, pixelY) {
+            ctx.save();
+
+            const skinTone = '#ffdbac';
+            const coatColor = '#8B0000'; // Dark red coat
+            const trimColor = '#ffd700'; // Gold trim
+            const pantsColor = '#2F4F4F'; // Dark grey pants
+            const bellColor = '#ffd700'; // Gold bell
+
+            // Body - fancy coat
+            ctx.fillStyle = coatColor;
+            ctx.beginPath();
+            ctx.roundRect(pixelX - 10, pixelY - 3, 20, 15, 4);
+            ctx.fill();
+
+            // Gold trim on coat
+            ctx.fillStyle = trimColor;
+            ctx.fillRect(pixelX - 10, pixelY - 3, 20, 2);
+            ctx.fillRect(pixelX - 10, pixelY + 10, 20, 2);
+
+            // Gold buttons
+            ctx.fillStyle = trimColor;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY + 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pants/legs
+            ctx.fillStyle = pantsColor;
+            ctx.fillRect(pixelX - 7, pixelY + 11, 6, 7);
+            ctx.fillRect(pixelX + 1, pixelY + 11, 6, 7);
+
+            // Shoes (black)
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 4, pixelY + 18, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 4, pixelY + 18, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Head
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 10, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Tricorn hat (classic town crier hat)
+            ctx.fillStyle = '#000';
+            // Hat base
+            ctx.beginPath();
+            ctx.ellipse(pixelX, pixelY - 16, 11, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // Hat crown (triangular shape)
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 9, pixelY - 16);
+            ctx.lineTo(pixelX, pixelY - 24);
+            ctx.lineTo(pixelX + 9, pixelY - 16);
+            ctx.closePath();
+            ctx.fill();
+
+            // Gold trim on hat
+            ctx.strokeStyle = trimColor;
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 9, pixelY - 16);
+            ctx.lineTo(pixelX, pixelY - 24);
+            ctx.lineTo(pixelX + 9, pixelY - 16);
+            ctx.stroke();
+
+            // Feather in hat
+            ctx.strokeStyle = '#FF6347'; // Red feather
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 7, pixelY - 22);
+            ctx.quadraticCurveTo(pixelX + 10, pixelY - 26, pixelX + 8, pixelY - 28);
+            ctx.stroke();
+
+            // Eyes
+            ctx.fillStyle = '#3d2817';
+            ctx.beginPath();
+            ctx.arc(pixelX - 3, pixelY - 11, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 3, pixelY - 11, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eye highlights
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(pixelX - 2.5, pixelY - 11.5, 0.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 3.5, pixelY - 11.5, 0.8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nose
+            ctx.fillStyle = '#d4a574';
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 9, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Subtle, dignified smile (much smaller and less curved)
+            ctx.strokeStyle = '#3d2817';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 5.5, 2, 0.3, Math.PI - 0.3);
+            ctx.stroke();
+
+            // Rosy cheeks (lighter/subtler)
+            ctx.fillStyle = 'rgba(255, 182, 193, 0.3)';
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 6, pixelY - 8, 2, 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 6, pixelY - 8, 2, 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Left arm (holding bell up)
+            ctx.fillStyle = coatColor;
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 13, pixelY - 5, 3, 7, -0.8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Left hand (holding bell)
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX - 15, pixelY - 10, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Bell in left hand
+            ctx.fillStyle = bellColor;
+            ctx.beginPath();
+            // Bell body (trapezoid shape)
+            ctx.moveTo(pixelX - 18, pixelY - 12);
+            ctx.lineTo(pixelX - 12, pixelY - 12);
+            ctx.lineTo(pixelX - 13, pixelY - 8);
+            ctx.lineTo(pixelX - 17, pixelY - 8);
+            ctx.closePath();
+            ctx.fill();
+
+            // Bell shine
+            ctx.fillStyle = '#ffed4e';
+            ctx.fillRect(pixelX - 16, pixelY - 11, 2, 2);
+
+            // Bell handle
+            ctx.strokeStyle = bellColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(pixelX - 15, pixelY - 13, 2, Math.PI, 0);
+            ctx.stroke();
+
+            // Bell clapper
+            ctx.fillStyle = '#8B7355';
+            ctx.beginPath();
+            ctx.arc(pixelX - 15, pixelY - 8, 1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right arm (at side)
+            ctx.fillStyle = coatColor;
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 12, pixelY + 2, 2.5, 6, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right hand
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX + 13, pixelY + 6, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Scroll/paper in right hand (town crier announcements)
+            ctx.fillStyle = '#FFF8DC';
+            ctx.fillRect(pixelX + 11, pixelY + 6, 4, 8);
+
+            // Lines on scroll
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 11.5, pixelY + 8);
+            ctx.lineTo(pixelX + 14.5, pixelY + 8);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 11.5, pixelY + 10);
+            ctx.lineTo(pixelX + 14.5, pixelY + 10);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 11.5, pixelY + 12);
+            ctx.lineTo(pixelX + 14.5, pixelY + 12);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // INSERT THE NEW drawSky FUNCTION HERE
+        function drawSky(pixelX, pixelY) {
+            ctx.save();
+
+            const skinTone = '#ffdbac';
+            const hairColor = '#d4a76a'; // Golden blonde/light brown
+            const dressColor = '#87CEEB'; // Baby blue
+            const dressAccent = '#B0E0E6'; // Lighter blue accent
+
+            // Dress - simple A-line style
+            ctx.fillStyle = dressColor;
+            ctx.beginPath();
+            // A-line dress shape (slightly flared)
+            ctx.moveTo(pixelX - 7, pixelY - 2);
+            ctx.lineTo(pixelX - 10, pixelY + 12);
+            ctx.lineTo(pixelX + 10, pixelY + 12);
+            ctx.lineTo(pixelX + 7, pixelY - 2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Simple collar/neckline
+            ctx.fillStyle = dressAccent;
+            ctx.fillRect(pixelX - 7, pixelY - 2, 14, 2);
+
+            // Hem accent at bottom
+            ctx.fillStyle = dressAccent;
+            ctx.fillRect(pixelX - 10, pixelY + 10, 20, 2);
+
+            // Legs (visible below dress)
+            ctx.fillStyle = skinTone;
+            ctx.fillRect(pixelX - 6, pixelY + 12, 4, 4);
+            ctx.fillRect(pixelX + 2, pixelY + 12, 4, 4);
+
+            // Shoes (simple)
+            ctx.fillStyle = '#B0B0B0';
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 4, pixelY + 16, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 4, pixelY + 16, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Head
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 8, 7, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hair (golden blonde, shoulder-length)
+            ctx.fillStyle = hairColor;
+            // Top of head
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 12, 8, Math.PI * 0.75, Math.PI * 2.25);
+            ctx.fill();
+            // Side hair pieces
+            ctx.fillRect(pixelX - 8, pixelY - 12, 3, 6);
+            ctx.fillRect(pixelX + 5, pixelY - 12, 3, 6);
+            // Soft bangs
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 3, pixelY - 10, 2.5, 3, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 1, pixelY - 11, 2.5, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 4, pixelY - 10, 2, 3, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes (smaller, more subtle)
+            ctx.fillStyle = '#5a7a8a'; // Muted blue-grey
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 3, pixelY - 8, 1.8, 2.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 3, pixelY - 8, 1.8, 2.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pupils
+            ctx.fillStyle = '#3d2817';
+            ctx.beginPath();
+            ctx.arc(pixelX - 3, pixelY - 8, 1, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 3, pixelY - 8, 1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Single eye highlight (subtle)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(pixelX - 2.5, pixelY - 8.5, 0.7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 3.5, pixelY - 8.5, 0.7, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nose (small, subtle)
+            ctx.fillStyle = '#d4a574';
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 6, 1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Mouth (very subtle)
+            ctx.strokeStyle = '#3d2817';
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 4, 1.5, 0.4, Math.PI - 0.4);
+            ctx.stroke();
+
+            // Subtle cheeks
+            ctx.fillStyle = 'rgba(255, 182, 193, 0.25)';
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 5.5, pixelY - 5, 2, 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 5.5, pixelY - 5, 2, 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Arms (coming out from dress)
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.ellipse(pixelX - 10, pixelY + 2, 2, 5, -0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 10, pixelY + 2, 2, 5, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hands
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX - 11, pixelY + 6, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pixelX + 11, pixelY + 6, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // INSERT THE NEW drawSam FUNCTION HERE
+        function drawSam(pixelX, pixelY) {
+            ctx.save();
+
+            const skinTone = '#ffdbac';
+            const hairColor = '#8B6F47'; // Brown
+            const vestColor = '#8B7355'; // Brown fishing vest
+            const shirtColor = '#E8DCC0'; // Cream/beige shirt
+            const pantsColor = '#5C4033'; // Brown pants
+            const hatColor = '#7a6e5c'; // Tan/khaki fishing hat
+
+            // Body - side view
+            ctx.fillStyle = shirtColor;
+            ctx.beginPath();
+            ctx.roundRect(pixelX - 5, pixelY - 2, 10, 12, 3);
+            ctx.fill();
+
+            // Fishing vest (side view)
+            ctx.fillStyle = vestColor;
+            ctx.fillRect(pixelX - 5, pixelY - 2, 10, 12);
+
+            // Vest pocket (visible on side)
+            ctx.fillStyle = '#6B5A48';
+            ctx.fillRect(pixelX - 3, pixelY + 3, 3, 3);
+
+            // Pants (side view, legs stacked)
+            ctx.fillStyle = pantsColor;
+            ctx.fillRect(pixelX - 4, pixelY + 9, 8, 8);
+
+            // Boot (side view)
+            ctx.fillStyle = '#3d3d3d';
+            ctx.fillRect(pixelX - 4, pixelY + 15, 8, 3);
+
+            // Head (side profile)
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 9, 7, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Fishing hat (side view)
+            ctx.fillStyle = hatColor;
+            // Hat brim (extends forward)
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 3, pixelY - 14, 8, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // Hat crown (side profile)
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 16, 6, Math.PI * 0.85, Math.PI * 1.5);
+            ctx.fill();
+            ctx.fillRect(pixelX - 6, pixelY - 16, 6, 3);
+
+            // Hair peeking out (back of head)
+            ctx.fillStyle = hairColor;
+            ctx.fillRect(pixelX - 7, pixelY - 13, 2, 4);
+
+            // Eye (side view - one eye visible)
+            ctx.fillStyle = '#5a4a3a';
+            ctx.beginPath();
+            ctx.arc(pixelX + 2, pixelY - 9, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eye highlight
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(pixelX + 2.5, pixelY - 9.5, 0.8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nose (side profile)
+            ctx.fillStyle = '#d4a574';
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 5, pixelY - 8);
+            ctx.lineTo(pixelX + 7, pixelY - 7);
+            ctx.lineTo(pixelX + 5, pixelY - 6);
+            ctx.fill();
+
+            // Mouth (side view smile)
+            ctx.strokeStyle = '#3d2817';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 5, pixelY - 5);
+            ctx.quadraticCurveTo(pixelX + 6, pixelY - 4, pixelX + 7, pixelY - 5);
+            ctx.stroke();
+
+            // Rosy cheek (side view)
+            ctx.fillStyle = 'rgba(255, 140, 105, 0.3)';
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 4, pixelY - 6, 2.5, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Beard/stubble (side profile)
+            ctx.fillStyle = 'rgba(139, 111, 71, 0.3)';
+            ctx.beginPath();
+            ctx.arc(pixelX + 4, pixelY - 4, 3, 0.3, Math.PI * 0.6);
+            ctx.fill();
+
+            // Front arm (reaching forward slightly)
+            ctx.fillStyle = shirtColor;
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 7, pixelY + 2, 2, 5, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Front hand/forearm
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.ellipse(pixelX + 9, pixelY + 5, 2, 3, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Back arm (less visible)
+            ctx.fillStyle = vestColor;
+            ctx.fillRect(pixelX - 7, pixelY, 2, 6);
+
+            // Fishing rod (held or leaning - behind character)
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 10, pixelY + 8);
+            ctx.lineTo(pixelX - 12, pixelY - 12);
+            ctx.stroke();
+
+            // Fishing line
+            ctx.strokeStyle = '#E0E0E0';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 12, pixelY - 12);
+            ctx.lineTo(pixelX - 13, pixelY - 6);
+            ctx.stroke();
+
+            // Hook
+            ctx.strokeStyle = '#C0C0C0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(pixelX - 13, pixelY - 5, 1, Math.PI, Math.PI * 2);
+            ctx.stroke();
+
+            // Tackle box on belt (back side visible)
+            ctx.fillStyle = '#6B8E23';
+            ctx.fillRect(pixelX - 6, pixelY + 8, 4, 4);
+
+            // Bag detail
+            ctx.strokeStyle = '#556B2F';
+            ctx.lineWidth = 0.8;
+            ctx.strokeRect(pixelX - 6, pixelY + 8, 4, 4);
+
+            ctx.restore();
+        }
+
         function drawSparkles(x, y, time) {
             const sparkleCount = 8;
             for (let i = 0; i < sparkleCount; i++) {
@@ -3081,34 +4068,24 @@
 
             if (myZone === 1) {
                 const npcPixel = gridToPixel(npc.x, npc.y);
-                ctx.fillStyle = npc.color;
-                ctx.beginPath();
-                ctx.arc(npcPixel.x, npcPixel.y, 15, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.fillStyle = '#ffed4e';
-                ctx.fillRect(npcPixel.x - 10, npcPixel.y - 25, 20, 10);
-                ctx.fillRect(npcPixel.x - 5, npcPixel.y - 30, 10, 5);
+                drawTownCrier(npcPixel.x, npcPixel.y);
                 
                 // Draw Sky NPC at (16, 2)
                 const skyNPCPixel = gridToPixel(skyNPC.x, skyNPC.y);
-                ctx.fillStyle = skyNPC.color;
-                ctx.beginPath();
-                ctx.arc(skyNPCPixel.x, skyNPCPixel.y, 15, 0, Math.PI * 2);
-                ctx.fill();
-                
+                drawSky(skyNPCPixel.x, skyNPCPixel.y);
+
                 // FIXED: Draw quest marker above Sky NPC with visible red exclamation mark
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                 ctx.beginPath();
                 ctx.arc(skyNPCPixel.x, skyNPCPixel.y - 35, 12, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 // Red exclamation mark (no black outline)
                 ctx.fillStyle = '#FF0000';
                 ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('!', skyNPCPixel.x, skyNPCPixel.y - 26);
-                
+
                 // NEW: Draw animated butterflies in Town Zone
                 const currentTime = Date.now();
                 townButterflies.forEach(butterfly => {
@@ -3125,91 +4102,7 @@
                 
                 // Draw merchant cat
                 const merchantPixel = gridToPixel(merchant.x, merchant.y);
-                
-                // Cat body
-                ctx.fillStyle = '#ff8c00';
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x, merchantPixel.y, 18, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Cat stripes
-                ctx.fillStyle = '#e07000';
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x - 8, merchantPixel.y - 5, 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x + 8, merchantPixel.y - 5, 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x, merchantPixel.y + 8, 3, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Cat ears
-                ctx.fillStyle = '#ff8c00';
-                ctx.beginPath();
-                ctx.moveTo(merchantPixel.x - 10, merchantPixel.y - 18);
-                ctx.lineTo(merchantPixel.x - 15, merchantPixel.y - 25);
-                ctx.lineTo(merchantPixel.x - 5, merchantPixel.y - 22);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.moveTo(merchantPixel.x + 10, merchantPixel.y - 18);
-                ctx.lineTo(merchantPixel.x + 15, merchantPixel.y - 25);
-                ctx.lineTo(merchantPixel.x + 5, merchantPixel.y - 22);
-                ctx.fill();
-                
-                // Inner ears
-                ctx.fillStyle = '#ffb347';
-                ctx.beginPath();
-                ctx.moveTo(merchantPixel.x - 8, merchantPixel.y - 20);
-                ctx.lineTo(merchantPixel.x - 11, merchantPixel.y - 24);
-                ctx.lineTo(merchantPixel.x - 7, merchantPixel.y - 22);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.moveTo(merchantPixel.x + 8, merchantPixel.y - 20);
-                ctx.lineTo(merchantPixel.x + 11, merchantPixel.y - 24);
-                ctx.lineTo(merchantPixel.x + 7, merchantPixel.y - 22);
-                ctx.fill();
-                
-                // Cat face
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x - 6, merchantPixel.y - 5, 2, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x + 6, merchantPixel.y - 5, 2, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Cat nose
-                ctx.fillStyle = '#ffb6c1';
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x, merchantPixel.y - 2, 1.5, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Cat mouth
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x, merchantPixel.y + 2, 4, 0, Math.PI);
-                ctx.stroke();
-                
-                // Cat whiskers
-                ctx.beginPath();
-                ctx.moveTo(merchantPixel.x - 15, merchantPixel.y - 2);
-                ctx.lineTo(merchantPixel.x - 8, merchantPixel.y - 1);
-                ctx.moveTo(merchantPixel.x + 15, merchantPixel.y - 2);
-                ctx.lineTo(merchantPixel.x + 8, merchantPixel.y - 1);
-                ctx.moveTo(merchantPixel.x - 15, merchantPixel.y + 2);
-                ctx.lineTo(merchantPixel.x - 8, merchantPixel.y + 1);
-                ctx.moveTo(merchantPixel.x + 15, merchantPixel.y + 2);
-                ctx.lineTo(merchantPixel.x + 8, merchantPixel.y + 1);
-                ctx.stroke();
-                
-                // Cat tail
-                ctx.strokeStyle = '#ff8c00';
-                ctx.lineWidth = 4;
-                ctx.beginPath();
-                ctx.arc(merchantPixel.x + 20, merchantPixel.y + 10, 8, Math.PI, Math.PI * 1.5);
-                ctx.stroke();
+                drawMerchantCat(merchantPixel.x, merchantPixel.y);
                 
                 // Trees
                 trees.forEach(tree => {
@@ -3386,17 +4279,14 @@
                 
                 // NEW: Draw quest NPC (Sam) at (15, 9) with cooking animation
                 const questNPCPixel = gridToPixel(questNPC.x, questNPC.y);
-                ctx.fillStyle = questNPC.color;
-                ctx.beginPath();
-                ctx.arc(questNPCPixel.x, questNPCPixel.y, 15, 0, Math.PI * 2);
-                ctx.fill();
-                
+                drawSam(questNPCPixel.x, questNPCPixel.y);
+
                 // Draw permanent cooking animation above quest NPC (Sam)
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                 ctx.beginPath();
                 ctx.arc(questNPCPixel.x, questNPCPixel.y - 35, 12, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 ctx.fillStyle = '#ff6600';
                 ctx.font = '16px Arial';
                 ctx.textAlign = 'center';
@@ -3646,16 +4536,21 @@
                         return;
                     }
                     
-                    ctx.fillStyle = player.color || '#fff';
-                    ctx.beginPath();
-                    ctx.arc(playerPixel.x, playerPixel.y, 15, 0, Math.PI * 2);
-                    ctx.fill();
+                    // Draw player sprite instead of circle
+                    drawPlayerSprite(playerPixel.x, playerPixel.y, player.direction || 'down', player.color || '#4ecdc4');
 
                     if (id === playerId) {
-                        ctx.strokeStyle = '#fff';
-                        ctx.lineWidth = 3;
+                        // Draw subtle ground shadow/indicator for local player
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
                         ctx.beginPath();
-                        ctx.arc(playerPixel.x, playerPixel.y, 18, 0, Math.PI * 2);
+                        ctx.ellipse(playerPixel.x, playerPixel.y + 18, 12, 4, 0, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Optional: Add a thin outline at feet level
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.ellipse(playerPixel.x, playerPixel.y + 18, 12, 4, 0, 0, Math.PI * 2);
                         ctx.stroke();
                     }
 
