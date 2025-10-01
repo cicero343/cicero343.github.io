@@ -397,6 +397,12 @@
         const GRID_WIDTH = Math.floor(canvas.width / GRID_SIZE);
         const GRID_HEIGHT = Math.floor(canvas.height / GRID_SIZE);
         
+        // Damage scaling constants (easy to adjust later)
+        const ATTACK_DAMAGE_THRESHOLD = 20; // Level at which sword damage increases
+        const MAGIC_DAMAGE_THRESHOLD = 20; // Level at which fireball damage increases
+        const BASE_DAMAGE = 1;
+        const ENHANCED_DAMAGE = 2;
+
         const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7', '#a29bfe'];
         
         let playerId = null;
@@ -1723,7 +1729,9 @@
                         
                         console.log(`Melee attack hit ${mob.type} at ${mob.x}, ${mob.y}`);
                         
-                        const newHealth = Math.max(0, mob.health - 1);
+                        // Calculate damage based on Attack skill level
+                        const attackDamage = playerAttack >= ATTACK_DAMAGE_THRESHOLD ? ENHANCED_DAMAGE : BASE_DAMAGE;
+                        const newHealth = Math.max(0, mob.health - attackDamage);
                         const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
                         
                         if (newHealth <= 0) {
@@ -6413,7 +6421,9 @@
                                 
                                 console.log(`Fireball hit ${mob.type} at ${mob.x}, ${mob.y}`);
                                 
-                                const newHealth = Math.max(0, mob.health - 1);
+                                // Calculate damage based on Magic skill level
+                                const magicDamage = playerMagic >= MAGIC_DAMAGE_THRESHOLD ? ENHANCED_DAMAGE : BASE_DAMAGE;
+                                const newHealth = Math.max(0, mob.health - magicDamage);
                                 const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
                                 
                                 if (newHealth <= 0) {
