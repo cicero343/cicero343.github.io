@@ -2995,6 +2995,63 @@
             ctx.stroke();
         }
 
+        function drawFireParticles(x, y, time) {
+            // Ember particles (rising sparks)
+            for (let i = 0; i < 8; i++) {
+                const particleTime = (time * 0.001 + i * 0.4) % 2; // 2-second loop
+                const particleY = y - 10 - particleTime * 25; // Rise upward
+                const particleX = x + Math.sin(time * 0.003 + i) * 8; // Slight drift
+                const opacity = 1 - particleTime/2; // Fade as it rises
+
+                ctx.fillStyle = `rgba(255, ${120 + Math.sin(time * 0.01 + i) * 50}, 0, ${opacity * 0.6})`;
+                ctx.beginPath();
+                ctx.arc(particleX, particleY, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Smoke particles (subtle gray)
+            for (let i = 0; i < 3; i++) {
+                const smokeTime = (time * 0.0005 + i * 0.6) % 3; // 3-second loop
+                const smokeY = y - 15 - smokeTime * 20;
+                const smokeX = x + Math.sin(time * 0.002 + i) * 10;
+                const smokeOpacity = Math.max(0, 0.3 - smokeTime/10);
+
+                ctx.fillStyle = `rgba(200, 200, 200, ${smokeOpacity})`;
+                ctx.beginPath();
+                ctx.arc(smokeX, smokeY, 3 + smokeTime, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawWaterTile(x, y, time) {
+            const pixel = gridToPixel(x, y);
+
+            // Base water color with depth variation
+            const depthVariation = Math.sin(x * 0.5 + y * 0.3) * 10;
+            ctx.fillStyle = `rgb(${65 + depthVariation}, ${105 + depthVariation}, 225)`;
+            ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+
+            // Flowing wave layers (multiple for depth)
+            const wave1 = Math.sin(time * 0.002 + x * 0.3 + y * 0.2) * 8;
+            const wave2 = Math.cos(time * 0.0015 + x * 0.4) * 5;
+
+            ctx.fillStyle = 'rgba(135, 206, 235, 0.4)';
+            ctx.fillRect(
+                pixel.x - GRID_SIZE/2,
+                pixel.y - GRID_SIZE/2 + wave1,
+                GRID_SIZE,
+                GRID_SIZE/4
+            );
+
+            ctx.fillStyle = 'rgba(173, 216, 230, 0.3)';
+            ctx.fillRect(
+                pixel.x - GRID_SIZE/2,
+                pixel.y - GRID_SIZE/2 + wave2,
+                GRID_SIZE,
+                GRID_SIZE/5
+            );
+        }
+
         // NEW: Draw butterfly function
         function drawButterfly(x, y, time) {
             // Draw butterfly body
@@ -4476,19 +4533,13 @@
                     }
                 });
 
-                // Now draw the water (existing code continues here)
+                // Now draw the water with enhanced animations
                 const currentTime = Date.now();
                 for (let x = LAKE_MIN_X; x <= LAKE_MAX_X; x++) {
                     for (let y = LAKE_MIN_Y; y <= LAKE_MAX_Y; y++) {
+                        drawWaterTile(x, y, currentTime);
+
                         const pixel = gridToPixel(x, y);
-                        
-                        ctx.fillStyle = '#4169E1';
-                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
-                        
-                        const waveOffset = Math.sin(currentTime * 0.001 + x * 0.5 + y * 0.3) * 10;
-                        ctx.fillStyle = 'rgba(135, 206, 235, 0.5)';
-                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2 + waveOffset, GRID_SIZE, GRID_SIZE/3);
-                        
                         drawWaterSparkles(pixel.x, pixel.y, currentTime, x, y);
                     }
                 }
@@ -4530,6 +4581,9 @@
                     ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2);
                     ctx.fill();
                 }
+
+                // Add particle effects
+                drawFireParticles(fireplacePixel.x, fireplacePixel.y - 15, currentTime);
                 
                 // Draw quest NPC (Sam) with shadow
                 const questNPCPixel = gridToPixel(questNPC.x, questNPC.y);
@@ -4588,6 +4642,9 @@
                         ctx.arc(sparkX, sparkY, 1, 0, Math.PI * 2);
                         ctx.fill();
                     }
+
+                    // Add particle effects
+                    drawFireParticles(campfirePixel.x, campfirePixel.y - 12, currentTime);
                 }
             });
             
