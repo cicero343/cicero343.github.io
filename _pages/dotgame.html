@@ -4360,128 +4360,6 @@
                 });
             }
 
-            if (myZone === 4) {
-                // Draw darker grass across the entire forest zone with vertical symmetry
-                const midY = Math.floor(GRID_HEIGHT / 2);
-                
-                for (let x = 0; x < GRID_WIDTH; x++) {
-                    for (let y = 0; y < GRID_HEIGHT; y++) {
-                        // Use mirrored Y coordinate for color/seed, but draw at actual position
-                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
-                        
-                        const pixel = gridToPixel(x, y);
-                        const seed = x * 1000 + mirroredY;
-                        
-                        // Darker forest grass
-                        const grassHue = 65 + (seed % 15);
-                        const grassLightness = 18 + (seed % 8);
-                        ctx.fillStyle = `hsl(${grassHue}, 45%, ${grassLightness}%)`;
-                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
-                        
-                        // Draw grass blades
-                        for (let i = 0; i < 5; i++) {
-                            const pr1 = (seed + i * 123) % 1000 / 1000;
-                            const pr2 = (seed + i * 456) % 1000 / 1000;
-                            
-                            const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
-                            const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
-                            const bladeHeight = 3 + pr1 * 4;
-                            
-                            ctx.strokeStyle = `rgba(${35 + pr1 * 25}, ${70 + pr2 * 30}, 35, 0.6)`;
-                            ctx.lineWidth = 1;
-                            ctx.beginPath();
-                            ctx.moveTo(bladeX, bladeY);
-                            ctx.quadraticCurveTo(
-                                bladeX + (pr2 - 0.5) * 2,
-                                bladeY - bladeHeight/2,
-                                bladeX + (pr1 - 0.5) * 3,
-                                bladeY - bladeHeight
-                            );
-                            ctx.stroke();
-                        }
-                    }
-                }
-            }
-
-            // Draw zone transition arrows
-            if (myZone === 1) {
-                const rightArrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
-                const rightArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('>', rightArrowX, rightArrowY);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '12px Arial';
-                ctx.fillText('Farm', rightArrowX, rightArrowY + 20);
-                
-                const leftArrowX = GRID_SIZE / 2;
-                const leftArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('<', leftArrowX, leftArrowY);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '12px Arial';
-                ctx.fillText('Lake', leftArrowX, leftArrowY + 20);
-                
-                // Draw north arrow to Forest
-                const northArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
-                const northArrowY = GRID_SIZE / 2;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('^', northArrowX, northArrowY);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '12px Arial';
-                ctx.fillText('Forest', northArrowX, northArrowY + 20);
-                
-            } else if (myZone === 2) {
-                const arrowX = GRID_SIZE / 2;
-                const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('<', arrowX, arrowY);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '12px Arial';
-                ctx.fillText('Town', arrowX, arrowY + 20);
-                
-            } else if (myZone === 3) {
-                const arrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
-                const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('>', arrowX, arrowY);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '12px Arial';
-                ctx.fillText('Town', arrowX, arrowY + 20);
-            } else if (myZone === 4) {
-                // Forest Zone - draw south arrow back to Town
-                const southArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
-                const southArrowY = (GRID_HEIGHT - 1) * GRID_SIZE + GRID_SIZE / 2;
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-                ctx.font = '24px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('v', southArrowX, southArrowY);
-                
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.font = '12px Arial';
-                ctx.fillText('Town', southArrowX, southArrowY + 20);
-            }
-
             if (myZone === 3) {
                 // Draw grass across the entire lake zone with vertical symmetry
                 const midY = Math.floor(GRID_HEIGHT / 2);
@@ -4843,6 +4721,128 @@
                     ctx.lineTo(rightPixel.x + GRID_SIZE/2, rightPixel.y);
                     ctx.stroke();
                 }
+            }
+
+            if (myZone === 4) {
+                // Draw darker grass across the entire forest zone with vertical symmetry
+                const midY = Math.floor(GRID_HEIGHT / 2);
+                
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        // Use mirrored Y coordinate for color/seed, but draw at actual position
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+                        
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+                        
+                        // Darker forest grass
+                        const grassHue = 65 + (seed % 15);
+                        const grassLightness = 18 + (seed % 8);
+                        ctx.fillStyle = `hsl(${grassHue}, 45%, ${grassLightness}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                        
+                        // Draw grass blades
+                        for (let i = 0; i < 5; i++) {
+                            const pr1 = (seed + i * 123) % 1000 / 1000;
+                            const pr2 = (seed + i * 456) % 1000 / 1000;
+                            
+                            const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeHeight = 3 + pr1 * 4;
+                            
+                            ctx.strokeStyle = `rgba(${35 + pr1 * 25}, ${70 + pr2 * 30}, 35, 0.6)`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(bladeX, bladeY);
+                            ctx.quadraticCurveTo(
+                                bladeX + (pr2 - 0.5) * 2,
+                                bladeY - bladeHeight/2,
+                                bladeX + (pr1 - 0.5) * 3,
+                                bladeY - bladeHeight
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            // Draw zone transition arrows
+            if (myZone === 1) {
+                const rightArrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
+                const rightArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('>', rightArrowX, rightArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Farm', rightArrowX, rightArrowY + 20);
+                
+                const leftArrowX = GRID_SIZE / 2;
+                const leftArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('<', leftArrowX, leftArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Lake', leftArrowX, leftArrowY + 20);
+                
+                // Draw north arrow to Forest
+                const northArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
+                const northArrowY = GRID_SIZE / 2;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('^', northArrowX, northArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Forest', northArrowX, northArrowY + 20);
+                
+            } else if (myZone === 2) {
+                const arrowX = GRID_SIZE / 2;
+                const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('<', arrowX, arrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', arrowX, arrowY + 20);
+                
+            } else if (myZone === 3) {
+                const arrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
+                const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('>', arrowX, arrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', arrowX, arrowY + 20);
+            } else if (myZone === 4) {
+                // Forest Zone - draw south arrow back to Town
+                const southArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
+                const southArrowY = (GRID_HEIGHT - 1) * GRID_SIZE + GRID_SIZE / 2;
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('v', southArrowX, southArrowY);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', southArrowX, southArrowY + 20);
             }
             
             if (myZone === 2 || myZone === 4) {
