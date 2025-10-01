@@ -2537,7 +2537,7 @@
                             selectedQuestOption = 0;
                             currentDialogNPC = 'Sky';
                             showQuestDialog = true;
-                            startTypewriter("Excellent work! You've cleared the goblins. Here's your 40 gold reward!");
+                            startTypewriter("Excellent work! Here's your 40 gold reward!");
                         } else {
                             // Quest is active but player hasn't killed enough goblins
                             showDialog = true;
@@ -4323,17 +4323,19 @@
                 drawCharacterShadow(skyNPCPixel.x, skyNPCPixel.y, 11);
                 drawSky(skyNPCPixel.x, skyNPCPixel.y);
 
-                // FIXED: Draw quest marker above Sky NPC with visible red exclamation mark
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                ctx.beginPath();
-                ctx.arc(skyNPCPixel.x, skyNPCPixel.y - 35, 12, 0, Math.PI * 2);
-                ctx.fill();
+                // Only draw quest marker if quest not completed
+                if (!skyQuestCompleted) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.beginPath();
+                    ctx.arc(skyNPCPixel.x, skyNPCPixel.y - 35, 12, 0, Math.PI * 2);
+                    ctx.fill();
 
-                // Red exclamation mark (no black outline)
-                ctx.fillStyle = '#FF0000';
-                ctx.font = 'bold 16px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('!', skyNPCPixel.x, skyNPCPixel.y - 26);
+                    // Red exclamation mark
+                    ctx.fillStyle = '#FF0000';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('!', skyNPCPixel.x, skyNPCPixel.y - 26);
+                }
 
                 // NEW: Draw animated butterflies in Town Zone
                 const currentTime = Date.now();
