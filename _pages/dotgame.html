@@ -416,6 +416,14 @@
         let isRespawning = false;
         let isPlayerCreated = false;
 
+        // Typewriter effect variables
+        let displayedText = '';
+        let charIndex = 0;
+        let lastCharTime = 0;
+        const typewriterSpeed = 30; // ms per character (lower = faster)
+        let isTypewriterActive = false;
+        let typewriterJustSkipped = false; // NEW: Prevents double-action on ENTER
+
         // Music system variables
         let currentMusicTrack = null;
         let musicVolume = 0.2; // Adjust volume (0.0 to 1.0)
@@ -1052,6 +1060,46 @@
             return lines;
         }
 
+        // Typewriter effect update function
+        function updateTypewriter(currentTime) {
+            if (isTypewriterActive && charIndex < dialogText.length) {
+                if (currentTime - lastCharTime >= typewriterSpeed) {
+                    charIndex++;
+                    displayedText = dialogText.substring(0, charIndex);
+                    lastCharTime = currentTime;
+
+                    // Check if we've reached the end naturally
+                    if (charIndex >= dialogText.length) {
+                        isTypewriterActive = false; // Automatically stop typewriter
+                    }
+                }
+            }
+        }
+
+        // Start typewriter effect for new dialogue
+        function startTypewriter(text) {
+            dialogText = text;
+            displayedText = '';
+            charIndex = 0;
+            lastCharTime = Date.now();
+            isTypewriterActive = true;
+        }
+
+        // Skip to end of typewriter (instant show all text)
+        function skipTypewriter() {
+            if (isTypewriterActive) {
+                charIndex = dialogText.length;
+                displayedText = dialogText;
+                isTypewriterActive = false;
+                typewriterJustSkipped = true; // NEW: Set flag to prevent immediate action
+
+                // Clear the flag after a short delay
+                setTimeout(() => {
+                    typewriterJustSkipped = false;
+                }, 200); // 200ms grace period
+            }
+        }
+
         // Track previous player count for drop cleanup
         let previousPlayerCount = 0;
 
@@ -1376,9 +1424,14 @@
                 if (cookingOptions.length > 0) {
                     showCookingDialog = true;
                     selectedCookingOption = 0;
+
+                    // Build cooking text dynamically
+                    const option = cookingOptions[0];
+                    const cookingText = `I can cook food here\n\n${option.icon} ${option.name}: ${option.description}`;
+                    startTypewriter(cookingText);
                 } else {
                     showDialog = true;
-                    dialogText = "I need some raw food to cook here. Maybe I should try fishing first!";
+                    startTypewriter("I need some raw food to cook here. Maybe I should try fishing first!");
                 }
                 return;
             }
@@ -1424,9 +1477,14 @@
                 if (cookingOptions.length > 0) {
                     showCookingDialog = true;
                     selectedCookingOption = 0;
+
+                    // Build cooking text dynamically
+                    const option = cookingOptions[0];
+                    const cookingText = `I can cook food here\n\n${option.icon} ${option.name}: ${option.description}`;
+                    startTypewriter(cookingText);
                 } else {
                     showDialog = true;
-                    dialogText = "I need some raw food to cook here. Maybe I should try fishing first!";
+                    startTypewriter("I need some raw food to cook here. Maybe I should try fishing first!");
                 }
             }
         }
@@ -1539,9 +1597,10 @@
                 currentTree = nearbyTree;
                 showWoodcuttingDialog = true;
                 selectedWoodcuttingOption = 0; // Default to "Yes"
+                startTypewriter('Chop down the tree?');
             } else if (!equippedTool || equippedTool.id !== 'iron_axe') {
                 showDialog = true;
-                dialogText = "I need to equip my axe first before I can chop down trees!";
+                startTypewriter("I need to equip my axe first before I can chop down trees!");
             }
         }
 
@@ -2449,7 +2508,7 @@
                 if (npcDistance <= 1) {
                     showDialog = true;
                     currentDialogNPC = 'Town Crier';
-                    dialogText = "Hello there, brave adventurer! Head east to the Farm for adventure, west to the peaceful lake for fishing, or north to the dangerous forest!";
+                    startTypewriter("Hello there, brave adventurer! Head east to the Farm for adventure, west to the peaceful lake for fishing, or north to the dangerous forest!");
                     return;
                 }
                 
@@ -2458,6 +2517,7 @@
                 if (merchantDistance <= 1) {
                     showMerchantDialog = true;
                     selectedTradeOption = 0; // Default to "Buy"
+                    startTypewriter('*meow* hey, wanna trade? ;3');
                     return;
                 }
                 
@@ -2468,7 +2528,7 @@
                         // Quest completed state
                         showDialog = true;
                         currentDialogNPC = 'Sky';
-                        dialogText = "Thank you for clearing out those goblins! The forest is safe again.";
+                        startTypewriter("Thank you for clearing out those goblins! The forest is safe again.");
                     } else if (skyQuestActive) {
                         // Check if player has killed 4 goblins for completion
                         if (goblinKillCount >= 4) {
@@ -2477,11 +2537,12 @@
                             selectedQuestOption = 0;
                             currentDialogNPC = 'Sky';
                             showQuestDialog = true;
+                            startTypewriter("Excellent work! You've cleared the goblins. Here's your 40 gold reward!");
                         } else {
                             // Quest is active but player hasn't killed enough goblins
                             showDialog = true;
                             currentDialogNPC = 'Sky';
-                            dialogText = `Come back to me once you've cleared out those goblins! (${goblinKillCount}/4 killed)`;
+                            startTypewriter(`Come back to me once you've cleared out those goblins! (${goblinKillCount}/4 killed)`);
                         }
                     } else {
                         // Initial quest offering
@@ -2489,6 +2550,7 @@
                         selectedQuestOption = 0;
                         currentDialogNPC = 'Sky';
                         showQuestDialog = true;
+                        startTypewriter('The forest is overrun with goblins! Clear out 4 of them for a reward!');
                     }
                     return;
                 }
@@ -2500,7 +2562,7 @@
                         // Quest completed state
                         showDialog = true;
                         currentDialogNPC = 'Sam';
-                        dialogText = "Thanks for helping me catch those fish, this stew is going to be delicious!";
+                        startTypewriter("Thanks for helping me catch those fish, this stew is going to be delicious!");
                     } else if (questNPCActive) {
                         // Check if player has 5 fish for completion
                         let fishCount = 0;
@@ -2516,11 +2578,12 @@
                             selectedQuestOption = 0;
                             currentDialogNPC = 'Sam';
                             showQuestDialog = true;
+                            startTypewriter('Perfect! You have the fish I need. Trade 5 fish for 30 gold?');
                         } else {
                             // Quest is active but player doesn't have enough fish
                             showDialog = true;
                             currentDialogNPC = 'Sam';
-                            dialogText = "Come back to me when you've caught 5 fish!";
+                            startTypewriter("Come back to me when you've caught 5 fish!");
                         }
                     } else {
                         // Initial quest offering
@@ -2528,6 +2591,7 @@
                         selectedQuestOption = 0;
                         currentDialogNPC = 'Sam';
                         showQuestDialog = true;
+                        startTypewriter("Would you mind bringing me 5 fish? I'll give you a nice reward!");
                     }
                     return;
                 }
@@ -3296,6 +3360,19 @@
             }
 
             ctx.restore();
+        }
+
+        // Draw subtle shadow under any character/entity
+        function drawCharacterShadow(x, y, size = 12) {
+            // Soft circular shadow with gradient for realism
+            const gradient = ctx.createRadialGradient(x, y + 18, 0, x, y + 18, size);
+            gradient.addColorStop(0, 'rgba(0, 0, 0, 0.3)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.ellipse(x, y + 18, size, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
         }
 
         // INSERT THE NEW drawMerchantCat FUNCTION HERE
@@ -4067,11 +4144,126 @@
             }
 
             if (myZone === 1) {
-                const npcPixel = gridToPixel(npc.x, npc.y);
-                drawTownCrier(npcPixel.x, npcPixel.y);
+                // Draw grass across the entire town zone with vertical symmetry
+                const midY = Math.floor(GRID_HEIGHT / 2);
+
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        // Use mirrored Y coordinate for color/seed, but draw at actual position
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+
+                        const grassHue = 70 + (seed % 20);
+                        ctx.fillStyle = `hsl(${grassHue}, 40%, ${25 + (seed % 10)}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+
+                        // Draw grass blades
+                        for (let i = 0; i < 5; i++) {
+                            const pr1 = (seed + i * 123) % 1000 / 1000;
+                            const pr2 = (seed + i * 456) % 1000 / 1000;
+
+                            const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeHeight = 3 + pr1 * 4;
+
+                            ctx.strokeStyle = `rgba(${50 + pr1 * 30}, ${100 + pr2 * 40}, 50, 0.6)`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(bladeX, bladeY);
+                            ctx.quadraticCurveTo(
+                                bladeX + (pr2 - 0.5) * 2,
+                                bladeY - bladeHeight/2,
+                                bladeX + (pr1 - 0.5) * 3,
+                                bladeY - bladeHeight
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+            // Draw flower garden patches around butterflies (4 vertical lines)
+                const flowerGardens = [];
                 
-                // Draw Sky NPC at (16, 2)
+                // Inner-left line: 6,8 to 6,12
+                for (let y = 9; y <= 11; y++) {
+                    flowerGardens.push({ x: 6, y: y });
+                }
+                
+                // Inner-right line: 7,8 to 7,12
+                for (let y = 9; y <= 11; y++) {
+                    flowerGardens.push({ x: 7, y: y });
+                }
+                
+                flowerGardens.forEach(garden => {
+                    const pixel = gridToPixel(garden.x, garden.y);
+                    const seed = garden.x * 1000 + garden.y;
+                    
+                    // Draw softer soil base
+                    const soilHue = 35 + (seed % 10);
+                    ctx.fillStyle = `hsl(${soilHue}, 25%, 35%)`;
+                    
+                    // Draw with rounded edges
+                    ctx.beginPath();
+                    ctx.roundRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE, 6);
+                    ctx.fill();
+                    
+                    // Draw larger, clearer flowers (2-3 per tile)
+                    const flowerCount = 2 + (seed % 2);
+                    for (let i = 0; i < flowerCount; i++) {
+                        const pr1 = (seed + i * 789) % 1000 / 1000;
+                        const pr2 = (seed + i * 321) % 1000 / 1000;
+                        
+                        const flowerX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.6;
+                        const flowerY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.6;
+                        
+                        // Brighter flower colors
+                        const flowerColors = ['#FF1493', '#FFD700', '#FF69B4', '#FF6347', '#00CED1'];
+                        const flowerColor = flowerColors[(seed + i) % flowerColors.length];
+                        
+                        // Draw green stem
+                        ctx.strokeStyle = '#4a7c2f';
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(flowerX, flowerY + 4);
+                        ctx.lineTo(flowerX, flowerY);
+                        ctx.stroke();
+                        
+                        // Draw larger flower head with 6 petals
+                        for (let p = 0; p < 6; p++) {
+                            const angle = (p / 6) * Math.PI * 2;
+                            const petalX = flowerX + Math.cos(angle) * 3.5;
+                            const petalY = flowerY + Math.sin(angle) * 3.5;
+                            
+                            ctx.fillStyle = flowerColor;
+                            ctx.beginPath();
+                            ctx.arc(petalX, petalY, 2.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        
+                        // Draw bright yellow center
+                        ctx.fillStyle = '#FFF700';
+                        ctx.beginPath();
+                        ctx.arc(flowerX, flowerY, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Add white highlight to center
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.beginPath();
+                        ctx.arc(flowerX - 0.5, flowerY - 0.5, 0.8, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+
+                // Town Crier with shadow
+                const npcPixel = gridToPixel(npc.x, npc.y);
+                drawCharacterShadow(npcPixel.x, npcPixel.y, 12);
+                drawTownCrier(npcPixel.x, npcPixel.y);
+
+                // Sky NPC with shadow
                 const skyNPCPixel = gridToPixel(skyNPC.x, skyNPC.y);
+                drawCharacterShadow(skyNPCPixel.x, skyNPCPixel.y, 11);
                 drawSky(skyNPCPixel.x, skyNPCPixel.y);
 
                 // FIXED: Draw quest marker above Sky NPC with visible red exclamation mark
@@ -4100,30 +4292,55 @@
                     drawButterfly(finalX, finalY, currentTime * 0.001);
                 });
                 
-                // Draw merchant cat
+                // Draw merchant cat with shadow
                 const merchantPixel = gridToPixel(merchant.x, merchant.y);
+                drawCharacterShadow(merchantPixel.x, merchantPixel.y, 13);
                 drawMerchantCat(merchantPixel.x, merchantPixel.y);
                 
                 // Trees
                 trees.forEach(tree => {
                     if (!tree.chopped) {
                         const treePixel = gridToPixel(tree.x, tree.y);
-                        
-                        // Draw trunk
+
+                        // Calculate sway based on time and tree position (each tree sways slightly differently)
+                        const sway = Math.sin(currentTime * 0.001 + tree.x * 0.5 + tree.y * 0.3) * 2;
+
+                        // Draw trunk with slight bend at the top
                         ctx.fillStyle = '#8B4513';
-                        ctx.fillRect(treePixel.x - 6, treePixel.y - 5, 12, 20);
-                        
-                        // Draw leaves
+                        ctx.save();
+
+                        // Trunk bends less than leaves (more realistic)
+                        const trunkBend = sway * 0.3; // 30% of leaf sway
+
+                        // Draw trunk as slightly curved trapezoid
+                        ctx.beginPath();
+                        ctx.moveTo(treePixel.x - 6, treePixel.y + 15); // Bottom left (no bend)
+                        ctx.lineTo(treePixel.x + 6, treePixel.y + 15); // Bottom right (no bend)
+                        ctx.lineTo(treePixel.x + 6 + trunkBend, treePixel.y - 5); // Top right (with bend)
+                        ctx.lineTo(treePixel.x - 6 + trunkBend, treePixel.y - 5); // Top left (with bend)
+                        ctx.closePath();
+                        ctx.fill();
+
+                        ctx.restore();
+
+                        // Save context and apply sway transformation to leaves
+                        ctx.save();
+                        ctx.translate(sway, 0); // Apply horizontal sway
+
+                        // Draw leaves with sway
                         ctx.fillStyle = '#228B22';
                         ctx.beginPath();
                         ctx.arc(treePixel.x, treePixel.y - 15, 18, 0, Math.PI * 2);
                         ctx.fill();
-                        
-                        // Draw inner leaves (lighter)
+
+                        // Draw inner leaves (lighter) with same sway
                         ctx.fillStyle = '#32CD32';
                         ctx.beginPath();
                         ctx.arc(treePixel.x - 4, treePixel.y - 18, 12, 0, Math.PI * 2);
                         ctx.fill();
+
+                        // Restore context (removes sway transformation)
+                        ctx.restore();
                     } else {
                         // Draw tree stump
                         const treePixel = gridToPixel(tree.x, tree.y);
@@ -4141,6 +4358,49 @@
                         ctx.stroke();
                     }
                 });
+            }
+
+            if (myZone === 4) {
+                // Draw darker grass across the entire forest zone with vertical symmetry
+                const midY = Math.floor(GRID_HEIGHT / 2);
+                
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        // Use mirrored Y coordinate for color/seed, but draw at actual position
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+                        
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+                        
+                        // Darker forest grass
+                        const grassHue = 65 + (seed % 15);
+                        const grassLightness = 18 + (seed % 8);
+                        ctx.fillStyle = `hsl(${grassHue}, 45%, ${grassLightness}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                        
+                        // Draw grass blades
+                        for (let i = 0; i < 5; i++) {
+                            const pr1 = (seed + i * 123) % 1000 / 1000;
+                            const pr2 = (seed + i * 456) % 1000 / 1000;
+                            
+                            const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeHeight = 3 + pr1 * 4;
+                            
+                            ctx.strokeStyle = `rgba(${35 + pr1 * 25}, ${70 + pr2 * 30}, 35, 0.6)`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(bladeX, bladeY);
+                            ctx.quadraticCurveTo(
+                                bladeX + (pr2 - 0.5) * 2,
+                                bladeY - bladeHeight/2,
+                                bladeX + (pr1 - 0.5) * 3,
+                                bladeY - bladeHeight
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
             }
 
             // Draw zone transition arrows
@@ -4223,6 +4483,122 @@
             }
 
             if (myZone === 3) {
+                // Draw grass across the entire lake zone with vertical symmetry
+                const midY = Math.floor(GRID_HEIGHT / 2);
+
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        // Skip water tiles
+                        if (x >= LAKE_MIN_X && x <= LAKE_MAX_X &&
+                            y >= LAKE_MIN_Y && y <= LAKE_MAX_Y) {
+                            continue;
+                        }
+
+                        // Use mirrored Y coordinate for color/seed, but draw at actual position
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+
+                        // Check if this is part of Sam's darker grass patch
+                        const isSamArea = (x >= 15 && x <= 17 && y >= 8 && y <= 10);
+
+                        const grassHue = 70 + (seed % 20);
+                        const grassLightness = isSamArea ? (20 + (seed % 8)) : (25 + (seed % 10)); // Darker around Sam
+                        ctx.fillStyle = `hsl(${grassHue}, 40%, ${grassLightness}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+
+                        // Draw grass blades
+                        for (let i = 0; i < 5; i++) {
+                            const pr1 = (seed + i * 123) % 1000 / 1000;
+                            const pr2 = (seed + i * 456) % 1000 / 1000;
+
+                            const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeHeight = 3 + pr1 * 4;
+
+                            ctx.strokeStyle = `rgba(${50 + pr1 * 30}, ${100 + pr2 * 40}, 50, 0.6)`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(bladeX, bladeY);
+                            ctx.quadraticCurveTo(
+                                bladeX + (pr2 - 0.5) * 2,
+                                bladeY - bladeHeight/2,
+                                bladeX + (pr1 - 0.5) * 3,
+                                bladeY - bladeHeight
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+            // Draw flower garden patches (natural flower beds)
+                const flowerGardens = [
+                    { x: 4, y: 6 }, { x: 4, y: 7 }, { x: 4, y: 8 },
+                    { x: 2, y: 6 }, { x: 2, y: 7 }, { x: 2, y: 8 }
+                ];
+                
+                flowerGardens.forEach(garden => {
+                    const pixel = gridToPixel(garden.x, garden.y);
+                    const seed = garden.x * 1000 + garden.y;
+                    
+                    // Draw softer soil base (less contrasting brown)
+                    const soilHue = 35 + (seed % 10);
+                    ctx.fillStyle = `hsl(${soilHue}, 25%, 35%)`; // Lighter, less saturated brown
+                    
+                    // Draw with rounded edges
+                    ctx.beginPath();
+                    ctx.roundRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE, 6);
+                    ctx.fill();
+                    
+                    // Draw larger, clearer flowers (2-3 per tile)
+                    const flowerCount = 2 + (seed % 2);
+                    for (let i = 0; i < flowerCount; i++) {
+                        const pr1 = (seed + i * 789) % 1000 / 1000;
+                        const pr2 = (seed + i * 321) % 1000 / 1000;
+                        
+                        const flowerX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.6;
+                        const flowerY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.6;
+                        
+                        // Brighter flower colors
+                        const flowerColors = ['#FF1493', '#FFD700', '#FF69B4', '#FF6347', '#00CED1'];
+                        const flowerColor = flowerColors[(seed + i) % flowerColors.length];
+                        
+                        // Draw green stem
+                        ctx.strokeStyle = '#4a7c2f';
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(flowerX, flowerY + 4);
+                        ctx.lineTo(flowerX, flowerY);
+                        ctx.stroke();
+                        
+                        // Draw larger flower head with 6 petals
+                        for (let p = 0; p < 6; p++) {
+                            const angle = (p / 6) * Math.PI * 2;
+                            const petalX = flowerX + Math.cos(angle) * 3.5;
+                            const petalY = flowerY + Math.sin(angle) * 3.5;
+                            
+                            ctx.fillStyle = flowerColor;
+                            ctx.beginPath();
+                            ctx.arc(petalX, petalY, 2.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        
+                        // Draw bright yellow center
+                        ctx.fillStyle = '#FFF700';
+                        ctx.beginPath();
+                        ctx.arc(flowerX, flowerY, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Add white highlight to center
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.beginPath();
+                        ctx.arc(flowerX - 0.5, flowerY - 0.5, 0.8, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+
+                // Now draw the water (existing code continues here)
                 const currentTime = Date.now();
                 for (let x = LAKE_MIN_X; x <= LAKE_MAX_X; x++) {
                     for (let y = LAKE_MIN_Y; y <= LAKE_MAX_Y; y++) {
@@ -4277,10 +4653,11 @@
                     ctx.fill();
                 }
                 
-                // NEW: Draw quest NPC (Sam) at (15, 9) with cooking animation
+                // Draw quest NPC (Sam) with shadow
                 const questNPCPixel = gridToPixel(questNPC.x, questNPC.y);
+                drawCharacterShadow(questNPCPixel.x, questNPCPixel.y, 10);
                 drawSam(questNPCPixel.x, questNPCPixel.y);
-
+                
                 // Draw permanent cooking animation above quest NPC (Sam)
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                 ctx.beginPath();
@@ -4335,51 +4712,106 @@
                     }
                 }
             });
-
-            function drawGrassTexture(x, y, gridSize) {
+            
+            function drawEnhancedGrass(x, y, gridSize) {
                 const pixel = gridToPixel(x, y);
-                const centerX = pixel.x;
-                const centerY = pixel.y;
-                
                 const seed = x * 1000 + y;
-                
-                ctx.fillStyle = 'rgba(20, 60, 20, 0.1)';
-                ctx.fillRect(centerX - gridSize/2, centerY - gridSize/2, gridSize, gridSize);
-                
-                for (let i = 0; i < 3; i++) {
-                    const pseudoRandom1 = (seed + i * 123) % 1000 / 1000;
-                    const pseudoRandom2 = (seed + i * 456 + 789) % 1000 / 1000;
-                    
-                    const offsetX = (pseudoRandom1 - 0.5) * gridSize * 0.6;
-                    const offsetY = (pseudoRandom2 - 0.5) * gridSize * 0.6;
-                    
-                    ctx.fillStyle = `rgba(${25 + (pseudoRandom1 * 15)}, ${70 + (pseudoRandom2 * 20)}, ${25 + (pseudoRandom1 * 10)}, 0.2)`;
+
+                // Base grass tile with subtle color variation
+                const grassHue = 70 + (seed % 20);
+                ctx.fillStyle = `hsl(${grassHue}, 40%, ${25 + (seed % 10)}%)`;
+                ctx.fillRect(pixel.x - gridSize/2, pixel.y - gridSize/2, gridSize, gridSize);
+
+                // Individual grass blades (4-6 per tile)
+                for (let i = 0; i < 5; i++) {
+                    const pr1 = (seed + i * 123) % 1000 / 1000;
+                    const pr2 = (seed + i * 456) % 1000 / 1000;
+
+                    const bladeX = pixel.x + (pr1 - 0.5) * gridSize * 0.8;
+                    const bladeY = pixel.y + (pr2 - 0.5) * gridSize * 0.8;
+                    const bladeHeight = 3 + pr1 * 4;
+
+                    // Draw grass blade as thin vertical line with slight curve
+                    ctx.strokeStyle = `rgba(${50 + pr1 * 30}, ${100 + pr2 * 40}, 50, 0.6)`;
+                    ctx.lineWidth = 1;
                     ctx.beginPath();
-                    ctx.arc(centerX + offsetX, centerY + offsetY, 1, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.moveTo(bladeX, bladeY);
+                    ctx.quadraticCurveTo(
+                        bladeX + (pr2 - 0.5) * 2,
+                        bladeY - bladeHeight/2,
+                        bladeX + (pr1 - 0.5) * 3,
+                        bladeY - bladeHeight
+                    );
+                    ctx.stroke();
                 }
             }
 
             if (myZone === 2) {
+                // Draw grass with vertical symmetry to avoid dark bottom half
+                const midY = Math.floor(GRID_HEIGHT / 2);
+                
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        // Use mirrored Y coordinate for color/seed, but draw at actual position
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+
+                        // Check if this tile is inside the fence (hay area)
+                        const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
+                        const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
+                        const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
+                        const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
+
+                        // Hay area: inside the fenced area
+                        const isHayArea = (x > fenceMinX && x < fenceMaxX && y > fenceMinY && y < fenceMaxY);
+
+                        let grassHue, saturation, lightness;
+                        if (isHayArea) {
+                            // Golden hay colors
+                            grassHue = 45 + (seed % 15); // Yellow-gold range (45-60)
+                            saturation = 60 + (seed % 20); // More saturated
+                            lightness = 55 + (seed % 15); // Brighter
+                        } else {
+                            // Normal grass
+                            grassHue = 70 + (seed % 20);
+                            saturation = 40;
+                            lightness = 25 + (seed % 10);
+                        }
+
+                        ctx.fillStyle = `hsl(${grassHue}, ${saturation}%, ${lightness}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                        
+                        // Draw grass blades
+                        for (let i = 0; i < 5; i++) {
+                            const pr1 = (seed + i * 123) % 1000 / 1000;
+                            const pr2 = (seed + i * 456) % 1000 / 1000;
+                            
+                            const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
+                            const bladeHeight = 3 + pr1 * 4;
+                            
+                            ctx.strokeStyle = `rgba(${50 + pr1 * 30}, ${100 + pr2 * 40}, 50, 0.6)`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(bladeX, bladeY);
+                            ctx.quadraticCurveTo(
+                                bladeX + (pr2 - 0.5) * 2,
+                                bladeY - bladeHeight/2,
+                                bladeX + (pr1 - 0.5) * 3,
+                                bladeY - bladeHeight
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                // Then draw the fence on top
                 const fenceMinX = Math.floor(GRID_WIDTH * 0.3) - 1;
                 const fenceMaxX = Math.floor(GRID_WIDTH * 0.7) + 1;
                 const fenceMinY = Math.floor(GRID_HEIGHT * 0.3) - 1;
                 const fenceMaxY = Math.floor(GRID_HEIGHT * 0.7) + 1;
-                
-                for (let x = fenceMinX - 2; x <= fenceMaxX + 2; x++) {
-                    for (let y = fenceMinY - 2; y <= fenceMaxY + 2; y++) {
-                        if (x >= 0 && x < GRID_WIDTH && y >= 0 && y < GRID_HEIGHT) {
-                            const distanceFromFence = Math.min(
-                                Math.abs(x - fenceMinX), Math.abs(x - fenceMaxX),
-                                Math.abs(y - fenceMinY), Math.abs(y - fenceMaxY)
-                            );
-                            
-                            if (distanceFromFence <= 3) {
-                                drawGrassTexture(x, y, GRID_SIZE);
-                            }
-                        }
-                    }
-                }
                 
                 ctx.strokeStyle = '#8B4513';
                 ctx.lineWidth = 3;
@@ -4422,12 +4854,16 @@
                         if (mobZone !== myZone) return;
                         
                         const mobPixel = gridToPixel(mob.x, mob.y);
-                        
+
+                        // Draw shadow first, then mob on top
                         if (mob.type === 'chicken') {
+                            drawCharacterShadow(mobPixel.x, mobPixel.y, 8);
                             drawChicken(mobPixel.x, mobPixel.y);
                         } else if (mob.type === 'mouse') {
+                            drawCharacterShadow(mobPixel.x, mobPixel.y, 6);
                             drawMouse(mobPixel.x, mobPixel.y);
                         } else if (mob.type === 'goblin') {
+                            drawCharacterShadow(mobPixel.x, mobPixel.y, 14);
                             drawGoblin(mobPixel.x, mobPixel.y);
                         }
                         
@@ -4536,23 +4972,29 @@
                         return;
                     }
                     
-                    // Draw player sprite instead of circle
-                    drawPlayerSprite(playerPixel.x, playerPixel.y, player.direction || 'down', player.color || '#4ecdc4');
-
+                    // Draw shadow first (so it appears behind sprite)
                     if (id === playerId) {
-                        // Draw subtle ground shadow/indicator for local player
-                        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                        // Local player gets a slightly different shadow (white tint + outline)
+                        drawCharacterShadow(playerPixel.x, playerPixel.y, 12);
+
+                        // Add white highlight for local player
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
                         ctx.beginPath();
                         ctx.ellipse(playerPixel.x, playerPixel.y + 18, 12, 4, 0, 0, Math.PI * 2);
                         ctx.fill();
 
-                        // Optional: Add a thin outline at feet level
-                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.ellipse(playerPixel.x, playerPixel.y + 18, 12, 4, 0, 0, Math.PI * 2);
                         ctx.stroke();
+                    } else {
+                        // Other players get standard shadow
+                        drawCharacterShadow(playerPixel.x, playerPixel.y, 12);
                     }
+
+                    // Draw player sprite on top of shadow
+                    drawPlayerSprite(playerPixel.x, playerPixel.y, player.direction || 'down', player.color || '#4ecdc4');
 
                     // Draw direction arrow for local player only
                     if (id === playerId) {
@@ -4800,20 +5242,32 @@
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
                 const maxTextWidth = dialogBoxWidth - 40;
-                
+
+                // Update typewriter effect
+                updateTypewriter(Date.now());
+
                 // Draw NPC name tab
                 if (currentDialogNPC) {
                     drawNPCNameTab(currentDialogNPC, dialogBoxX, dialogBoxY, dialogBoxWidth);
                 }
-                
+
+                // Subtle border glow/pulse effect
+                const pulseIntensity = 0.3 + Math.sin(Date.now() * 0.003) * 0.15;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgba(159, 216, 159, ${pulseIntensity})`;
+
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
                 ctx.strokeStyle = '#4a6b47';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
-                const wrappedLines = wrapText(dialogText, maxTextWidth, '16px Courier New');
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+
+                // Use displayedText instead of dialogText for typewriter effect
+                const wrappedLines = wrapText(displayedText, maxTextWidth, '16px Courier New');
                 ctx.fillStyle = '#e8f5e8';
                 ctx.font = '16px Courier New';
                 ctx.textAlign = 'left';
@@ -4824,7 +5278,12 @@
                 
                 ctx.font = '12px Courier New';
                 ctx.fillStyle = '#a8c5a8';
-                ctx.fillText('Press ESC or any movement key to close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                // Show different instruction if typewriter is still active
+                if (isTypewriterActive && charIndex < dialogText.length) {
+                    ctx.fillText('ENTER: Skip | ESC/WASD: Close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                } else {
+                    ctx.fillText('Press ESC or any movement key to close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                }
             }
 
             if (showCookingDialog) {
@@ -4835,17 +5294,27 @@
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
                 const maxTextWidth = dialogBoxWidth - 40;
-                
+
+                // Update typewriter effect
+                updateTypewriter(Date.now());
+
+                // Subtle border glow/pulse effect
+                const pulseIntensity = 0.3 + Math.sin(Date.now() * 0.003) * 0.15;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgba(159, 216, 159, ${pulseIntensity})`;
+
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
                 ctx.strokeStyle = '#4a6b47';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
-                // Main instruction text with word wrapping
-                const mainText = 'I can cook food here';
-                const wrappedMainLines = wrapText(mainText, maxTextWidth, '16px Courier New');
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+
+                // Main instruction text with typewriter and word wrapping
+                const wrappedMainLines = wrapText(displayedText, maxTextWidth, '16px Courier New');
                 
                 ctx.fillStyle = '#e8f5e8';
                 ctx.font = '16px Courier New';
@@ -4876,7 +5345,11 @@
                 
                 ctx.font = '12px Courier New';
                 ctx.fillStyle = '#a8c5a8';
-                ctx.fillText('TAB: Cycle | ENTER: Cook | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                if (isTypewriterActive && charIndex < dialogText.length) {
+                    ctx.fillText('ENTER: Skip | TAB: Cycle | ESC: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                } else {
+                    ctx.fillText('TAB: Cycle | ENTER: Cook | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                }
             }
 
             if (showLevelUpPopup && levelUpPopupTimer > 0) {
@@ -4967,18 +5440,35 @@
                 const dialogBoxHeight = 100;
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
-                
+                const maxTextWidth = dialogBoxWidth - 40;
+
+                // Update typewriter effect
+                updateTypewriter(Date.now());
+
+                // Subtle border glow/pulse effect
+                const pulseIntensity = 0.3 + Math.sin(Date.now() * 0.003) * 0.15;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgba(159, 216, 159, ${pulseIntensity})`;
+
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
                 ctx.strokeStyle = '#4a6b47';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+
+                // Use displayedText with word wrapping
+                const wrappedLines = wrapText(displayedText, maxTextWidth, '16px Courier New');
                 ctx.fillStyle = '#e8f5e8';
                 ctx.font = '16px Courier New';
                 ctx.textAlign = 'left';
-                ctx.fillText('Chop down the tree?', textStartX, textStartY);
+
+                wrappedLines.forEach((line, index) => {
+                    ctx.fillText(line, textStartX, textStartY + (index * 20));
+                });
                 
                 // Draw options side by side
                 const yesText = selectedWoodcuttingOption === 0 ? '> Yes' : '  Yes';
@@ -4990,7 +5480,11 @@
                 
                 ctx.font = '12px Courier New';
                 ctx.fillStyle = '#a8c5a8';
-                ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                if (isTypewriterActive && charIndex < dialogText.length) {
+                    ctx.fillText('ENTER: Skip | TAB: Cycle | ESC: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                } else {
+                    ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                }
             }
 
             if (showMerchantDialog) {
@@ -5000,21 +5494,38 @@
                 const dialogBoxHeight = 100;
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
-                
+                const maxTextWidth = dialogBoxWidth - 40;
+
+                // Update typewriter effect
+                updateTypewriter(Date.now());
+
                 // Draw NPC name tab
                 drawNPCNameTab('Merchant', dialogBoxX, dialogBoxY, dialogBoxWidth);
-                
+
+                // Subtle border glow/pulse effect
+                const pulseIntensity = 0.3 + Math.sin(Date.now() * 0.003) * 0.15;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgba(159, 216, 159, ${pulseIntensity})`;
+
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
                 ctx.strokeStyle = '#4a6b47';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+
+                // Use displayedText with word wrapping
+                const wrappedLines = wrapText(displayedText, maxTextWidth, '16px Courier New');
                 ctx.fillStyle = '#e8f5e8';
                 ctx.font = '16px Courier New';
                 ctx.textAlign = 'left';
-                ctx.fillText('*meow* hey, wanna trade? ;3', textStartX, textStartY);
+
+                wrappedLines.forEach((line, index) => {
+                    ctx.fillText(line, textStartX, textStartY + (index * 20));
+                });
                 
                 // Draw options side by side
                 const buyText = selectedTradeOption === 0 ? '> Buy' : '  Buy';
@@ -5026,7 +5537,12 @@
                 
                 ctx.font = '12px Courier New';
                 ctx.fillStyle = '#a8c5a8';
-                ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                // Show different instruction if typewriter is still active
+                if (isTypewriterActive && charIndex < dialogText.length) {
+                    ctx.fillText('ENTER: Skip | TAB: Cycle | ESC: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                } else {
+                    ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                }
             }
 
             // FIXED: Draw quest dialog with Sky NPC providing the Goblin Slayer quest
@@ -5037,76 +5553,74 @@
                 const dialogBoxHeight = 100;
                 const textStartX = dialogBoxX + 20;
                 const textStartY = dialogBoxY + 30;
-                
+                const maxTextWidth = dialogBoxWidth - 40;
+
+                // Update typewriter effect
+                updateTypewriter(Date.now());
+
                 // Draw NPC name tab
                 const npcName = currentDialogNPC === 'Sky' ? 'Sky' : 'Sam';
                 drawNPCNameTab(npcName, dialogBoxX, dialogBoxY, dialogBoxWidth);
-                
+
+                // Subtle border glow/pulse effect
+                const pulseIntensity = 0.3 + Math.sin(Date.now() * 0.003) * 0.15;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = `rgba(159, 216, 159, ${pulseIntensity})`;
+
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.fillRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
                 ctx.strokeStyle = '#4a6b47';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(dialogBoxX, dialogBoxY, dialogBoxWidth, dialogBoxHeight);
-                
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+
+                // Use displayedText with word wrapping
+                const wrappedLines = wrapText(displayedText, maxTextWidth, '16px Courier New');
                 ctx.fillStyle = '#e8f5e8';
                 ctx.font = '16px Courier New';
                 ctx.textAlign = 'left';
-                
-                if (currentDialogNPC === 'Sky') {
-                    // FIXED: Sky's goblin quest dialog
-                    if (questDialogType === 'initial') {
-                        ctx.fillText('The forest is overrun with goblins! Clear out 4 of them for a reward!', textStartX, textStartY);
-                        
-                        // Draw options side by side
-                        const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
-                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
-                        
-                        ctx.font = '14px Courier New';
-                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
-                        ctx.fillText(noText, textStartX + 150, textStartY + 40);
-                    } else if (questDialogType === 'completion') {
-                        ctx.fillText('Excellent work! You\'ve cleared the goblins. Here\'s your 40 gold reward!', textStartX, textStartY);
-                        
-                        // Draw options side by side
-                        const yesText = selectedQuestOption === 0 ? '> Yes (40 gold)' : '  Yes (40 gold)';
-                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
-                        
-                        ctx.font = '14px Courier New';
-                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
-                        ctx.fillText(noText, textStartX + 270, textStartY + 40);
-                    }
-                } else {
-                    // Sam's fish quest dialog
-                    if (questDialogType === 'initial') {
-                        ctx.fillText('Would you mind bringing me 5 fish? I\'ll give you a nice reward!', textStartX, textStartY);
-                        
-                        // Draw options side by side
-                        const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
-                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
-                        
-                        ctx.font = '14px Courier New';
-                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
-                        ctx.fillText(noText, textStartX + 150, textStartY + 40);
-                    } else if (questDialogType === 'completion') {
-                        ctx.fillText('Perfect! You have the fish I need. Trade 5 fish for 30 gold?', textStartX, textStartY);
-                        
-                        // Draw options side by side
-                        const yesText = selectedQuestOption === 0 ? '> Yes (30 gold)' : '  Yes (30 gold)';
-                        const noText = selectedQuestOption === 1 ? '> No' : '  No';
-                        
-                        ctx.font = '14px Courier New';
-                        ctx.fillText(yesText, textStartX + 50, textStartY + 40);
-                        ctx.fillText(noText, textStartX + 250, textStartY + 40);
-                    }
+
+                wrappedLines.forEach((line, index) => {
+                    ctx.fillText(line, textStartX, textStartY + (index * 20));
+                });
+
+                // Draw quest dialog options (Yes/No)
+                const yesText = selectedQuestOption === 0 ? '> Yes' : '  Yes';
+                const noText = selectedQuestOption === 1 ? '> No' : '  No';
+
+                // Position options below the wrapped text
+                const optionsY = textStartY + (wrappedLines.length * 20) + 20;
+
+                ctx.font = '14px Courier New';
+
+                if (questDialogType === 'initial') {
+                    ctx.fillText(yesText, textStartX + 50, optionsY);
+                    ctx.fillText(noText, textStartX + 150, optionsY);
+                } else if (questDialogType === 'completion') {
+                    // Show gold amount in options
+                    const goldAmount = currentDialogNPC === 'Sky' ? '40 gold' : '30 gold';
+                    const yesTextWithGold = selectedQuestOption === 0 ? `> Yes (${goldAmount})` : `  Yes (${goldAmount})`;
+                    ctx.fillText(yesTextWithGold, textStartX + 50, optionsY);
+                    ctx.fillText(noText, textStartX + 250, optionsY);
                 }
-                
+
                 ctx.font = '12px Courier New';
                 ctx.fillStyle = '#a8c5a8';
-                if (questDialogType === 'initial') {
-                    ctx.fillText('TAB: Cycle | ENTER: Select | ESC: Close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                if (isTypewriterActive && charIndex < dialogText.length) {
+                    if (questDialogType === 'initial') {
+                        ctx.fillText('ENTER: Skip | TAB: Cycle | ESC: Close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                    } else {
+                        ctx.fillText('ENTER: Skip | TAB: Cycle | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                    }
                 } else {
-                    ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                    if (questDialogType === 'initial') {
+                        ctx.fillText('TAB: Cycle | ENTER: Select | ESC: Close', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                    } else {
+                        ctx.fillText('TAB: Cycle | ENTER: Select | ESC/WASD: Cancel', textStartX, dialogBoxY + dialogBoxHeight - 15);
+                    }
                 }
             }
 
@@ -5268,6 +5782,20 @@
             }
             
             if (e.key === 'Enter') {
+                // CRITICAL: Check if typewriter is ACTIVELY running (not just finished)
+                if (isTypewriterActive && charIndex < dialogText.length &&
+                    (showDialog || showMerchantDialog || showQuestDialog || showCookingDialog || showWoodcuttingDialog)) {
+                    skipTypewriter();
+                    e.preventDefault();
+                    return; // Stop here, don't process dialog actions yet
+                }
+
+                // NEW: If we just skipped typewriter, don't process other actions yet
+                if (typewriterJustSkipped) {
+                    e.preventDefault();
+                    return;
+                }
+                
                 if (showInventory && isSelectingFiremaking) {
                     // Handle firemaking ENTER selection
                     if (firemakingStep === 0 && firemakingOptions.length > 0) {
@@ -5332,7 +5860,7 @@
                                 skyQuestActive = true;
                                 showDialog = true;
                                 currentDialogNPC = 'Sky';
-                                dialogText = "Perfect! Head north to the forest and clear out those goblins. I'll be waiting!";
+                                startTypewriter("Perfect! Head north to the forest and clear out those goblins. I'll be waiting!");
                             } else {
                                 // Sam's fish quest
                                 const fishQuest = {
@@ -5344,12 +5872,12 @@
                                 questNPCActive = true;
                                 showDialog = true;
                                 currentDialogNPC = 'Sam';
-                                dialogText = "Wonderful! I'll be waiting here for those 5 fish.";
+                                startTypewriter("Wonderful! I'll be waiting here for those 5 fish.");
                             }
                         } else {
                             // Declined quest
                             showDialog = true;
-                            dialogText = "If you change your mind I'll be right here!";
+                            startTypewriter("If you change your mind I'll be right here!");
                         }
                         showQuestDialog = false;
                     } else if (questDialogType === 'completion' && selectedQuestOption === 0) {
@@ -5365,7 +5893,7 @@
 
                             showDialog = true;
                             currentDialogNPC = 'Sky';
-                            dialogText = "Excellent! Here's your reward. Thank you for clearing out those goblins!";
+                            startTypewriter("Excellent! Here's your reward. Thank you for clearing out those goblins!");
                         } else {
                             // Complete Sam's fish quest - remove 5 fish and give 30 gold + 20 XP
                             let fishRemoved = 0;
@@ -5390,7 +5918,7 @@
 
                             showDialog = true;
                             currentDialogNPC = 'Sam';
-                            dialogText = "Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!";
+                            startTypewriter("Excellent! Here's your reward. Thanks for helping me catch those fish, this stew is going to be delicious!");
                         }
                         showQuestDialog = false;
                     } else {
@@ -5400,6 +5928,14 @@
                 }
             }
             
+            // Skip typewriter with ENTER (only when no other dialogs are active)
+            if (e.key === 'Enter' && isTypewriterActive &&
+                (showDialog || showMerchantDialog || showQuestDialog || showCookingDialog || showWoodcuttingDialog)) {
+                skipTypewriter();
+                e.preventDefault(); // Prevent ENTER from triggering other actions
+                return;
+            }
+
             if (e.key === 'Escape') {
                 if (showInventory) {
                     if (isSelectingFiremaking) {
@@ -5425,6 +5961,7 @@
                     showQuestDialog = false;
                 } else if (showDialog) {
                     showDialog = false;
+                    isTypewriterActive = false; // Reset typewriter
                 }
                 return;
             }
@@ -5490,6 +6027,7 @@
                 showMerchantDialog = false;
                 showQuestDialog = false;
                 currentTree = null;
+                isTypewriterActive = false; // Reset typewriter
                 stopFishing();
                 stopCooking();
                 stopWoodcutting();
