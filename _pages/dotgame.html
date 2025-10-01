@@ -900,6 +900,9 @@
         let isAttacking = false;
         let attackStartTime = 0;
         let attackDuration = 300; // Attack animation lasts 300ms
+        let attackComboCount = 0; // Tracks which attack in combo (0, 1, or 2)
+        let lastAttackTime = 0; // Track time of last attack for combo reset
+        const comboResetTime = 1000; // Reset combo after 1 second of no attacks
         
         // Merchant trading system
         let showMerchantDialog = false;
@@ -1266,6 +1269,7 @@
                     isCooking: isCooking,
                     isWoodcutting: isWoodcutting,
                     isAttacking: isAttacking,
+                    attackComboCount: attackComboCount,
                     isFiremaking: isFiremaking,
                     level: playerLevel,
                     exp: playerEXP,
@@ -1689,18 +1693,30 @@
 
         function performMeleeAttack() {
             if (myHealth <= 0 || isRespawning || isFishing || isCooking || isWoodcutting || isAttacking) return;
-            
+
             // Check if sword is equipped
             if (!equippedWeapon || equippedWeapon.id !== 'sword') {
                 return; // No sword equipped, can't attack
             }
-            
+
+            // Check if combo should reset (too much time passed)
+            const now = Date.now();
+            if (now - lastAttackTime > comboResetTime) {
+                attackComboCount = 0;
+            }
+
             // PLAY SWORD SOUND when attacking with sword
             playSwordStabSound();
-            
+
             isAttacking = true;
             attackStartTime = Date.now();
+            lastAttackTime = Date.now();
             updatePlayerData();
+
+            // After attack finishes, increment combo count
+            setTimeout(() => {
+                attackComboCount = (attackComboCount + 1) % 3; // Cycle 0 -> 1 -> 2 -> 0
+            }, attackDuration);
             
             // Calculate attack position based on direction
             const directions = {
@@ -1719,21 +1735,50 @@
             // Check for mobs in attack range (Wilderness and Forest zones)
             if (myZone === 2 || myZone === 4) {
                 Object.entries(mobs).forEach(([mobId, mob]) => {
-                    if (mob && mob.health > 0 && 
-                        mob.x === attackX && 
+                    if (mob && mob.health > 0 &&
+                        mob.x === attackX &&
                         mob.y === attackY) {
-                        
+
                         // Only attack mobs in current zone
                         const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
                         if (mobZone !== myZone) return;
-                        
+
                         console.log(`Melee attack hit ${mob.type} at ${mob.x}, ${mob.y}`);
+
+                        // Check if this is the third attack (knockback attack)
+                        const isKnockbackAttack = (attackComboCount === 2);
                         
                         // Calculate damage based on Attack skill level
                         const attackDamage = playerAttack >= ATTACK_DAMAGE_THRESHOLD ? ENHANCED_DAMAGE : BASE_DAMAGE;
                         const newHealth = Math.max(0, mob.health - attackDamage);
                         const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
                         
+                        // Apply knockback if it's the third attack
+                        let knockbackX = mob.x;
+                        let knockbackY = mob.y;
+
+                        if (isKnockbackAttack && newHealth > 0) {
+                            // Calculate knockback direction (2 tiles back)
+                            const knockbackDistance = 2;
+
+                            switch (myDirection) {
+                                case 'up':
+                                    knockbackY = Math.max(1, mob.y - knockbackDistance);
+                                    break;
+                                case 'down':
+                                    knockbackY = Math.min(GRID_HEIGHT - 2, mob.y + knockbackDistance);
+                                    break;
+                                case 'left':
+                                    knockbackX = Math.max(1, mob.x - knockbackDistance);
+                                    break;
+                                case 'right':
+                                    knockbackX = Math.min(GRID_WIDTH - 2, mob.x + knockbackDistance);
+                                    break;
+                            }
+
+                            console.log(`Knockback! Moving ${mob.type} from ${mob.x},${mob.y} to ${knockbackX},${knockbackY}`);
+                        }
+
                         if (newHealth <= 0) {
                             console.log(`${mob.type} ${mobId} killed by melee attack - creating drops`);
                             
@@ -1790,9 +1835,10 @@
                             }
                             
                             // FIXED: Set respawn timer for ALL mobs (goblins, chickens, mice)
-                            set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
+                              set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
                         } else {
-                            set(mobRef, { ...mob, health: newHealth });
+                            // Mob is still alive - update health and position (with knockback if applicable)
+                            set(mobRef, { ...mob, health: newHealth, x: knockbackX, y: knockbackY });
                         }
                         
                         givePlayerEXP(3); // Give some general XP for combat
@@ -2315,8 +2361,8 @@
                             set(mobRef, {
                                 x: pos.x,
                                 y: pos.y,
-                                health: 3,
-                                maxHealth: 3,
+                                health: 5,
+                                maxHealth: 5,
                                 type: 'goblin',
                                 lastMove: Date.now(),
                                 moveCounter: 0,
@@ -5167,50 +5213,242 @@
                         const direction = player.direction || 'right';
                         const attackElapsed = Date.now() - (attackStartTime || Date.now());
                         const attackProgress = Math.min(attackElapsed / attackDuration, 1);
-                        
-                        // Simple stab animation - extend sword forward and back
-                        const stabDistance = Math.sin(attackProgress * Math.PI) * 25; // Stab forward and back
-                        let swordX = playerPixel.x;
-                        let swordY = playerPixel.y;
-                        
-                        // Calculate sword position based on direction
-                        switch (direction) {
-                            case 'up':
-                                swordX = playerPixel.x;
-                                swordY = playerPixel.y - 15 - stabDistance;
-                                break;
-                            case 'down':
-                                swordX = playerPixel.x;
-                                swordY = playerPixel.y + 15 + stabDistance;
-                                break;
-                            case 'left':
-                                swordX = playerPixel.x - 15 - stabDistance;
-                                swordY = playerPixel.y;
-                                break;
-                            case 'right':
-                                swordX = playerPixel.x + 15 + stabDistance;
-                                swordY = playerPixel.y;
-                                break;
+
+                        const totalSwordLength = 40;
+                        const hiltLength = 10;
+                        const bladeLength = totalSwordLength - hiltLength;
+                        const hiltThickness = 6;
+
+                        // Determine if this is a swing or stab based on direction and combo
+                        const isVertical = (direction === 'up' || direction === 'down');
+                        const isThirdAttack = (id === playerId && attackComboCount === 2);
+                        const useSwingAnimation = !isVertical && !isThirdAttack;
+
+                        // Draw special effect for knockback attack (third attack)
+                        if (id === playerId && attackComboCount === 2 && attackProgress > 0.3 && attackProgress < 0.7) {
+                            // Draw impact lines/effect during the peak of the stab
+                            ctx.strokeStyle = 'rgba(255, 255, 0, 0.6)';
+                            ctx.lineWidth = 2;
+
+                            const impactDistance = 45; // Distance of impact lines
+
+                            if (direction === 'left') {
+                                for (let i = 0; i < 3; i++) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(playerPixel.x - 40, playerPixel.y - 10 + (i * 10));
+                                    ctx.lineTo(playerPixel.x - impactDistance, playerPixel.y - 10 + (i * 10));
+                                    ctx.stroke();
+                                }
+                            } else if (direction === 'right') {
+                                for (let i = 0; i < 3; i++) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(playerPixel.x + 40, playerPixel.y - 10 + (i * 10));
+                                    ctx.lineTo(playerPixel.x + impactDistance, playerPixel.y - 10 + (i * 10));
+                                    ctx.stroke();
+                                }
+                            } else if (direction === 'up') {
+                                for (let i = 0; i < 3; i++) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(playerPixel.x - 10 + (i * 10), playerPixel.y - 40);
+                                    ctx.lineTo(playerPixel.x - 10 + (i * 10), playerPixel.y - impactDistance);
+                                    ctx.stroke();
+                                }
+                            } else if (direction === 'down') {
+                                for (let i = 0; i < 3; i++) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(playerPixel.x - 10 + (i * 10), playerPixel.y + 40);
+                                    ctx.lineTo(playerPixel.x - 10 + (i * 10), playerPixel.y + impactDistance);
+                                    ctx.stroke();
+                                }
+                            }
                         }
-                        
-                        // Draw simple sword/stick
-                        ctx.fillStyle = '#8B4513'; // Brown handle
-                        if (direction === 'up' || direction === 'down') {
-                            ctx.fillRect(swordX - 2, swordY - 10, 4, 20); // Vertical sword
+
+                        if (useSwingAnimation) {
+                            // SWING ANIMATION (for left/right first two attacks)
+                            const verticalOffset = -20 + (20 * attackProgress);
+
+                            if (direction === 'left') {
+                                const baseX = playerPixel.x - 10;
+                                const baseY = playerPixel.y;
+
+                                const endX = baseX - totalSwordLength;
+                                const endY = baseY + verticalOffset;
+
+                                const angle = Math.atan2(endY - baseY, endX - baseX);
+
+                                const hiltEndX = baseX + Math.cos(angle) * hiltLength;
+                                const hiltEndY = baseY + Math.sin(angle) * hiltLength;
+
+                                const bladeEndX = hiltEndX + Math.cos(angle) * bladeLength;
+                                const bladeEndY = hiltEndY + Math.sin(angle) * bladeLength;
+
+                                // Draw hilt
+                                ctx.strokeStyle = '#8B4513';
+                                ctx.lineWidth = hiltThickness;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(baseX, baseY);
+                                ctx.lineTo(hiltEndX, hiltEndY);
+                                ctx.stroke();
+
+                                // Draw blade
+                                ctx.strokeStyle = '#C0C0C0';
+                                ctx.lineWidth = 3;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(hiltEndX, hiltEndY);
+                                ctx.lineTo(bladeEndX, bladeEndY);
+                                ctx.stroke();
+
+                            } else if (direction === 'right') {
+                                const baseX = playerPixel.x + 10;
+                                const baseY = playerPixel.y;
+
+                                const endX = baseX + totalSwordLength;
+                                const endY = baseY + verticalOffset;
+
+                                const angle = Math.atan2(endY - baseY, endX - baseX);
+
+                                const hiltEndX = baseX + Math.cos(angle) * hiltLength;
+                                const hiltEndY = baseY + Math.sin(angle) * hiltLength;
+
+                                const bladeEndX = hiltEndX + Math.cos(angle) * bladeLength;
+                                const bladeEndY = hiltEndY + Math.sin(angle) * bladeLength;
+
+                                // Draw hilt
+                                ctx.strokeStyle = '#8B4513';
+                                ctx.lineWidth = hiltThickness;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(baseX, baseY);
+                                ctx.lineTo(hiltEndX, hiltEndY);
+                                ctx.stroke();
+
+                                // Draw blade
+                                ctx.strokeStyle = '#C0C0C0';
+                                ctx.lineWidth = 3;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(hiltEndX, hiltEndY);
+                                ctx.lineTo(bladeEndX, bladeEndY);
+                                ctx.stroke();
+                            }
                         } else {
-                            ctx.fillRect(swordX - 10, swordY - 2, 20, 4); // Horizontal sword
-                        }
-                        
-                        // Draw blade tip
-                        ctx.fillStyle = '#C0C0C0'; // Silver tip
-                        if (direction === 'up') {
-                            ctx.fillRect(swordX - 1, swordY - 12, 2, 5);
-                        } else if (direction === 'down') {
-                            ctx.fillRect(swordX - 1, swordY + 7, 2, 5);
-                        } else if (direction === 'left') {
-                            ctx.fillRect(swordX - 12, swordY - 1, 5, 2);
-                        } else if (direction === 'right') {
-                            ctx.fillRect(swordX + 7, swordY - 1, 5, 2);
+                            // STAB ANIMATION (for up/down always, and left/right third attack)
+                            const stabDistance = Math.sin(attackProgress * Math.PI) * 25;
+
+                            if (direction === 'left') {
+                                const baseX = playerPixel.x - stabDistance;
+                                const baseY = playerPixel.y;
+
+                                const hiltEndX = baseX - hiltLength;
+                                const hiltEndY = baseY;
+
+                                const bladeEndX = hiltEndX - bladeLength;
+                                const bladeEndY = baseY;
+
+                                // Draw hilt
+                                ctx.strokeStyle = '#8B4513';
+                                ctx.lineWidth = hiltThickness;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(baseX, baseY);
+                                ctx.lineTo(hiltEndX, hiltEndY);
+                                ctx.stroke();
+
+                                // Draw blade
+                                ctx.strokeStyle = '#C0C0C0';
+                                ctx.lineWidth = 3;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(hiltEndX, hiltEndY);
+                                ctx.lineTo(bladeEndX, bladeEndY);
+                                ctx.stroke();
+
+                            } else if (direction === 'right') {
+                                const baseX = playerPixel.x + stabDistance;
+                                const baseY = playerPixel.y;
+
+                                const hiltEndX = baseX + hiltLength;
+                                const hiltEndY = baseY;
+
+                                const bladeEndX = hiltEndX + bladeLength;
+                                const bladeEndY = baseY;
+
+                                // Draw hilt
+                                ctx.strokeStyle = '#8B4513';
+                                ctx.lineWidth = hiltThickness;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(baseX, baseY);
+                                ctx.lineTo(hiltEndX, hiltEndY);
+                                ctx.stroke();
+
+                                // Draw blade
+                                ctx.strokeStyle = '#C0C0C0';
+                                ctx.lineWidth = 3;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(hiltEndX, hiltEndY);
+                                ctx.lineTo(bladeEndX, bladeEndY);
+                                ctx.stroke();
+
+                            } else if (direction === 'up') {
+                                const baseX = playerPixel.x;
+                                const baseY = playerPixel.y - stabDistance;
+
+                                const hiltEndX = baseX;
+                                const hiltEndY = baseY - hiltLength;
+
+                                const bladeEndX = baseX;
+                                const bladeEndY = hiltEndY - bladeLength;
+
+                                // Draw hilt
+                                ctx.strokeStyle = '#8B4513';
+                                ctx.lineWidth = hiltThickness;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(baseX, baseY);
+                                ctx.lineTo(hiltEndX, hiltEndY);
+                                ctx.stroke();
+
+                                // Draw blade
+                                ctx.strokeStyle = '#C0C0C0';
+                                ctx.lineWidth = 3;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(hiltEndX, hiltEndY);
+                                ctx.lineTo(bladeEndX, bladeEndY);
+                                ctx.stroke();
+
+                            } else if (direction === 'down') {
+                                const baseX = playerPixel.x;
+                                const baseY = playerPixel.y + stabDistance;
+
+                                const hiltEndX = baseX;
+                                const hiltEndY = baseY + hiltLength;
+
+                                const bladeEndX = baseX;
+                                const bladeEndY = hiltEndY + bladeLength;
+
+                                // Draw hilt
+                                ctx.strokeStyle = '#8B4513';
+                                ctx.lineWidth = hiltThickness;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(baseX, baseY);
+                                ctx.lineTo(hiltEndX, hiltEndY);
+                                ctx.stroke();
+
+                                // Draw blade
+                                ctx.strokeStyle = '#C0C0C0';
+                                ctx.lineWidth = 3;
+                                ctx.lineCap = 'round';
+                                ctx.beginPath();
+                                ctx.moveTo(hiltEndX, hiltEndY);
+                                ctx.lineTo(bladeEndX, bladeEndY);
+                                ctx.stroke();
+                            }
                         }
                     }
 
@@ -6222,8 +6460,8 @@
                         set(mobRef, {
                             x: respawnPos.x,
                             y: respawnPos.y,
-                            health: 3,
-                            maxHealth: 3,
+                            health: 5,
+                            maxHealth: 5,
                             type: 'goblin',
                             lastMove: Date.now(),
                             moveCounter: 0,
@@ -6294,8 +6532,8 @@
                             set(mobRef, {
                                 x: pos.x,
                                 y: pos.y,
-                                health: 3,
-                                maxHealth: 3,
+                                health: 5,
+                                maxHealth: 5,
                                 type: 'goblin',
                                 lastMove: Date.now(),
                                 moveCounter: 0,
@@ -6528,8 +6766,12 @@
                                     newX = Math.max(1, Math.min(GRID_WIDTH - 2, newX));
                                     newY = Math.max(1, Math.min(GRID_HEIGHT - 2, newY));
                                     
-                                    // Check if target position is occupied
-                                    if (!isPositionOccupied(newX, newY) || (newX === myGridPos.x && newY === myGridPos.y)) {
+                                    // Check if target position is occupied by terrain
+                                    const isBlocked = isPositionOccupied(newX, newY);
+                                    const isPlayerPosition = (newX === myGridPos.x && newY === myGridPos.y);
+
+                                    if (!isBlocked && !isPlayerPosition) {
+                                        // Safe to move - no terrain or player blocking
                                         const mobRef = ref(database, `forestMobs/${mobId}`);
                                         set(mobRef, {
                                             ...mob,
@@ -6539,12 +6781,18 @@
                                             moveCounter: moveCounter + 1,
                                             isAggro: true
                                         });
-                                        
-                                        // Check if goblin reached player for attack
-                                        if (newX === myGridPos.x && newY === myGridPos.y) {
-                                            takeDamage(); // Goblin attacks player
-                                            console.log('Goblin attacked player!');
-                                        }
+                                    } else if (isPlayerPosition) {
+                                        // Goblin is trying to move onto player - attack instead!
+                                        takeDamage();
+                                        console.log('Goblin attacked player at close range!');
+
+                                        // Update lastMove to prevent attack spam
+                                        const mobRef = ref(database, `forestMobs/${mobId}`);
+                                        set(mobRef, {
+                                            ...mob,
+                                            lastMove: currentTime,
+                                            isAggro: true
+                                        });
                                     }
                                 }
                             } else if (mob.isAggro) {
@@ -6641,8 +6889,8 @@
                 set(mobRef, {
                     x: pos.x,
                     y: pos.y,
-                    health: 3,
-                    maxHealth: 3,
+                    health: 5,
+                    maxHealth: 5,
                     type: 'goblin',
                     lastMove: Date.now(),
                     moveCounter: 0,
