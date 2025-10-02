@@ -952,8 +952,9 @@
             id: 'sword',
             name: 'Old Sword',
             description: 'An old rusty sword. Still sharp enough to hurt.',
-            icon: '⚔️',
-            type: 'weapon'
+            icon: '🗡️',
+            type: 'weapon',
+            rotateIcon: true  // NEW: Flag to rotate this icon
         };
         
         inventory[1] = {
@@ -2088,8 +2089,16 @@
                 
                 if (inventory[i]) {
                     slot.classList.add('occupied');
-                    slot.textContent = inventory[i].icon;
-                    
+
+                    // NEW: Create a span for the icon so we can rotate it without affecting the slot
+                    const iconSpan = document.createElement('span');
+                    iconSpan.textContent = inventory[i].icon;
+                    if (inventory[i].rotateIcon) {
+                        iconSpan.style.display = 'inline-block';
+                        iconSpan.style.transform = 'rotate(90deg)';
+                    }
+                    slot.appendChild(iconSpan);
+
                     if (inventory[i].stackable && inventory[i].stack > 1) {
                         const stackDiv = document.createElement('div');
                         stackDiv.className = 'item-stack';
