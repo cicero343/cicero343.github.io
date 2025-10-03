@@ -369,8 +369,8 @@
     <div class="status">
         <div style="display: inline-block;">Connected Adventurers: <span id="playerCount">0</span></div>
         <div class="hearts" id="hearts">❤️❤️❤️❤️</div>
-        <div style="display: inline-block; margin-left: 30px;">💰 Gold: <span id="goldCounter">0</span></div>
-        <div style="display: inline-block; margin-left: 30px;">Grid Position: <span id="gridPos">10, 7</span></div>
+        <div class="hearts" id="manaHearts" style="margin-left: 15px;">💙💙💙</div>
+        <div style="display: inline-block; margin-left: 30px;">Position: <span id="gridPos">10, 7</span></div>
     </div>
 
     <script type="module">
@@ -414,6 +414,8 @@
         let myColor = '';
         let myGridPos = { x: 10, y: 7 };
         let myHealth = 4;
+        let myMana = 3; // Starting mana
+        let myMaxMana = 3; // Max mana
         let myGold = 0;
         let myDirection = 'right';
         let myZone = 1;
@@ -1225,12 +1227,17 @@
             myGridPos = startPos;
             console.log('Starting position:', myGridPos);
             
+            // Initialize mana
+            myMana = myMaxMana; // Start with full mana
+            myHealth = 4;
+
             // Update UI
             document.getElementById('playerColor').innerHTML = '●';
             document.getElementById('playerColor').style.color = myColor;
             document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
             updateZoneDisplay();
             updateHeartDisplay();
+            updateManaDisplay();
             updateGoldDisplay();
             updateSkillsDisplay();
             
@@ -1261,6 +1268,8 @@
                     gridY: myGridPos.y,
                     color: myColor,
                     health: myHealth,
+                    mana: myMana || 3,           // Add with fallback
+                    maxMana: myMaxMana || 3,     // Add with fallback
                     gold: myGold,
                     direction: myDirection,
                     zone: myZone,
@@ -1950,6 +1959,7 @@
                 }
                 
                 updateHeartDisplay();
+                updateManaDisplay(); // Add this line
                 updatePlayerData();
                 console.log(`Consumed ${item.name} and restored ${healAmount} health!`);
             }
@@ -1964,7 +1974,18 @@
 
         function castFireball() {
             if (myHealth <= 0 || isRespawning || isFishing) return;
-            
+
+            // Check if player has mana
+            if (myMana <= 0) {
+                console.log('Not enough mana!');
+                return; // Can't cast without mana
+            }
+
+            // Consume 1 mana
+            myMana = Math.max(0, myMana - 1);
+            updateManaDisplay();
+            updatePlayerData();
+
             // PLAY FIREBALL SOUND when casting
             playFireballSound();
             
@@ -2015,10 +2036,12 @@
             stopWoodcutting();
             updatePlayerData();
             updateHeartDisplay();
+            updateManaDisplay(); // Add this line
 
             setTimeout(() => {
                 const maxHealth = 4 + Math.floor(playerLevel / 10);
                 myHealth = maxHealth;
+                myMana = myMaxMana; // Restore mana on respawn
                 isRespawning = false;
 
                 let newPos;
@@ -2032,6 +2055,7 @@
                 myGridPos = newPos;
                 document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
                 updateHeartDisplay();
+                updateManaDisplay(); // Add this line
                 updatePlayerData();
             }, 3000);
         }
@@ -2044,10 +2068,20 @@
             document.getElementById('playerLife').textContent = `${myHealth}/${maxHealth}`;
         }
 
+        function updateManaDisplay() {
+            const manaHearts = '💙'.repeat(myMana) + '🖤'.repeat(myMaxMana - myMana);
+            document.getElementById('manaHearts').textContent = manaHearts;
+        }
+
         function updateGoldDisplay() {
-            document.getElementById('goldCounter').textContent = myGold;
-            document.getElementById('goldDisplay').textContent = myGold;
-            document.getElementById('playerGoldInv').textContent = myGold;
+            const goldCounter = document.getElementById('goldCounter');
+            if (goldCounter) goldCounter.textContent = myGold;
+
+            const goldDisplay = document.getElementById('goldDisplay');
+            if (goldDisplay) goldDisplay.textContent = myGold;
+
+            const playerGoldInv = document.getElementById('playerGoldInv');
+            if (playerGoldInv) playerGoldInv.textContent = myGold;
         }
 
         // FIXED: Magic skill now works like attack skill - only levels from killing mobs with magic
@@ -6381,6 +6415,7 @@
 
         let lastMoveTime = 0;
         let lastHeartbeat = 0;
+        let lastManaRegen = 0; // For 5-second mana regeneration
         function gameLoop() {
             const currentTime = Date.now();
             
@@ -6388,7 +6423,17 @@
                 updatePlayerData();
                 lastHeartbeat = currentTime;
             }
-            
+
+
+            // Mana regeneration every 5 seconds
+            if (currentTime - lastManaRegen > 5000) {
+                if (myMana < myMaxMana) {
+                    myMana = Math.min(myMaxMana, myMana + 1);
+                    updateManaDisplay();
+                    updatePlayerData();
+                }
+                lastManaRegen = currentTime;
+            }
             processFishing();
             processCooking();
             processWoodcutting();
