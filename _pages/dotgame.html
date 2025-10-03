@@ -1231,6 +1231,10 @@
             myMana = myMaxMana; // Start with full mana
             myHealth = 4;
 
+            // Calculate max mana based on starting level (usually 1)
+            myMaxMana = 3 + Math.floor(playerLevel / 20);
+            myMana = myMaxMana; // Ensure mana matches new max
+
             // Update UI
             document.getElementById('playerColor').innerHTML = '●';
             document.getElementById('playerColor').style.color = myColor;
@@ -1947,8 +1951,8 @@
                 }
                 equippedTool = item;
                 console.log(`Equipped tool: ${item.name}`);
-            } else if (item.type === 'food' && item.healAmount && myHealth < 4) {
-                // Consume food item
+            } else if ((item.type === 'food' || item.type === 'potion') && item.healAmount && myHealth < 4) {
+                // Consume food/potion item
                 const healAmount = Math.min(item.healAmount, 4 - myHealth);
                 myHealth = Math.min(4, myHealth + healAmount);
                 
@@ -2105,6 +2109,14 @@
                     myHealth = Math.min(myHealth + 1, maxHealth);
                     updateHeartDisplay();
                     console.log(`Heart capacity increased! Now ${maxHealth} hearts maximum`);
+                }
+
+                // Award mana heart increases at level 20 (and every 10 levels after)
+                if (playerLevel >= 20 && playerLevel % 10 === 0) {
+                    myMaxMana = 3 + Math.floor(playerLevel / 20); // +1 mana heart at level 20, +1 more at 40, etc.
+                    myMana = Math.min(myMana + 1, myMaxMana); // Restore 1 mana on level up
+                    updateManaDisplay();
+                    console.log(`Mana capacity increased! Now ${myMaxMana} mana hearts maximum`);
                 }
             }
 
@@ -6424,9 +6436,8 @@
                 lastHeartbeat = currentTime;
             }
 
-
             // Mana regeneration every 5 seconds
-            if (currentTime - lastManaRegen > 5000) {
+            if (currentTime - lastManaRegen > 2000) {
                 if (myMana < myMaxMana) {
                     myMana = Math.min(myMaxMana, myMana + 1);
                     updateManaDisplay();
