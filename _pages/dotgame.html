@@ -419,6 +419,7 @@
         let myGold = 0;
         let myDirection = 'right';
         let myZone = 1;
+        // Zone IDs: 1=Town, 2=Farm, 3=Lake, 4=Forest, 5=Cave
         let showDialog = false;
         let dialogText = '';
         let isRespawning = false;
@@ -1004,6 +1005,9 @@
             { x: 16, y: 12, chopped: false }
         ];
 
+        // Cave entrance in Forest Zone
+        const caveEntrance = { x: 10, y: 6 };
+
         // Lake water area (7x7 grid in center)
         const LAKE_CENTER_X = Math.floor(GRID_WIDTH / 2);
         const LAKE_CENTER_Y = Math.floor(GRID_HEIGHT / 2);
@@ -1269,7 +1273,7 @@
         }
 
         function updateZoneDisplay() {
-            const zoneNames = { 1: 'Town', 2: 'Farm', 3: 'Lake', 4: 'Forest' };
+            const zoneNames = { 1: 'Town', 2: 'Farm', 3: 'Lake', 4: 'Forest', 5: 'Cave' };
             document.getElementById('zoneDisplay').textContent = zoneNames[myZone];
         }
 
@@ -2522,7 +2526,7 @@
                 updateZoneDisplay();
                 updatePlayerData();
                 initializeMobs();
-                playZoneMusic(2); // ADD THIS
+                playZoneMusic(2);
             }
             else if (myZone === 2 && myGridPos.x <= 0) {
                 myZone = 1;
@@ -2530,7 +2534,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
-                playZoneMusic(1); // ADD THIS
+                playZoneMusic(1);
             }
             else if (myZone === 1 && myGridPos.x <= 0) {
                 myZone = 3;
@@ -2538,7 +2542,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
-                playZoneMusic(3); // ADD THIS
+                playZoneMusic(3);
             }
             else if (myZone === 3 && myGridPos.x >= GRID_WIDTH - 1) {
                 myZone = 1;
@@ -2546,7 +2550,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
-                playZoneMusic(1); // ADD THIS
+                playZoneMusic(1);
             }
             else if (myZone === 1 && myGridPos.y <= 0) {
                 myZone = 4;
@@ -2555,7 +2559,7 @@
                 updateZoneDisplay();
                 updatePlayerData();
                 initializeMobs();
-                playZoneMusic(4); // ADD THIS
+                playZoneMusic(4);
             }
             else if (myZone === 4 && myGridPos.y >= GRID_HEIGHT - 1) {
                 myZone = 1;
@@ -2563,7 +2567,27 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
-                playZoneMusic(1); // ADD THIS
+                playZoneMusic(1);
+            }
+            // NEW: Cave entrance transition from Forest Zone
+            else if (myZone === 4 && myGridPos.x === caveEntrance.x && myGridPos.y === caveEntrance.y) {
+                myZone = 5; // Enter Cave
+                myGridPos.x = Math.floor(GRID_WIDTH / 2); // Spawn at bottom-center
+                myGridPos.y = GRID_HEIGHT - 2;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+                playZoneMusic(4); // Use same music as Forest
+            }
+            // NEW: Cave exit back to Forest Zone
+            else if (myZone === 5 && myGridPos.y >= GRID_HEIGHT - 1) {
+                myZone = 4; // Return to Forest
+                myGridPos.x = caveEntrance.x;
+                myGridPos.y = caveEntrance.y;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+                playZoneMusic(4);
             }
         }
 
@@ -5001,30 +5025,30 @@
             if (myZone === 4) {
                 // Draw darker grass across the entire forest zone with vertical symmetry
                 const midY = Math.floor(GRID_HEIGHT / 2);
-                
+
                 for (let x = 0; x < GRID_WIDTH; x++) {
                     for (let y = 0; y < GRID_HEIGHT; y++) {
                         // Use mirrored Y coordinate for color/seed, but draw at actual position
                         const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
-                        
+
                         const pixel = gridToPixel(x, y);
                         const seed = x * 1000 + mirroredY;
-                        
+
                         // Darker forest grass
                         const grassHue = 65 + (seed % 15);
                         const grassLightness = 18 + (seed % 8);
                         ctx.fillStyle = `hsl(${grassHue}, 45%, ${grassLightness}%)`;
                         ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
-                        
+
                         // Draw grass blades
                         for (let i = 0; i < 5; i++) {
                             const pr1 = (seed + i * 123) % 1000 / 1000;
                             const pr2 = (seed + i * 456) % 1000 / 1000;
-                            
+
                             const bladeX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.8;
                             const bladeY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.8;
                             const bladeHeight = 3 + pr1 * 4;
-                            
+
                             ctx.strokeStyle = `rgba(${35 + pr1 * 25}, ${70 + pr2 * 30}, 35, 0.6)`;
                             ctx.lineWidth = 1;
                             ctx.beginPath();
@@ -5039,69 +5063,292 @@
                         }
                     }
                 }
+
+                // Draw mound/hill around cave entrance with flat bottom and rounded top
+                const caveMoundPixel = gridToPixel(caveEntrance.x, caveEntrance.y);
+                // Offset the mound center upward so the flat bottom sits at (x, 6) - below the entrance
+                const moundCenterY = caveMoundPixel.y + GRID_SIZE * 0.5;
+
+                // Draw soft semi-circular mound base (flat bottom, rounded top)
+                for (let radius = 2.5; radius > 0; radius -= 0.3) {
+                    const heightFactor = (2.5 - radius) / 2.5; // 0 at edge, 1 at center
+
+                    // Earth color that gets slightly darker toward center
+                    const lightness = 35 + (radius / 2.5) * 10;
+                    ctx.fillStyle = `hsl(80, 20%, ${lightness}%)`;
+
+                    ctx.beginPath();
+                    // Draw arc only on top half (from PI to 2*PI = bottom-left to bottom-right)
+                    ctx.arc(caveMoundPixel.x, moundCenterY, radius * GRID_SIZE * 0.45, Math.PI, 2 * Math.PI);
+                    // Close the path with a straight line at the bottom
+                    ctx.lineTo(caveMoundPixel.x + radius * GRID_SIZE * 0.45, moundCenterY);
+                    ctx.lineTo(caveMoundPixel.x - radius * GRID_SIZE * 0.45, moundCenterY);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                // Add highlight on top of mound (lighting from above)
+                const highlightGradient = ctx.createRadialGradient(
+                    caveMoundPixel.x,
+                    moundCenterY - GRID_SIZE * 0.3,
+                    0,
+                    caveMoundPixel.x,
+                    moundCenterY,
+                    GRID_SIZE * 1.2
+                );
+                highlightGradient.addColorStop(0, 'rgba(140, 160, 100, 0.3)');
+                highlightGradient.addColorStop(0.5, 'rgba(140, 160, 100, 0.1)');
+                highlightGradient.addColorStop(1, 'rgba(140, 160, 100, 0)');
+                ctx.fillStyle = highlightGradient;
+                ctx.beginPath();
+                // Clip highlight to top half only
+                ctx.arc(caveMoundPixel.x, moundCenterY, GRID_SIZE * 1.2, Math.PI, 2 * Math.PI);
+                ctx.lineTo(caveMoundPixel.x + GRID_SIZE * 1.2, moundCenterY);
+                ctx.lineTo(caveMoundPixel.x - GRID_SIZE * 1.2, moundCenterY);
+                ctx.closePath();
+                ctx.fill();
+
+                // Add shadow on bottom of mound (depth effect) - only on the flat bottom edge
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                ctx.fillRect(
+                    caveMoundPixel.x - GRID_SIZE * 1.1,
+                    moundCenterY - 2,
+                    GRID_SIZE * 2.2,
+                    4
+                );
+
+                // Add static grass details using seed-based positioning (won't sparkle/change)
+                // Only place grass on the top half of the mound
+                const staticGrassPositions = [
+                    { x: -0.6, y: -0.4 }, { x: -0.3, y: -0.6 }, { x: 0.2, y: -0.5 },
+                    { x: 0.5, y: -0.3 }, { x: -0.7, y: -0.1 }, { x: -0.4, y: -0.2 },
+                    { x: 0.3, y: -0.3 }, { x: 0.6, y: -0.2 }, { x: -0.2, y: -0.7 },
+                    { x: 0.1, y: -0.7 }, { x: -0.5, y: -0.5 }, { x: 0.4, y: -0.6 }
+                ];
+
+                staticGrassPositions.forEach((pos, index) => {
+                    const grassX = caveMoundPixel.x + pos.x * GRID_SIZE;
+                    const grassY = moundCenterY + pos.y * GRID_SIZE;
+                    
+                    // Use index for consistent but varied grass appearance
+                    const bladeLength = 3 + (index % 3);
+                    const bladeAngle = (index % 5) * 0.3 - 0.6;
+                    
+                    ctx.strokeStyle = `rgba(${70 + (index % 30)}, ${100 + (index % 40)}, 50, 0.5)`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(grassX, grassY);
+                    ctx.quadraticCurveTo(
+                        grassX + bladeAngle * 2,
+                        grassY - bladeLength / 2,
+                        grassX + bladeAngle * 3,
+                        grassY - bladeLength
+                    );
+                    ctx.stroke();
+                });
+
+                // Add static small rocks on the mound (only on top half)
+                const staticRockPositions = [
+                    { x: -0.4, y: -0.3, size: 2 },
+                    { x: 0.3, y: -0.4, size: 1.5 },
+                    { x: -0.5, y: -0.2, size: 2.5 },
+                    { x: 0.4, y: -0.3, size: 1.8 },
+                    { x: 0.0, y: -0.6, size: 1.2 },
+                    { x: -0.2, y: -0.5, size: 2.2 }
+                ];
+
+                staticRockPositions.forEach(rock => {
+                    const rockX = caveMoundPixel.x + rock.x * GRID_SIZE;
+                    const rockY = moundCenterY + rock.y * GRID_SIZE;
+                    
+                    ctx.fillStyle = '#6a6a5a';
+                    ctx.beginPath();
+                    ctx.arc(rockX, rockY, rock.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add tiny highlight on rocks
+                    ctx.fillStyle = 'rgba(120, 120, 110, 0.4)';
+                    ctx.beginPath();
+                    ctx.arc(rockX - 0.5, rockY - 0.5, rock.size * 0.4, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Draw cave entrance as rocky doorway
+                const cavePixel = gridToPixel(caveEntrance.x, caveEntrance.y);
+
+                // Draw rocky archway/doorframe
+                ctx.fillStyle = '#5a5a5a'; // Medium grey rock
+                ctx.beginPath();
+                // Left pillar
+                ctx.fillRect(cavePixel.x - GRID_SIZE * 0.6, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 0.3, GRID_SIZE * 0.8);
+                // Right pillar
+                ctx.fillRect(cavePixel.x + GRID_SIZE * 0.3, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 0.3, GRID_SIZE * 0.8);
+                // Top arch stone
+                ctx.fillRect(cavePixel.x - GRID_SIZE * 0.6, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 1.2, GRID_SIZE * 0.25);
+
+                // Add darker rock shading for depth
+                ctx.fillStyle = '#3a3a3a';
+                // Left pillar shadow
+                ctx.fillRect(cavePixel.x - GRID_SIZE * 0.35, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 0.05, GRID_SIZE * 0.8);
+                // Right pillar shadow
+                ctx.fillRect(cavePixel.x + GRID_SIZE * 0.3, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 0.05, GRID_SIZE * 0.8);
+
+                // Add lighter rock highlights
+                ctx.fillStyle = '#7a7a7a';
+                // Left pillar highlight
+                ctx.fillRect(cavePixel.x - GRID_SIZE * 0.6, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 0.05, GRID_SIZE * 0.8);
+                // Right pillar highlight
+                ctx.fillRect(cavePixel.x + GRID_SIZE * 0.55, cavePixel.y - GRID_SIZE * 0.3, GRID_SIZE * 0.05, GRID_SIZE * 0.8);
+
+                // Draw very dark cave opening (the actual entrance)
+                ctx.fillStyle = '#0a0a0a';
+                ctx.fillRect(cavePixel.x - GRID_SIZE * 0.3, cavePixel.y - GRID_SIZE * 0.05, GRID_SIZE * 0.6, GRID_SIZE * 0.55);
+
+                // Add subtle gradient effect at entrance (darkness fading in)
+                const gradient = ctx.createLinearGradient(
+                    cavePixel.x,
+                    cavePixel.y - GRID_SIZE * 0.05,
+                    cavePixel.x,
+                    cavePixel.y + GRID_SIZE * 0.3
+                );
+                gradient.addColorStop(0, 'rgba(40, 40, 40, 0.6)');
+                gradient.addColorStop(1, 'rgba(10, 10, 10, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(cavePixel.x - GRID_SIZE * 0.3, cavePixel.y - GRID_SIZE * 0.05, GRID_SIZE * 0.6, GRID_SIZE * 0.2);
+
+                // Add some rocky texture details on the pillars
+                for (let i = 0; i < 8; i++) {
+                    const seed = caveEntrance.x * 1000 + caveEntrance.y + i;
+                    const pr1 = (seed * 123) % 1000 / 1000;
+                    const pr2 = (seed * 456) % 1000 / 1000;
+
+                    // Left pillar rocks
+                    ctx.fillStyle = `rgba(${60 + pr1 * 40}, ${60 + pr1 * 40}, ${60 + pr1 * 40}, 0.4)`;
+                    ctx.beginPath();
+                    ctx.arc(
+                        cavePixel.x - GRID_SIZE * 0.45 + (pr1 - 0.5) * GRID_SIZE * 0.15,
+                        cavePixel.y - GRID_SIZE * 0.2 + pr2 * GRID_SIZE * 0.6,
+                        2 + pr1 * 2,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+
+                    // Right pillar rocks
+                    ctx.fillStyle = `rgba(${60 + pr2 * 40}, ${60 + pr2 * 40}, ${60 + pr2 * 40}, 0.4)`;
+                    ctx.beginPath();
+                    ctx.arc(
+                        cavePixel.x + GRID_SIZE * 0.45 + (pr2 - 0.5) * GRID_SIZE * 0.15,
+                        cavePixel.y - GRID_SIZE * 0.2 + pr1 * GRID_SIZE * 0.6,
+                        2 + pr2 * 2,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+
+                // Draw subtle outline to define the entrance
+                ctx.strokeStyle = '#2a2a2a';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(cavePixel.x - GRID_SIZE * 0.3, cavePixel.y - GRID_SIZE * 0.05, GRID_SIZE * 0.6, GRID_SIZE * 0.55);
+            }
+
+            // NEW: Cave Zone rendering
+            if (myZone === 5) {
+                // Draw dark rocky cave floor
+                const midY = Math.floor(GRID_HEIGHT / 2);
+
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+
+                        // Very dark rocky ground
+                        const rockHue = 30 + (seed % 10); // Brown-grey tones
+                        const rockLightness = 10 + (seed % 8); // Very dark
+                        ctx.fillStyle = `hsl(${rockHue}, 15%, ${rockLightness}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+
+                        // Add some rock texture details
+                        for (let i = 0; i < 3; i++) {
+                            const pr1 = (seed + i * 234) % 1000 / 1000;
+                            const pr2 = (seed + i * 567) % 1000 / 1000;
+
+                            const rockX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.6;
+                            const rockY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.6;
+                            const rockSize = 1 + pr1 * 2;
+
+                            ctx.fillStyle = `rgba(${80 + pr1 * 30}, ${70 + pr2 * 20}, ${60 + pr1 * 15}, 0.3)`;
+                            ctx.beginPath();
+                            ctx.arc(rockX, rockY, rockSize, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
             }
 
             // Draw zone transition arrows
             if (myZone === 1) {
                 const rightArrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
                 const rightArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.font = '24px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('>', rightArrowX, rightArrowY);
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Farm', rightArrowX, rightArrowY + 20);
-                
+
                 const leftArrowX = GRID_SIZE / 2;
                 const leftArrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.font = '24px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('<', leftArrowX, leftArrowY);
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Lake', leftArrowX, leftArrowY + 20);
-                
+
                 // Draw north arrow to Forest
                 const northArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
                 const northArrowY = GRID_SIZE / 2;
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.font = '24px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('^', northArrowX, northArrowY);
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Forest', northArrowX, northArrowY + 20);
-                
+
             } else if (myZone === 2) {
                 const arrowX = GRID_SIZE / 2;
                 const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.font = '24px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('<', arrowX, arrowY);
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Town', arrowX, arrowY + 20);
-                
+
             } else if (myZone === 3) {
                 const arrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
                 const arrowY = (GRID_HEIGHT / 2) * GRID_SIZE;
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.font = '24px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('>', arrowX, arrowY);
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Town', arrowX, arrowY + 20);
@@ -5109,15 +5356,40 @@
                 // Forest Zone - draw south arrow back to Town
                 const southArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
                 const southArrowY = (GRID_HEIGHT - 1) * GRID_SIZE + GRID_SIZE / 2;
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
                 ctx.font = '24px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText('v', southArrowX, southArrowY);
-                
+
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Town', southArrowX, southArrowY + 20);
+
+                // NEW: Draw arrow to Cave entrance (at position 10, 7)
+                const caveArrowPixel = gridToPixel(10, 7);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('^', caveArrowPixel.x, caveArrowPixel.y);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Cave', caveArrowPixel.x, caveArrowPixel.y + 20);
+            } else if (myZone === 5) {
+                // NEW: Cave Zone - draw south arrow back to Forest
+                const southArrowX = (GRID_WIDTH / 2) * GRID_SIZE;
+                const southArrowY = (GRID_HEIGHT - 1) * GRID_SIZE + GRID_SIZE / 2;
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('v', southArrowX, southArrowY);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Forest', southArrowX, southArrowY + 20);
             }
             
             if (myZone === 2 || myZone === 4) {
