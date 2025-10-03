@@ -467,6 +467,7 @@
         let inventory = new Array(20).fill(null);
         let equippedWeapon = null;
         let equippedTool = null;
+        let equippedShield = null; // NEW: Track equipped shield
         
         // Sound system variables
         let audioContext = null;
@@ -925,6 +926,15 @@
         let activeQuests = []; // Array to store active quests (max 5)
         let currentDialogNPC = ''; // Track which NPC is talking
         
+        // Shield purchase tracking (new)
+        let hasShieldInInventory = false; // Track if player has shield
+
+        // Shield blocking mechanics (NEW)
+        let isBlocking = false; // Is player currently holding shield up
+        let shieldHitCount = 0; // How many hits the shield has taken
+        const MAX_SHIELD_HITS = 2; // Shield breaks after 2 hits
+        let shieldBroken = false; // Is shield currently broken
+
         // Butterflies in Town Zone
         let townButterflies = [
             { x: 5, y: 11, offsetX: 0, offsetY: 0, time: 0 },
@@ -1285,6 +1295,8 @@
                     isAttacking: isAttacking,
                     attackComboCount: attackComboCount,
                     isFiremaking: isFiremaking,
+                    isBlocking: isBlocking, // NEW
+                    shieldHitCount: shieldHitCount, // NEW
                     level: playerLevel,
                     exp: playerEXP,
                     magic: playerMagic,
@@ -1355,14 +1367,13 @@
                             const amountToAdd = Math.min(spaceAvailable, item.stack);
                             inventory[i].stack += amountToAdd;
                             item.stack -= amountToAdd;
-
                             if (item.stack <= 0) {
+                                updateShieldInventoryStatus(); // NEW - Track shield ownership
                                 return true; // All items added
                             }
                         }
                     }
                 }
-
                 // If we still have items left, create new stacks
                 while (item.stack > 0) {
                     for (let i = 0; i < inventory.length; i++) {
@@ -1373,29 +1384,31 @@
                                 stack: stackSize
                             };
                             item.stack -= stackSize;
-
                             if (item.stack <= 0) {
+                                updateShieldInventoryStatus(); // NEW - Track shield ownership
                                 return true;
                             }
                             break;
                         }
                     }
-
                     // If we get here, inventory is full
                     if (item.stack > 0) {
+                        updateShieldInventoryStatus(); // NEW - Track shield ownership
                         return false;
                     }
                 }
+                updateShieldInventoryStatus(); // NEW - Track shield ownership
                 return true;
             }
-
             // Non-stackable items
             for (let i = 0; i < inventory.length; i++) {
                 if (!inventory[i]) {
                     inventory[i] = item;
+                    updateShieldInventoryStatus(); // NEW - Track shield ownership
                     return true;
                 }
             }
+            updateShieldInventoryStatus(); // NEW - Track shield ownership
             return false;
         }
 
@@ -1868,6 +1881,50 @@
             }, attackDuration);
         }
 
+        function startBlocking() {
+            // Can only block if shield is equipped and not broken
+            if (!equippedShield || shieldBroken || isBlocking) return;
+
+            // Can't block while doing other actions
+            if (isFishing || isCooking || isWoodcutting || isAttacking || isFiremaking || isRespawning) return;
+
+            isBlocking = true;
+            console.log('Started blocking with shield');
+            updatePlayerData();
+        }
+
+        function stopBlocking() {
+            if (!isBlocking) return;
+
+            isBlocking = false;
+            console.log('Stopped blocking');
+            updatePlayerData();
+        }
+
+        function resetShield() {
+            // Reset shield when player releases R key
+            shieldHitCount = 0;
+            shieldBroken = false;
+            console.log('Shield reset');
+        }
+
+        function shieldTakeHit() {
+            if (!isBlocking || shieldBroken) return false;
+
+            shieldHitCount++;
+            console.log(`Shield took hit ${shieldHitCount}/${MAX_SHIELD_HITS}`);
+
+            if (shieldHitCount >= MAX_SHIELD_HITS) {
+                shieldBroken = true;
+                stopBlocking();
+                console.log('Shield broken! Release R to reset.');
+                return false; // Shield broke, damage goes through
+            }
+
+            updatePlayerData();
+            return true; // Shield absorbed the hit
+        }
+
         function processFishing() {
             if (isFishing && Date.now() >= nextFishTime) {
                 const fish = {
@@ -1939,6 +1996,7 @@
                 return;
             }
             
+            // AFTER - Add shield equip logic
             if (item.type === 'weapon') {
                 if (equippedWeapon) {
                     equippedWeapon = null;
@@ -1951,7 +2009,16 @@
                 }
                 equippedTool = item;
                 console.log(`Equipped tool: ${item.name}`);
-            } else if ((item.type === 'food' || item.type === 'potion') && item.healAmount && myHealth < 4) {
+            } else if (item.type === 'shield') {
+                // NEW: Shield equip logic
+                if (equippedShield && equippedShield.id === item.id) {
+                    equippedShield = null; // Only unequip if THIS shield is already equipped
+                    console.log('Unequipped shield');
+                } else {
+                    equippedShield = item; // Otherwise, equip it
+                    console.log(`Equipped shield: ${item.name}`);
+                }
+            } else if (item.type === 'food' && item.healAmount && myHealth < 4) {
                 // Consume food/potion item
                 const healAmount = Math.min(item.healAmount, 4 - myHealth);
                 myHealth = Math.min(4, myHealth + healAmount);
@@ -1969,11 +2036,20 @@
             }
             
             initializeInventory();
+            updateShieldInventoryStatus(); // NEW
         }
 
+        // AFTER - Include shield check
         function isItemEquipped(item) {
             return (equippedWeapon && equippedWeapon.id === item.id) ||
-                   (equippedTool && equippedTool.id === item.id);
+                (equippedTool && equippedTool.id === item.id) ||
+                (equippedShield && equippedShield.id === item.id); // NEW
+        }
+
+        // NEW FUNCTION - Add after isItemEquipped()
+        function updateShieldInventoryStatus() {
+            // Check if player has shield in inventory
+            hasShieldInInventory = inventory.some(item => item && item.id === 'shield');
         }
 
         function castFireball() {
@@ -2020,13 +2096,20 @@
             }, 5000);
         }
 
+        // AFTER - Check shield before taking damage
         function takeDamage() {
             if (isRespawning || myHealth <= 0) return;
-            
+
+            // NEW: Check if shield blocks the damage
+            if (isBlocking && shieldTakeHit()) {
+                console.log('Shield blocked the damage!');
+                return; // Damage blocked, don't take health damage
+            }
+
             myHealth = Math.max(0, myHealth - 1);
             updateHeartDisplay();
             updatePlayerData();
-            
+
             if (myHealth <= 0) {
                 startRespawn();
             }
@@ -2755,11 +2838,28 @@
                 price: 15,
                 stock: 999, // Infinite
                 untradeable: true
+            },
+            {
+                id: 'shield',
+                name: 'Wooden Shield',
+                description: 'A sturdy wooden shield. Can be equipped for defense.',
+                icon: '🛡️',
+                type: 'shield',
+                price: 50,
+                stock: 1, // Only 1 available per session
+                untradeable: false // Can be sold back if needed
             }
         ];
 
+        // AFTER - Filter out shield if already owned
         function getMerchantStock() {
-            return merchantInventory;
+            return merchantInventory.filter(item => {
+                // Hide shield from merchant if player already has one
+                if (item.id === 'shield' && hasShieldInInventory) {
+                    return false;
+                }
+                return true;
+            });
         }
 
         function getPlayerSellableItems() {
@@ -2824,8 +2924,8 @@
                 const merchantItems = getMerchantStock();
                 const item = merchantItems[selectedTradeSlot];
                 
+                // AFTER - Track shield purchase
                 if (item && myGold >= item.price) {
-                    // Create the item to add to inventory
                     const itemToAdd = {
                         id: item.id,
                         name: item.name,
@@ -2838,12 +2938,18 @@
                         healAmount: item.id === 'health_potion' ? 1 : undefined,
                         untradeable: item.untradeable || false
                     };
-                    
+
                     if (addItemToInventory(itemToAdd)) {
                         myGold -= item.price;
                         updateGoldDisplay();
                         updatePlayerData();
                         console.log(`Bought ${item.name} for ${item.price} gold`);
+
+                        // Track shield purchase (NEW)
+                        if (item.id === 'shield') {
+                            hasShieldInInventory = true;
+                            console.log('Shield purchased - removed from merchant stock');
+                        }
                     }
                 }
             } else { // sell
@@ -5164,6 +5270,164 @@
                     // Draw player sprite on top of shadow
                     drawPlayerSprite(playerPixel.x, playerPixel.y, player.direction || 'down', player.color || '#4ecdc4');
 
+                    // NEW: Draw shield if player is blocking
+                    if (player.isBlocking && (id === playerId || player.zone === myZone)) {
+                        const direction = player.direction || 'down';
+
+                        // Shield dimensions
+                        const shieldWidth = 20;
+                        const shieldHeight = 28;
+                        const shieldThickness = 4;
+
+                        // Colors
+                        const woodColor = '#8B4513';
+                        const metalRim = '#C0C0C0';
+                        const metalBoss = '#FFD700'; // Gold boss in center
+
+                        ctx.save();
+
+                        if (direction === 'left' || direction === 'right') {
+                            // LEFT/RIGHT: Shield appears as thin vertical wall
+                            const offsetX = direction === 'left' ? -18 : 18;
+                            const shieldX = playerPixel.x + offsetX;
+                            const shieldY = playerPixel.y;
+
+                            // Draw shield as thin vertical rectangle
+                            ctx.fillStyle = woodColor;
+                            ctx.fillRect(shieldX - shieldThickness/2, shieldY - shieldHeight/2, shieldThickness, shieldHeight);
+
+                            // Metal rim on edges
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 2;
+                            ctx.strokeRect(shieldX - shieldThickness/2, shieldY - shieldHeight/2, shieldThickness, shieldHeight);
+
+                            // Horizontal metal bands
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 1.5;
+                            ctx.beginPath();
+                            ctx.moveTo(shieldX - shieldThickness/2, shieldY - 8);
+                            ctx.lineTo(shieldX + shieldThickness/2, shieldY - 8);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(shieldX - shieldThickness/2, shieldY + 8);
+                            ctx.lineTo(shieldX + shieldThickness/2, shieldY + 8);
+                            ctx.stroke();
+
+                        } else if (direction === 'up') {
+                            // UP: Shield outline around player's body (subtle, on same tile)
+                            const shieldX = playerPixel.x;
+                            const shieldY = playerPixel.y;
+
+                            // Draw subtle shield outline around player (left side)
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.moveTo(shieldX - 12, shieldY - 8); // Top left
+                            ctx.lineTo(shieldX - 12, shieldY + 12); // Bottom left
+                            ctx.stroke();
+
+                            // Draw subtle shield outline (right side)
+                            ctx.beginPath();
+                            ctx.moveTo(shieldX + 12, shieldY - 8); // Top right
+                            ctx.lineTo(shieldX + 12, shieldY + 12); // Bottom right
+                            ctx.stroke();
+
+                            // Draw subtle top arc of shield peeking above player
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.arc(shieldX, shieldY - 8, 12, Math.PI * 0.8, Math.PI * 0.2);
+                            ctx.stroke();
+
+                            // Add small wooden texture hints on sides
+                            ctx.fillStyle = woodColor;
+                            ctx.fillRect(shieldX - 13, shieldY - 2, 3, 10);
+                            ctx.fillRect(shieldX + 10, shieldY - 2, 3, 10);
+
+                            // Metal rim on wooden parts
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(shieldX - 13, shieldY - 2, 3, 10);
+                            ctx.strokeRect(shieldX + 10, shieldY - 2, 3, 10);
+
+                        } else if (direction === 'down') {
+                            // DOWN: Shield held low, protecting lower body
+                            const shieldX = playerPixel.x;
+                            const shieldY = playerPixel.y + 18; // Lower position
+
+                            // Draw wooden shield face (rounded rectangle)
+                            ctx.fillStyle = woodColor;
+                            ctx.beginPath();
+                            ctx.roundRect(shieldX - shieldWidth/2, shieldY - shieldHeight/2, shieldWidth, shieldHeight, 4);
+                            ctx.fill();
+
+                            // Metal rim
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 3;
+                            ctx.beginPath();
+                            ctx.roundRect(shieldX - shieldWidth/2, shieldY - shieldHeight/2, shieldWidth, shieldHeight, 4);
+                            ctx.stroke();
+
+                            // Horizontal metal bands
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(shieldX - shieldWidth/2 + 2, shieldY - 8);
+                            ctx.lineTo(shieldX + shieldWidth/2 - 2, shieldY - 8);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(shieldX - shieldWidth/2 + 2, shieldY + 8);
+                            ctx.lineTo(shieldX + shieldWidth/2 - 2, shieldY + 8);
+                            ctx.stroke();
+
+                            // Center boss (metal stud)
+                            ctx.fillStyle = metalBoss;
+                            ctx.beginPath();
+                            ctx.arc(shieldX, shieldY, 4, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.strokeStyle = metalRim;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+
+                        // Draw hit count indicator on the shield
+                        if (id === playerId) {
+                            const hitsRemaining = MAX_SHIELD_HITS - (player.shieldHitCount || 0);
+
+                            // Position text based on direction
+                            let textX = playerPixel.x;
+                            let textY = playerPixel.y;
+
+                            if (direction === 'left') {
+                                textX = playerPixel.x - 18;
+                                textY = playerPixel.y + 4;
+                            } else if (direction === 'right') {
+                                textX = playerPixel.x + 18;
+                                textY = playerPixel.y + 4;
+                            } else if (direction === 'up') {
+                                textX = playerPixel.x;
+                                textY = playerPixel.y - 25;
+                            } else if (direction === 'down') {
+                                textX = playerPixel.x;
+                                textY = playerPixel.y + 22;
+                            }
+
+                            // Draw background circle for number
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+                            ctx.beginPath();
+                            ctx.arc(textX, textY - 3, 8, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Draw hit count
+                            ctx.fillStyle = '#FFD700';
+                            ctx.font = 'bold 12px Courier New';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(`${hitsRemaining}`, textX, textY);
+                        }
+
+                        ctx.restore();
+                    }
+
                     // Draw direction arrow for local player only
                     if (id === playerId) {
                         // Calculate arrow position one tile ahead
@@ -6358,6 +6622,14 @@
                 }
                 return;
             }
+
+            // NEW: R key for shield blocking
+            if (e.key.toLowerCase() === 'r') {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog) {
+                    startBlocking();
+                }
+                return;
+            }
             
             // Cancel dialogs if movement keys are pressed
             if ((showQuickChat || showCookingDialog || showWoodcuttingDialog || showMerchantDialog || showQuestDialog) && ['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) {
@@ -6421,8 +6693,17 @@
             }
         });
 
+        // AFTER - Add shield release logic
         document.addEventListener('keyup', (e) => {
             keys[e.key.toLowerCase()] = false;
+
+            // NEW: Handle R key release for shield
+            if (e.key.toLowerCase() === 'r') {
+                if (isBlocking) {
+                    stopBlocking();
+                }
+                resetShield(); // Always reset shield when R is released
+            }
         });
 
         let lastMoveTime = 0;
@@ -6639,7 +6920,7 @@
                 }
             }
             
-            if (myHealth > 0 && !isRespawning && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !showQuestDialog && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && currentTime - lastMoveTime > 200) {
+            if (myHealth > 0 && !isRespawning && !isBlocking && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !showQuestDialog && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && currentTime - lastMoveTime > 200) {
                 let moved = false;
                 let newPos = { ...myGridPos };
 
