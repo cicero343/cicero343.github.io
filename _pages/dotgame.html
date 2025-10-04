@@ -3520,7 +3520,97 @@
             ctx.fill();
         }
 
-        function drawGoblinWarlord(x, y) {
+        function drawGoblinWarlord(x, y, isAttacking, direction) {
+
+        // Default parameters if not provided
+        isAttacking = isAttacking || false;
+        direction = direction || 'down';
+
+        // Special case: Up direction - draw back view silhouette
+        if (direction === 'up') {
+            // Red attack glow - subtle and less circular
+            if (isAttacking) {
+                ctx.fillStyle = 'rgba(255, 50, 50, 0.15)';
+                ctx.fillRect(x - 80, y - 60, 160, 140);
+
+                ctx.fillStyle = 'rgba(255, 50, 50, 0.25)';
+                ctx.fillRect(x - 60, y - 40, 120, 100);
+            }
+
+            // Dark green body (back view)
+            ctx.fillStyle = '#0d4d0d';
+            ctx.beginPath();
+            ctx.ellipse(x, y + 10, 55, 65, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dark chest armor (back)
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(x - 40, y - 15, 80, 40);
+
+            // Dark arms
+            ctx.fillStyle = '#0d4d0d';
+            ctx.fillRect(x - 65, y - 10, 20, 55);
+            ctx.fillRect(x + 45, y - 10, 20, 55);
+
+            // Dark shoulders
+            ctx.fillStyle = '#2a2a2a';
+            ctx.beginPath();
+            ctx.arc(x - 55, y - 10, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 55, y - 10, 18, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dark helmet back
+            ctx.fillStyle = '#4a3a00';
+            ctx.fillRect(x - 35, y - 75, 70, 25);
+
+            // Dark head
+            ctx.fillStyle = '#003300';
+            ctx.beginPath();
+            ctx.arc(x, y - 50, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Legs (back view)
+            ctx.fillStyle = '#0d4d0d';
+            ctx.fillRect(x - 45, y + 40, 25, 50);
+            ctx.fillRect(x + 20, y + 40, 25, 50);
+
+            // Hammer silhouette (always visible)
+            const weaponOffset = isAttacking ? -20 : 0;
+
+            // Handle
+            ctx.fillStyle = '#2a1a0a';
+            ctx.fillRect(x + 45, y - 70 + weaponOffset, 12, 110);
+
+            // Hammer head
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(x + 35, y - 100 + weaponOffset, 32, 35);
+
+            // Red glow on hammer when attacking
+            if (isAttacking) {
+                ctx.fillStyle = 'rgba(255, 50, 50, 0.6)';
+                ctx.fillRect(x + 30, y - 105 + weaponOffset, 42, 45);
+            }
+
+            return; // Skip normal drawing for up direction
+        }
+
+        // Handle left direction - mirror the sprite
+        ctx.save();
+        if (direction === 'left') {
+            ctx.translate(x, y);
+            ctx.scale(-1, 1);
+            ctx.translate(-x, -y);
+        }
+
+        // Apply attack tilt for down/right/left
+        if (isAttacking) {
+            ctx.translate(x, y);
+            ctx.rotate(0.15); // Tilt right (or left if mirrored)
+            ctx.translate(-x, -y);
+        }
+
             // This boss is 4x scale - occupies 4x4 tiles
             const scale = 4;
 
@@ -3566,8 +3656,9 @@
             ctx.fillStyle = '#1a7a1a';
             // Left arm
             ctx.fillRect(x - 65, y - 10, 20, 55);
-            // Right arm (holding weapon)
-            ctx.fillRect(x + 45, y - 10, 20, 55);
+            // Right arm (holding weapon) - moves with attack
+            const armOffset = isAttacking ? -30 : 0;
+            ctx.fillRect(x + 45, y - 10 + armOffset, 20, 55);
 
             // Shoulder armor (spikes)
             ctx.fillStyle = '#4a4a4a';
@@ -3587,9 +3678,8 @@
             }
 
             // Right shoulder
-            ctx.fillStyle = '#4a4a4a';
             ctx.beginPath();
-            ctx.arc(x + 55, y - 10, 18, 0, Math.PI * 2);
+            ctx.arc(x + 55, y - 10 + armOffset, 18, 0, Math.PI * 2);
             ctx.fill();
 
             // === SKULL TROPHY ON BELT ===
@@ -3699,35 +3789,56 @@
             ctx.fill();
 
             // === MASSIVE WAR HAMMER ===
+            const weaponOffset = isAttacking ? -30 : 0;
+
             ctx.lineWidth = 2;
             // Hammer handle (thick wooden shaft)
             ctx.fillStyle = '#5a3a1a';
-            ctx.fillRect(x + 45, y - 70, 12, 110);
+            ctx.fillRect(x + 45, y - 70 + weaponOffset, 12, 110);
 
             // Handle grip wrapping
             ctx.strokeStyle = '#3a2a0a';
             for (let i = 0; i < 10; i++) {
                 ctx.beginPath();
-                ctx.moveTo(x + 45, y - 60 + i * 12);
-                ctx.lineTo(x + 57, y - 60 + i * 12);
+                ctx.moveTo(x + 45, y - 60 + i * 12 + weaponOffset);
+                ctx.lineTo(x + 57, y - 60 + i * 12 + weaponOffset);
                 ctx.stroke();
             }
 
             // Hammer head (MASSIVE metal block)
             ctx.fillStyle = '#3a3a3a';
-            ctx.fillRect(x + 35, y - 100, 32, 35);
+            ctx.fillRect(x + 35, y - 100 + weaponOffset, 32, 35);
 
             // Hammer head details
             ctx.fillStyle = '#2a2a2a';
-            ctx.fillRect(x + 37, y - 98, 28, 5);
-            ctx.fillRect(x + 37, y - 88, 28, 5);
-            ctx.fillRect(x + 37, y - 78, 28, 5);
+            ctx.fillRect(x + 37, y - 98 + weaponOffset, 28, 5);
+            ctx.fillRect(x + 37, y - 88 + weaponOffset, 28, 5);
+            ctx.fillRect(x + 37, y - 78 + weaponOffset, 28, 5);
+
+            // Attack flash effect
+            if (isAttacking) {
+                ctx.fillStyle = 'rgba(255, 100, 100, 0.5)';
+                ctx.fillRect(x + 30, y - 105 + weaponOffset, 42, 45);
+
+                // Impact lines
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 3;
+                for (let i = 0; i < 8; i++) {
+                    const angle = (i / 8) * Math.PI * 2;
+                    const startDist = 50;
+                    const endDist = 70;
+                    ctx.beginPath();
+                    ctx.moveTo(x + 51 + Math.cos(angle) * startDist, y - 82 + weaponOffset + Math.sin(angle) * startDist);
+                    ctx.lineTo(x + 51 + Math.cos(angle) * endDist, y - 82 + weaponOffset + Math.sin(angle) * endDist);
+                    ctx.stroke();
+                }
+            }
 
             // Spikes on hammer
             ctx.fillStyle = '#4a4a4a';
             for (let i = 0; i < 8; i++) {
                 const spikeX = x + 37 + (i % 4) * 8;
-                const spikeY = y - 100 + Math.floor(i / 4) * 35;
+                const spikeY = y - 100 + weaponOffset + Math.floor(i / 4) * 35;
                 ctx.beginPath();
                 ctx.moveTo(spikeX, spikeY);
                 ctx.lineTo(spikeX + 3, spikeY - 8);
@@ -3743,6 +3854,9 @@
             ctx.beginPath();
             ctx.ellipse(x, y + 95, 85, 15, 0, 0, Math.PI * 2);
             ctx.fill();
+
+            // Restore transform if applied
+            ctx.restore();
         }
 
         // Draw a cute Nintendo-style character sprite
@@ -5845,7 +5959,7 @@
                         } else if (mob.type === 'warlord') {
                             // Boss gets much larger shadow
                             drawCharacterShadow(mobPixel.x, mobPixel.y, 85);
-                            drawGoblinWarlord(mobPixel.x, mobPixel.y);
+                            drawGoblinWarlord(mobPixel.x, mobPixel.y, mob.isAttacking, mob.attackDirection);
                             
                             // NEW: Boss name tag (always visible)
                             const nameTagY = mobPixel.y - 140;
@@ -5928,15 +6042,6 @@
                                 ctx.lineWidth = 3;
                                 ctx.strokeText(`${mob.health}/${mob.maxHealth}`, mobPixel.x, barY + 10);
                                 ctx.fillText(`${mob.health}/${mob.maxHealth}`, mobPixel.x, barY + 10);
-
-                                // Draw boss title above health bar
-                                ctx.fillStyle = '#FFD700';
-                                ctx.font = 'bold 12px Courier New';
-                                ctx.textAlign = 'center';
-                                ctx.strokeStyle = '#000000';
-                                ctx.lineWidth = 3;
-                                ctx.strokeText('GOBLIN WARLORD', mobPixel.x, barY - 8);
-                                ctx.fillText('GOBLIN WARLORD', mobPixel.x, barY - 8);
 
                             } else {
                                 // Regular mobs: Small health bar
@@ -7606,6 +7711,9 @@
                             isAggro: false,
                             isBoss: true,
                             noKnockback: true,
+                            isAttacking: false,
+                            attackDirection: 'down',
+                            lastAttackTime: 0,
                             respawnTime: null
                         });
                     } else if (mob.type === 'goblin') {
@@ -7974,7 +8082,15 @@
                                     // Ensure goblin stays within bounds
                                     newX = Math.max(1, Math.min(GRID_WIDTH - 2, newX));
                                     newY = Math.max(1, Math.min(GRID_HEIGHT - 2, newY));
-                                    
+
+                                    // NEW: Prevent goblin from standing on cave entrance (10, 6) in Forest Zone
+                                    const caveEntrance = { x: 10, y: 6 };
+                                    if (newX === caveEntrance.x && newY === caveEntrance.y) {
+                                        // Don't move onto the cave entrance - stay at current position
+                                        newX = mob.x;
+                                        newY = mob.y;
+                                    }
+
                                     // Check if target position is occupied by terrain
                                     const isBlocked = isPositionOccupied(newX, newY);
                                     const isPlayerPosition = (newX === myGridPos.x && newY === myGridPos.y);
@@ -7994,6 +8110,20 @@
                                         // Goblin is trying to move onto player - attack instead!
                                         takeDamage();
                                         console.log('Goblin attacked player at close range!');
+
+                                        // Update lastMove to prevent attack spam
+                                        const mobRef = ref(database, `forestMobs/${mobId}`);
+                                        set(mobRef, {
+                                            ...mob,
+                                            lastMove: currentTime,
+                                            isAggro: true
+                                        });
+                                    // NEW: Also attack if player is standing on cave entrance and goblin is adjacent
+                                    } else if (myGridPos.x === caveEntrance.x && myGridPos.y === caveEntrance.y &&
+                                            Math.abs(mob.x - myGridPos.x) <= 1 && Math.abs(mob.y - myGridPos.y) <= 1) {
+                                        // Player on cave entrance, goblin adjacent - can still attack!
+                                        takeDamage();
+                                        console.log('Goblin attacked player at cave entrance!');
 
                                         // Update lastMove to prevent attack spam
                                         const mobRef = ref(database, `forestMobs/${mobId}`);
@@ -8029,6 +8159,14 @@
                                     let newX = Math.max(1, Math.min(GRID_WIDTH - 2, mob.x + dir.x));
                                     let newY = Math.max(1, Math.min(GRID_HEIGHT - 2, mob.y + dir.y));
                                     
+                                    // NEW: Prevent goblin from wandering onto cave entrance
+                                    const caveEntrance = { x: 10, y: 6 };
+                                    if (newX === caveEntrance.x && newY === caveEntrance.y) {
+                                        // Don't move onto cave entrance - stay where we are
+                                        newX = mob.x;
+                                        newY = mob.y;
+                                    }
+
                                     const mobRef = ref(database, `forestMobs/${mobId}`);
                                     set(mobRef, {
                                         ...mob,
@@ -8041,6 +8179,16 @@
                             }
                         } else if (mob.type === 'warlord') {
                             // BOSS AI - Similar to goblin but slower and more powerful
+
+                            // NEW: Auto-reset attack animation after 400ms
+                            if (mob.isAttacking && (currentTime - (mob.lastAttackTime || 0)) > 400) {
+                                const mobRef = ref(database, `caveMobs/${mobId}`);
+                                set(mobRef, {
+                                    ...mob,
+                                    isAttacking: false
+                                });
+                                return; // Skip rest of AI this frame to avoid conflicts
+                            }
                             const playerDistance = Math.abs(mob.x - myGridPos.x) + Math.abs(mob.y - myGridPos.y);
 
                             if (playerDistance <= (mob.aggroRange || 5)) {
@@ -8078,11 +8226,40 @@
                                         }
 
                                         // Boss is close enough - ATTACK PLAYER!
-                                        // Deal exactly 3 damage
-                                        myHealth = Math.max(0, myHealth - 3);
-                                        updateHeartDisplay();
-                                        updatePlayerData();
-                                        console.log('💥 BOSS HIT PLAYER for 3 damage!');
+
+                                        // NEW: Determine attack direction based on player position
+                                        let attackDir = 'down';
+                                        const dx = myGridPos.x - mob.x;
+                                        const dy = myGridPos.y - mob.y;
+
+                                        if (Math.abs(dx) > Math.abs(dy)) {
+                                            attackDir = dx > 0 ? 'right' : 'left';
+                                        } else {
+                                            attackDir = dy > 0 ? 'down' : 'up';
+                                        }
+
+                                        // NEW: Warlord deals 3 damage - shield can absorb 2, remaining goes through
+                                        const warlordDamage = 3;
+                                        let damageToPlayer = warlordDamage;
+
+                                        if (isBlocking && !shieldBroken) {
+                                            // Shield absorbs up to 2 damage
+                                            const shieldAbsorb = Math.min(2, damageToPlayer);
+                                            damageToPlayer -= shieldAbsorb;
+                                            
+                                            // Shield breaks after absorbing
+                                            shieldBroken = true;
+                                            stopBlocking();
+                                            console.log(`Shield absorbed ${shieldAbsorb} damage and shattered!`);
+                                        }
+
+                                        // Deal remaining damage to player
+                                        if (damageToPlayer > 0) {
+                                            myHealth = Math.max(0, myHealth - damageToPlayer);
+                                            updateHeartDisplay();
+                                            updatePlayerData();
+                                            console.log(`💥 BOSS HIT PLAYER for ${damageToPlayer} damage!`);
+                                        }
 
                                         // Check if player died
                                         if (myHealth <= 0) {
@@ -8094,8 +8271,12 @@
                                         set(mobRef, {
                                             ...mob,
                                             lastMove: currentTime,
-                                            isAggro: true
+                                            isAggro: true,
+                                            isAttacking: true,
+                                            attackDirection: attackDir,
+                                            lastAttackTime: currentTime
                                         });
+
                                     } else {
                                         // Move towards player
                                         let newX = mob.x;
@@ -8140,6 +8321,7 @@
                                     set(mobRef, {
                                         ...mob,
                                         isAggro: false,
+                                        attackDirection: 'down', // Reset to facing down when calm
                                         lastMove: currentTime
                                     });
                                 }
