@@ -1365,28 +1365,13 @@
                     }
                 } // ← Boss loop ends here
                 
-                // NEW: Check for entrance barrier fences - side exits open at y=12
-                const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
-                const entranceY = GRID_HEIGHT - 1; // y=14
+                // NEW: Horizontal fence barrier at y=10 - blocks all except exit positions
+                const fenceY = 10;
+                const exitPositions = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19];
 
-                // Left wall (x=9) - at y=14, 13, 11 ONLY (skip y=12 for side exit)
-                if (gridX === entranceX - 1 && (gridY === entranceY || gridY === entranceY - 1 || gridY === entranceY - 3)) {
+                // Check if player is trying to cross the fence at a non-exit position
+                if (gridY === fenceY && !exitPositions.includes(gridX)) {
                     return true;
-                }
-
-                // Right wall (x=11) - at y=14, 13, 11 ONLY (skip y=12 for side exit)
-                if (gridX === entranceX + 1 && (gridY === entranceY || gridY === entranceY - 1 || gridY === entranceY - 3)) {
-                    return true;
-                }
-
-                // DO NOT block (10,10), (8,12), or (12,12) - these are exits!
-
-                // Right corridor walls (leading to exit at 12,12)
-                for (let y = 13; y >= 12; y--) {
-                    // Left wall of right corridor (x=11) - but don't double-block main path
-                    if (gridX === 11 && gridY === y && gridY < entranceY - 4) {
-                        return true;
-                    }
                 }
             } // ← Cave zone check ends here
             
@@ -2221,15 +2206,14 @@
 
                 // FIXED: Zone-specific respawn logic
                 if (myZone === 5) {
-                    // Cave zone - always respawn near entrance/exit area to avoid warlord
-                    // Respawn in the safe entrance corridor area
+                    // Cave zone - respawn above the horizontal fence
                     const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
-                    const entranceY = GRID_HEIGHT - 1; // y=14
+                    const fenceY = 10;
 
-                    // Respawn in main corridor between y=11 and y=13, x=10 (center path)
+                    // Respawn in corridor between fence and exit (y=11,12,13)
                     newPos = {
-                        x: entranceX,
-                        y: Math.floor(Math.random() * 3) + (entranceY - 3) // Random between y=11,12,13
+                        x: entranceX, // Spawn at center
+                        y: Math.floor(Math.random() * 3) + (fenceY + 1) // Random between y=11,12,13
                     };
                 } else {
                     // Other zones - use normal random respawn with collision check
@@ -5659,7 +5643,7 @@
                     }
                 } // ← Floor rendering ends here
                 
-            // NEW: Entrance with main path and side exits at specific coordinates
+            // NEW: Entrance at top (unchanged)
             const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
             const entranceY = GRID_HEIGHT - 1; // y=14
 
@@ -5680,52 +5664,6 @@
             ctx.arc(exitPixel.x, exitPixel.y, GRID_SIZE * 2.5, 0, Math.PI * 2);
             ctx.fill();
 
-            // Main pathway left wall (x=9, at y=14, y=13, and y=11 ONLY - skip y=12 for exit)
-            const leftWallYs = [entranceY, entranceY - 1, entranceY - 3]; // y=14, 13, 11 - SKIP y=12
-            leftWallYs.forEach(y => {
-                const fencePixel = gridToPixel(entranceX - 1, y);
-
-                // Fence post
-                ctx.fillStyle = '#5a3a1a';
-                ctx.fillRect(fencePixel.x - 8, fencePixel.y - 15, 16, 30);
-
-                // Fence bars
-                ctx.fillStyle = '#4a2a0a';
-                ctx.fillRect(fencePixel.x - 10, fencePixel.y - 8, 20, 3);
-                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 0, 20, 3);
-                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 8, 20, 3);
-            });
-
-            // Main pathway right wall (x=11, at y=14, y=13, and y=11 ONLY - skip y=12 for exit)
-            const rightWallYs = [entranceY, entranceY - 1, entranceY - 3]; // y=14, 13, 11 - SKIP y=12
-            rightWallYs.forEach(y => {
-                const fencePixel = gridToPixel(entranceX + 1, y);
-
-                // Fence post
-                ctx.fillStyle = '#5a3a1a';
-                ctx.fillRect(fencePixel.x - 8, fencePixel.y - 15, 16, 30);
-
-                // Fence bars
-                ctx.fillStyle = '#4a2a0a';
-                ctx.fillRect(fencePixel.x - 10, fencePixel.y - 8, 20, 3);
-                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 0, 20, 3);
-                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 8, 20, 3);
-            });
-
-            // LEFT EXIT - Arrow at (8,12) - NO FENCE HERE
-            const leftExitPixel = gridToPixel(8, 12);
-            ctx.fillStyle = '#FFD700';
-            ctx.font = 'bold 20px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('←', leftExitPixel.x, leftExitPixel.y + 7);
-
-            // RIGHT EXIT - Arrow at (12,12) - NO FENCE HERE
-            const rightExitPixel = gridToPixel(12, 12);
-            ctx.fillStyle = '#FFD700';
-            ctx.font = 'bold 20px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('→', rightExitPixel.x, rightExitPixel.y + 7);
-
             // Draw rope at main exit
             ctx.strokeStyle = '#8B7355';
             ctx.lineWidth = 3;
@@ -5740,6 +5678,36 @@
                 ctx.beginPath();
                 ctx.arc(exitPixel.x, exitPixel.y - GRID_SIZE + (i * 15), 3, 0, Math.PI * 2);
                 ctx.fill();
+            }
+
+            // NEW: Horizontal fence barrier at y=10 with multiple vertical exits
+            const fenceY = 10;
+            const exitPositions = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]; // Even distribution of exits
+
+            // Draw horizontal fence (skip exit positions)
+            for (let x = 0; x < GRID_WIDTH; x++) {
+                // Skip if this is an exit position
+                if (exitPositions.includes(x)) {
+                    // Draw exit markers (arrows pointing up)
+                    const exitMarkerPixel = gridToPixel(x, fenceY);
+                    ctx.fillStyle = '#FFD700';
+                    ctx.font = 'bold 20px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('↑', exitMarkerPixel.x, exitMarkerPixel.y + 7);
+                    continue;
+                }
+
+                const fencePixel = gridToPixel(x, fenceY);
+
+                // Fence post
+                ctx.fillStyle = '#5a3a1a';
+                ctx.fillRect(fencePixel.x - 8, fencePixel.y - 15, 16, 30);
+
+                // Fence bars (horizontal)
+                ctx.fillStyle = '#4a2a0a';
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y - 8, 20, 3);
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 0, 20, 3);
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 8, 20, 3);
             }
         }
             // Draw zone transition arrows
@@ -8081,12 +8049,22 @@
 
                                 if (timeSinceLastMove >= 1200) { // Boss moves slower (1.2 seconds)
                                     // Check if adjacent to player (within 4 tiles due to boss size)
+                                    // OR if player is one tile past the fence (to prevent safe-spotting)
                                     const isAdjacentToPlayer = (
                                         Math.abs(mob.x - myGridPos.x) <= 2 &&
                                         Math.abs(mob.y - myGridPos.y) <= 2
                                     );
 
-                                    if (isAdjacentToPlayer) {
+                                    // NEW: Also check if player is just past the fence (one tile away)
+                                    const fenceY = 10;
+                                    const maxWarlordY = fenceY - 2; // y=8
+                                    const isPlayerJustPastFence = (
+                                        mob.y === maxWarlordY && // Warlord at fence line
+                                        myGridPos.y === fenceY + 1 && // Player one tile past fence (y=11)
+                                        Math.abs(mob.x - myGridPos.x) <= 2 // Within horizontal reach
+                                    );
+
+                                    if (isAdjacentToPlayer || isPlayerJustPastFence) {
                                         // FIXED: Don't attack if player is already dead or respawning
                                         if (isRespawning || myHealth <= 0) {
                                             // Update lastMove anyway to prevent spam checking
@@ -8129,14 +8107,18 @@
                                         if (mob.y < myGridPos.y) newY++;
                                         else if (mob.y > myGridPos.y) newY--;
 
-                                        // Check if target position is valid (not out of bounds)
-                                        newX = Math.max(2, Math.min(GRID_WIDTH - 3, newX)); // Boss needs more space
-                                        newY = Math.max(2, Math.min(GRID_HEIGHT - 8, newY)); // Keep boss away from entrance area
+                                        // Basic bounds check
+                                        newX = Math.max(0, Math.min(GRID_WIDTH - 1, newX));
+                                        newY = Math.max(0, Math.min(GRID_HEIGHT - 1, newY));
 
-                                        // Don't let boss get too close to entrance area
-                                        const safeZoneY = GRID_HEIGHT - 7;
-                                        if (newY > safeZoneY) {
-                                            newY = safeZoneY; // Stop before corridors
+                                        // NEW: Prevent warlord from crossing the horizontal fence
+                                        // Warlord is 4x4, extends from (y-1) to (y+2)
+                                        // Fence is at y=10, so warlord center must stay at y=8 or below
+                                        // This ensures his bottom edge (y+2) doesn't go past y=10
+                                        const fenceY = 10;
+                                        const maxWarlordY = fenceY - 2; // y=8 (so bottom edge is at y=10)
+                                        if (newY > maxWarlordY) {
+                                            newY = maxWarlordY; // Stop before the fence
                                         }
 
                                         // Boss doesn't check for terrain collision - it's too powerful!
