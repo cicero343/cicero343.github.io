@@ -1329,7 +1329,7 @@
             if (isWaterTile(gridX, gridY)) {
                 return true;
             }
-            
+
             // Check for trees in Town Zone
             if (myZone === 1) {
                 for (let tree of trees) {
@@ -1338,16 +1338,57 @@
                     }
                 }
             }
-            
+
             // Check for goblins in Forest Zone - they now block movement
             if (myZone === 4) {
                 for (let [mobId, mob] of Object.entries(mobs)) {
-                    if (mob && mob.type === 'goblin' && mob.health > 0 && 
+                    if (mob && mob.type === 'goblin' && mob.health > 0 &&
                         mob.x === gridX && mob.y === gridY) {
-                        return true; // Goblins block movement
+                        return true;
                     }
                 }
             }
+
+            // Check for Goblin Warlord in Cave Zone - blocks 4x4 area
+            if (myZone === 5) {
+                for (let [mobId, mob] of Object.entries(mobs)) {
+                    if (mob && mob.type === 'warlord' && mob.health > 0) {
+                        // Boss occupies 4x4 tiles centered on its position
+                        const bossMinX = mob.x - 1;
+                        const bossMaxX = mob.x + 2;
+                        const bossMinY = mob.y - 1;
+                        const bossMaxY = mob.y + 2;
+                        if (gridX >= bossMinX && gridX <= bossMaxX &&
+                            gridY >= bossMinY && gridY <= bossMaxY) {
+                            return true;
+                        }
+                    }
+                } // ← Boss loop ends here
+                
+                // NEW: Check for entrance barrier fences - side exits open at y=12
+                const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
+                const entranceY = GRID_HEIGHT - 1; // y=14
+
+                // Left wall (x=9) - at y=14, 13, 11 ONLY (skip y=12 for side exit)
+                if (gridX === entranceX - 1 && (gridY === entranceY || gridY === entranceY - 1 || gridY === entranceY - 3)) {
+                    return true;
+                }
+
+                // Right wall (x=11) - at y=14, 13, 11 ONLY (skip y=12 for side exit)
+                if (gridX === entranceX + 1 && (gridY === entranceY || gridY === entranceY - 1 || gridY === entranceY - 3)) {
+                    return true;
+                }
+
+                // DO NOT block (10,10), (8,12), or (12,12) - these are exits!
+
+                // Right corridor walls (leading to exit at 12,12)
+                for (let y = 13; y >= 12; y--) {
+                    // Left wall of right corridor (x=11) - but don't double-block main path
+                    if (gridX === 11 && gridY === y && gridY < entranceY - 4) {
+                        return true;
+                    }
+                }
+            } // ← Cave zone check ends here
             
             // Player campfires are passable - don't check them here
             // Only permanent structures block movement
@@ -1763,12 +1804,28 @@
             
             console.log(`Melee attack targeting position: ${attackX}, ${attackY}`);
             
-            // Check for mobs in attack range (Wilderness and Forest zones)
-            if (myZone === 2 || myZone === 4) {
+            // Check for mobs in attack range (Wilderness, Forest, and Cave zones)
+            if (myZone === 2 || myZone === 4 || myZone === 5) {
                 Object.entries(mobs).forEach(([mobId, mob]) => {
-                    if (mob && mob.health > 0 &&
-                        mob.x === attackX &&
-                        mob.y === attackY) {
+                    if (mob && mob.health > 0) {
+                        // For boss (4x4), check if attack hits any of its tiles
+                        let isHit = false;
+
+                        if (mob.type === 'warlord') {
+                            // Boss occupies 4x4 area centered on position
+                            const bossMinX = mob.x - 1;
+                            const bossMaxX = mob.x + 2;
+                            const bossMinY = mob.y - 1;
+                            const bossMaxY = mob.y + 2;
+
+                            isHit = (attackX >= bossMinX && attackX <= bossMaxX &&
+                                    attackY >= bossMinY && attackY <= bossMaxY);
+                        } else {
+                            // Normal mobs use single tile
+                            isHit = (mob.x === attackX && mob.y === attackY);
+                        }
+
+                        if (!isHit) return;
 
                         // Only attack mobs in current zone
                         const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
@@ -1778,17 +1835,26 @@
 
                         // Check if this is the third attack (knockback attack)
                         const isKnockbackAttack = (attackComboCount === 2);
-                        
+
                         // Calculate damage based on Attack skill level
                         const attackDamage = playerAttack >= ATTACK_DAMAGE_THRESHOLD ? ENHANCED_DAMAGE : BASE_DAMAGE;
                         const newHealth = Math.max(0, mob.health - attackDamage);
-                        const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
-                        
-                        // Apply knockback if it's the third attack
+
+                        // Determine correct Firebase reference
+                        let mobRef;
+                        if (myZone === 5) {
+                            mobRef = ref(database, `caveMobs/${mobId}`);
+                        } else if (myZone === 4) {
+                            mobRef = ref(database, `forestMobs/${mobId}`);
+                        } else {
+                            mobRef = ref(database, `mobs/${mobId}`);
+                        }
+
+                        // Apply knockback if it's the third attack AND mob is not a boss
                         let knockbackX = mob.x;
                         let knockbackY = mob.y;
 
-                        if (isKnockbackAttack && newHealth > 0) {
+                        if (isKnockbackAttack && newHealth > 0 && !mob.noKnockback) {
                             // Calculate knockback direction (2 tiles back)
                             const knockbackDistance = 2;
 
@@ -1812,14 +1878,25 @@
 
                         if (newHealth <= 0) {
                             console.log(`${mob.type} ${mobId} killed by melee attack - creating drops`);
-                            
+
                             // Give attack skill XP
                             if (playerAttack < 20) {
                                 playerAttack += 1;
                                 console.log(`Attack skill increased to ${playerAttack}!`);
                             }
-                            
-                            const expValue = mob.type === 'goblin' ? 12 : (mob.type === 'chicken' ? 8 : 6);
+
+                            // Calculate EXP based on mob type (BOSS GIVES MASSIVE XP)
+                            let expValue;
+                            if (mob.type === 'warlord') {
+                                expValue = 800; // MASSIVE XP BOOST - approximately 5-6 levels
+                            } else if (mob.type === 'goblin') {
+                                expValue = 12;
+                            } else if (mob.type === 'chicken') {
+                                expValue = 8;
+                            } else {
+                                expValue = 6;
+                            }
+
                             const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                             set(expDropRef, {
                                 x: mob.x,
@@ -1830,11 +1907,16 @@
                                 createdAt: Date.now()
                             });
                             
-                            // Gold drops - goblins drop more gold (4-5) than chickens/mice (2-4)
-                            if (Math.random() < 0.8) {
-                                const goldValue = mob.type === 'goblin' ? 
-                                    Math.floor(Math.random() * 2) + 4 : // 4-5 gold
-                                    Math.floor(Math.random() * 3) + 2; // 2-4 gold
+                            // Gold drops - BOSS drops guaranteed 150 gold, goblins drop 4-5, others drop 2-4
+                            if (mob.type === 'warlord' || Math.random() < 0.8) {
+                                let goldValue;
+                                if (mob.type === 'warlord') {
+                                    goldValue = 150; // MASSIVE GOLD REWARD
+                                } else if (mob.type === 'goblin') {
+                                    goldValue = Math.floor(Math.random() * 2) + 4; // 4-5 gold
+                                } else {
+                                    goldValue = Math.floor(Math.random() * 3) + 2; // 2-4 gold
+                                }
                                 const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                 set(goldDropRef, {
                                     x: mob.x,
@@ -1864,9 +1946,9 @@
                                 goblinKillCount++;
                                 console.log(`Goblin killed! Progress: ${goblinKillCount}/4`);
                             }
-                            
-                            // FIXED: Set respawn timer for ALL mobs (goblins, chickens, mice)
-                              set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
+
+                            // FIXED: Set respawn timer - 15 seconds for all mobs including boss
+                            set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 });
                         } else {
                             // Mob is still alive - update health and position (with knockback if applicable)
                             set(mobRef, { ...mob, health: newHealth, x: knockbackX, y: knockbackY });
@@ -2136,17 +2218,33 @@
                 isRespawning = false;
 
                 let newPos;
-                do {
+
+                // FIXED: Zone-specific respawn logic
+                if (myZone === 5) {
+                    // Cave zone - always respawn near entrance/exit area to avoid warlord
+                    // Respawn in the safe entrance corridor area
+                    const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
+                    const entranceY = GRID_HEIGHT - 1; // y=14
+
+                    // Respawn in main corridor between y=11 and y=13, x=10 (center path)
                     newPos = {
-                        x: Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1,
-                        y: Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1
+                        x: entranceX,
+                        y: Math.floor(Math.random() * 3) + (entranceY - 3) // Random between y=11,12,13
                     };
-                } while (isPositionOccupied(newPos.x, newPos.y));
-                
+                } else {
+                    // Other zones - use normal random respawn with collision check
+                    do {
+                        newPos = {
+                            x: Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1,
+                            y: Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1
+                        };
+                    } while (isPositionOccupied(newPos.x, newPos.y));
+                }
+
                 myGridPos = newPos;
                 document.getElementById('gridPos').textContent = `${myGridPos.x}, ${myGridPos.y}`;
                 updateHeartDisplay();
-                updateManaDisplay(); // Add this line
+                updateManaDisplay();
                 updatePlayerData();
             }, 3000);
         }
@@ -2190,18 +2288,28 @@
                 levelUpPopupTimer = 3000;
                 console.log('LEVEL UP! Now level ' + playerLevel);
 
-                // Award heart increases at levels 10 and 20
-                if (playerLevel === 10 || playerLevel === 20) {
+                // FIXED: Award hearts for crossing level 10 or 20 thresholds
+                const oldHeartThreshold = Math.floor(oldLevel / 10); // How many heart upgrades before
+                const newHeartThreshold = Math.floor(playerLevel / 10); // How many heart upgrades now
+
+                if (newHeartThreshold > oldHeartThreshold) {
+                    // Crossed a threshold! Award hearts equal to the difference
+                    const heartsToAdd = newHeartThreshold - oldHeartThreshold;
                     const maxHealth = 4 + Math.floor(playerLevel / 10);
-                    myHealth = Math.min(myHealth + 1, maxHealth);
+                    myHealth = Math.min(myHealth + heartsToAdd, maxHealth);
                     updateHeartDisplay();
                     console.log(`Heart capacity increased! Now ${maxHealth} hearts maximum`);
                 }
 
-                // Award mana heart increases at level 20 (and every 10 levels after)
-                if (playerLevel >= 20 && playerLevel % 10 === 0) {
-                    myMaxMana = 3 + Math.floor(playerLevel / 20); // +1 mana heart at level 20, +1 more at 40, etc.
-                    myMana = Math.min(myMana + 1, myMaxMana); // Restore 1 mana on level up
+                // FIXED: Award mana hearts for crossing level 20, 40, 60, etc. thresholds
+                const oldManaThreshold = Math.floor(oldLevel / 20); // How many mana upgrades before
+                const newManaThreshold = Math.floor(playerLevel / 20); // How many mana upgrades now
+
+                if (newManaThreshold > oldManaThreshold) {
+                    // Crossed a mana threshold! Award mana hearts equal to the difference
+                    const manaHeartsToAdd = newManaThreshold - oldManaThreshold;
+                    myMaxMana = 3 + Math.floor(playerLevel / 20);
+                    myMana = Math.min(myMana + manaHeartsToAdd, myMaxMana);
                     updateManaDisplay();
                     console.log(`Mana capacity increased! Now ${myMaxMana} mana hearts maximum`);
                 }
@@ -2436,7 +2544,38 @@
         }
 
         function initializeMobs() {
-            if (myZone === 2) {
+            if (myZone === 5) {
+                // NEW: Cave Zone - Goblin Warlord Boss
+                console.log('Checking Cave Zone boss...');
+                const caveMobsRef = ref(database, 'caveMobs');
+
+                onValue(caveMobsRef, (snapshot) => {
+                    const currentMobs = snapshot.val() || {};
+                    console.log('Current Cave Mobs:', currentMobs);
+
+                    // Only create boss if it doesn't exist
+                    if (!currentMobs.goblinWarlord) {
+                        console.log('Creating Goblin Warlord boss...');
+
+                        // Spawn in upper-center of cave (away from entrance)
+                        const bossRef = ref(database, 'caveMobs/goblinWarlord');
+                        set(bossRef, {
+                            x: Math.floor(GRID_WIDTH / 2),
+                            y: 5, // Spawn deep in cave, away from entrance
+                            health: 50,
+                            maxHealth: 50,
+                            type: 'warlord',
+                            lastMove: Date.now(),
+                            moveCounter: 0,
+                            aggroTarget: null,
+                            aggroRange: 5, // Larger aggro range
+                            isAggro: false,
+                            isBoss: true, // Flag for special handling
+                            noKnockback: true // Boss cannot be knocked back
+                        });
+                    }
+                }, { onlyOnce: true });
+            } else if (myZone === 2) {
                 // FIXED: Farm Zone mob initialization with better persistence
                 console.log('Checking Farm Zone mobs...');
                 const mobsRef = ref(database, 'mobs');
@@ -2577,6 +2716,7 @@
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
+                initializeMobs();
                 playZoneMusic(4); // Use same music as Forest
             }
             // NEW: Cave exit back to Forest Zone
@@ -3161,6 +3301,18 @@
                 });
             });
 
+            // NEW: Listen to Cave Zone boss
+            const caveMobsRef = ref(database, 'caveMobs');
+            onValue(caveMobsRef, (snapshot) => {
+                const caveMobs = snapshot.val() || {};
+                // Merge cave mobs with regular mobs for unified handling
+                Object.entries(caveMobs).forEach(([id, mob]) => {
+                    if (mob) {
+                        mobs[id] = { ...mob, zone: 5 }; // Mark as cave zone
+                    }
+                });
+            });
+
             const dropsRef = ref(database, 'drops');
             onValue(dropsRef, (snapshot) => {
                 drops = snapshot.val() || {};
@@ -3381,6 +3533,231 @@
             ctx.fillStyle = '#654321';
             ctx.beginPath();
             ctx.arc(x + 13, y - 17, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawGoblinWarlord(x, y) {
+            // This boss is 4x scale - occupies 4x4 tiles
+            const scale = 4;
+
+            // === LEGS (wide stance for stability) ===
+            ctx.fillStyle = '#1a7a1a';
+            // Left leg
+            ctx.fillRect(x - 45, y + 40, 25, 50);
+            // Right leg
+            ctx.fillRect(x + 20, y + 40, 25, 50);
+
+            // Leg armor (metal knee guards)
+            ctx.fillStyle = '#4a4a4a';
+            ctx.fillRect(x - 45, y + 55, 25, 8);
+            ctx.fillRect(x + 20, y + 55, 25, 8);
+
+            // === MASSIVE BODY ===
+            ctx.fillStyle = '#1a7a1a';
+            ctx.beginPath();
+            ctx.ellipse(x, y + 10, 55, 65, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Body shading for depth
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.beginPath();
+            ctx.ellipse(x + 15, y + 20, 50, 55, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // === CHEST ARMOR (metal plate) ===
+            ctx.fillStyle = '#5a5a5a';
+            ctx.fillRect(x - 40, y - 15, 80, 40);
+
+            // Armor details (rivets)
+            ctx.fillStyle = '#3a3a3a';
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 3; j++) {
+                    ctx.beginPath();
+                    ctx.arc(x - 30 + i * 15, y - 10 + j * 15, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // === ARMS (thick and muscular) ===
+            ctx.fillStyle = '#1a7a1a';
+            // Left arm
+            ctx.fillRect(x - 65, y - 10, 20, 55);
+            // Right arm (holding weapon)
+            ctx.fillRect(x + 45, y - 10, 20, 55);
+
+            // Shoulder armor (spikes)
+            ctx.fillStyle = '#4a4a4a';
+            // Left shoulder
+            ctx.beginPath();
+            ctx.arc(x - 55, y - 10, 18, 0, Math.PI * 2);
+            ctx.fill();
+            // Shoulder spikes
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                ctx.fillStyle = '#6a6a6a';
+                ctx.beginPath();
+                ctx.moveTo(x - 55 + Math.cos(angle) * 18, y - 10 + Math.sin(angle) * 18);
+                ctx.lineTo(x - 55 + Math.cos(angle) * 28, y - 10 + Math.sin(angle) * 28);
+                ctx.lineTo(x - 55 + Math.cos(angle + 0.3) * 18, y - 10 + Math.sin(angle + 0.3) * 18);
+                ctx.fill();
+            }
+
+            // Right shoulder
+            ctx.fillStyle = '#4a4a4a';
+            ctx.beginPath();
+            ctx.arc(x + 55, y - 10, 18, 0, Math.PI * 2);
+            ctx.fill();
+
+            // === SKULL TROPHY ON BELT ===
+            ctx.fillStyle = '#e8e8e8';
+            ctx.beginPath();
+            ctx.arc(x - 35, y + 30, 8, 0, Math.PI * 2);
+            ctx.fill();
+            // Eye sockets
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x - 38, y + 28, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x - 32, y + 28, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // === MASSIVE HEAD ===
+            ctx.fillStyle = '#004d00';
+            ctx.beginPath();
+            ctx.arc(x, y - 50, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Head shading
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.beginPath();
+            ctx.arc(x + 10, y - 45, 35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // === HUGE POINTED EARS ===
+            ctx.fillStyle = '#1a7a1a';
+            // Left ear
+            ctx.beginPath();
+            ctx.moveTo(x - 40, y - 50);
+            ctx.lineTo(x - 60, y - 65);
+            ctx.lineTo(x - 35, y - 55);
+            ctx.fill();
+            // Right ear
+            ctx.beginPath();
+            ctx.moveTo(x + 40, y - 50);
+            ctx.lineTo(x + 60, y - 65);
+            ctx.lineTo(x + 35, y - 55);
+            ctx.fill();
+
+            // === BATTLE HELMET/CROWN ===
+            ctx.fillStyle = '#8B7500';
+            // Helmet base
+            ctx.fillRect(x - 35, y - 75, 70, 15);
+            // Helmet horns
+            ctx.fillStyle = '#6a5a00';
+            // Left horn
+            ctx.beginPath();
+            ctx.moveTo(x - 35, y - 70);
+            ctx.lineTo(x - 50, y - 95);
+            ctx.lineTo(x - 30, y - 75);
+            ctx.fill();
+            // Right horn
+            ctx.beginPath();
+            ctx.moveTo(x + 35, y - 70);
+            ctx.lineTo(x + 50, y - 95);
+            ctx.lineTo(x + 30, y - 75);
+            ctx.fill();
+
+            // === GLOWING RED EYES (very menacing) ===
+            // Eye glow effect
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#FF0000';
+            ctx.fillStyle = '#FF0000';
+            ctx.beginPath();
+            ctx.arc(x - 15, y - 55, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 15, y - 55, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Bright eye centers
+            ctx.fillStyle = '#FF6666';
+            ctx.beginPath();
+            ctx.arc(x - 15, y - 55, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 15, y - 55, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // === BATTLE SCARS ===
+            ctx.strokeStyle = '#003300';
+            ctx.lineWidth = 3;
+            // Scar across face
+            ctx.beginPath();
+            ctx.moveTo(x - 30, y - 60);
+            ctx.lineTo(x + 25, y - 45);
+            ctx.stroke();
+
+            // === TUSKS/FANGS ===
+            ctx.fillStyle = '#FFFFFF';
+            // Left tusk
+            ctx.beginPath();
+            ctx.moveTo(x - 20, y - 35);
+            ctx.lineTo(x - 15, y - 25);
+            ctx.lineTo(x - 25, y - 30);
+            ctx.fill();
+            // Right tusk
+            ctx.beginPath();
+            ctx.moveTo(x + 20, y - 35);
+            ctx.lineTo(x + 15, y - 25);
+            ctx.lineTo(x + 25, y - 30);
+            ctx.fill();
+
+            // === MASSIVE WAR HAMMER ===
+            ctx.lineWidth = 2;
+            // Hammer handle (thick wooden shaft)
+            ctx.fillStyle = '#5a3a1a';
+            ctx.fillRect(x + 45, y - 70, 12, 110);
+
+            // Handle grip wrapping
+            ctx.strokeStyle = '#3a2a0a';
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(x + 45, y - 60 + i * 12);
+                ctx.lineTo(x + 57, y - 60 + i * 12);
+                ctx.stroke();
+            }
+
+            // Hammer head (MASSIVE metal block)
+            ctx.fillStyle = '#3a3a3a';
+            ctx.fillRect(x + 35, y - 100, 32, 35);
+
+            // Hammer head details
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(x + 37, y - 98, 28, 5);
+            ctx.fillRect(x + 37, y - 88, 28, 5);
+            ctx.fillRect(x + 37, y - 78, 28, 5);
+
+            // Spikes on hammer
+            ctx.fillStyle = '#4a4a4a';
+            for (let i = 0; i < 8; i++) {
+                const spikeX = x + 37 + (i % 4) * 8;
+                const spikeY = y - 100 + Math.floor(i / 4) * 35;
+                ctx.beginPath();
+                ctx.moveTo(spikeX, spikeY);
+                ctx.lineTo(spikeX + 3, spikeY - 8);
+                ctx.lineTo(spikeX + 6, spikeY);
+                ctx.fill();
+            }
+
+            // === MASSIVE SHADOW ===
+            const shadowGradient = ctx.createRadialGradient(x, y + 95, 0, x, y + 95, 85);
+            shadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0.6)');
+            shadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = shadowGradient;
+            ctx.beginPath();
+            ctx.ellipse(x, y + 95, 85, 15, 0, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -5257,37 +5634,114 @@
             if (myZone === 5) {
                 // Draw dark rocky cave floor
                 const midY = Math.floor(GRID_HEIGHT / 2);
-
                 for (let x = 0; x < GRID_WIDTH; x++) {
                     for (let y = 0; y < GRID_HEIGHT; y++) {
                         const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
                         const pixel = gridToPixel(x, y);
                         const seed = x * 1000 + mirroredY;
-
                         // Very dark rocky ground
                         const rockHue = 30 + (seed % 10); // Brown-grey tones
                         const rockLightness = 10 + (seed % 8); // Very dark
                         ctx.fillStyle = `hsl(${rockHue}, 15%, ${rockLightness}%)`;
                         ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
-
                         // Add some rock texture details
                         for (let i = 0; i < 3; i++) {
                             const pr1 = (seed + i * 234) % 1000 / 1000;
                             const pr2 = (seed + i * 567) % 1000 / 1000;
-
                             const rockX = pixel.x + (pr1 - 0.5) * GRID_SIZE * 0.6;
                             const rockY = pixel.y + (pr2 - 0.5) * GRID_SIZE * 0.6;
                             const rockSize = 1 + pr1 * 2;
-
                             ctx.fillStyle = `rgba(${80 + pr1 * 30}, ${70 + pr2 * 20}, ${60 + pr1 * 15}, 0.3)`;
                             ctx.beginPath();
                             ctx.arc(rockX, rockY, rockSize, 0, Math.PI * 2);
                             ctx.fill();
                         }
                     }
-                }
-            }
+                } // ← Floor rendering ends here
+                
+            // NEW: Entrance with main path and side exits at specific coordinates
+            const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
+            const entranceY = GRID_HEIGHT - 1; // y=14
 
+            // Draw light beam at main exit (10, 14)
+            const exitPixel = gridToPixel(entranceX, entranceY);
+
+            // Light beam gradient
+            const lightGradient = ctx.createRadialGradient(
+                exitPixel.x, exitPixel.y, 0,
+                exitPixel.x, exitPixel.y, GRID_SIZE * 2.5
+            );
+            lightGradient.addColorStop(0, 'rgba(255, 255, 200, 0.6)');
+            lightGradient.addColorStop(0.5, 'rgba(255, 255, 200, 0.3)');
+            lightGradient.addColorStop(1, 'rgba(255, 255, 200, 0)');
+
+            ctx.fillStyle = lightGradient;
+            ctx.beginPath();
+            ctx.arc(exitPixel.x, exitPixel.y, GRID_SIZE * 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Main pathway left wall (x=9, at y=14, y=13, and y=11 ONLY - skip y=12 for exit)
+            const leftWallYs = [entranceY, entranceY - 1, entranceY - 3]; // y=14, 13, 11 - SKIP y=12
+            leftWallYs.forEach(y => {
+                const fencePixel = gridToPixel(entranceX - 1, y);
+
+                // Fence post
+                ctx.fillStyle = '#5a3a1a';
+                ctx.fillRect(fencePixel.x - 8, fencePixel.y - 15, 16, 30);
+
+                // Fence bars
+                ctx.fillStyle = '#4a2a0a';
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y - 8, 20, 3);
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 0, 20, 3);
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 8, 20, 3);
+            });
+
+            // Main pathway right wall (x=11, at y=14, y=13, and y=11 ONLY - skip y=12 for exit)
+            const rightWallYs = [entranceY, entranceY - 1, entranceY - 3]; // y=14, 13, 11 - SKIP y=12
+            rightWallYs.forEach(y => {
+                const fencePixel = gridToPixel(entranceX + 1, y);
+
+                // Fence post
+                ctx.fillStyle = '#5a3a1a';
+                ctx.fillRect(fencePixel.x - 8, fencePixel.y - 15, 16, 30);
+
+                // Fence bars
+                ctx.fillStyle = '#4a2a0a';
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y - 8, 20, 3);
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 0, 20, 3);
+                ctx.fillRect(fencePixel.x - 10, fencePixel.y + 8, 20, 3);
+            });
+
+            // LEFT EXIT - Arrow at (8,12) - NO FENCE HERE
+            const leftExitPixel = gridToPixel(8, 12);
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('←', leftExitPixel.x, leftExitPixel.y + 7);
+
+            // RIGHT EXIT - Arrow at (12,12) - NO FENCE HERE
+            const rightExitPixel = gridToPixel(12, 12);
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('→', rightExitPixel.x, rightExitPixel.y + 7);
+
+            // Draw rope at main exit
+            ctx.strokeStyle = '#8B7355';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(exitPixel.x, exitPixel.y - GRID_SIZE);
+            ctx.lineTo(exitPixel.x, exitPixel.y + GRID_SIZE/2);
+            ctx.stroke();
+
+            // Rope knots
+            ctx.fillStyle = '#6B5345';
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(exitPixel.x, exitPixel.y - GRID_SIZE + (i * 15), 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
             // Draw zone transition arrows
             if (myZone === 1) {
                 const rightArrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
@@ -5392,14 +5846,22 @@
                 ctx.fillText('Forest', southArrowX, southArrowY + 20);
             }
             
-            if (myZone === 2 || myZone === 4) {
-                // Draw mobs for both Wilderness (zone 2) and Forest (zone 4)
+            if (myZone === 2 || myZone === 4 || myZone === 5) {
+                // Draw mobs for Wilderness (zone 2), Forest (zone 4), and Cave (zone 5)
                 Object.entries(mobs).forEach(([mobId, mob]) => {
                     if (mob && mob.health > 0) {
                         // Only draw mobs that belong to current zone
-                        const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
+                        let mobZone;
+                        if (mob.type === 'warlord') {
+                            mobZone = 5; // Warlord is in Cave
+                        } else if (mob.type === 'goblin') {
+                            mobZone = 4; // Normal goblins in Forest
+                        } else {
+                            mobZone = 2; // Farm mobs
+                        }
+
                         if (mobZone !== myZone) return;
-                        
+
                         const mobPixel = gridToPixel(mob.x, mob.y);
 
                         // Draw shadow first, then mob on top
@@ -5412,20 +5874,115 @@
                         } else if (mob.type === 'goblin') {
                             drawCharacterShadow(mobPixel.x, mobPixel.y, 14);
                             drawGoblin(mobPixel.x, mobPixel.y);
+                        } else if (mob.type === 'warlord') {
+                            // Boss gets much larger shadow
+                            drawCharacterShadow(mobPixel.x, mobPixel.y, 85);
+                            drawGoblinWarlord(mobPixel.x, mobPixel.y);
+                            
+                            // NEW: Boss name tag (always visible)
+                            const nameTagY = mobPixel.y - 140;
+                            
+                            // Name tag background
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                            ctx.fillRect(mobPixel.x - 70, nameTagY - 5, 140, 20);
+                            
+                            // Name tag border
+                            ctx.strokeStyle = '#FFD700';
+                            ctx.lineWidth = 2;
+                            ctx.strokeRect(mobPixel.x - 70, nameTagY - 5, 140, 20);
+                            
+                            // Boss icon/skull
+                            ctx.fillStyle = '#FF0000';
+                            ctx.font = '14px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('💀', mobPixel.x - 50, nameTagY + 9);
+                            
+                            // Boss name
+                            ctx.fillStyle = '#FFD700';
+                            ctx.font = 'bold 11px Courier New';
+                            ctx.strokeStyle = '#000000';
+                            ctx.lineWidth = 3;
+                            ctx.strokeText('GOBLIN WARLORD', mobPixel.x + 5, nameTagY + 9);
+                            ctx.fillText('GOBLIN WARLORD', mobPixel.x + 5, nameTagY + 9);
+                            
+                            // Boss level indicator
+                            ctx.fillStyle = '#FF6666';
+                            ctx.font = 'bold 10px Courier New';
+                            ctx.fillText('[BOSS]', mobPixel.x + 5, nameTagY - 10);
                         }
-                        
-                        // Draw health bar if damaged
-                        if (mob.health < mob.maxHealth) {
-                            const barWidth = 20;
-                            const barHeight = 3;
-                            const barX = mobPixel.x - barWidth / 2;
-                            const barY = mobPixel.y - 20;
-                            
-                            ctx.fillStyle = '#333';
-                            ctx.fillRect(barX, barY, barWidth, barHeight);
-                            
-                            ctx.fillStyle = '#ff4444';
-                            ctx.fillRect(barX, barY, (mob.health / mob.maxHealth) * barWidth, barHeight);
+
+                        // Draw health bar if damaged (or always for boss)
+                        if (mob.health < mob.maxHealth || mob.type === 'warlord') {
+                            let barWidth, barHeight, barX, barY;
+
+                            if (mob.type === 'warlord') {
+                                // BOSS: Much larger health bar
+                                barWidth = 120;
+                                barHeight = 12;
+                                barX = mobPixel.x - barWidth / 2;
+                                barY = mobPixel.y - 120; // Higher above boss head
+
+                                // Draw boss health bar background (dark)
+                                ctx.fillStyle = '#1a1a1a';
+                                ctx.fillRect(barX - 2, barY - 2, barWidth + 4, barHeight + 4);
+
+                                // Draw boss health bar border (gold)
+                                ctx.strokeStyle = '#FFD700';
+                                ctx.lineWidth = 2;
+                                ctx.strokeRect(barX - 2, barY - 2, barWidth + 4, barHeight + 4);
+
+                                // Draw empty bar (red background)
+                                ctx.fillStyle = '#4a0000';
+                                ctx.fillRect(barX, barY, barWidth, barHeight);
+
+                                // Draw filled bar (gradient red to yellow based on health)
+                                const healthPercent = mob.health / mob.maxHealth;
+                                const currentBarWidth = healthPercent * barWidth;
+
+                                // Color changes based on health: green -> yellow -> red
+                                let barColor;
+                                if (healthPercent > 0.6) {
+                                    barColor = '#44ff44'; // Green (high health)
+                                } else if (healthPercent > 0.3) {
+                                    barColor = '#ffaa00'; // Yellow (medium health)
+                                } else {
+                                    barColor = '#ff4444'; // Red (low health)
+                                }
+
+                                ctx.fillStyle = barColor;
+                                ctx.fillRect(barX, barY, currentBarWidth, barHeight);
+
+                                // Draw health text on bar (50/50 format)
+                                ctx.fillStyle = '#ffffff';
+                                ctx.font = 'bold 10px Courier New';
+                                ctx.textAlign = 'center';
+                                ctx.strokeStyle = '#000000';
+                                ctx.lineWidth = 3;
+                                ctx.strokeText(`${mob.health}/${mob.maxHealth}`, mobPixel.x, barY + 10);
+                                ctx.fillText(`${mob.health}/${mob.maxHealth}`, mobPixel.x, barY + 10);
+
+                                // Draw boss title above health bar
+                                ctx.fillStyle = '#FFD700';
+                                ctx.font = 'bold 12px Courier New';
+                                ctx.textAlign = 'center';
+                                ctx.strokeStyle = '#000000';
+                                ctx.lineWidth = 3;
+                                ctx.strokeText('GOBLIN WARLORD', mobPixel.x, barY - 8);
+                                ctx.fillText('GOBLIN WARLORD', mobPixel.x, barY - 8);
+
+                            } else {
+                                // Regular mobs: Small health bar
+                                barWidth = 30;
+                                barHeight = 4;
+                                barX = mobPixel.x - barWidth / 2;
+                                barY = mobPixel.y - 25;
+                                
+                                ctx.fillStyle = '#333';
+                                ctx.fillRect(barX, barY, barWidth, barHeight);
+                                
+                                ctx.fillStyle = '#ff4444';
+                                ctx.fillRect(barX, barY, (mob.health / mob.maxHealth) * barWidth, barHeight);
+                            }
                         }
                         
                         // Draw aggro indicator for goblins
@@ -7063,8 +7620,27 @@
             Object.entries(mobs).forEach(([mobId, mob]) => {
                 if (mob && mob.health === 0 && mob.respawnTime && now >= mob.respawnTime) {
                     console.log(`Respawning ${mob.type} ${mobId}`);
-                    
-                    if (mob.type === 'goblin') {
+
+                    if (mob.type === 'warlord') {
+                        // Boss respawn in Cave center (deep inside, away from entrance)
+                        const mobRef = ref(database, `caveMobs/${mobId}`);
+
+                        set(mobRef, {
+                            x: Math.floor(GRID_WIDTH / 2),
+                            y: 7, // Spawn at top-center of cave (away from entrance)
+                            health: 50,
+                            maxHealth: 50,
+                            type: 'warlord',
+                            lastMove: Date.now(),
+                            moveCounter: 0,
+                            aggroTarget: null,
+                            aggroRange: 5,
+                            isAggro: false,
+                            isBoss: true,
+                            noKnockback: true,
+                            respawnTime: null
+                        });
+                    } else if (mob.type === 'goblin') {
                         // Goblin respawn in Forest at original positions
                         const mobRef = ref(database, `forestMobs/${mobId}`);
                         const originalPositions = {
@@ -7264,35 +7840,76 @@
                 }
             });
 
-            if ((myZone === 2 || myZone === 4)) {
+            if ((myZone === 2 || myZone === 4 || myZone === 5)) {
                 Object.entries(fireballs).forEach(([fireballId, fireball]) => {
                     if (fireball && fireball.zone === myZone) {
                         Object.entries(mobs).forEach(([mobId, mob]) => {
-                            if (mob && mob.health > 0 && 
-                                mob.x === fireball.x && 
-                                mob.y === fireball.y) {
-                                
+                            if (mob && mob.health > 0) {
+                                // For boss (4x4), check if fireball hits any of its tiles
+                                let isHit = false;
+
+                                if (mob.type === 'warlord') {
+                                    // Boss occupies 4x4 area centered on position
+                                    const bossMinX = mob.x - 1;
+                                    const bossMaxX = mob.x + 2;
+                                    const bossMinY = mob.y - 1;
+                                    const bossMaxY = mob.y + 2;
+
+                                    isHit = (fireball.x >= bossMinX && fireball.x <= bossMaxX &&
+                                            fireball.y >= bossMinY && fireball.y <= bossMaxY);
+                                } else {
+                                    // Normal mobs use single tile
+                                    isHit = (mob.x === fireball.x && mob.y === fireball.y);
+                                }
+
+                                if (!isHit) return;
+
                                 // Only hit mobs in current zone
-                                const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
+                                let mobZone;
+                                if (mob.type === 'warlord') {
+                                    mobZone = 5;
+                                } else if (mob.type === 'goblin') {
+                                    mobZone = 4;
+                                } else {
+                                    mobZone = 2;
+                                }
+
                                 if (mobZone !== myZone) return;
-                                
+    
                                 console.log(`Fireball hit ${mob.type} at ${mob.x}, ${mob.y}`);
                                 
                                 // Calculate damage based on Magic skill level
                                 const magicDamage = playerMagic >= MAGIC_DAMAGE_THRESHOLD ? ENHANCED_DAMAGE : BASE_DAMAGE;
                                 const newHealth = Math.max(0, mob.health - magicDamage);
-                                const mobRef = myZone === 4 ? ref(database, `forestMobs/${mobId}`) : ref(database, `mobs/${mobId}`);
+                                let mobRef;
+                                if (myZone === 5) {
+                                    mobRef = ref(database, `caveMobs/${mobId}`);
+                                } else if (myZone === 4) {
+                                    mobRef = ref(database, `forestMobs/${mobId}`);
+                                } else {
+                                    mobRef = ref(database, `mobs/${mobId}`);
+                                }
                                 
                                 if (newHealth <= 0) {
                                     console.log(`${mob.type} killed - creating drops`);
-                                    
+
                                     // Give magic skill XP for fireball kills
                                     if (playerMagic < 20) {
                                         playerMagic += 1;
                                         console.log(`Magic skill increased to ${playerMagic}!`);
                                     }
-                                    
-                                    const expValue = mob.type === 'goblin' ? 12 : (mob.type === 'chicken' ? 8 : 6);
+
+                                    // Calculate EXP based on mob type (BOSS GIVES MASSIVE XP)
+                                    let expValue;
+                                    if (mob.type === 'warlord') {
+                                        expValue = 800; // MASSIVE XP BOOST
+                                    } else if (mob.type === 'goblin') {
+                                        expValue = 12;
+                                    } else if (mob.type === 'chicken') {
+                                        expValue = 8;
+                                    } else {
+                                        expValue = 6;
+                                    }
                                     const expDropRef = ref(database, `drops/exp_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                     set(expDropRef, {
                                         x: mob.x,
@@ -7303,11 +7920,16 @@
                                         createdAt: Date.now()
                                     });
                                     
-                                    // Gold drops - goblins drop more gold (4-5) than chickens/mice (2-4)
-                                    if (Math.random() < 0.8) {
-                                        const goldValue = mob.type === 'goblin' ? 
-                                            Math.floor(Math.random() * 2) + 4 : // 4-5 gold
-                                            Math.floor(Math.random() * 3) + 2; // 2-4 gold
+                                    // Gold drops - BOSS drops guaranteed 150 gold
+                                    if (mob.type === 'warlord' || Math.random() < 0.8) {
+                                        let goldValue;
+                                        if (mob.type === 'warlord') {
+                                            goldValue = 150; // MASSIVE GOLD REWARD
+                                        } else if (mob.type === 'goblin') {
+                                            goldValue = Math.floor(Math.random() * 2) + 4; // 4-5 gold
+                                        } else {
+                                            goldValue = Math.floor(Math.random() * 3) + 2; // 2-4 gold
+                                        }
                                         const goldDropRef = ref(database, `drops/gold_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`);
                                         set(goldDropRef, {
                                             x: mob.x,
@@ -7338,8 +7960,8 @@
                                         console.log(`Goblin killed by fireball! Progress: ${goblinKillCount}/4`);
                                     }
                                     
-                                    // FIXED: Set respawn timer for ALL mobs killed by fireballs
-                                    set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 }); // Respawn in 15 seconds
+                                    // FIXED: Set respawn timer - 15 seconds for all mobs including boss
+                                    set(mobRef, { ...mob, health: 0, respawnTime: Date.now() + 15000 });
                                 } else {
                                     set(mobRef, { ...mob, health: newHealth });
                                 }
@@ -7352,7 +7974,7 @@
                 });
             }
 
-            if ((myZone === 2 || myZone === 4) && currentTime % 500 < 50) {
+            if ((myZone === 2 || myZone === 4 || myZone === 5) && currentTime % 500 < 50) {
                 Object.entries(mobs).forEach(([mobId, mob]) => {
                     if (mob && mob.health > 0) {
                         const mobZone = mob.zone || (mob.type === 'goblin' ? 4 : 2);
@@ -7447,6 +8069,124 @@
                                         lastMove: currentTime,
                                         moveCounter: moveCounter + 1
                                     });
+                                }
+                            }
+                        } else if (mob.type === 'warlord') {
+                            // BOSS AI - Similar to goblin but slower and more powerful
+                            const playerDistance = Math.abs(mob.x - myGridPos.x) + Math.abs(mob.y - myGridPos.y);
+
+                            if (playerDistance <= (mob.aggroRange || 5)) {
+                                // Player in aggro range - boss becomes aggressive
+                                mob.isAggro = true;
+
+                                if (timeSinceLastMove >= 1200) { // Boss moves slower (1.2 seconds)
+                                    // Check if adjacent to player (within 4 tiles due to boss size)
+                                    const isAdjacentToPlayer = (
+                                        Math.abs(mob.x - myGridPos.x) <= 2 &&
+                                        Math.abs(mob.y - myGridPos.y) <= 2
+                                    );
+
+                                    if (isAdjacentToPlayer) {
+                                        // FIXED: Don't attack if player is already dead or respawning
+                                        if (isRespawning || myHealth <= 0) {
+                                            // Update lastMove anyway to prevent spam checking
+                                            const mobRef = ref(database, `caveMobs/${mobId}`);
+                                            set(mobRef, {
+                                                ...mob,
+                                                lastMove: currentTime,
+                                                isAggro: true
+                                            });
+                                            return; // Skip attack
+                                        }
+
+                                        // Boss is close enough - ATTACK PLAYER!
+                                        // Deal exactly 3 damage
+                                        myHealth = Math.max(0, myHealth - 3);
+                                        updateHeartDisplay();
+                                        updatePlayerData();
+                                        console.log('💥 BOSS HIT PLAYER for 3 damage!');
+
+                                        // Check if player died
+                                        if (myHealth <= 0) {
+                                            startRespawn();
+                                        }
+
+                                        // Update lastMove to prevent spam attacking
+                                        const mobRef = ref(database, `caveMobs/${mobId}`);
+                                        set(mobRef, {
+                                            ...mob,
+                                            lastMove: currentTime,
+                                            isAggro: true
+                                        });
+                                    } else {
+                                        // Move towards player
+                                        let newX = mob.x;
+                                        let newY = mob.y;
+
+                                        if (mob.x < myGridPos.x) newX++;
+                                        else if (mob.x > myGridPos.x) newX--;
+
+                                        if (mob.y < myGridPos.y) newY++;
+                                        else if (mob.y > myGridPos.y) newY--;
+
+                                        // Check if target position is valid (not out of bounds)
+                                        newX = Math.max(2, Math.min(GRID_WIDTH - 3, newX)); // Boss needs more space
+                                        newY = Math.max(2, Math.min(GRID_HEIGHT - 8, newY)); // Keep boss away from entrance area
+
+                                        // Don't let boss get too close to entrance area
+                                        const safeZoneY = GRID_HEIGHT - 7;
+                                        if (newY > safeZoneY) {
+                                            newY = safeZoneY; // Stop before corridors
+                                        }
+
+                                        // Boss doesn't check for terrain collision - it's too powerful!
+                                        const mobRef = ref(database, `caveMobs/${mobId}`);
+                                        set(mobRef, {
+                                            ...mob,
+                                            x: newX,
+                                            y: newY,
+                                            lastMove: currentTime,
+                                            moveCounter: moveCounter + 1,
+                                            isAggro: true
+                                        });
+                                    }
+                                }
+                            } else if (mob.isAggro) {
+                                // Player left aggro range - calm down after delay
+                                if (timeSinceLastMove >= 3000) {
+                                    const mobRef = ref(database, `caveMobs/${mobId}`);
+                                    set(mobRef, {
+                                        ...mob,
+                                        isAggro: false,
+                                        lastMove: currentTime
+                                    });
+                                }
+                            } else {
+                                // Idle movement - boss stays mostly still
+                                const stayDuration = 5000; // Boss rarely moves when not aggro
+
+                                if (timeSinceLastMove >= stayDuration) {
+                                    // Occasionally take a small step
+                                    if (Math.random() < 0.3) { // 30% chance to move
+                                        const directions = [
+                                            { x: 0, y: -1 }, { x: 0, y: 1 },
+                                            { x: -1, y: 0 }, { x: 1, y: 0 },
+                                            { x: 0, y: 0 } // Stay in place (most common)
+                                        ];
+
+                                        const dir = directions[Math.floor(Math.random() * directions.length)];
+                                        let newX = Math.max(2, Math.min(GRID_WIDTH - 3, mob.x + dir.x));
+                                        let newY = Math.max(2, Math.min(GRID_HEIGHT - 3, mob.y + dir.y));
+
+                                        const mobRef = ref(database, `caveMobs/${mobId}`);
+                                        set(mobRef, {
+                                            ...mob,
+                                            x: newX,
+                                            y: newY,
+                                            lastMove: currentTime,
+                                            moveCounter: moveCounter + 1
+                                        });
+                                    }
                                 }
                             }
                         } else {
