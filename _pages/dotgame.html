@@ -7831,14 +7831,16 @@
                 }
             }
 
-            // NEW: Warlord maintenance - ensure boss exists in cave
+            // NEW: Warlord maintenance - ensure boss exists in cave (but respect respawn timer)
             if (myZone === 5) {
-                const warlordExists = Object.entries(mobs).some(([id, mob]) =>
-                    mob && mob.type === 'warlord' && mob.health > 0
+                const warlordData = Object.entries(mobs).find(([id, mob]) =>
+                    mob && mob.type === 'warlord'
                 );
 
-                if (!warlordExists) {
-                    console.log('Warlord missing in cave, creating...');
+                // Only create if warlord doesn't exist at all (not even as dead)
+                // If it's dead, the normal respawn system will handle it
+                if (!warlordData) {
+                    console.log('Warlord completely missing in cave, creating...');
                     const bossRef = ref(database, 'caveMobs/goblinWarlord');
                     set(bossRef, {
                         x: Math.floor(GRID_WIDTH / 2),
