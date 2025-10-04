@@ -2537,8 +2537,10 @@
                     const currentMobs = snapshot.val() || {};
                     console.log('Current Cave Mobs:', currentMobs);
 
-                    // Only create boss if it doesn't exist
-                    if (!currentMobs.goblinWarlord) {
+                    // Create boss if it doesn't exist OR if it exists but has no health (dead/corrupted data)
+                    const bossExists = currentMobs.goblinWarlord && currentMobs.goblinWarlord.health > 0;
+
+                    if (!bossExists) {
                         console.log('Creating Goblin Warlord boss...');
 
                         // Spawn in upper-center of cave (away from entrance)
@@ -2554,8 +2556,10 @@
                             aggroTarget: null,
                             aggroRange: 5, // Larger aggro range
                             isAggro: false,
-                            isBoss: true, // Flag for special handling
-                            noKnockback: true // Boss cannot be knocked back
+                            attackDirection: 'down', // NEW: Default direction
+                            isAttacking: false, // NEW: Default not attacking
+                            isBoss: true,
+                            noKnockback: true
                         });
                     }
                 }, { onlyOnce: true });
@@ -3270,7 +3274,9 @@
 
             const mobsRef = ref(database, 'mobs');
             onValue(mobsRef, (snapshot) => {
-                mobs = snapshot.val() || {};
+                const farmMobs = snapshot.val() || {};
+                // Start fresh with only farm mobs
+                mobs = { ...farmMobs };
             });
 
             // Listen to Forest Zone goblins
@@ -3289,7 +3295,15 @@
             const caveMobsRef = ref(database, 'caveMobs');
             onValue(caveMobsRef, (snapshot) => {
                 const caveMobs = snapshot.val() || {};
-                // Merge cave mobs with regular mobs for unified handling
+
+                // IMPORTANT: Remove any existing cave mobs from mobs object first
+                Object.keys(mobs).forEach(mobId => {
+                    if (mobs[mobId] && mobs[mobId].zone === 5) {
+                        delete mobs[mobId];
+                    }
+                });
+
+                // Then add current cave mobs
                 Object.entries(caveMobs).forEach(([id, mob]) => {
                     if (mob) {
                         mobs[id] = { ...mob, zone: 5 }; // Mark as cave zone
@@ -7700,7 +7714,7 @@
 
                         set(mobRef, {
                             x: Math.floor(GRID_WIDTH / 2),
-                            y: 7, // Spawn at top-center of cave (away from entrance)
+                            y: 7,
                             health: 50,
                             maxHealth: 50,
                             type: 'warlord',
@@ -7709,11 +7723,11 @@
                             aggroTarget: null,
                             aggroRange: 5,
                             isAggro: false,
+                            attackDirection: 'down',
+                            isAttacking: false,
+                            lastAttackTime: 0,
                             isBoss: true,
                             noKnockback: true,
-                            isAttacking: false,
-                            attackDirection: 'down',
-                            lastAttackTime: 0,
                             respawnTime: null
                         });
                     } else if (mob.type === 'goblin') {
@@ -7813,6 +7827,35 @@
                                 isAggro: false
                             });
                         }
+                    });
+                }
+            }
+
+            // NEW: Warlord maintenance - ensure boss exists in cave
+            if (myZone === 5) {
+                const warlordExists = Object.entries(mobs).some(([id, mob]) =>
+                    mob && mob.type === 'warlord' && mob.health > 0
+                );
+
+                if (!warlordExists) {
+                    console.log('Warlord missing in cave, creating...');
+                    const bossRef = ref(database, 'caveMobs/goblinWarlord');
+                    set(bossRef, {
+                        x: Math.floor(GRID_WIDTH / 2),
+                        y: 5,
+                        health: 50,
+                        maxHealth: 50,
+                        type: 'warlord',
+                        lastMove: Date.now(),
+                        moveCounter: 0,
+                        aggroTarget: null,
+                        aggroRange: 5,
+                        isAggro: false,
+                        attackDirection: 'down',
+                        isAttacking: false,
+                        lastAttackTime: 0,
+                        isBoss: true,
+                        noKnockback: true
                     });
                 }
             }
@@ -8220,7 +8263,9 @@
                                             set(mobRef, {
                                                 ...mob,
                                                 lastMove: currentTime,
-                                                isAggro: true
+                                                isAggro: false,
+                                                attackDirection: 'down',
+                                                isAttacking: false
                                             });
                                             return; // Skip attack
                                         }
@@ -8232,10 +8277,15 @@
                                         const dx = myGridPos.x - mob.x;
                                         const dy = myGridPos.y - mob.y;
 
-                                        if (Math.abs(dx) > Math.abs(dy)) {
-                                            attackDir = dx > 0 ? 'right' : 'left';
-                                        } else {
-                                            attackDir = dy > 0 ? 'down' : 'up';
+                                        // Only face up if player is directly above (not diagonal)
+                                        if (dy < 0 && Math.abs(dy) > Math.abs(dx)) {
+                                            attackDir = 'up';
+                                        } else if (dy > 0) {
+                                            attackDir = 'down';
+                                        } else if (dx > 0) {
+                                            attackDir = 'right';
+                                        } else if (dx < 0) {
+                                            attackDir = 'left';
                                         }
 
                                         // NEW: Warlord deals 3 damage - shield can absorb 2, remaining goes through
@@ -8302,6 +8352,21 @@
                                             newY = maxWarlordY; // Stop before the fence
                                         }
 
+                                        // NEW: Set movement direction - default to 'down' for horizontal movement
+                                        let moveDirection = 'down';
+                                        const actualDx = newX - mob.x;
+                                        const actualDy = newY - mob.y;
+
+                                        // Only face up/down if actually moving vertically
+                                        if (actualDy < 0) {
+                                            moveDirection = 'up';
+                                        } else if (actualDy > 0) {
+                                            moveDirection = 'down';
+                                        } else if (actualDx !== 0) {
+                                            // Moving horizontally - keep facing down
+                                            moveDirection = 'down';
+                                        }
+
                                         // Boss doesn't check for terrain collision - it's too powerful!
                                         const mobRef = ref(database, `caveMobs/${mobId}`);
                                         set(mobRef, {
@@ -8310,7 +8375,8 @@
                                             y: newY,
                                             lastMove: currentTime,
                                             moveCounter: moveCounter + 1,
-                                            isAggro: true
+                                            isAggro: true,
+                                            attackDirection: 'down'
                                         });
                                     }
                                 }
