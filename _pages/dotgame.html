@@ -419,9 +419,10 @@
         let myGold = 0;
         let myDirection = 'right';
         let myZone = 1;
-        // Zone IDs: 1=Town, 2=Farm, 3=Lake, 4=Forest, 5=Cave
+        // Zone IDs: 1=Town, 2=Farm, 3=Lake, 4=Forest, 5=Cave, 6=Temple
         let showDialog = false;
         let dialogText = '';
+        let oracleDialogIndex = 0; // Track which of the 3 Oracle dialogs to show
         let isRespawning = false;
         let isPlayerCreated = false;
 
@@ -443,7 +444,8 @@
             1: 'assets/music/town.mp3',    // Town Zone
             2: 'assets/music/town.mp3',    // Farm Zone uses same file as Town Zone
             3: 'assets/music/lake.mp3',    // Lake Zone
-            4: 'assets/music/forest.mp3'   // Forest Zone
+            4: 'assets/music/forest.mp3',   // Forest Zone
+            5: 'assets/music/temple.mp3'   // Temple Zone
         };
         
         // Quick chat system
@@ -991,11 +993,12 @@
             400, 500, 620, 760, 920, 1100, 1300, 1520, 1760, 2000
         ];
 
-        const npc = { x: 5, y: 4, color: '#ffd700' };
+        const npc = { x: 4, y: 4, color: '#ffd700' };
         const fireplace = { x: 16, y: 9, color: '#ff6600' };
-        const merchant = { x: 11, y: 3, color: '#ff8c00' };
+        const merchant = { x: 14, y: 5, color: '#ff8c00' };
         const questNPC = { x: 15, y: 9, color: '#4169E1' }; // Quest NPC in Lake Zone
         const skyNPC = { x: 16, y: 2, color: '#87CEEB' }; // Sky NPC in Town Zone
+        const mysticalLady = { x: 5, y: 6, color: '#f5f5ff' }; // Mystical Lady in Temple Zone
         
         // Trees in Town Zone
         const trees = [
@@ -1273,7 +1276,7 @@
         }
 
         function updateZoneDisplay() {
-            const zoneNames = { 1: 'Town', 2: 'Farm', 3: 'Lake', 4: 'Forest', 5: 'Cave' };
+            const zoneNames = { 1: 'Town', 2: 'Farm', 3: 'Lake', 4: 'Forest', 5: 'Cave', 6: 'Temple' };
             document.getElementById('zoneDisplay').textContent = zoneNames[myZone];
         }
 
@@ -1339,6 +1342,52 @@
                 }
             }
 
+                // NEW: Check for house structure in Town Zone only
+                if (myZone === 1) {
+                    const houseX = 8;
+                    const houseY = 5;
+                    const doorX = 9;
+                    const doorY = 7;
+
+                    // House occupies (8,5) to (10,7), except doorway at (9,7)
+                    if (gridX >= houseX && gridX < houseX + 3 &&
+                        gridY >= houseY && gridY < houseY + 3) {
+                        // Allow doorway position
+                        if (gridX === doorX && gridY === doorY) {
+                            return false;
+                        }
+                        return true; // Block all other house tiles
+                    }
+                }
+            
+            // Check for Garden pond (center water area)
+            if (myZone === 6) {
+                const pondCenterX = Math.floor(GRID_WIDTH / 2);
+                const pondCenterY = Math.floor(GRID_HEIGHT / 2);
+                const pondSize = 2.5;
+
+                const distToPond = Math.sqrt(
+                    Math.pow(gridX - pondCenterX, 2) +
+                    Math.pow(gridY - pondCenterY, 2)
+                );
+
+                if (distToPond <= pondSize) {
+                    return true; // Can't walk on pond
+                }
+
+                // Check for garden trees
+                const gardenTrees = [
+                    { x: 3, y: 3 }, { x: 7, y: 4 }, { x: 15, y: 3 },
+                    { x: 4, y: 10 }, { x: 12, y: 11 }, { x: 17, y: 9 }
+                ];
+
+                for (let tree of gardenTrees) {
+                    if (tree.x === gridX && tree.y === gridY) {
+                        return true;
+                    }
+                }
+            }
+
             // Check for goblins in Forest Zone - they now block movement
             if (myZone === 4) {
                 for (let [mobId, mob] of Object.entries(mobs)) {
@@ -1384,7 +1433,8 @@
                (myZone === 1 && merchant.x === gridX && merchant.y === gridY) ||
                (myZone === 1 && skyNPC.x === gridX && skyNPC.y === gridY) ||
                (myZone === 3 && fireplace.x === gridX && fireplace.y === gridY) ||
-               (myZone === 3 && questNPC.x === gridX && questNPC.y === gridY);
+               (myZone === 3 && questNPC.x === gridX && questNPC.y === gridY) ||
+               (myZone === 6 && mysticalLady.x === gridX && mysticalLady.y === gridY);
         }
 
         function addItemToInventory(item) {
@@ -2717,6 +2767,26 @@
                 updatePlayerData();
                 playZoneMusic(4);
             }
+            // NEW: Town to Garden transition (through hut doorway)
+            else if (myZone === 1 && myGridPos.x === 9 && myGridPos.y === 7) {
+                myZone = 6; // Enter Garden
+                myGridPos.x = Math.floor(GRID_WIDTH / 2); // Spawn in center
+                myGridPos.y = GRID_HEIGHT - 2; // Spawn near bottom (at the exit)
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+                playZoneMusic(5); // Play Garden music
+            }
+            // NEW: Garden to Town transition (south edge exit)
+            else if (myZone === 6 && myGridPos.y >= GRID_HEIGHT - 1) {
+                myZone = 1; // Return to Town
+                myGridPos.x = 9; // Spawn at hut door
+                myGridPos.y = 7;
+                stopFishing();
+                updateZoneDisplay();
+                updatePlayerData();
+                playZoneMusic(1); // Play Town music
+            }
         }
 
         // Quest management functions
@@ -2937,6 +3007,25 @@
                         showQuestDialog = true;
                         startTypewriter("Would you mind bringing me 5 fish? I'll give you a nice reward!");
                     }
+                    return;
+                }
+                // ADD THIS NEW SECTION for Temple Zone (Zone 6)
+             
+            } else if (myZone === 6) {
+                // Check mystical lady (The Oracle)
+                const oracleDistance = Math.abs(myGridPos.x - mysticalLady.x) + Math.abs(myGridPos.y - mysticalLady.y);
+                if (oracleDistance <= 1) {
+                    showDialog = true;
+                    currentDialogNPC = 'The Oracle';
+                    
+                    // Cycle through the 3 dialog lines
+                    const oracleDialogs = [
+                        "This quiet town of Rowanmyst has stood for millennia, hidden beneath the whispering trees.",
+                        "Some say the old gods left a fragment of their power here, sealed within the crystal of the lake.",
+                        "But since their long slumber, dark clouds have gathered across these lands — as if the light of their protection is fading from Serenity Skies."
+                    ];
+                    
+                    startTypewriter(oracleDialogs[oracleDialogIndex]);
                     return;
                 }
             }
@@ -4873,6 +4962,115 @@
             ctx.restore();
         }
 
+        function drawMysticalLady(pixelX, pixelY) {
+            ctx.save();
+
+            const skinTone = '#ffeedd';
+            const hairColor = '#e8e8ff'; // Very pale, almost white
+            const robeColor = '#f5f5ff'; // Pure white with slight blue tint
+            const accentColor = '#c0d0ff'; // Light blue accents
+
+            // Flowing robes (long, white)
+            ctx.fillStyle = robeColor;
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 12, pixelY + 18);
+            ctx.quadraticCurveTo(pixelX - 10, pixelY - 5, pixelX - 9, pixelY - 2);
+            ctx.lineTo(pixelX + 9, pixelY - 2);
+            ctx.quadraticCurveTo(pixelX + 10, pixelY - 5, pixelX + 12, pixelY + 18);
+            ctx.closePath();
+            ctx.fill();
+
+            // Robe shadows/folds
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 8, pixelY + 5);
+            ctx.lineTo(pixelX - 6, pixelY + 15);
+            ctx.lineTo(pixelX - 4, pixelY + 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 8, pixelY + 5);
+            ctx.lineTo(pixelX + 6, pixelY + 15);
+            ctx.lineTo(pixelX + 4, pixelY + 5);
+            ctx.closePath();
+            ctx.fill();
+
+            // Belt/sash (light blue)
+            ctx.fillStyle = accentColor;
+            ctx.fillRect(pixelX - 9, pixelY, 18, 3);
+
+            // Head (pale skin)
+            ctx.fillStyle = skinTone;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 7, 7, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Long flowing hair (very pale, ethereal)
+            ctx.fillStyle = hairColor;
+            // Left side
+            ctx.beginPath();
+            ctx.moveTo(pixelX - 7, pixelY - 12);
+            ctx.quadraticCurveTo(pixelX - 10, pixelY - 5, pixelX - 8, pixelY + 5);
+            ctx.lineTo(pixelX - 6, pixelY + 5);
+            ctx.quadraticCurveTo(pixelX - 8, pixelY - 5, pixelX - 5, pixelY - 12);
+            ctx.closePath();
+            ctx.fill();
+
+            // Right side
+            ctx.beginPath();
+            ctx.moveTo(pixelX + 7, pixelY - 12);
+            ctx.quadraticCurveTo(pixelX + 10, pixelY - 5, pixelX + 8, pixelY + 5);
+            ctx.lineTo(pixelX + 6, pixelY + 5);
+            ctx.quadraticCurveTo(pixelX + 8, pixelY - 5, pixelX + 5, pixelY - 12);
+            ctx.closePath();
+            ctx.fill();
+
+            // Hair top/crown
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 12, 8, Math.PI * 0.8, Math.PI * 2.2);
+            ctx.fill();
+
+            // Eyes (closed/peaceful expression)
+            ctx.strokeStyle = '#8888aa';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(pixelX - 3, pixelY - 8, 2, 0, Math.PI);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(pixelX + 3, pixelY - 8, 2, 0, Math.PI);
+            ctx.stroke();
+
+            // Gentle smile
+            ctx.strokeStyle = '#ddaaaa';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 4, 3, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+
+            // Mystical glow aura
+            const glowTime = Date.now() * 0.002;
+            const glowOpacity = 0.15 + Math.sin(glowTime) * 0.1;
+            ctx.fillStyle = `rgba(200, 220, 255, ${glowOpacity})`;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY - 5, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Floating sparkles around her
+            for (let i = 0; i < 4; i++) {
+                const angle = (i / 4) * Math.PI * 2 + glowTime;
+                const distance = 15 + Math.sin(glowTime + i) * 3;
+                const sparkleX = pixelX + Math.cos(angle) * distance;
+                const sparkleY = pixelY - 8 + Math.sin(angle) * distance;
+
+                ctx.fillStyle = 'rgba(220, 240, 255, 0.6)';
+                ctx.beginPath();
+                ctx.arc(sparkleX, sparkleY, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
         function drawSparkles(x, y, time) {
             const sparkleCount = 8;
             for (let i = 0; i < sparkleCount; i++) {
@@ -5333,6 +5531,156 @@
                 ctx.fillText('🔥', questNPCPixel.x, questNPCPixel.y - 28);
             }
 
+            // NEW: Draw mystical hut structure in Town Zone (renders on top of terrain)
+            if (myZone === 1) {
+                const hutX = 8;
+                const hutY = 5;
+                const hutWidth = 3;
+                const hutHeight = 3;
+
+                // Draw hut shadow first
+                for (let x = hutX; x < hutX + hutWidth; x++) {
+                    for (let y = hutY; y < hutY + hutHeight; y++) {
+                        const pixel = gridToPixel(x, y);
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                        ctx.fillRect(pixel.x - GRID_SIZE/2 + 3, pixel.y - GRID_SIZE/2 + 3, GRID_SIZE, GRID_SIZE);
+                    }
+                }
+
+                // Draw hut with 3D rounded roof integrated into tiles
+                for (let x = hutX; x < hutX + hutWidth; x++) {
+                    for (let y = hutY; y < hutY + hutHeight; y++) {
+                        const pixel = gridToPixel(x, y);
+                        
+                        // Check if this is a roof tile (top row)
+                        if (y === hutY) {
+                            // TOP ROW - Draw rounded roof portion
+                            
+                            // Calculate curve for 3D dome effect
+                            const relativeX = x - hutX; // 0, 1, 2
+                            
+                            // Base color for thatch
+                            ctx.fillStyle = '#5C4033';
+                            ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                            
+                            // Create rounded dome effect with gradients
+                            if (relativeX === 0) {
+                                // Left edge - darker
+                                ctx.fillStyle = '#4a3520';
+                                ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE/3, GRID_SIZE);
+                            } else if (relativeX === 1) {
+                                // Center - lighter (highest point)
+                                ctx.fillStyle = '#6B5A4D';
+                                ctx.fillRect(pixel.x - GRID_SIZE/4, pixel.y - GRID_SIZE/2, GRID_SIZE/2, GRID_SIZE);
+                            } else {
+                                // Right edge - darker
+                                ctx.fillStyle = '#4a3520';
+                                ctx.fillRect(pixel.x + GRID_SIZE/6, pixel.y - GRID_SIZE/2, GRID_SIZE/3, GRID_SIZE);
+                            }
+                            
+                            // Thatch texture (horizontal lines for all roof tiles)
+                            ctx.strokeStyle = '#3d2817';
+                            ctx.lineWidth = 1.5;
+                            for (let i = 0; i < 3; i++) {
+                                ctx.beginPath();
+                                ctx.moveTo(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2 + (i * 12));
+                                ctx.lineTo(pixel.x + GRID_SIZE/2, pixel.y - GRID_SIZE/2 + (i * 12));
+                                ctx.stroke();
+                            }
+                            
+                            // Add moss on roof
+                            ctx.fillStyle = 'rgba(34, 139, 34, 0.3)';
+                            const seed = x * 100 + y;
+                            if (seed % 2 === 0) {
+                                ctx.beginPath();
+                                ctx.arc(pixel.x - GRID_SIZE/4, pixel.y, 4, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                            
+                        } else {
+                            // MIDDLE AND BOTTOM ROWS - Draw walls
+                            
+                            // Old weathered wood
+                            ctx.fillStyle = '#6B5A4D';
+                            ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                            
+                            // Moss/vine patches
+                            ctx.fillStyle = 'rgba(34, 139, 34, 0.4)';
+                            const seed = x * 100 + y;
+                            if (seed % 3 === 0) {
+                                ctx.fillRect(pixel.x - GRID_SIZE/3, pixel.y - GRID_SIZE/4, GRID_SIZE/2, GRID_SIZE/3);
+                            }
+                            
+                            // Weathered wood texture (vertical planks)
+                            ctx.strokeStyle = '#5a4a3d';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(pixel.x - GRID_SIZE/4, pixel.y - GRID_SIZE/2);
+                            ctx.lineTo(pixel.x - GRID_SIZE/4, pixel.y + GRID_SIZE/2);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(pixel.x + GRID_SIZE/4, pixel.y - GRID_SIZE/2);
+                            ctx.lineTo(pixel.x + GRID_SIZE/4, pixel.y + GRID_SIZE/2);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                // Draw mysterious doorway at (9,7) - darker, more mystical
+                const doorX = 9;
+                const doorY = 7;
+                const doorPixel = gridToPixel(doorX, doorY);
+                
+                // Very dark doorway (mysterious entrance)
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillRect(doorPixel.x - GRID_SIZE/3, doorPixel.y - GRID_SIZE/2, GRID_SIZE * 2/3, GRID_SIZE);
+                
+                // Weathered door frame with vines
+                ctx.strokeStyle = '#4a3520';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(doorPixel.x - GRID_SIZE/3, doorPixel.y - GRID_SIZE/2, GRID_SIZE * 2/3, GRID_SIZE);
+                
+                // Mystical glow from inside
+                const glowGradient = ctx.createRadialGradient(
+                    doorPixel.x, doorPixel.y,
+                    0,
+                    doorPixel.x, doorPixel.y,
+                    GRID_SIZE/2
+                );
+                glowGradient.addColorStop(0, 'rgba(100, 200, 100, 0.3)');
+                glowGradient.addColorStop(1, 'rgba(100, 200, 100, 0)');
+                ctx.fillStyle = glowGradient;
+                ctx.fillRect(doorPixel.x - GRID_SIZE/2, doorPixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+                
+                // Hanging vines over door
+                ctx.strokeStyle = '#228B22';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(doorPixel.x - GRID_SIZE/4, doorPixel.y - GRID_SIZE/2);
+                ctx.quadraticCurveTo(
+                    doorPixel.x - GRID_SIZE/6, doorPixel.y - GRID_SIZE/4,
+                    doorPixel.x - GRID_SIZE/5, doorPixel.y
+                );
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(doorPixel.x + GRID_SIZE/4, doorPixel.y - GRID_SIZE/2);
+                ctx.quadraticCurveTo(
+                    doorPixel.x + GRID_SIZE/6, doorPixel.y - GRID_SIZE/4,
+                    doorPixel.x + GRID_SIZE/5, doorPixel.y
+                );
+                ctx.stroke();
+                
+                // Small leaves on vines
+                ctx.fillStyle = '#32CD32';
+                ctx.beginPath();
+                ctx.ellipse(doorPixel.x - GRID_SIZE/5, doorPixel.y - GRID_SIZE/6, 3, 5, 0.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(doorPixel.x + GRID_SIZE/5, doorPixel.y - GRID_SIZE/6, 3, 5, -0.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
             // Draw player-created campfires in ALL zones
             playerCampfires.forEach(campfire => {
                 if (campfire.zone === myZone) {
@@ -5769,7 +6117,7 @@
                             ctx.fill();
                         }
                     }
-                } // ← Floor rendering ends here
+                } // Floor rendering ends here
                 
             // NEW: Entrance at top (unchanged)
             const entranceX = Math.floor(GRID_WIDTH / 2); // x=10
@@ -5838,6 +6186,618 @@
                 ctx.fillRect(fencePixel.x - 10, fencePixel.y + 8, 20, 3);
             }
         }
+            // NEW: Temple Zone rendering - mysterious and moody
+            if (myZone === 6) {
+                // Draw dark grass (similar to Forest but darker and more desaturated)
+                const midY = Math.floor(GRID_HEIGHT / 2);
+
+                for (let x = 0; x < GRID_WIDTH; x++) {
+                    for (let y = 0; y < GRID_HEIGHT; y++) {
+                        const mirroredY = y > midY ? (GRID_HEIGHT - 1 - y) : y;
+                        const pixel = gridToPixel(x, y);
+                        const seed = x * 1000 + mirroredY;
+
+                        // Very dark, desaturated grass
+                        const grassHue = 80 + (seed % 15); // Muted grey-green
+                        const grassLightness = 15 + (seed % 8); // Very dark
+                        ctx.fillStyle = `hsl(${grassHue}, 25%, ${grassLightness}%)`;
+                        ctx.fillRect(pixel.x - GRID_SIZE/2, pixel.y - GRID_SIZE/2, GRID_SIZE, GRID_SIZE);
+
+                        // Add texture variation
+                        const grassDetail = (seed % 4);
+                        if (grassDetail === 0) {
+                            ctx.fillStyle = `hsl(${grassHue + 5}, 20%, ${grassLightness + 3}%)`;
+                            ctx.beginPath();
+                            ctx.arc(pixel.x + ((seed % 10) - 5), pixel.y + ((seed % 10) - 5), 2, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+
+                // DECLARE currentTime ONCE here (after grass, before pond)
+                const currentTime = Date.now();
+
+                // Draw mystical lady NPC with shadow
+                const mysticalLadyPixel = gridToPixel(mysticalLady.x, mysticalLady.y);
+                drawCharacterShadow(mysticalLadyPixel.x, mysticalLadyPixel.y, 10);
+                drawMysticalLady(mysticalLadyPixel.x, mysticalLadyPixel.y);
+
+                // Draw small reflective pond in center with stronger isometric perspective
+                const pondCenterX = Math.floor(GRID_WIDTH / 2);
+                const pondCenterY = Math.floor(GRID_HEIGHT / 2);
+                const pondRadius = 3.5 * GRID_SIZE; // Radius in pixels
+
+                const pondPixelX = pondCenterX * GRID_SIZE + GRID_SIZE/2;
+                const pondPixelY = pondCenterY * GRID_SIZE + GRID_SIZE/2;
+
+                // Draw main pond body with radial gradient for smooth depth transition
+                const depthGradient = ctx.createRadialGradient(
+                    pondPixelX + 13, pondPixelY - 9, 0, // Center at deepest point (northeast)
+                    pondPixelX, pondPixelY, pondRadius
+                );
+                depthGradient.addColorStop(0, '#0a1420'); // Darkest at center/depth
+                depthGradient.addColorStop(0.3, '#0c1824');
+                depthGradient.addColorStop(0.6, '#0f1f2e');
+                depthGradient.addColorStop(1, '#152838'); // Lightest at edges/surface
+
+                ctx.fillStyle = depthGradient;
+                ctx.beginPath();
+                ctx.ellipse(pondPixelX, pondPixelY, pondRadius, pondRadius * 0.8, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Soft light reflection patch - far northeast (blurred with gradient)
+                const reflectGradient1 = ctx.createRadialGradient(
+                    pondPixelX + 15, pondPixelY - 10, 0,
+                    pondPixelX + 15, pondPixelY - 10, pondRadius * 0.35
+                );
+                reflectGradient1.addColorStop(0, 'rgba(60, 80, 100, 0.3)');
+                reflectGradient1.addColorStop(0.6, 'rgba(60, 80, 100, 0.15)');
+                reflectGradient1.addColorStop(1, 'rgba(60, 80, 100, 0)');
+                
+                ctx.fillStyle = reflectGradient1;
+                ctx.beginPath();
+                ctx.ellipse(pondPixelX + 15, pondPixelY - 10, pondRadius * 0.35, pondRadius * 0.25, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Secondary soft reflection - offset west slightly (blurred)
+                const reflectGradient2 = ctx.createRadialGradient(
+                    pondPixelX - 8, pondPixelY - 2, 0,
+                    pondPixelX - 8, pondPixelY - 2, pondRadius * 0.28
+                );
+                reflectGradient2.addColorStop(0, 'rgba(50, 70, 90, 0.2)');
+                reflectGradient2.addColorStop(0.7, 'rgba(50, 70, 90, 0.1)');
+                reflectGradient2.addColorStop(1, 'rgba(50, 70, 90, 0)');
+                
+                ctx.fillStyle = reflectGradient2;
+                ctx.beginPath();
+                ctx.ellipse(pondPixelX - 8, pondPixelY - 2, pondRadius * 0.28, pondRadius * 0.2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Animated ripples with occasional sudden ripple effect
+                const ripple1 = Math.sin(currentTime * 0.0008) * 2;
+                const ripple2 = Math.sin(currentTime * 0.0008 + Math.PI * 0.5) * 2;
+                const ripple3 = Math.sin(currentTime * 0.0008 + Math.PI) * 2;
+
+                // NEW: Sudden ripple that appears every 5 seconds
+                const rippleCycle = (currentTime % 5000) / 5000; // 0 to 1 over 5 seconds
+                const suddenRippleActive = rippleCycle < 0.6; // Active for first 3 seconds of cycle
+                const suddenRippleRadius = rippleCycle * pondRadius * 1.2; // Expands outward
+                const suddenRippleOpacity = suddenRippleActive ? (1 - rippleCycle * 1.5) * 0.25 : 0; // Fades as it expands
+
+                if (suddenRippleActive && suddenRippleOpacity > 0) {
+                    ctx.strokeStyle = `rgba(90, 110, 130, ${suddenRippleOpacity})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.ellipse(
+                        pondPixelX + 8, 
+                        pondPixelY - 5, 
+                        suddenRippleRadius, 
+                        suddenRippleRadius * 0.75, 
+                        0, 0, Math.PI * 2
+                    );
+                    ctx.stroke();
+                }
+
+                // Inner ripple - northeast
+                ctx.strokeStyle = 'rgba(70, 90, 110, 0.15)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.ellipse(
+                    pondPixelX + 8, 
+                    pondPixelY - 6, 
+                    pondRadius * 0.35 + ripple1, 
+                    pondRadius * 0.26 + ripple1 * 0.75, 
+                    0, 0, Math.PI * 2
+                );
+                ctx.stroke();
+
+                // Middle ripple - slight northeast
+                ctx.strokeStyle = 'rgba(70, 90, 110, 0.12)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.ellipse(
+                    pondPixelX + 4, 
+                    pondPixelY - 3, 
+                    pondRadius * 0.55 + ripple2, 
+                    pondRadius * 0.42 + ripple2 * 0.75, 
+                    0, 0, Math.PI * 2
+                );
+                ctx.stroke();
+
+                // Outer ripple - minimal offset
+                ctx.strokeStyle = 'rgba(70, 90, 110, 0.1)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.ellipse(
+                    pondPixelX + 2, 
+                    pondPixelY - 1, 
+                    pondRadius * 0.75 + ripple3, 
+                    pondRadius * 0.58 + ripple3 * 0.75, 
+                    0, 0, Math.PI * 2
+                );
+                ctx.stroke();
+
+                // Edge ripple - centered (defines pond boundary)
+                const edgeRipple = Math.sin(currentTime * 0.0008) * 1.5;
+                ctx.strokeStyle = 'rgba(100, 120, 150, 0.18)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(pondPixelX, pondPixelY, pondRadius - 5 + edgeRipple, (pondRadius - 5 + edgeRipple) * 0.8, 0, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Subtle sparkles scattered in different positions for depth
+                const sparklePositions = [
+                    { xOffset: 12, yOffset: -8, distance: 0.4 },
+                    { xOffset: -6, yOffset: -3, distance: 0.5 },
+                    { xOffset: 8, yOffset: 2, distance: 0.6 },
+                    { xOffset: 2, yOffset: -10, distance: 0.35 },
+                    { xOffset: -10, yOffset: 4, distance: 0.55 },
+                    { xOffset: 14, yOffset: -2, distance: 0.45 }
+                ];
+
+                sparklePositions.forEach((pos, i) => {
+                    const angle = (i / sparklePositions.length) * Math.PI * 2 + currentTime * 0.0004;
+                    const wobble = Math.sin(currentTime * 0.001 + i) * 3;
+                    const sparkleX = pondPixelX + pos.xOffset + Math.cos(angle) * wobble;
+                    const sparkleY = pondPixelY + pos.yOffset + Math.sin(angle) * wobble * 0.8;
+                    const sparkleOpacity = 0.12 + Math.sin(currentTime * 0.002 + i) * 0.08;
+                    
+                    ctx.fillStyle = `rgba(130, 150, 180, ${sparkleOpacity})`;
+                    ctx.beginPath();
+                    ctx.arc(sparkleX, sparkleY, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // Draw weeping willow trees scattered around - ENHANCED (AFTER pond)
+                const gardenTrees = [
+                    { x: 3, y: 3 }, { x: 7, y: 4 }, { x: 15, y: 3 },
+                    { x: 4, y: 10 }, { x: 12, y: 11 }, { x: 17, y: 9 }
+                ];
+
+                // DO NOT redeclare currentTime here - it's already declared above
+                gardenTrees.forEach(tree => {
+                    const willowX = tree.x * GRID_SIZE + GRID_SIZE/2;
+                    const willowY = tree.y * GRID_SIZE + GRID_SIZE/2;
+                    
+                    // Thick, ancient gnarled trunk (wider and more imposing)
+                    ctx.fillStyle = '#1a1a1a';
+                    ctx.fillRect(willowX - 14, willowY - 12, 28, 40);
+                    
+                    // Trunk gnarls and knots
+                    ctx.fillStyle = '#0a0a0a';
+                    ctx.beginPath();
+                    ctx.ellipse(willowX - 6, willowY, 4, 6, 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.ellipse(willowX + 7, willowY + 8, 3, 5, -0.4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Trunk texture (bark) - more pronounced
+                    ctx.strokeStyle = '#2a2a2a';
+                    ctx.lineWidth = 2;
+                    for (let i = 0; i < 5; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(willowX - 12, willowY - 8 + (i * 8));
+                        ctx.lineTo(willowX + 12, willowY - 8 + (i * 8));
+                        ctx.stroke();
+                    }
+                    
+                    // Vertical bark cracks
+                    ctx.strokeStyle = '#0a0a0a';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(willowX - 8, willowY - 10);
+                    ctx.lineTo(willowX - 7, willowY + 15);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(willowX + 9, willowY - 5);
+                    ctx.lineTo(willowX + 8, willowY + 20);
+                    ctx.stroke();
+                    
+                    // Massive drooping canopy (much larger)
+                    ctx.fillStyle = '#2a3a2a';
+                    ctx.beginPath();
+                    ctx.ellipse(willowX, willowY - 25, 40, 32, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Inner lighter canopy
+                    ctx.fillStyle = '#3a4a3a';
+                    ctx.beginPath();
+                    ctx.ellipse(willowX, willowY - 25, 30, 24, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Subtle glow/aura around canopy
+                    ctx.strokeStyle = 'rgba(58, 74, 58, 0.3)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.ellipse(willowX, willowY - 25, 42, 34, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // MAIN CASCADING BRANCHES - longer, more dramatic
+                    ctx.strokeStyle = '#2a3a2a';
+                    ctx.lineWidth = 3.5;
+                    for (let i = -35; i <= 35; i += 3) {
+                        const branchSway = Math.sin(currentTime * 0.001 + tree.x * 0.5 + i * 0.08) * 4;
+                        const branchLength = 45 + (Math.abs(i) % 15);
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(willowX + i, willowY - 20);
+                        ctx.quadraticCurveTo(
+                            willowX + i + branchSway * 0.4, willowY + 10,
+                            willowX + i + branchSway * 0.8, willowY + branchLength
+                        );
+                        ctx.stroke();
+                    }
+                    
+                    // SECONDARY WISPY BRANCHES (lighter, more delicate)
+                    ctx.strokeStyle = '#3a5a3a';
+                    ctx.lineWidth = 2;
+                    for (let i = -30; i <= 30; i += 5) {
+                        const branchSway = Math.sin(currentTime * 0.0015 + tree.x * 0.5 + i * 0.12) * 5;
+                        const branchLength = 50 + (Math.abs(i) % 12);
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(willowX + i, willowY - 15);
+                        ctx.quadraticCurveTo(
+                            willowX + i + branchSway * 0.6, willowY + 15,
+                            willowX + i + branchSway * 1.3, willowY + branchLength
+                        );
+                        ctx.stroke();
+                    }
+                    
+                    // TERTIARY THIN BRANCHES (finest detail)
+                    ctx.strokeStyle = '#4a6a4a';
+                    ctx.lineWidth = 1.5;
+                    for (let i = -25; i <= 25; i += 7) {
+                        const branchSway = Math.sin(currentTime * 0.002 + tree.x * 0.5 + i * 0.15) * 6;
+                        const branchLength = 55 + (Math.abs(i) % 10);
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(willowX + i, willowY - 10);
+                        ctx.quadraticCurveTo(
+                            willowX + i + branchSway * 0.8, willowY + 20,
+                            willowX + i + branchSway * 1.5, willowY + branchLength
+                        );
+                        ctx.stroke();
+                    }
+                    
+                    // Leaves clusters on hanging branches (more numerous)
+                    ctx.fillStyle = '#3a4a3a';
+                    for (let i = -30; i <= 30; i += 6) {
+                        const branchSway = Math.sin(currentTime * 0.001 + tree.x * 0.5 + i * 0.1) * 4;
+                        const leafY = willowY + 30 + (Math.abs(i) % 15);
+                        
+                        ctx.beginPath();
+                        ctx.ellipse(willowX + i + branchSway, leafY, 4, 7, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // Additional leaf details (lighter highlights)
+                    ctx.fillStyle = '#4a5a4a';
+                    for (let i = -25; i <= 25; i += 8) {
+                        const branchSway = Math.sin(currentTime * 0.0015 + tree.x * 0.5 + i * 0.12) * 5;
+                        const leafY = willowY + 35 + (Math.abs(i) % 12);
+                        
+                        ctx.beginPath();
+                        ctx.ellipse(willowX + i + branchSway, leafY, 3, 5, 0.2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    
+                    // Mystical mist/aura at base
+                    const mistGradient = ctx.createRadialGradient(
+                        willowX, willowY + 20,
+                        0,
+                        willowX, willowY + 20,
+                        50
+                    );
+                    mistGradient.addColorStop(0, 'rgba(42, 58, 42, 0.25)');
+                    mistGradient.addColorStop(1, 'rgba(42, 58, 42, 0)');
+                    ctx.fillStyle = mistGradient;
+                    ctx.beginPath();
+                    ctx.arc(willowX, willowY + 20, 50, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // 1. OLD STONE URN WITH MOSS (northwest area at 5,4)
+                const urnX = 5 * GRID_SIZE + GRID_SIZE/2;
+                const urnY = 4 * GRID_SIZE + GRID_SIZE/2;
+                
+                // Stone pedestal base
+                ctx.fillStyle = '#3a3a3a';
+                ctx.fillRect(urnX - 10, urnY + 8, 20, 12);
+                
+                // Pedestal top (wider)
+                ctx.fillStyle = '#4a4a4a';
+                ctx.fillRect(urnX - 12, urnY + 6, 24, 4);
+                
+                // Urn body (rounded)
+                ctx.fillStyle = '#5a5a5a';
+                ctx.beginPath();
+                ctx.ellipse(urnX, urnY - 2, 10, 14, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Urn neck (narrower top)
+                ctx.fillStyle = '#4a4a4a';
+                ctx.fillRect(urnX - 6, urnY - 16, 12, 8);
+                
+                // Urn rim (flared)
+                ctx.fillStyle = '#5a5a5a';
+                ctx.fillRect(urnX - 8, urnY - 18, 16, 3);
+                
+                // Weathered cracks
+                ctx.strokeStyle = '#2a2a2a';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(urnX - 6, urnY - 10);
+                ctx.lineTo(urnX - 4, urnY + 5);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(urnX + 5, urnY - 5);
+                ctx.lineTo(urnX + 7, urnY + 3);
+                ctx.stroke();
+                
+                // Heavy moss growth
+                ctx.fillStyle = 'rgba(34, 139, 34, 0.5)';
+                // Left side moss
+                ctx.beginPath();
+                ctx.ellipse(urnX - 8, urnY, 4, 8, 0.3, 0, Math.PI * 2);
+                ctx.fill();
+                // Right side moss
+                ctx.beginPath();
+                ctx.ellipse(urnX + 7, urnY + 3, 5, 6, -0.2, 0, Math.PI * 2);
+                ctx.fill();
+                // Bottom moss creeping
+                ctx.fillStyle = 'rgba(34, 139, 34, 0.4)';
+                ctx.fillRect(urnX - 9, urnY + 8, 6, 8);
+                
+                // Small ivy leaves on moss
+                ctx.fillStyle = '#2a4a2a';
+                for (let i = 0; i < 5; i++) {
+                    const leafX = urnX - 8 + (i * 3);
+                    const leafY = urnY + 2 + (i % 2) * 4;
+                    ctx.beginPath();
+                    ctx.ellipse(leafX, leafY, 2, 3, 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // 2. MYSTICAL GLOWING CRYSTAL (at 15,6) - central artifact
+                const crystalX = 15 * GRID_SIZE + GRID_SIZE/2;
+                const crystalY = 6 * GRID_SIZE + GRID_SIZE/2;
+                
+                // Pulsing glow aura around crystal
+                const glowPulse = 0.7 + Math.sin(currentTime * 0.003) * 0.3;
+                const glowGradient = ctx.createRadialGradient(
+                    crystalX, crystalY, 0,
+                    crystalX, crystalY, 35 * glowPulse
+                );
+                glowGradient.addColorStop(0, 'rgba(100, 200, 255, 0.4)');
+                glowGradient.addColorStop(0.5, 'rgba(150, 100, 255, 0.25)');
+                glowGradient.addColorStop(1, 'rgba(100, 200, 255, 0)');
+                
+                ctx.fillStyle = glowGradient;
+                ctx.beginPath();
+                ctx.arc(crystalX, crystalY, 35 * glowPulse, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Stone pedestal
+                ctx.fillStyle = '#3a3a3a';
+                ctx.fillRect(crystalX - 12, crystalY + 10, 24, 10);
+                
+                // Pedestal top
+                ctx.fillStyle = '#4a4a4a';
+                ctx.fillRect(crystalX - 14, crystalY + 8, 28, 4);
+                
+                // Ancient runes on pedestal (simple marks)
+                ctx.strokeStyle = 'rgba(100, 200, 255, 0.3)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(crystalX - 10 + (i * 8), crystalY + 12);
+                    ctx.lineTo(crystalX - 8 + (i * 8), crystalY + 16);
+                    ctx.stroke();
+                }
+                
+                // Crystal main body (tall, angular)
+                const crystalHeight = 25;
+                const crystalWidth = 10;
+                
+                // Main crystal shape (gradient for depth)
+                const crystalGradient = ctx.createLinearGradient(
+                    crystalX - crystalWidth, crystalY,
+                    crystalX + crystalWidth, crystalY
+                );
+                crystalGradient.addColorStop(0, '#4080ff');
+                crystalGradient.addColorStop(0.3, '#80b0ff');
+                crystalGradient.addColorStop(0.5, '#a0d0ff');
+                crystalGradient.addColorStop(0.7, '#6090ff');
+                crystalGradient.addColorStop(1, '#4070dd');
+                
+                ctx.fillStyle = crystalGradient;
+                ctx.beginPath();
+                ctx.moveTo(crystalX, crystalY - crystalHeight); // Top point
+                ctx.lineTo(crystalX - crystalWidth, crystalY + 8); // Bottom left
+                ctx.lineTo(crystalX + crystalWidth, crystalY + 8); // Bottom right
+                ctx.closePath();
+                ctx.fill();
+                
+                // Crystal facets (angular highlights)
+                ctx.fillStyle = 'rgba(200, 230, 255, 0.6)';
+                ctx.beginPath();
+                ctx.moveTo(crystalX, crystalY - crystalHeight);
+                ctx.lineTo(crystalX - 3, crystalY - 5);
+                ctx.lineTo(crystalX, crystalY);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.fillStyle = 'rgba(150, 200, 255, 0.5)';
+                ctx.beginPath();
+                ctx.moveTo(crystalX, crystalY - crystalHeight);
+                ctx.lineTo(crystalX + 3, crystalY - 5);
+                ctx.lineTo(crystalX, crystalY);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Bright core glow (pulsing)
+                const coreGlow = 0.6 + Math.sin(currentTime * 0.004) * 0.4;
+                ctx.fillStyle = `rgba(255, 255, 255, ${coreGlow})`;
+                ctx.beginPath();
+                ctx.ellipse(crystalX, crystalY - 8, 4, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Magical particles floating around crystal
+                for (let i = 0; i < 8; i++) {
+                    const angle = (i / 8) * Math.PI * 2 + currentTime * 0.001;
+                    const floatHeight = Math.sin(currentTime * 0.002 + i) * 15;
+                    const distance = 20 + Math.sin(currentTime * 0.0015 + i) * 5;
+                    const particleX = crystalX + Math.cos(angle) * distance;
+                    const particleY = crystalY - 10 + floatHeight;
+                    const particleOpacity = 0.4 + Math.sin(currentTime * 0.003 + i) * 0.3;
+                    
+                    const hue = 200 + Math.sin(currentTime * 0.002 + i) * 60; // Color shift
+                    ctx.fillStyle = `hsla(${hue}, 100%, 70%, ${particleOpacity})`;
+                    ctx.beginPath();
+                    ctx.arc(particleX, particleY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Light rays emanating from crystal
+                ctx.strokeStyle = 'rgba(150, 200, 255, 0.15)';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 6; i++) {
+                    const rayAngle = (i / 6) * Math.PI * 2 + currentTime * 0.0005;
+                    const rayLength = 25 + Math.sin(currentTime * 0.002 + i) * 8;
+                    ctx.beginPath();
+                    ctx.moveTo(crystalX, crystalY - 10);
+                    ctx.lineTo(
+                        crystalX + Math.cos(rayAngle) * rayLength,
+                        crystalY - 10 + Math.sin(rayAngle) * rayLength
+                    );
+                    ctx.stroke();
+                }
+
+                // 3. VINE-COVERED STONE WALLS (creating boundaries)
+                const wallSegments = [
+                    // West wall
+                    { x1: 1, y1: 2, x2: 1, y2: 5 },
+                    { x1: 1, y1: 8, x2: 1, y2: 12 },
+                    // North wall (partial) - MOVED HIGHER
+                    { x1: 1, y1: 1, x2: 4, y2: 1 },
+                    { x1: 6, y1: 1, x2: 8, y2: 1 },
+                    // East wall (partial)
+                    { x1: 19, y1: 2, x2: 19, y2: 5 },
+                    { x1: 19, y1: 7, x2: 19, y2: 10 }
+                ];
+
+                wallSegments.forEach(wall => {
+                    if (wall.x1 === wall.x2) {
+                        // Vertical wall
+                        for (let y = wall.y1; y <= wall.y2; y++) {
+                            const wallPixel = gridToPixel(wall.x1, y);
+                            
+                            // Stone wall
+                            ctx.fillStyle = '#3a3a3a';
+                            ctx.fillRect(wallPixel.x - 6, wallPixel.y - GRID_SIZE/2, 12, GRID_SIZE);
+                            
+                            // Darker mortar lines
+                            ctx.strokeStyle = '#2a2a2a';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(wallPixel.x - 6, wallPixel.y);
+                            ctx.lineTo(wallPixel.x + 6, wallPixel.y);
+                            ctx.stroke();
+                            
+                            // Vines (green, creeping)
+                            if (y % 2 === 0) {
+                                ctx.strokeStyle = '#2a4a2a';
+                                ctx.lineWidth = 2;
+                                ctx.beginPath();
+                                ctx.moveTo(wallPixel.x - 3, wallPixel.y - GRID_SIZE/2);
+                                ctx.quadraticCurveTo(
+                                    wallPixel.x + 2, wallPixel.y - GRID_SIZE/4,
+                                    wallPixel.x - 2, wallPixel.y
+                                );
+                                ctx.stroke();
+                                
+                                // Small leaves
+                                ctx.fillStyle = '#3a5a3a';
+                                ctx.beginPath();
+                                ctx.ellipse(wallPixel.x, wallPixel.y - GRID_SIZE/3, 3, 2, 0.3, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    } else {
+                        // Horizontal wall
+                        for (let x = wall.x1; x <= wall.x2; x++) {
+                            const wallPixel = gridToPixel(x, wall.y1);
+                            
+                            // Stone wall
+                            ctx.fillStyle = '#3a3a3a';
+                            ctx.fillRect(wallPixel.x - GRID_SIZE/2, wallPixel.y - 6, GRID_SIZE, 12);
+                            
+                            // Darker mortar lines
+                            ctx.strokeStyle = '#2a2a2a';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(wallPixel.x, wallPixel.y - 6);
+                            ctx.lineTo(wallPixel.x, wallPixel.y + 6);
+                            ctx.stroke();
+                            
+                            // Vines
+                            if (x % 2 === 1) {
+                                ctx.strokeStyle = '#2a4a2a';
+                                ctx.lineWidth = 2;
+                                ctx.beginPath();
+                                ctx.moveTo(wallPixel.x - GRID_SIZE/2, wallPixel.y);
+                                ctx.quadraticCurveTo(
+                                    wallPixel.x - GRID_SIZE/4, wallPixel.y - 3,
+                                    wallPixel.x, wallPixel.y + 2
+                                );
+                                ctx.stroke();
+                                
+                                // Small leaves
+                                ctx.fillStyle = '#3a5a3a';
+                                ctx.beginPath();
+                                ctx.ellipse(wallPixel.x - GRID_SIZE/3, wallPixel.y, 2, 3, 0.3, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    }
+                });
+
+                // Add soft ambient fog/mist overlay
+                const fogGradient = ctx.createRadialGradient(
+                    canvas.width / 2, canvas.height / 2,
+                    0,
+                    canvas.width / 2, canvas.height / 2,
+                    Math.max(canvas.width, canvas.height) / 2
+                );
+                fogGradient.addColorStop(0, 'rgba(25, 30, 35, 0)');
+                fogGradient.addColorStop(0.7, 'rgba(25, 30, 35, 0.2)');
+                fogGradient.addColorStop(1, 'rgba(25, 30, 35, 0.35)');
+                ctx.fillStyle = fogGradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
             // Draw zone transition arrows
             if (myZone === 1) {
                 const rightArrowX = (GRID_WIDTH - 1) * GRID_SIZE + GRID_SIZE / 2;
@@ -5876,6 +6836,36 @@
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Forest', northArrowX, northArrowY + 20);
+
+                // NEW: Draw mystical indicator above hut entrance
+                const doorArrowX = 9 * GRID_SIZE + GRID_SIZE/2;
+                const doorArrowY = 6 * GRID_SIZE;
+
+                // Pulsing mystical symbol
+                const pulseSize = 0.9 + Math.sin(Date.now() * 0.003) * 0.1;
+                ctx.save();
+                ctx.translate(doorArrowX, doorArrowY + 5);
+                ctx.scale(pulseSize, pulseSize);
+
+                ctx.fillStyle = 'rgba(100, 255, 100, 0.7)';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('✨', 0, 0);
+
+                ctx.restore();
+
+                // NEW: Draw arrow to Garden at hut entrance (9,8)
+                const gardenArrowX = 9 * GRID_SIZE + GRID_SIZE / 2;
+                const gardenArrowY = 8 * GRID_SIZE + GRID_SIZE / 2;
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('^', gardenArrowX, gardenArrowY);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Temple', gardenArrowX, gardenArrowY + 20);
 
             } else if (myZone === 2) {
                 const arrowX = GRID_SIZE / 2;
@@ -5940,6 +6930,19 @@
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 ctx.font = '12px Arial';
                 ctx.fillText('Forest', southArrowX, southArrowY + 20);
+            } else if (myZone === 6) {
+                // Temple Zone - south arrow back to Town
+                const exitX = (GRID_WIDTH / 2) * GRID_SIZE;
+                const exitY = (GRID_HEIGHT - 1) * GRID_SIZE + GRID_SIZE / 2;
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('v', exitX, exitY);
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = '12px Arial';
+                ctx.fillText('Town', exitX, exitY + 20);
             }
             
             if (myZone === 2 || myZone === 4 || myZone === 5) {
@@ -7336,6 +8339,29 @@
                     e.preventDefault();
                     return;
                 }
+
+                // Handle Oracle dialog cycling
+                if (showDialog && currentDialogNPC === 'The Oracle') {
+                    // Check if we're on the last dialog (index 2)
+                    if (oracleDialogIndex === 2) {
+                        // Close dialog after the last line
+                        showDialog = false;
+                        oracleDialogIndex = 0; // Reset for next conversation
+                    } else {
+                        // Move to next dialog
+                        oracleDialogIndex = (oracleDialogIndex + 1) % 3;
+                        
+                        const oracleDialogs = [
+                                        "This quiet town of Rowanmyst has stood for millennia, hidden beneath the whispering trees.",
+                                        "Some say the old gods left a fragment of their power here, sealed within the crystal of the lake.",
+                                        "But since their long slumber, dark clouds have gathered across these lands — as if the light of their protection is fading from Serenity Skies."
+                        ];
+                        
+                        startTypewriter(oracleDialogs[oracleDialogIndex]);
+                    }
+                    e.preventDefault();
+                    return;
+                }
                 
                 if (showInventory && isSelectingFiremaking) {
                     // Handle firemaking ENTER selection
@@ -7565,6 +8591,13 @@
                 }
                 if (showQuestDialog) {
                     showQuestDialog = false;
+                }
+                if (showDialog) {
+                    showDialog = false;
+                    // Reset Oracle dialog index when closing
+                    if (currentDialogNPC === 'The Oracle') {
+                        oracleDialogIndex = 0;
+                    }
                 }
                 return;
             }
