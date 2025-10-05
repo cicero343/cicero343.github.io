@@ -426,6 +426,13 @@
         let isRespawning = false;
         let isPlayerCreated = false;
 
+        // TEMPLE CUTSCENE VARIABLES
+        let showTempleCutscene = false;
+        let cutsceneStartTime = 0;
+        let cutsceneFadeProgress = 0;
+        let templeCutscenePlayed = false;
+        const CUTSCENE_DURATION = 3000; // 3 seconds total
+
         // Typewriter effect variables
         let displayedText = '';
         let charIndex = 0;
@@ -2767,17 +2774,25 @@
                 updatePlayerData();
                 playZoneMusic(4);
             }
-            // NEW: Town to Garden transition (through hut doorway)
+            // NEW: Town to Temple transition (through hut doorway)
             else if (myZone === 1 && myGridPos.x === 9 && myGridPos.y === 7) {
-                myZone = 6; // Enter Garden
+                myZone = 6; // Enter Temple
                 myGridPos.x = Math.floor(GRID_WIDTH / 2); // Spawn in center
                 myGridPos.y = GRID_HEIGHT - 2; // Spawn near bottom (at the exit)
                 stopFishing();
                 updateZoneDisplay();
                 updatePlayerData();
-                playZoneMusic(5); // Play Garden music
+                playZoneMusic(5); // Play Temple music
+                
+                // TRIGGER CUTSCENE on first entry
+                if (!templeCutscenePlayed) {
+                    showTempleCutscene = true;
+                    cutsceneStartTime = Date.now();
+                    cutsceneFadeProgress = 0;
+                    templeCutscenePlayed = true; // Mark as played for this session
+                }
             }
-            // NEW: Garden to Town transition (south edge exit)
+            // NEW: Temple to Town transition (south edge exit)
             else if (myZone === 6 && myGridPos.y >= GRID_HEIGHT - 1) {
                 myZone = 1; // Return to Town
                 myGridPos.x = 9; // Spawn at hut door
@@ -5726,7 +5741,7 @@
                     drawFireParticles(campfirePixel.x, campfirePixel.y - 12, currentTime);
                 }
             });
-            
+
             function drawEnhancedGrass(x, y, gridSize) {
                 const pixel = gridToPixel(x, y);
                 const seed = x * 1000 + y;
@@ -8271,7 +8286,183 @@
                 ctx.textAlign = 'center';
                 ctx.fillText('W/S: Navigate | ENTER: ' + (tradeMode === 'buy' ? 'Buy' : 'Sell') + ' | ESC: Close', overlayX + overlayWidth / 2, overlayY + overlayHeight - 15);
             }
-        }
+
+            // TEMPLE CUTSCENE - Draw last so it's on top of everything
+            if (showTempleCutscene) {
+                const elapsed = Date.now() - cutsceneStartTime;
+                
+                if (elapsed < CUTSCENE_DURATION) {
+                    // Black background
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    const progress = elapsed / CUTSCENE_DURATION;
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    
+                    // Calculate opacity for pond (fades in, then out)
+                    let pondOpacity = 0;
+                    if (progress < 0.2) {
+                        pondOpacity = progress / 0.2; // Fade in 0-20%
+                    } else if (progress < 0.6) {
+                        pondOpacity = 1; // Stay visible 20-60%
+                    } else if (progress < 0.8) {
+                        pondOpacity = 1 - ((progress - 0.6) / 0.2); // Fade out 60-80%
+                    } else {
+                        pondOpacity = 0; // Gone after 80%
+                    }
+                    
+                    // Calculate opacity for Oracle (fades in after pond is visible)
+                    let oracleOpacity = 0;
+                    if (progress > 0.4 && progress < 0.6) {
+                        oracleOpacity = (progress - 0.4) / 0.2; // Fade in 40-60%
+                    } else if (progress >= 0.6) {
+                        oracleOpacity = 1; // Stay visible after 60%
+                    }
+                    
+                    // Calculate final fade out
+                    let finalFadeOut = 0;
+                    if (progress > 0.92) {
+                        finalFadeOut = (progress - 0.92) / 0.08; // Fade to black in last 8%
+                    }
+                    
+                    // DRAW POND (if visible)
+                    if (pondOpacity > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = pondOpacity;
+                        
+                        const pondRadius = 150;
+                        
+                        // Pond water (dark blue)
+                        ctx.fillStyle = '#2d4b85';
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, pondRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Lighter water highlight
+                        ctx.fillStyle = '#4169a5';
+                        ctx.beginPath();
+                        ctx.arc(centerX - 30, centerY - 30, pondRadius * 0.6, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Simple ripples (3 concentric circles)
+                        const time = Date.now() * 0.001;
+                        for (let i = 0; i < 3; i++) {
+                            const rippleOffset = (time + i * 0.7) % 2;
+                            const rippleRadius = pondRadius * 0.3 + rippleOffset * 40;
+                            const rippleOpacity = (1 - rippleOffset / 2) * 0.4;
+                            
+                            ctx.strokeStyle = `rgba(173, 216, 230, ${rippleOpacity})`;
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.arc(centerX, centerY, rippleRadius, 0, Math.PI * 2);
+                            ctx.stroke();
+                        }
+                        
+                        ctx.restore();
+                    }
+                    
+                    // DRAW ORACLE (if visible)
+                    if (oracleOpacity > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = oracleOpacity;
+                        
+                        const scale = 10; // Scale factor for close-up
+                        
+                        // Correct colors from actual sprite
+                        const skinTone = '#ffeedd';
+                        const hairColor = '#e8e8ff'; // Very pale, almost white
+                        
+                        // Face (pale skin) - 7 pixel radius * 10 = 70
+                        ctx.fillStyle = skinTone;
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, 7 * scale, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Long flowing hair (very pale, ethereal)
+                        ctx.fillStyle = hairColor;
+                        
+                        // Hair top/crown
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY - 5 * scale, 8 * scale, Math.PI * 0.8, Math.PI * 2.2);
+                        ctx.fill();
+                        
+                        // Left side hair
+                        ctx.beginPath();
+                        ctx.moveTo(centerX - 7 * scale, centerY - 5 * scale);
+                        ctx.quadraticCurveTo(centerX - 10 * scale, centerY + 2 * scale, centerX - 8 * scale, centerY + 12 * scale);
+                        ctx.lineTo(centerX - 6 * scale, centerY + 12 * scale);
+                        ctx.quadraticCurveTo(centerX - 8 * scale, centerY + 2 * scale, centerX - 5 * scale, centerY - 5 * scale);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        // Right side hair
+                        ctx.beginPath();
+                        ctx.moveTo(centerX + 7 * scale, centerY - 5 * scale);
+                        ctx.quadraticCurveTo(centerX + 10 * scale, centerY + 2 * scale, centerX + 8 * scale, centerY + 12 * scale);
+                        ctx.lineTo(centerX + 6 * scale, centerY + 12 * scale);
+                        ctx.quadraticCurveTo(centerX + 8 * scale, centerY + 2 * scale, centerX + 5 * scale, centerY - 5 * scale);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        // Eyes (closed/peaceful expression)
+                        ctx.strokeStyle = '#8888aa';
+                        ctx.lineWidth = 1.5 * scale;
+                        ctx.beginPath();
+                        ctx.arc(centerX - 3 * scale, centerY - 1 * scale, 2 * scale, 0, Math.PI);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.arc(centerX + 3 * scale, centerY - 1 * scale, 2 * scale, 0, Math.PI);
+                        ctx.stroke();
+                        
+                        // Gentle smile
+                        ctx.strokeStyle = '#ddaaaa';
+                        ctx.lineWidth = 1 * scale;
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY + 3 * scale, 3 * scale, 0.2, Math.PI - 0.2);
+                        ctx.stroke();
+                        
+                        // Mystical sparkle aura (rotating and pulsing)
+                        const time = Date.now() * 0.002;
+                        const sparkleCount = 12;
+                        
+                        for (let i = 0; i < sparkleCount; i++) {
+                            const angle = (i / sparkleCount) * Math.PI * 2 + time;
+                            const distance = (15 + Math.sin(time + i) * 3) * scale;
+                            const sparkleX = centerX + Math.cos(angle) * distance;
+                            const sparkleY = centerY - 3 * scale + Math.sin(angle) * distance;
+                            
+                            const opacity = 0.6 + Math.sin(time * 3 + i) * 0.4;
+                            const sparkleSize = (1.5 + Math.sin(time * 4 + i) * 0.5) * scale;
+                            
+                            ctx.fillStyle = `rgba(220, 240, 255, ${opacity})`;
+                            ctx.beginPath();
+                            ctx.arc(sparkleX, sparkleY, sparkleSize, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        
+                        // Mystical glow aura
+                        const glowOpacity = 0.25 + Math.sin(time) * 0.15;
+                        ctx.fillStyle = `rgba(200, 220, 255, ${glowOpacity})`;
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY + 2 * scale, 20 * scale, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.restore();
+                    }
+                    
+                    // Apply final fade out to black
+                    if (finalFadeOut > 0) {
+                        ctx.fillStyle = `rgba(0, 0, 0, ${finalFadeOut})`;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                } else {
+                    // Cutscene finished
+                    showTempleCutscene = false;
+                    cutsceneFadeProgress = 0;
+                }
+            }
+        } // <-- drawGame() ends here
 
         // Draw quest tracking panel
         drawQuestPanel();
@@ -8560,7 +8751,7 @@
             }
             
             if (e.key.toLowerCase() === 'f') {
-                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog) {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog && !showTempleCutscene) {
                     performMeleeAttack();
                 }
                 return;
@@ -8568,7 +8759,7 @@
 
             // NEW: R key for shield blocking
             if (e.key.toLowerCase() === 'r') {
-                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog) {
+                if (!showInventory && !showDialog && !showQuickChat && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showQuestDialog && !showTempleCutscene) {
                     startBlocking();
                 }
                 return;
@@ -8923,7 +9114,7 @@
                 }
             }
             
-            if (myHealth > 0 && !isRespawning && !isBlocking && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !showQuestDialog && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && currentTime - lastMoveTime > 200) {
+            if (myHealth > 0 && !isRespawning && !isBlocking && !showDialog && !showCookingDialog && !showWoodcuttingDialog && !showMerchantDialog && !showTradeScreen && !showInventory && !showQuickChat && !showQuestDialog && !isFishing && !isCooking && !isWoodcutting && !isFiremaking && !showTempleCutscene && currentTime - lastMoveTime > 200) {
                 let moved = false;
                 let newPos = { ...myGridPos };
 
@@ -8965,7 +9156,7 @@
                 stopWoodcutting();
             }
 
-            if (keys[' '] && !showInventory && !isFishing) {
+            if (keys[' '] && !showInventory && !isFishing && !showTempleCutscene) {
                 castFireball();
                 keys[' '] = false;
             }
