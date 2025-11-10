@@ -98,6 +98,25 @@ layout: default
     color: #00ff00;
   }
 
+  /* Mobile-friendly code blocks - prevent horizontal overflow */
+  code {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  pre {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  pre code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
   [data-theme="dark"] table {
     background-color: #1e1e1e;
   }
