@@ -1552,6 +1552,7 @@ Select server (1-2):</code></pre>
 <p><strong>Solution:</strong> Check the <code>ALLOWED_PATHS</code> in your MCP script. The folder you're trying to access must be listed there.</p>
 
 <hr>
+<br>
 
 <p><strong>Congratulations!</strong> You now have a fully functional local AI with tool use capabilities. Your AI can interact with files, monitor your system, and all of this runs privately on your own computer.</p>
 
