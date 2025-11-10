@@ -311,7 +311,8 @@ layout: default
 <p><em>A beginner-friendly guide to running a local AI model with file access on your own computer</em></p>
 
 <h2 id="introduction">Introduction</h2>
-<p>This guide will walk you through setting up a local MCP (Model Context Protocol) server that allows your AI to interact with files on your computer. By the end, you'll have an AI assistant that can read, write, search files, and monitor your system - all running privately on your machine with no cloud services required.</p>
+<p>This guide will walk you through setting up a local MCP (Model Context Protocol) server that allows your AI to interact with files on your computer. By the end, you'll have a tool-augmented AI assistant that can read, write, search files, and monitor your system when you ask - all running privately on your machine with no cloud services required.</p> 
+<p>(Note: MCP can also power autonomous agents triggered by hooks, but those require different frameworks beyond this guide's scope.)</p>
 
 <div class="info-box">
   <strong>What You'll Build:</strong>
