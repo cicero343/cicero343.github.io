@@ -14,33 +14,37 @@ layout: default
         :root {
             --bg-color: #ffffff;
             --txt-color: #000000;
-            --container-bg-color: white; /* Default content container background in light mode */
-            --container-txt-color: #000000; /* Default content container text color in light mode */
-            --link-color-light: blue; /* Blue links in light mode */
-            --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
-            --link-color-dark: #00ff00; /* Green links in dark mode */
-            --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
-            --header-color-dark: #00ff00; /* Green header color in dark mode */
-            --gist-bg-light: #f9f9f9; /* Background color for gists in light mode */
-            --gist-bg-dark: #1e1e1e; /* Background color for gists in dark mode */
-            --gist-border-light: #ddd; /* Border color for gists in light mode */
-            --gist-border-dark: #444; /* Border color for gists in dark mode */
-            --code-bg-light: #f1f1f1; /* Background color for code blocks in light mode */
-            --code-bg-dark: #2e2e2e; /* Background color for code blocks in dark mode */
-            --code-color-light: #000000; /* Text color for code blocks in light mode */
-            --code-color-dark: #00ff00; /* Text color for code blocks in dark mode */
+            --container-bg-color: white;
+            --container-txt-color: #000000;
+            --link-color-light: blue;
+            --link-hover-color-light: darkblue;
+            --link-color-dark: #00ff00;
+            --link-hover-color-dark: #00cc00;
+            --header-color-dark: #00ff00;
+            --gist-bg-light: #f9f9f9;
+            --gist-bg-dark: #1e1e1e;
+            --gist-border-light: #ddd;
+            --gist-border-dark: #444;
+            --code-bg-light: #f4f4f4;
+            --code-bg-dark: #0d1117;
+            --code-color-light: #000000;
+            --code-color-dark: #00ff00;
+            --repo-bg-light: #ffffff;
+            --repo-bg-dark: #161b22;
+            --repo-border-light: #d0d7de;
+            --repo-border-dark: #30363d;
+            --repo-text-light: #24292f;
+            --repo-text-dark: #c9d1d9;
+            --repo-desc-light: #57606a;
+            --repo-desc-dark: #8b949e;
         }
 
         /* Dark mode settings */
         [data-theme="dark"] {
             --bg-color: #000000;
             --txt-color: #ffffff;
-            --container-bg-color: #333333; /* Grey background for the content container in dark mode */
-            --container-txt-color: #00ff00; /* Green text color in the content container in dark mode */
-            --gist-bg-dark: #1e1e1e; /* Background color for gists in dark mode */
-            --gist-border-dark: #444; /* Border color for gists in dark mode */
-            --code-bg-dark: #2e2e2e; /* Background color for code blocks in dark mode */
-            --code-color-dark: #00ff00; /* Text color for code blocks in dark mode */
+            --container-bg-color: #333333;
+            --container-txt-color: #00ff00;
         }
 
         /* Apply the variables to the body */
@@ -51,28 +55,28 @@ layout: default
 
         /* Link styling */
         a:link, a:visited {
-            color: var(--link-color-light); /* Default blue for light mode links */
+            color: var(--link-color-light);
         }
 
         a:hover {
-            color: var(--link-hover-color-light); /* Hover color in light mode */
+            color: var(--link-hover-color-light);
         }
 
         a:active {
-            color: var(--link-color-light); /* Active link color in light mode */
+            color: var(--link-color-light);
         }
 
         /* Dark mode overrides */
         [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-            color: var(--link-color-dark); /* Green links in dark mode */
+            color: var(--link-color-dark);
         }
 
         [data-theme="dark"] a:hover {
-            color: var(--link-hover-color-dark); /* Hover color in dark mode */
+            color: var(--link-hover-color-dark);
         }
 
         [data-theme="dark"] a:active {
-            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
+            color: var(--link-color-dark);
         }
 
         /* Wrap content in a container to apply custom styles */
@@ -83,8 +87,8 @@ layout: default
             padding: 1rem;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 90%; /* Ensures the content doesn't touch the edges */
-            margin-bottom: 20px; /* Add space between the containers */
+            max-width: 90%;
+            margin-bottom: 20px;
         }
 
         /* Adjust the container width for different screen sizes */
@@ -104,72 +108,168 @@ layout: default
         h2 {
             font-size: 2em;
             font-weight: bold;
-            margin: 0; /* Remove margins to ensure no gap */
+            margin: 0;
             color: #333;
         }
 
         [data-theme="dark"] h2 {
-            color: var(--header-color-dark); /* Green header color in dark mode */
+            color: var(--header-color-dark);
         }
 
+        /* Repository card styling */
+        .repo-card {
+            background-color: var(--repo-bg-light);
+            border: 1px solid var(--repo-border-light);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.2s ease;
+            text-decoration: none;
+            display: block;
+            color: var(--repo-text-light);
+        }
+
+        [data-theme="dark"] .repo-card {
+            background-color: var(--repo-bg-dark);
+            border-color: var(--repo-border-dark);
+            color: var(--repo-text-dark);
+        }
+
+        .repo-card:hover {
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        [data-theme="dark"] .repo-card:hover {
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .repo-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2em;
+            color: var(--link-color-light);
+        }
+
+        [data-theme="dark"] .repo-card h3 {
+            color: var(--link-color-dark);
+        }
+
+        .repo-description {
+            color: var(--repo-desc-light);
+            margin: 8px 0;
+            font-size: 0.95em;
+        }
+
+        [data-theme="dark"] .repo-description {
+            color: var(--repo-desc-dark);
+        }
+
+        .repo-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85em;
+            color: var(--repo-desc-light);
+            margin-top: 12px;
+        }
+
+        [data-theme="dark"] .repo-stats {
+            color: var(--repo-desc-dark);
+        }
+
+        .repo-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .language-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Gist styling */
         .gist {
             margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid var(--gist-border-light); /* Default border color in light mode */
-            border-radius: 4px;
-            background-color: var(--gist-bg-light); /* Default background color in light mode */
+            padding: 16px;
+            border: 1px solid var(--gist-border-light);
+            border-radius: 6px;
+            background-color: var(--gist-bg-light);
         }
 
         [data-theme="dark"] .gist {
-            background-color: var(--gist-bg-dark); /* Background color in dark mode */
-            border: 1px solid var(--gist-border-dark); /* Border color in dark mode */
+            background-color: var(--gist-bg-dark);
+            border-color: var(--gist-border-dark);
         }
 
         .gist h3 {
             margin-top: 0;
+            margin-bottom: 12px;
+            color: var(--container-txt-color);
         }
 
         .gist pre {
-            background-color: var(--code-bg-light); /* Background color for code blocks in light mode */
-            padding: 10px;
-            border-radius: 4px;
+            background-color: var(--code-bg-light) !important;
+            padding: 12px;
+            border-radius: 6px;
             overflow-x: auto;
-            color: var(--code-color-light); /* Text color for code blocks in light mode */
+            color: var(--code-color-light) !important;
+            margin: 0;
+            line-height: 1.5;
         }
 
         [data-theme="dark"] .gist pre {
-            background-color: var(--code-bg-dark); /* Background color for code blocks in dark mode */
-            color: var(--code-color-dark); /* Text color for code blocks in dark mode */
+            background-color: var(--code-bg-dark) !important;
+            color: var(--code-color-dark) !important;
         }
 
         .gist code {
-            color: inherit; /* Ensure the code inherits color from the pre element */
+            color: inherit !important;
+            background-color: transparent !important;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
         }
 
         .gist a {
             display: inline-block;
             margin-top: 10px;
-            color: #0366d6;
+            color: var(--link-color-light);
             text-decoration: none;
             font-weight: bold;
+        }
+
+        [data-theme="dark"] .gist a {
+            color: var(--link-color-dark);
         }
 
         .gist a:hover {
             text-decoration: underline;
         }
 
-    /* Ensure the iframe is responsive */
-    .responsive-iframe {
-        width: 100%; /* Take full width of the parent container */
-        max-width: 505px; /* Set a max width to keep it within standard smartphone width */
-        height: 167px; /* Set the height according to your iframe content */
-        border: none; /* Removes the border around the iframe */
-    }
+        /* Ensure the iframe is responsive */
+        .responsive-iframe {
+            width: 100%;
+            max-width: 505px;
+            height: 167px;
+            border: none;
+        }
 
-    /* Container styling without centering */
-    .iframe-container {
-        overflow: hidden; /* Hide overflow to prevent stretching */
-    }
+        /* Container styling without centering */
+        .iframe-container {
+            overflow: hidden;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--repo-desc-light);
+        }
+
+        [data-theme="dark"] .loading {
+            color: var(--repo-desc-dark);
+        }
 
     </style>
 </head>
@@ -197,86 +297,133 @@ layout: default
     <br>
 
 <!-- Repository Preview Section -->
-<div class="content-container">
-    <h3>IoCFinder</h3>
-    <a href="https://github.com/cicero343/IoCFinder" target="_blank" class="repo-link">
-        <img class="repo-img-dark fill-div" alt="IoCFinder" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=IoCFinder&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
-    </a>
+<div id="repos-container">
+    <div class="loading">Loading repositories...</div>
 </div>
 
-<div class="content-container">
-    <h3>KQL-Queries</h3>
-    <a href="https://github.com/cicero343/KQL-Queries" target="_blank" class="repo-link">
-        <img class="repo-img-dark fill-div" alt="KQL-Queries" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=KQL-Queries&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
-    </a>
-</div>
+<h1>My GitHub Gists</h1>
+
+<hr>
+
+<br>
 
 <div class="content-container">
-    <h3>PopupWindowsAPI</h3>
-    <a href="https://github.com/cicero343/PopupWindowsAPI" target="_blank" class="repo-link">
-        <img class="repo-img-dark fill-div" alt="PopupWindowsAPI" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=PopupWindowsAPI&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
-    </a>
-</div>
-
-<div class="content-container">
-    <h3>CyberSecBookmarks</h3>
-    <a href="https://github.com/cicero343/CyberSecBookmarks" target="_blank" class="repo-link">
-        <img class="repo-img-dark fill-div" alt="CyberSecBookmarks" src="https://github-readme-stats.vercel.app/api/pin/?username=cicero343&repo=CyberSecBookmarks&theme=transparent&show_owner=true&title_color=2be4ea&icon_color=fed33f&text_color=e8615a&bg_color=1e181e65&border_color=9c3230&border_radius=2&langs_count=5">
-    </a>
-</div>
-
-    <div class="content-container">
-        <div id="gists-container">
-          <!-- Gists will be loaded here -->
-        </div>
+    <div id="gists-container">
+        <div class="loading">Loading gists...</div>
     </div>
+</div>
 
-    <script>
-      async function fetchGists() {
+<script>
+    // Language colors mapping (common languages)
+    const languageColors = {
+        'JavaScript': '#f1e05a',
+        'Python': '#3572A5',
+        'Java': '#b07219',
+        'HTML': '#e34c26',
+        'CSS': '#563d7c',
+        'TypeScript': '#2b7489',
+        'Shell': '#89e051',
+        'C++': '#f34b7d',
+        'C': '#555555',
+        'Go': '#00ADD8',
+        'Ruby': '#701516',
+        'PHP': '#4F5D95',
+        'PowerShell': '#012456',
+        'KQL': '#00758F'
+    };
+
+    async function fetchRepositories() {
         try {
-          const username = 'cicero343'; // Your GitHub username
-          const response = await fetch(`https://api.github.com/users/${username}/gists`);
-          const gists = await response.json();
+            const username = 'cicero343';
+            const repos = ['IoCFinder', 'KQL-Queries', 'CyberSecBookmarks', 'RaffleTool', 'PopupWindowsAPI'];
+            const container = document.getElementById('repos-container');
+            container.innerHTML = '';
 
-          if (gists.length === 0) {
-            document.getElementById('gists-container').innerText = 'No Gists found.';
-            return;
-          }
+            for (const repoName of repos) {
+                const response = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
+                const repo = await response.json();
 
-          const container = document.getElementById('gists-container');
-          gists.forEach(gist => {
-            const gistDiv = document.createElement('div');
-            gistDiv.className = 'gist';
+                const repoCard = document.createElement('div');
+                repoCard.className = 'content-container';
+                
+                const languageColor = languageColors[repo.language] || '#858585';
+                
+                repoCard.innerHTML = `
+                    <a href="${repo.html_url}" target="_blank" class="repo-card">
+                        <h3>${repo.name}</h3>
+                        <div class="repo-description">${repo.description || 'No description available'}</div>
+                        <div class="repo-stats">
+                            ${repo.language ? `
+                                <span class="repo-stat">
+                                    <span class="language-dot" style="background-color: ${languageColor}"></span>
+                                    ${repo.language}
+                                </span>
+                            ` : ''}
+                            <span class="repo-stat">⭐ ${repo.stargazers_count}</span>
+                            <span class="repo-stat">🔀 ${repo.forks_count}</span>
+                        </div>
+                    </a>
+                `;
 
-            const fileName = Object.keys(gist.files)[0];
-            const file = gist.files[fileName];
-
-            gistDiv.innerHTML = `
-              <h3>${gist.description || 'No Description'}</h3>
-              <pre><code>Loading preview...</code></pre>
-              <a href="${gist.html_url}" target="_blank">View on GitHub</a>
-            `;
-
-            container.appendChild(gistDiv);
-
-            // Fetch the raw content to display the first 5 lines
-            fetch(file.raw_url)
-              .then(response => response.text())
-              .then(content => {
-                const codeElement = gistDiv.querySelector('code');
-                codeElement.textContent = content.split('\n').slice(0, 5).join('\n') + '...';
-              })
-              .catch(error => {
-                gistDiv.querySelector('code').textContent = 'Unable to load preview';
-              });
-          });
+                container.appendChild(repoCard);
+            }
         } catch (error) {
-          document.getElementById('gists-container').innerText = 'Failed to load Gists.';
+            document.getElementById('repos-container').innerHTML = '<div class="loading">Failed to load repositories.</div>';
+            console.error('Error fetching repositories:', error);
         }
-      }
+    }
 
-      fetchGists();
-    </script>
+    async function fetchGists() {
+        try {
+            const username = 'cicero343';
+            const response = await fetch(`https://api.github.com/users/${username}/gists`);
+            const gists = await response.json();
+
+            const container = document.getElementById('gists-container');
+            
+            if (gists.length === 0) {
+                container.innerHTML = '<div class="loading">No Gists found.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            gists.forEach(gist => {
+                const gistDiv = document.createElement('div');
+                gistDiv.className = 'gist';
+
+                const fileName = Object.keys(gist.files)[0];
+                const file = gist.files[fileName];
+
+                gistDiv.innerHTML = `
+                    <h3>${gist.description || 'No Description'}</h3>
+                    <pre><code>Loading preview...</code></pre>
+                    <a href="${gist.html_url}" target="_blank">View on GitHub</a>
+                `;
+
+                container.appendChild(gistDiv);
+
+                // Fetch the raw content to display the first 5 lines
+                fetch(file.raw_url)
+                    .then(response => response.text())
+                    .then(content => {
+                        const codeElement = gistDiv.querySelector('code');
+                        codeElement.textContent = content.split('\n').slice(0, 5).join('\n') + '\n...';
+                    })
+                    .catch(error => {
+                        gistDiv.querySelector('code').textContent = 'Unable to load preview';
+                    });
+            });
+        } catch (error) {
+            document.getElementById('gists-container').innerHTML = '<div class="loading">Failed to load Gists.</div>';
+            console.error('Error fetching gists:', error);
+        }
+    }
+
+    // Load both repositories and gists when the page loads
+    fetchRepositories();
+    fetchGists();
+</script>
 
 </body>
 </html>
