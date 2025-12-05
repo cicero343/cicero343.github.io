@@ -2858,6 +2858,39 @@ permalink: /dashboard/
     color: #00ff00 !important;
   }
 
+  /* Dark mode overrides for CVE sub-tab containers */
+  [data-theme="dark"] .nvd-inner-container,
+  [data-theme="dark"] .msrc-tracker-container,
+  [data-theme="dark"] .shodan-inner-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+  
+  [data-theme="dark"] .msrc-header h1,
+  [data-theme="dark"] .msrc-header p,
+  [data-theme="dark"] .shodan-header h1,
+  [data-theme="dark"] .shodan-header p {
+    color: white !important;
+    background: transparent !important;
+  }
+
+  [data-theme="dark"] .msrc-tracker-container .msrc-header p,
+  [data-theme="dark"] .shodan-inner-container .shodan-header p {
+    color: white !important;
+  }
+  
+  [data-theme="dark"] .nvd-inner-container h1,
+  [data-theme="dark"] .nvd-inner-container p,
+  [data-theme="dark"] .msrc-tracker-container h2,
+  [data-theme="dark"] .msrc-tracker-container p,
+  [data-theme="dark"] .msrc-api-info,
+  [data-theme="dark"] .msrc-api-info p,
+  [data-theme="dark"] .shodan-inner-container p,
+  [data-theme="dark"] .shodan-no-results h3,
+  [data-theme="dark"] .shodan-no-results p {
+    color: #333 !important;
+    background: transparent !important;
+  }
+
   /* Dark mode styles for Domain Intelligence */
   [data-theme="dark"] .domain-container,
   [data-theme="dark"] .domain-header,
