@@ -16,6 +16,10 @@ permalink: /dashboard/
     padding: 0;
   }
 
+  [data-theme="dark"] body {
+    background: #000000;
+  }
+
   .dashboard-tabs {
     display: flex;
     justify-content: center;
@@ -2805,43 +2809,49 @@ permalink: /dashboard/
   }
 
   /* Combined Dark Mode Overrides */
-  [data-theme="dark"] .dashboard-content,
-  [data-theme="dark"] .dashboard-tabs a,
-  [data-theme="dark"] .card,
-  [data-theme="dark"] .card h2,
-  [data-theme="dark"] .card p,
-  [data-theme="dark"] h2,
-  [data-theme="dark"] p,
-  [data-theme="dark"] textarea,
-  [data-theme="dark"] table,
-  [data-theme="dark"] th,
-  [data-theme="dark"] td,
-  [data-theme="dark"] .foodbank,
-  [data-theme="dark"] .recipe-card,
-  [data-theme="dark"] .recipe-card-content {
+  [data-theme="dark"] .dashboard-content {
+    background-color: #111;
+  }
+  
+  [data-theme="dark"] .dashboard-content .card,
+  [data-theme="dark"] .dashboard-content .card h2,
+  [data-theme="dark"] .dashboard-content .card p,
+  [data-theme="dark"] .dashboard-content h2,
+  [data-theme="dark"] .dashboard-content p,
+  [data-theme="dark"] .dashboard-content textarea,
+  [data-theme="dark"] .dashboard-content table,
+  [data-theme="dark"] .dashboard-content th,
+  [data-theme="dark"] .dashboard-content td,
+  [data-theme="dark"] .dashboard-content .foodbank,
+  [data-theme="dark"] .dashboard-content .recipe-card,
+  [data-theme="dark"] .dashboard-content .recipe-card-content {
     background-color: #111 !important;
     color: #00ff00 !important;
   }
-
-  [data-theme="dark"] .card .loading {
+  
+  [data-theme="dark"] .dashboard-content .card .loading {
     color: #00aa00;
   }
-
-  [data-theme="dark"] button.export-btn,
-  [data-theme="dark"] button.table-btn,
-  [data-theme="dark"] button {
+  
+  [data-theme="dark"] .dashboard-content button.export-btn,
+  [data-theme="dark"] .dashboard-content button.table-btn,
+  [data-theme="dark"] .dashboard-content button {
     background-color: #006400;
     color: #00ff00;
   }
-
-  [data-theme="dark"] canvas {
+  
+  [data-theme="dark"] .dashboard-content canvas {
     background: #fff !important;
   }
-
+  
   [data-theme="dark"] .dashboard-tabs {
     background: #000 !important;
   }
-
+  
+  [data-theme="dark"] .dashboard-tabs a {
+    color: #00ff00 !important;
+  }
+  
   [data-theme="dark"] .recipe-modal-content,
   [data-theme="dark"] .recipe-modal-body {
     background-color: #111 !important;
