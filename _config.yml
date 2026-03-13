@@ -34,6 +34,8 @@ navbar:
     url: /cybernews/
   - title: "Admin Login"
     url: /admin/
+  - title: "Guest Portal"
+    url: /guest/
 
 # Exclude from processing
 exclude:
@@ -43,5 +45,6 @@ exclude:
   - vendor/
   - Gemfile
   - Gemfile.lock
+
 
 
