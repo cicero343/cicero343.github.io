@@ -222,68 +222,10 @@
       height: 2px;
       margin-top: -1px;
     }
-    #gun {
-      position: absolute;
-      bottom: 50px;
-      right: 80px;
-      transform: translateX(-50%);
-      width: 140px;
-      height: 100px;
-      pointer-events: none;
-      z-index: 8;
-    }
-    #gun::before {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 45px;
-      height: 55px;
-      background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
-      border-radius: 4px;
-      border: 2px solid #444;
-      box-shadow: 
-        inset 0 2px 4px rgba(255,255,255,0.1),
-        0 4px 12px rgba(0,0,0,0.8);
-    }
-    #gun::after {
-      content: "";
-      position: absolute;
-      bottom: 55px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 12px;
-      height: 50px;
-      background: linear-gradient(to top, #3a3a3a, #555);
-      border-radius: 2px;
-      border: 1px solid #666;
-      box-shadow: 
-        inset 0 1px 2px rgba(255,255,255,0.2),
-        0 2px 8px rgba(0,0,0,0.6);
-    }
-    .gun-sight {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 8px;
-      background: #ff4444;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #ff4444;
-    }
     canvas {
       display: block;
       width: 100vw;
       height: 100vh;
-    }
-    .shoot-flash {
-      animation: flash 0.1s ease-out;
-    }
-    @keyframes flash {
-      0% { filter: brightness(1.5); }
-      100% { filter: brightness(1); }
     }
     #damageIndicators {
       position: absolute;
@@ -383,9 +325,125 @@
     #vignette.active {
       opacity: 1;
     }
-    #captureProgress {
+    #scoreHud {
+      position: absolute;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      color: #fff;
+      text-align: center;
+      min-width: 220px;
+      pointer-events: none;
+    }
+    #scoreHud .score-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffc107;
+      margin-bottom: 4px;
+    }
+    #scoreHud .score-value {
+      font-size: 20px;
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+    #scoreHud .score-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 3px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    #scoreHud .score-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffc107, #ff9800);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+    #scoreHud .pillars-owned {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+    #leaderboard {
       position: absolute;
       top: 130px;
+      right: 10px;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 12px;
+      border-radius: 4px;
+      z-index: 10;
+      min-width: 160px;
+      pointer-events: none;
+    }
+    #leaderboard .lb-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffc107;
+      margin-bottom: 6px;
+    }
+    .lb-entry {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 2px 0;
+    }
+    .lb-entry.me {
+      color: #8BC34A;
+      font-weight: bold;
+    }
+    .lb-entry .lb-score {
+      color: #ffc107;
+    }
+    #winBanner {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      z-index: 25;
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #ffc107;
+      border-radius: 12px;
+      padding: 24px 48px;
+      color: #fff;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      box-shadow: 0 0 40px rgba(255, 193, 7, 0.4);
+    }
+    #winBanner.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    #winBanner .trophy {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+    #winBanner .win-text {
+      font-size: 26px;
+      font-weight: bold;
+      color: #ffc107;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+    #winBanner .win-sub {
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 6px;
+    }
+    #captureProgress {
+      position: absolute;
+      top: 285px;
       right: 10px;
       width: 280px;
       pointer-events: none;
@@ -465,10 +523,26 @@
     <strong>Multiplayer WebGL FPS</strong><br>
     Click to lock mouse.<br>
     <b>W A S D</b> to move, mouse to look.<br>
+    <b>Shift</b> to sprint.<br>
     <b>Space</b> to jump.<br>
     <b>Left click</b> to shoot.<br>
     <b>Right click</b> to throw grenade.<br>
     Press <b>Esc</b> to release mouse.
+  </div>
+  <div id="scoreHud">
+    <div class="score-title">King of the Pillar</div>
+    <div class="score-value"><span id="myScore">0</span> / 40</div>
+    <div class="score-bar-bg"><div class="score-bar-fill" id="scoreBarFill"></div></div>
+    <div class="pillars-owned" id="pillarsOwned">Capture a pillar to start scoring</div>
+  </div>
+  <div id="leaderboard">
+    <div class="lb-title">Leaderboard</div>
+    <div id="lbEntries"></div>
+  </div>
+  <div id="winBanner">
+    <div class="trophy">🏆</div>
+    <div class="win-text" id="winBannerText">Player won!</div>
+    <div class="win-sub">King of the Pillar — pillars resetting...</div>
   </div>
   <div id="grenadeCount">
     <span class="icon">💣</span><span id="grenadeAmount">0</span>
@@ -498,9 +572,6 @@
         <div class="capture-bar-fill" id="captureFill"></div>
       </div>
     </div>
-  </div>
-  <div id="gun">
-    <div class="gun-sight"></div>
   </div>
   <canvas id="glcanvas"></canvas>
 
@@ -583,6 +654,102 @@
       oscillator.stop(now + 0.15);
     }
 
+    // Deep explosion boom - noise burst + descending sine rumble
+    function playExplosionSound() {
+      const now = audioContext.currentTime;
+
+      const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.5, audioContext.sampleRate);
+      const noiseData = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < noiseData.length; i++) {
+        noiseData[i] = (Math.random() * 2 - 1) * (1 - i / noiseData.length);
+      }
+      const noise = audioContext.createBufferSource();
+      noise.buffer = noiseBuffer;
+
+      const filter = audioContext.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(800, now);
+      filter.frequency.exponentialRampToValueAtTime(100, now + 0.5);
+
+      const noiseGain = audioContext.createGain();
+      noiseGain.gain.setValueAtTime(0.5, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(audioContext.destination);
+      noise.start(now);
+      noise.stop(now + 0.5);
+
+      const rumble = audioContext.createOscillator();
+      rumble.type = 'sine';
+      rumble.frequency.setValueAtTime(80, now);
+      rumble.frequency.exponentialRampToValueAtTime(30, now + 0.4);
+
+      const rumbleGain = audioContext.createGain();
+      rumbleGain.gain.setValueAtTime(0.4, now);
+      rumbleGain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+      rumble.connect(rumbleGain);
+      rumbleGain.connect(audioContext.destination);
+      rumble.start(now);
+      rumble.stop(now + 0.4);
+    }
+
+    // Pleasant ascending chime for capturing a pillar
+    function playCaptureSound() {
+      const now = audioContext.currentTime;
+      const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+      notes.forEach((freq, i) => {
+        const osc = audioContext.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        const gain = audioContext.createGain();
+        gain.gain.setValueAtTime(0.001, now + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.15, now + i * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.3);
+      });
+    }
+
+    // Descending tone for losing a pillar
+    function playLostPillarSound() {
+      const now = audioContext.currentTime;
+      const osc = audioContext.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(120, now + 0.35);
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    }
+
+    // Victory fanfare arpeggio
+    function playWinSound() {
+      const now = audioContext.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5]; // C E G C G C
+      notes.forEach((freq, i) => {
+        const osc = audioContext.createOscillator();
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        const gain = audioContext.createGain();
+        gain.gain.setValueAtTime(0.001, now + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.08, now + i * 0.12 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.4);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start(now + i * 0.12);
+        osc.stop(now + i * 0.12 + 0.4);
+      });
+    }
+
     // ====== Basic WebGL setup ======
     const canvas = document.getElementById("glcanvas");
     const gl = canvas.getContext("webgl");
@@ -606,9 +773,11 @@
       attribute vec3 aColor;
       uniform mat4 uMatrix;
       varying vec3 vColor;
+      varying float vFog;
       void main(void) {
         gl_Position = uMatrix * vec4(aPosition, 1.0);
         vColor = aColor;
+        vFog = gl_Position.w;
         gl_PointSize = 6.0;
       }
     `;
@@ -616,8 +785,13 @@
     const fsSource = `
       precision mediump float;
       varying vec3 vColor;
+      varying float vFog;
+      uniform float uFog;
       void main(void) {
-        gl_FragColor = vec4(vColor, 1.0);
+        vec3 skyColor = vec3(0.72, 0.82, 0.96);
+        float fogFactor = clamp((vFog - 40.0) / 520.0, 0.0, 0.92) * uFog;
+        vec3 finalColor = mix(vColor, skyColor, fogFactor);
+        gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
 
@@ -648,6 +822,8 @@
     const aPositionLoc = gl.getAttribLocation(program, "aPosition");
     const aColorLoc = gl.getAttribLocation(program, "aColor");
     const uMatrixLoc = gl.getUniformLocation(program, "uMatrix");
+    const uFogLoc = gl.getUniformLocation(program, "uFog");
+    gl.uniform1f(uFogLoc, 1.0);
 
     // ====== Helpers ======
     function pushVertex(arr, x, y, z, r, g, b) {
@@ -710,7 +886,8 @@
       pushVertex(arr, x1, y1, z1, r, g, b);
     }
 
-    // Add cylinder (for stickman limbs)
+    // Add cylinder along an arbitrary axis (for stickman limbs, gun barrels)
+    // Builds a proper perpendicular basis so angled limbs aren't sheared
     function addCylinderVertices(arr, x1, y1, z1, x2, y2, z2, radius, color, segments = 6) {
       const [r, g, b] = color;
       const dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
@@ -718,33 +895,76 @@
       
       if (len < 0.001) return;
 
+      // Normalized axis
+      const ax = dx / len, ay = dy / len, az = dz / len;
+      // Pick a helper vector not parallel to the axis
+      let hx = 0, hy = 1, hz = 0;
+      if (Math.abs(ay) > 0.99) { hx = 1; hy = 0; }
+      // u = normalize(axis x helper), v = axis x u
+      let ux = ay * hz - az * hy;
+      let uy = az * hx - ax * hz;
+      let uz = ax * hy - ay * hx;
+      const ulen = Math.hypot(ux, uy, uz) || 1;
+      ux /= ulen; uy /= ulen; uz /= ulen;
+      const vx = ay * uz - az * uy;
+      const vy = az * ux - ax * uz;
+      const vz = ax * uy - ay * ux;
+
       for (let i = 0; i < segments; i++) {
         const angle1 = (i / segments) * Math.PI * 2;
         const angle2 = ((i + 1) / segments) * Math.PI * 2;
         
-        const cos1 = Math.cos(angle1) * radius;
-        const sin1 = Math.sin(angle1) * radius;
-        const cos2 = Math.cos(angle2) * radius;
-        const sin2 = Math.sin(angle2) * radius;
+        const c1 = Math.cos(angle1) * radius, s1 = Math.sin(angle1) * radius;
+        const c2 = Math.cos(angle2) * radius, s2 = Math.sin(angle2) * radius;
 
-        // Bottom triangle
+        const o1x = ux * c1 + vx * s1, o1y = uy * c1 + vy * s1, o1z = uz * c1 + vz * s1;
+        const o2x = ux * c2 + vx * s2, o2y = uy * c2 + vy * s2, o2z = uz * c2 + vz * s2;
+
+        // Bottom cap triangle
         pushVertex(arr, x1, y1, z1, r, g, b);
-        pushVertex(arr, x1 + cos1, y1, z1 + sin1, r, g, b);
-        pushVertex(arr, x1 + cos2, y1, z1 + sin2, r, g, b);
+        pushVertex(arr, x1 + o1x, y1 + o1y, z1 + o1z, r, g, b);
+        pushVertex(arr, x1 + o2x, y1 + o2y, z1 + o2z, r, g, b);
 
-        // Top triangle
+        // Top cap triangle
         pushVertex(arr, x2, y2, z2, r, g, b);
-        pushVertex(arr, x2 + cos2, y2, z2 + sin2, r, g, b);
-        pushVertex(arr, x2 + cos1, y2, z2 + sin1, r, g, b);
+        pushVertex(arr, x2 + o2x, y2 + o2y, z2 + o2z, r, g, b);
+        pushVertex(arr, x2 + o1x, y2 + o1y, z2 + o1z, r, g, b);
 
         // Side quad (2 triangles)
-        pushVertex(arr, x1 + cos1, y1, z1 + sin1, r, g, b);
-        pushVertex(arr, x2 + cos1, y2, z2 + sin1, r, g, b);
-        pushVertex(arr, x2 + cos2, y2, z2 + sin2, r, g, b);
+        pushVertex(arr, x1 + o1x, y1 + o1y, z1 + o1z, r, g, b);
+        pushVertex(arr, x2 + o1x, y2 + o1y, z2 + o1z, r, g, b);
+        pushVertex(arr, x2 + o2x, y2 + o2y, z2 + o2z, r, g, b);
 
-        pushVertex(arr, x1 + cos1, y1, z1 + sin1, r, g, b);
-        pushVertex(arr, x2 + cos2, y2, z2 + sin2, r, g, b);
-        pushVertex(arr, x1 + cos2, y1, z1 + sin2, r, g, b);
+        pushVertex(arr, x1 + o1x, y1 + o1y, z1 + o1z, r, g, b);
+        pushVertex(arr, x2 + o2x, y2 + o2y, z2 + o2z, r, g, b);
+        pushVertex(arr, x1 + o2x, y1 + o2y, z1 + o2z, r, g, b);
+      }
+    }
+
+    // Add ellipsoid (squashed sphere - used for cloud puffs)
+    function addEllipsoidVertices(arr, cx, cy, cz, rx, ry, rz, color, segments = 6) {
+      const [r, g, b] = color;
+      for (let lat = 0; lat < segments; lat++) {
+        const theta1 = (lat / segments) * Math.PI;
+        const theta2 = ((lat + 1) / segments) * Math.PI;
+        for (let lon = 0; lon < segments; lon++) {
+          const phi1 = (lon / segments) * Math.PI * 2;
+          const phi2 = ((lon + 1) / segments) * Math.PI * 2;
+
+          const p = (t, ph) => [
+            cx + rx * Math.sin(t) * Math.cos(ph),
+            cy + ry * Math.cos(t),
+            cz + rz * Math.sin(t) * Math.sin(ph)
+          ];
+          const a = p(theta1, phi1), bb = p(theta1, phi2), c = p(theta2, phi2), d = p(theta2, phi1);
+
+          pushVertex(arr, a[0], a[1], a[2], r, g, b);
+          pushVertex(arr, bb[0], bb[1], bb[2], r, g, b);
+          pushVertex(arr, c[0], c[1], c[2], r, g, b);
+          pushVertex(arr, a[0], a[1], a[2], r, g, b);
+          pushVertex(arr, c[0], c[1], c[2], r, g, b);
+          pushVertex(arr, d[0], d[1], d[2], r, g, b);
+        }
       }
     }
 
@@ -787,85 +1007,156 @@
       }
     }
 
-    // Create stickman model with proper body rotation
-    function addStickmanVertices(arr, x, y, z, yaw, color) {
-      const headRadius = 0.3;
-      const bodyHeight = 1.2;
-      const limbRadius = 0.08;
-      
-      const cosYaw = Math.cos(yaw);
-      const sinYaw = Math.sin(yaw);
-      
-      // Head
-      addSphereVertices(arr, x, y + bodyHeight + headRadius, z, headRadius, color);
-      
-      // Body
-      addCylinderVertices(arr, x, y, z, x, y + bodyHeight, z, limbRadius * 1.5, color);
-      
-      // Arms
-      const armY = y + bodyHeight * 0.7;
-      const armLength = 0.5;
-      const armAngle = Math.PI / 6;
-      
-      const leftArmOffsetX = -cosYaw * 0.2;
-      const leftArmOffsetZ = sinYaw * 0.2;
-      const leftArmEndX = leftArmOffsetX - cosYaw * 0.15;
-      const leftArmEndZ = leftArmOffsetZ + sinYaw * 0.15;
-      
-      addCylinderVertices(arr, 
-        x + leftArmOffsetX, armY, z + leftArmOffsetZ,
-        x + leftArmEndX, armY - armLength * Math.sin(armAngle), z + leftArmEndZ,
-        limbRadius, color);
-      
-      const rightArmOffsetX = cosYaw * 0.2;
-      const rightArmOffsetZ = -sinYaw * 0.2;
-      const rightArmEndX = sinYaw * 0.3;
-      const rightArmEndZ = cosYaw * 0.3;
-      
-      addCylinderVertices(arr, 
-        x + rightArmOffsetX, armY, z + rightArmOffsetZ,
-        x + rightArmEndX, armY - 0.2, z + rightArmEndZ,
-        limbRadius, color);
-      
-      // Gun
-      const gunX = x + rightArmEndX;
-      const gunY = armY - 0.15;
-      const gunZ = z + rightArmEndZ;
-      const gunColorDark = [0.2, 0.2, 0.2];
-      const gunColorLight = [0.4, 0.4, 0.4];
-      
-      const gripOffsetX = -sinYaw * 0.02;
-      const gripOffsetZ = -cosYaw * 0.02;
-      addBoxVertices(arr, gunX + gripOffsetX, gunY - 0.05, gunZ + gripOffsetZ, 
-        0.06, 0.12, 0.06, gunColorDark);
-      
-      const barrelOffsetX = sinYaw * 0.1;
-      const barrelOffsetZ = cosYaw * 0.1;
+    // Create player model v3: smoothed network movement drives a full walk
+    // cycle - stride matched to ground speed, body bob, lateral sway, forward
+    // lean, idle breathing, jump tuck. Still deliberately stick-like.
+    //   amp:   0..1 walk amplitude (ramps in/out as the player starts/stops)
+    //   idleT: per-player time offset for idle breathing
+    //   air:   0..1 airborne factor (legs tuck while jumping/falling)
+    function addStickmanVertices(arr, x, y, z, yaw, color, walkPhase = 0, aimPitch = 0, amp = 0, idleT = 0, air = 0, moveDX = null, moveDZ = null) {
+      const limbRadius = 0.075;
+      const darkColor = [color[0] * 0.65, color[1] * 0.65, color[2] * 0.65];
+      const gunDark = [0.14, 0.14, 0.16];
+      const gunLight = [0.38, 0.38, 0.42];
+      const woodColor = [0.42, 0.27, 0.14];
+      const eyeColor = [0.06, 0.06, 0.06];
+
+      // Facing direction (matches camera convention) and right vector
+      const fwdX = Math.sin(yaw), fwdZ = Math.cos(yaw);
+      const rgtX = Math.cos(yaw), rgtZ = -Math.sin(yaw);
+
+      // Aim direction includes pitch - gun and eyes track where the player looks
+      const cp = Math.cos(aimPitch), sp = Math.sin(aimPitch);
+      const aimX = fwdX * cp, aimY = sp, aimZ = fwdZ * cp;
+
+      // ===== Animation drivers =====
+      // Body bob: two beats per stride while walking, slow breathing when idle
+      const bob = Math.abs(Math.sin(walkPhase)) * 0.06 * amp
+                + Math.sin(idleT * 1.7) * 0.013 * (1 - amp);
+      // Hips sway side to side over the planted foot
+      const sway = Math.sin(walkPhase) * 0.035 * amp;
+
+      // Direction of travel - legs and lean follow this, so strafing players
+      // side-step while their body keeps facing the aim direction
+      const mdX = moveDX === null ? fwdX : moveDX;
+      const mdZ = moveDZ === null ? fwdZ : moveDZ;
+      // Lean into the run
+      const lean = 0.08 * amp;
+
+      const cxB = x + rgtX * sway;
+      const czB = z + rgtZ * sway;
+
+      // ===== Pelvis & torso =====
+      const hipSpread = 0.13;
+      const hipY = y + 0.05 + bob * 0.6;
+      const lHipX = cxB - rgtX * hipSpread, lHipZ = czB - rgtZ * hipSpread;
+      const rHipX = cxB + rgtX * hipSpread, rHipZ = czB + rgtZ * hipSpread;
+      addCylinderVertices(arr, lHipX, hipY, lHipZ, rHipX, hipY, rHipZ, 0.075, darkColor, 6);
+
+      const chestY = y + 0.95 + bob;
+      const chestX = cxB + mdX * lean, chestZ = czB + mdZ * lean;
+      addCylinderVertices(arr, cxB, hipY, czB, chestX, chestY, chestZ, 0.12, color, 7);
+
+      // Shoulders
+      const shY = chestY - 0.05;
+      const lShX = chestX - rgtX * 0.24, lShZ = chestZ - rgtZ * 0.24;
+      const rShX = chestX + rgtX * 0.24, rShZ = chestZ + rgtZ * 0.24;
+      addSphereVertices(arr, lShX, shY, lShZ, 0.075, color, 6);
+      addSphereVertices(arr, rShX, shY, rShZ, 0.075, color, 6);
+
+      // ===== Neck & head (head bobs a touch more than the body) =====
+      const headR = 0.26;
+      const headX = chestX + mdX * lean * 0.5;
+      const headZ = chestZ + mdZ * lean * 0.5;
+      const headY = chestY + 0.34 + bob * 0.25;
+      addCylinderVertices(arr, chestX, chestY, chestZ, headX, headY - headR * 0.55, headZ, 0.06, color, 6);
+      addSphereVertices(arr, headX, headY, headZ, headR, color, 8);
+
+      // Eyes sit on the aim direction so you can read where they're looking
+      const eyeBaseX = headX + aimX * (headR * 0.82);
+      const eyeBaseY = headY + aimY * (headR * 0.82) + 0.03;
+      const eyeBaseZ = headZ + aimZ * (headR * 0.82);
+      addSphereVertices(arr, eyeBaseX - rgtX * 0.09, eyeBaseY, eyeBaseZ - rgtZ * 0.09, 0.045, eyeColor, 5);
+      addSphereVertices(arr, eyeBaseX + rgtX * 0.09, eyeBaseY, eyeBaseZ + rgtZ * 0.09, 0.045, eyeColor, 5);
+
+      // ===== Rifle: chest height, aimed along look direction, bobs with stride =====
+      const gunBobY = Math.sin(walkPhase * 2) * 0.02 * amp + Math.sin(idleT * 1.3) * 0.008;
+      const gunBaseX = chestX + fwdX * 0.3 + rgtX * 0.06;
+      const gunBaseY = chestY - 0.12 + gunBobY;
+      const gunBaseZ = chestZ + fwdZ * 0.3 + rgtZ * 0.06;
+
+      // Stock (wood, behind base) -> receiver -> barrel
       addCylinderVertices(arr,
-        gunX, gunY, gunZ,
-        gunX + barrelOffsetX, gunY, gunZ + barrelOffsetZ,
-        0.03, gunColorLight, 8);
-      
-      // Legs
-      const legY = y;
-      const legLen = 0.7;
-      const legSpread = 0.15;
-      
-      const leftLegX = -cosYaw * legSpread;
-      const leftLegZ = sinYaw * legSpread;
-      
-      addCylinderVertices(arr, 
-        x + leftLegX, legY, z + leftLegZ,
-        x + leftLegX, legY - legLen, z + leftLegZ,
-        limbRadius, color);
-      
-      const rightLegX = cosYaw * legSpread;
-      const rightLegZ = -sinYaw * legSpread;
-      
-      addCylinderVertices(arr, 
-        x + rightLegX, legY, z + rightLegZ,
-        x + rightLegX, legY - legLen, z + rightLegZ,
-        limbRadius, color);
+        gunBaseX - aimX * 0.28, gunBaseY - aimY * 0.28 - 0.03, gunBaseZ - aimZ * 0.28,
+        gunBaseX - aimX * 0.1, gunBaseY - aimY * 0.1, gunBaseZ - aimZ * 0.1,
+        0.045, woodColor, 6);
+      addCylinderVertices(arr,
+        gunBaseX - aimX * 0.12, gunBaseY - aimY * 0.12, gunBaseZ - aimZ * 0.12,
+        gunBaseX + aimX * 0.32, gunBaseY + aimY * 0.32, gunBaseZ + aimZ * 0.32,
+        0.05, gunDark, 6);
+      addCylinderVertices(arr,
+        gunBaseX + aimX * 0.32, gunBaseY + aimY * 0.32, gunBaseZ + aimZ * 0.32,
+        gunBaseX + aimX * 0.68, gunBaseY + aimY * 0.68, gunBaseZ + aimZ * 0.68,
+        0.024, gunLight, 6);
+      // Magazine hanging below the receiver
+      addCylinderVertices(arr,
+        gunBaseX + aimX * 0.08, gunBaseY + aimY * 0.08, gunBaseZ + aimZ * 0.08,
+        gunBaseX + aimX * 0.08, gunBaseY + aimY * 0.08 - 0.14, gunBaseZ + aimZ * 0.08,
+        0.035, gunDark, 5);
+
+      // ===== Arms: both hands on the rifle (follow the gun's bob naturally) =====
+      const rHandX = gunBaseX - aimX * 0.02, rHandY = gunBaseY - aimY * 0.02 - 0.05, rHandZ = gunBaseZ - aimZ * 0.02;
+      const lHandX = gunBaseX + aimX * 0.4, lHandY = gunBaseY + aimY * 0.4 - 0.03, lHandZ = gunBaseZ + aimZ * 0.4;
+
+      const rElbX = (rShX + rHandX) / 2 + rgtX * 0.1;
+      const rElbY = (shY + rHandY) / 2 - 0.1;
+      const rElbZ = (rShZ + rHandZ) / 2 + rgtZ * 0.1;
+      addCylinderVertices(arr, rShX, shY, rShZ, rElbX, rElbY, rElbZ, limbRadius, color, 6);
+      addCylinderVertices(arr, rElbX, rElbY, rElbZ, rHandX, rHandY, rHandZ, limbRadius * 0.9, color, 6);
+      addSphereVertices(arr, rHandX, rHandY, rHandZ, 0.07, darkColor, 5);
+
+      const lElbX = (lShX + lHandX) / 2 - rgtX * 0.12;
+      const lElbY = (shY + lHandY) / 2 - 0.12;
+      const lElbZ = (lShZ + lHandZ) / 2 - rgtZ * 0.12;
+      addCylinderVertices(arr, lShX, shY, lShZ, lElbX, lElbY, lElbZ, limbRadius, color, 6);
+      addCylinderVertices(arr, lElbX, lElbY, lElbZ, lHandX, lHandY, lHandZ, limbRadius * 0.9, color, 6);
+      addSphereVertices(arr, lHandX, lHandY, lHandZ, 0.07, darkColor, 5);
+
+      // ===== Legs: two segments with knees =====
+      // Hips sway with the body but feet stay planted on the unswayed line,
+      // which is what sells the weight shift.
+      const legDrop = 0.73;
+
+      function addLeg(side, phase) {
+        const hipJX = side > 0 ? rHipX : lHipX;
+        const hipJZ = side > 0 ? rHipZ : lHipZ;
+        // Planted foot anchor ignores body sway
+        const footAnchorX = x + rgtX * hipSpread * side;
+        const footAnchorZ = z + rgtZ * hipSpread * side;
+
+        const swing = Math.sin(phase) * 0.34 * amp * (1 - air);
+        const lift = Math.max(0, Math.sin(phase)) * 0.16 * amp * (1 - air)
+                   + air * 0.24; // tuck both legs while airborne
+
+        const footX = footAnchorX + mdX * swing;
+        const footY = y - legDrop + lift;
+        const footZ = footAnchorZ + mdZ * swing;
+
+        // Knee bends along the direction of travel - more mid-stride and airborne
+        const bend = 0.07 + Math.abs(swing) * 0.3 + air * 0.28;
+        const kneeX = (hipJX + footX) / 2 + mdX * bend;
+        const kneeY = (hipY + footY) / 2 + 0.03;
+        const kneeZ = (hipJZ + footZ) / 2 + mdZ * bend;
+
+        addCylinderVertices(arr, hipJX, hipY, hipJZ, kneeX, kneeY, kneeZ, limbRadius, color, 6);
+        addCylinderVertices(arr, kneeX, kneeY, kneeZ, footX, footY, footZ, limbRadius * 0.9, color, 6);
+        // Foot - small forward-pointing nub
+        addCylinderVertices(arr, footX, footY, footZ,
+          footX + fwdX * 0.14, footY, footZ + fwdZ * 0.14, limbRadius * 0.85, darkColor, 5);
+      }
+
+      addLeg(1, walkPhase);
+      addLeg(-1, walkPhase + Math.PI);
     }
 
     function bindAttributes() {
@@ -881,22 +1172,42 @@
     // ====== World geometry ======
     const worldVertices = [];
     const size = 500.0;
-    const groundColor = [0.2, 0.7, 0.2];
 
-    pushVertex(worldVertices, -size, 0, -size, ...groundColor);
-    pushVertex(worldVertices,  size, 0, -size, ...groundColor);
-    pushVertex(worldVertices,  size, 0,  size, ...groundColor);
-    pushVertex(worldVertices, -size, 0, -size, ...groundColor);
-    pushVertex(worldVertices,  size, 0,  size, ...groundColor);
-    pushVertex(worldVertices, -size, 0,  size, ...groundColor);
+    // Checkerboard ground - alternating green tiles give a sense of speed and scale
+    (function buildGround() {
+      const tile = 10.0;
+      const tiles = Math.floor((size * 2) / tile);
+      const colorA = [0.22, 0.62, 0.25];
+      const colorB = [0.18, 0.52, 0.21];
+      for (let i = 0; i < tiles; i++) {
+        for (let j = 0; j < tiles; j++) {
+          const x1 = -size + i * tile;
+          const z1 = -size + j * tile;
+          const x2 = x1 + tile;
+          const z2 = z1 + tile;
+          const c = ((i + j) % 2 === 0) ? colorA : colorB;
+          pushVertex(worldVertices, x1, 0, z1, ...c);
+          pushVertex(worldVertices, x2, 0, z1, ...c);
+          pushVertex(worldVertices, x2, 0, z2, ...c);
+          pushVertex(worldVertices, x1, 0, z1, ...c);
+          pushVertex(worldVertices, x2, 0, z2, ...c);
+          pushVertex(worldVertices, x1, 0, z2, ...c);
+        }
+      }
+    })();
 
     function addPillar(px, pz, height) {
       const w = 1.0;
-      const color = [0.7, 0.7, 0.9];
+      // Slightly different shades per face fakes directional lighting
+      const colorN = [0.62, 0.62, 0.82]; // north/south faces
+      const colorE = [0.74, 0.74, 0.94]; // east/west faces
+      const colorT = [0.85, 0.85, 1.0];  // top face
       const x1 = px - w, x2 = px + w;
       const z1 = pz - w, z2 = pz + w;
       const y1 = 0,  y2 = height;
 
+      let color = colorN;
+
       pushVertex(worldVertices, x1, y1, z1, ...color);
       pushVertex(worldVertices, x2, y1, z1, ...color);
       pushVertex(worldVertices, x2, y2, z1, ...color);
@@ -911,6 +1222,8 @@
       pushVertex(worldVertices, x1, y2, z2, ...color);
       pushVertex(worldVertices, x2, y2, z2, ...color);
 
+      color = colorE;
+
       pushVertex(worldVertices, x1, y1, z2, ...color);
       pushVertex(worldVertices, x1, y1, z1, ...color);
       pushVertex(worldVertices, x1, y2, z1, ...color);
@@ -924,6 +1237,8 @@
       pushVertex(worldVertices, x2, y1, z1, ...color);
       pushVertex(worldVertices, x2, y2, z2, ...color);
       pushVertex(worldVertices, x2, y2, z1, ...color);
+
+      color = colorT;
 
       pushVertex(worldVertices, x1, y2, z1, ...color);
       pushVertex(worldVertices, x2, y2, z1, ...color);
@@ -947,9 +1262,146 @@
     const bottlePillarPos = { x: 0, z: -10, h: 2 };
     addPillar(bottlePillarPos.x, bottlePillarPos.z, bottlePillarPos.h);
 
+    // ====== Scenery: mountains on the horizon (hazed out by fog) ======
+    (function buildMountains() {
+      const ring = 26;
+      const baseR = 380;
+      const mtnColors = [[0.42, 0.47, 0.62], [0.36, 0.42, 0.58], [0.47, 0.52, 0.66]];
+      for (let i = 0; i < ring; i++) {
+        // Pseudo-random but deterministic per slot
+        const seed = Math.sin(i * 127.1) * 43758.5453;
+        const rnd = seed - Math.floor(seed);
+        const angle = (i / ring) * Math.PI * 2 + rnd * 0.2;
+        const dist = baseR + rnd * 90;
+        const mx = Math.cos(angle) * dist;
+        const mz = Math.sin(angle) * dist;
+        const h = 55 + rnd * 75;
+        const w = 60 + rnd * 50;
+        const c = mtnColors[i % 3];
+        const peakX = mx, peakZ = mz;
+        // Four-sided pyramid
+        const corners = [
+          [mx - w, 0, mz - w], [mx + w, 0, mz - w],
+          [mx + w, 0, mz + w], [mx - w, 0, mz + w]
+        ];
+        for (let f = 0; f < 4; f++) {
+          const a = corners[f], b = corners[(f + 1) % 4];
+          // Alternate shading per face
+          const fc = f % 2 === 0 ? c : [c[0] * 0.85, c[1] * 0.85, c[2] * 0.85];
+          pushVertex(worldVertices, a[0], a[1], a[2], ...fc);
+          pushVertex(worldVertices, b[0], b[1], b[2], ...fc);
+          pushVertex(worldVertices, peakX, h, peakZ, ...fc);
+        }
+      }
+    })();
+
     const worldVertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(worldVertices), gl.STATIC_DRAW);
+
+    // ====== Sky: fullscreen gradient quad drawn in clip space ======
+    const identityMatrix = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+    const skyVertices = [];
+    const skyTop = [0.28, 0.52, 0.93];
+    const skyHorizon = [0.72, 0.82, 0.96];
+    // Two triangles covering the screen; colors interpolate top -> horizon
+    pushVertex(skyVertices, -1, -1, 0.9999, ...skyHorizon);
+    pushVertex(skyVertices,  1, -1, 0.9999, ...skyHorizon);
+    pushVertex(skyVertices,  1,  1, 0.9999, ...skyTop);
+    pushVertex(skyVertices, -1, -1, 0.9999, ...skyHorizon);
+    pushVertex(skyVertices,  1,  1, 0.9999, ...skyTop);
+    pushVertex(skyVertices, -1,  1, 0.9999, ...skyTop);
+    const skyBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, skyBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(skyVertices), gl.STATIC_DRAW);
+
+    // ====== Clouds: drifting puffy clusters of squashed spheres ======
+    const cloudClusters = [];
+    (function buildCloudDefs() {
+      for (let i = 0; i < 11; i++) {
+        const seed = Math.sin(i * 311.7) * 43758.5453;
+        const rnd = (n) => {
+          const s = Math.sin((i * 7 + n) * 269.5) * 43758.5453;
+          return s - Math.floor(s);
+        };
+        const cluster = {
+          x: -350 + rnd(1) * 700,
+          y: 85 + rnd(2) * 50,
+          z: -350 + rnd(3) * 700,
+          speed: 1.2 + rnd(4) * 1.6,
+          puffs: []
+        };
+        const puffCount = 3 + Math.floor(rnd(5) * 3);
+        for (let p = 0; p < puffCount; p++) {
+          cluster.puffs.push({
+            ox: (rnd(10 + p) - 0.5) * 22,
+            oy: (rnd(20 + p) - 0.5) * 4,
+            oz: (rnd(30 + p) - 0.5) * 12,
+            rx: 7 + rnd(40 + p) * 9,
+            ry: 2.2 + rnd(50 + p) * 1.8,
+            rz: 5 + rnd(60 + p) * 6,
+            shade: 0.93 + rnd(70 + p) * 0.07
+          });
+        }
+        cloudClusters.push(cluster);
+      }
+    })();
+    const cloudBuffer = gl.createBuffer();
+    const sunBuffer = gl.createBuffer();
+    let sunVertexCount = 0;
+
+    // Sun - built once
+    (function buildSun() {
+      const sunVerts = [];
+      addSphereVertices(sunVerts, 230, 115, -320, 22, [1.0, 0.97, 0.75], 10);
+      addSphereVertices(sunVerts, 230, 115, -320, 16, [1.0, 1.0, 0.9], 10);
+      gl.bindBuffer(gl.ARRAY_BUFFER, sunBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sunVerts), gl.STATIC_DRAW);
+      sunVertexCount = sunVerts.length / 6;
+    })();
+
+    function drawSky(mvp) {
+      // Gradient backdrop - drawn in clip space, no depth writes
+      gl.depthMask(false);
+      gl.uniform1f(uFogLoc, 0.0);
+      gl.uniformMatrix4fv(uMatrixLoc, false, identityMatrix);
+      gl.bindBuffer(gl.ARRAY_BUFFER, skyBuffer);
+      bindAttributes();
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      gl.depthMask(true);
+      gl.uniform1f(uFogLoc, 1.0);
+      gl.uniformMatrix4fv(uMatrixLoc, false, mvp);
+    }
+
+    function drawCloudsAndSun(timeSec) {
+      gl.uniform1f(uFogLoc, 0.12);
+
+      // Sun (static)
+      gl.bindBuffer(gl.ARRAY_BUFFER, sunBuffer);
+      bindAttributes();
+      gl.drawArrays(gl.TRIANGLES, 0, sunVertexCount);
+
+      // Clouds drift slowly on x, wrapping around the world
+      const cloudVerts = [];
+      for (const cluster of cloudClusters) {
+        let cx = cluster.x + timeSec * cluster.speed;
+        // Wrap into [-400, 400]
+        cx = ((cx + 400) % 800 + 800) % 800 - 400;
+        for (const puff of cluster.puffs) {
+          const s = puff.shade;
+          addEllipsoidVertices(cloudVerts,
+            cx + puff.ox, cluster.y + puff.oy, cluster.z + puff.oz,
+            puff.rx, puff.ry, puff.rz,
+            [s, s, s + 0.02], 6);
+        }
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER, cloudBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cloudVerts), gl.DYNAMIC_DRAW);
+      bindAttributes();
+      gl.drawArrays(gl.TRIANGLES, 0, cloudVerts.length / 6);
+
+      gl.uniform1f(uFogLoc, 1.0);
+    }
 
     // ====== King of the Pillar System ======
     const CAPTURE_RADIUS = 4.0;
@@ -1059,7 +1511,7 @@
             if (circle.progress <= 0) {
               circle.progress = 0;
               circle.owner = null;
-              playGunshotSound(); // Audio feedback
+              playLostPillarSound();
               needsSync = true;
             }
           }
@@ -1075,7 +1527,9 @@
               if (circle.progress >= 1) {
                 circle.progress = 1;
                 circle.owner = capturer;
-                playHitSound(); // Audio feedback
+                if (capturer === myPlayerId) {
+                  playCaptureSound();
+                }
                 needsSync = true;
               }
             }
@@ -1099,15 +1553,26 @@
       }
     }
 
+    let lastScoreSync = 0;
+
     function updatePlayerScores(dt) {
-      // Award points for owned circles
+      const now = Date.now();
+      let earnedThisFrame = false;
+
+      // Award points for owned circles - blocked only when an ENEMY is inside
       captureCircles.forEach(circle => {
-        if (circle.owner && circle.playersInside.size === 0) {
-          // Only score when uncontested
-          if (circle.owner === myPlayerId) {
+        if (circle.owner === myPlayerId) {
+          const enemiesInside = Array.from(circle.playersInside).filter(pid => {
+            if (pid === myPlayerId) return false;
+            const p = remotePlayers[pid];
+            return p && p.alive && p.lastUpdate && (now - p.lastUpdate) < 5000;
+          });
+
+          if (enemiesInside.length === 0) {
             const currentScore = playerScores.get(myPlayerId) || 0;
             const newScore = currentScore + (POINTS_PER_SECOND * dt);
             playerScores.set(myPlayerId, newScore);
+            earnedThisFrame = true;
 
             // Check for win
             if (newScore >= POINTS_TO_WIN) {
@@ -1117,8 +1582,9 @@
         }
       });
 
-      // Sync scores periodically
-      if (Math.random() < 0.1) { // ~10% chance each frame
+      // Sync scores every 500ms while earning
+      if (earnedThisFrame && now - lastScoreSync > 500) {
+        lastScoreSync = now;
         syncPlayerScore();
       }
     }
@@ -1132,13 +1598,47 @@
       });
     }
 
+    // ====== Score HUD & Leaderboard ======
+    function updateScoreHud() {
+      const myScore = Math.floor(playerScores.get(myPlayerId) || 0);
+      document.getElementById('myScore').textContent = myScore;
+      document.getElementById('scoreBarFill').style.width =
+        Math.min(100, (myScore / POINTS_TO_WIN) * 100) + '%';
+
+      const owned = captureCircles.filter(c => c.owner === myPlayerId).length;
+      const ownedText = owned === 0
+        ? 'Capture a pillar to start scoring'
+        : `${owned} pillar${owned > 1 ? 's' : ''} owned — earning ${owned * POINTS_PER_SECOND} pt/s`;
+      document.getElementById('pillarsOwned').textContent = ownedText;
+
+      // Leaderboard - top 5 by score
+      const entries = [];
+      playerScores.forEach((score, pid) => {
+        const name = pid === myPlayerId ? (myName || 'You') : (playerNames.get(pid) || 'Player');
+        entries.push({ pid, name, score: Math.floor(score) });
+      });
+      entries.sort((a, b) => b.score - a.score);
+
+      const lbDiv = document.getElementById('lbEntries');
+      if (entries.length === 0) {
+        lbDiv.innerHTML = '<div class="lb-entry"><span>No scores yet</span></div>';
+      } else {
+        lbDiv.innerHTML = entries.slice(0, 5).map((e, i) =>
+          `<div class="lb-entry${e.pid === myPlayerId ? ' me' : ''}">` +
+          `<span>${i + 1}. ${e.name}</span><span class="lb-score">${e.score}</span></div>`
+        ).join('');
+      }
+    }
+    setInterval(updateScoreHud, 200);
+
+    let winInProgress = false;
+
     function handleKOTPWin(winnerId) {
-      const winnerName = playerNames.get(winnerId) || 'Unknown';
-      
-      // Announce in kill feed
-      addKillToFeed('🏆 ' + winnerName, 'won King of the Pillar!');
-      
-      // Broadcast win event
+      if (winInProgress) return;
+      winInProgress = true;
+      setTimeout(() => { winInProgress = false; }, 5000);
+
+      // Broadcast win event - the kotpWins listener shows the banner for everyone (including us)
       const winRef = push(ref(database, 'kotpWins'));
       set(winRef, {
         winnerId: winnerId,
@@ -1147,6 +1647,15 @@
 
       // Reset circles
       resetKOTPGame();
+    }
+
+    function showWinBanner(winnerName) {
+      const banner = document.getElementById('winBanner');
+      document.getElementById('winBannerText').textContent = winnerName + ' won King of the Pillar!';
+      banner.classList.add('active');
+      playWinSound();
+      addKillToFeed('🏆 ' + winnerName, 'won King of the Pillar!');
+      setTimeout(() => banner.classList.remove('active'), 4500);
     }
 
     function resetKOTPGame() {
@@ -1221,6 +1730,7 @@
     // Draw capture circles
     function drawCaptureCircles() {
       const circleVerts = [];
+      const timeNow = performance.now();
       
       captureCircles.forEach(circle => {
         const segments = 32;
@@ -1251,6 +1761,28 @@
           color = [0.8, 0.8, 0.8];
         }
 
+        // Pulse the ring while a capture is in progress
+        let ringWidth = 0.3;
+        if (circle.capturingPlayer) {
+          ringWidth = 0.3 + 0.2 * (0.5 + 0.5 * Math.sin(timeNow / 150));
+        }
+
+        // Beacon on top of owned pillars - a glowing crown in the owner's colour
+        if (circle.owner) {
+          const pillar = capturePillars.find(p => p.id === circle.id);
+          if (pillar) {
+            const beaconPulse = 0.5 + 0.3 * Math.sin(timeNow / 250);
+            const beaconColor = [
+              Math.min(1, color[0] * 0.6 + beaconPulse * 0.5),
+              Math.min(1, color[1] * 0.6 + beaconPulse * 0.5),
+              Math.min(1, color[2] * 0.6 + beaconPulse * 0.5)
+            ];
+            addBoxVertices(circleVerts, pillar.x, pillar.h + 0.4, pillar.z, 2.4, 0.3, 2.4, beaconColor);
+            addBoxVertices(circleVerts, pillar.x, pillar.h + 1.0, pillar.z, 0.3, 1.5, 0.3, beaconColor);
+            addSphereVertices(circleVerts, pillar.x, pillar.h + 1.9, pillar.z, 0.35, beaconColor, 8);
+          }
+        }
+
         // Draw outer ring
         for (let i = 0; i < segments; i++) {
           const angle1 = (i / segments) * Math.PI * 2;
@@ -1261,10 +1793,10 @@
           const x2 = circle.x + Math.cos(angle2) * CAPTURE_RADIUS;
           const z2 = circle.z + Math.sin(angle2) * CAPTURE_RADIUS;
           
-          const x1Inner = circle.x + Math.cos(angle1) * (CAPTURE_RADIUS - 0.3);
-          const z1Inner = circle.z + Math.sin(angle1) * (CAPTURE_RADIUS - 0.3);
-          const x2Inner = circle.x + Math.cos(angle2) * (CAPTURE_RADIUS - 0.3);
-          const z2Inner = circle.z + Math.sin(angle2) * (CAPTURE_RADIUS - 0.3);
+          const x1Inner = circle.x + Math.cos(angle1) * (CAPTURE_RADIUS - ringWidth);
+          const z1Inner = circle.z + Math.sin(angle1) * (CAPTURE_RADIUS - ringWidth);
+          const x2Inner = circle.x + Math.cos(angle2) * (CAPTURE_RADIUS - ringWidth);
+          const z2Inner = circle.z + Math.sin(angle2) * (CAPTURE_RADIUS - ringWidth);
           
           // Validate all coordinates before pushing
           if (isFinite(x1) && isFinite(z1) && isFinite(x2) && isFinite(z2) &&
@@ -1356,7 +1888,7 @@
     const GRENADE_RESPAWN_TIME = 30000;
     const GRENADE_THROW_SPEED = 15.0;
     const GRENADE_FUSE_TIME = 2.0;
-    const GRENADE_DAMAGE = 2;
+    const GRENADE_DAMAGE = 3;
     const GRENADE_RADIUS = 5.0;
     const PICKUP_RADIUS = 1.0;
     
@@ -1504,7 +2036,14 @@
         });
       }
 
-      playGunshotSound();
+      // Camera shake proportional to proximity
+      const shakeRange = GRENADE_RADIUS * 2.5;
+      if (myDistSq < shakeRange * shakeRange) {
+        const proximity = 1 - Math.sqrt(myDistSq) / shakeRange;
+        recoilPitch += (Math.random() - 0.5) * 0.08 * proximity;
+      }
+
+      playExplosionSound();
     }
     
     function updateExplosions(dt) {
@@ -1567,6 +2106,103 @@
     const bulletBuffer = gl.createBuffer();
     const shardBuffer = gl.createBuffer();
 
+    // ====== First-person rifle viewmodel ======
+    // Rendered in view space after the world (depth cleared so it never clips
+    // into walls), with sway, bob, recoil, and a muzzle flash.
+    const viewmodelBuffer = gl.createBuffer();
+    let muzzleFlashUntil = 0;
+    let swayYaw = 0, swayPitch = 0;
+    let prevYawForSway = 0, prevPitchForSway = 0;
+
+    function buildViewmodelVerts(timeMs) {
+      const v = [];
+      const dark = [0.13, 0.13, 0.15];
+      const mid = [0.22, 0.22, 0.25];
+      const light = [0.4, 0.4, 0.44];
+      const wood = [0.4, 0.26, 0.13];
+      const woodDark = [0.32, 0.2, 0.1];
+
+      // All geometry in local space, barrel pointing down -Z
+      // Receiver
+      addBoxVertices(v, 0, 0, -0.08, 0.07, 0.1, 0.42, mid);
+      // Top rail
+      addBoxVertices(v, 0, 0.06, -0.1, 0.05, 0.025, 0.34, dark);
+      // Barrel
+      addCylinderVertices(v, 0, 0.015, -0.29, 0, 0.015, -0.74, 0.022, light, 8);
+      // Muzzle
+      addBoxVertices(v, 0, 0.015, -0.76, 0.05, 0.05, 0.07, dark);
+      // Fore-end (wood, under the barrel)
+      addBoxVertices(v, 0, -0.03, -0.38, 0.06, 0.06, 0.24, wood);
+      // Stock
+      addBoxVertices(v, 0, -0.035, 0.24, 0.06, 0.1, 0.22, wood);
+      addBoxVertices(v, 0, -0.07, 0.36, 0.06, 0.13, 0.06, woodDark);
+      // Grip
+      addBoxVertices(v, 0, -0.13, 0.07, 0.05, 0.12, 0.07, woodDark);
+      // Magazine
+      addBoxVertices(v, 0, -0.15, -0.1, 0.05, 0.16, 0.09, dark);
+      // Front sight post
+      addBoxVertices(v, 0, 0.09, -0.66, 0.014, 0.05, 0.02, dark);
+      // Rear sight
+      addBoxVertices(v, 0, 0.095, 0.06, 0.05, 0.03, 0.02, dark);
+
+      // Muzzle flash - layered bright spheres for ~70ms after firing
+      if (timeMs < muzzleFlashUntil) {
+        addSphereVertices(v, 0, 0.015, -0.84, 0.08, [1.0, 0.85, 0.3], 6);
+        addSphereVertices(v, 0, 0.015, -0.84, 0.045, [1.0, 1.0, 0.85], 6);
+        // Side spikes
+        addBoxVertices(v, 0, 0.015, -0.84, 0.2, 0.015, 0.015, [1.0, 0.7, 0.2]);
+        addBoxVertices(v, 0, 0.015, -0.84, 0.015, 0.2, 0.015, [1.0, 0.7, 0.2]);
+      }
+      return v;
+    }
+
+    function drawViewmodel(proj, timeMs) {
+      if (!isAlive) return;
+
+      // Weapon sway lags behind mouse movement
+      const yawDelta = yaw - prevYawForSway;
+      const pitchDelta = pitch - prevPitchForSway;
+      prevYawForSway = yaw;
+      prevPitchForSway = pitch;
+      swayYaw += (yawDelta * 2.2 - swayYaw * 8) * Math.min(0.05, 1);
+      swayPitch += (pitchDelta * 2.2 - swayPitch * 8) * Math.min(0.05, 1);
+      swayYaw = Math.max(-0.08, Math.min(0.08, swayYaw));
+      swayPitch = Math.max(-0.08, Math.min(0.08, swayPitch));
+
+      // Position: right of center, below eye line; bob + recoil pushback
+      const tx = 0.34 + swayYaw * 0.5;
+      const ty = -0.36 + bobOffset * 0.6 - swayPitch * 0.5;
+      const tz = -1.05 + recoilPitch * 2.0;
+      const rotX = swayPitch * 1.5 + recoilPitch * 1.4; // recoil tilts muzzle up
+      const rotY = -swayYaw * 1.5;
+
+      const cx = Math.cos(rotX), sx = Math.sin(rotX);
+      const cy2 = Math.cos(rotY), sy2 = Math.sin(rotY);
+      const RX = new Float32Array([1,0,0,0, 0,cx,sx,0, 0,-sx,cx,0, 0,0,0,1]);
+      const RY = new Float32Array([cy2,0,-sy2,0, 0,1,0,0, sy2,0,cy2,0, 0,0,0,1]);
+      const T = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, tx,ty,tz,1]);
+
+      const R = new Float32Array(16);
+      mat4Multiply(R, RY, RX);
+      const M = new Float32Array(16);
+      mat4Multiply(M, T, R);
+      const gunMvp = new Float32Array(16);
+      mat4Multiply(gunMvp, proj, M);
+
+      // Draw over everything - never clips into world geometry
+      gl.clear(gl.DEPTH_BUFFER_BIT);
+      gl.uniform1f(uFogLoc, 0.0);
+      gl.uniformMatrix4fv(uMatrixLoc, false, gunMvp);
+
+      const verts = buildViewmodelVerts(timeMs);
+      gl.bindBuffer(gl.ARRAY_BUFFER, viewmodelBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.DYNAMIC_DRAW);
+      bindAttributes();
+      gl.drawArrays(gl.TRIANGLES, 0, verts.length / 6);
+
+      gl.uniform1f(uFogLoc, 1.0);
+    }
+
     const BULLET_LIFETIME = 1.0;
     const BULLET_SPEED = 60.0;
     const SHARD_LIFETIME = 0.6;
@@ -1598,6 +2234,7 @@
       });
 
       playGunshotSound();
+      recoilPitch += 0.025;
 
       const shotRef = push(ref(database, 'shots'));
       set(shotRef, {
@@ -1611,12 +2248,8 @@
         timestamp: Date.now()
       });
 
-      const gun = document.getElementById('gun');
-      gun.classList.add('shoot-flash');
-      setTimeout(() => gun.classList.remove('shoot-flash'), 100);
-    }
-
-    function spawnShards(bottle) {
+      muzzleFlashUntil = performance.now() + 70;
+    }    function spawnShards(bottle) {
       const [bx, by, bz] = bottle.pos;
       for (let i = 0; i < 12; i++) {
         const dx = (Math.random() - 0.5);
@@ -1742,7 +2375,7 @@
 
     // ====== First-person camera ======
     let camPos = [0, 2, 5];
-    let yaw = 0;
+    let yaw = Math.PI; // face the arena (pillars are at -z)
     let pitch = 0;
     let velocityY = 0;
     let isGrounded = true;
@@ -1751,13 +2384,20 @@
       forward: false,
       backward: false,
       left: false,
-      right: false
+      right: false,
+      sprint: false
     };
 
-    const moveSpeed = 15.0;
+    const moveSpeed = 12.0;
+    const sprintMultiplier = 1.6;
     const mouseSensitivity = 0.002;
     const jumpSpeed = 8.0;
     const gravity = 25.0;
+
+    // View-only effects
+    let recoilPitch = 0;        // decaying recoil kick
+    let bobPhase = 0;           // head bob phase
+    let bobOffset = 0;          // current vertical bob applied to view
 
     canvas.addEventListener("click", () => {
       canvas.requestPointerLock();
@@ -1796,6 +2436,9 @@
         case "KeyD":
         case "ArrowRight":
           move.right = true; break;
+        case "ShiftLeft":
+        case "ShiftRight":
+          move.sprint = true; break;
         case "Space":
           if (isGrounded && isAlive) {
             velocityY = jumpSpeed;
@@ -1819,6 +2462,9 @@
         case "KeyD":
         case "ArrowRight":
           move.right = false; break;
+        case "ShiftLeft":
+        case "ShiftRight":
+          move.sprint = false; break;
       }
     });
 
@@ -2006,6 +2652,7 @@
         if (!remotePlayers[id] || !remotePlayers[id].x) {
           overlay.remove();
           nameTagOverlays.delete(id);
+          playerAnimState.delete(id);
         }
       });
 
@@ -2038,11 +2685,15 @@
 
       for (const id in remotePlayers) {
         const p = remotePlayers[id];
-        if (p && p.x !== undefined) {
+        if (p && p.x !== undefined && p.alive !== false) {
+          const anim = playerAnimState.get(id);
+          const px = anim ? anim.rx : p.x;
+          const py = anim ? anim.ry : p.y;
+          const pz = anim ? anim.rz : p.z;
           const playerName = playerNames.get(id) || 'Player';
-          const nameTagY = p.y + 1.2;
+          const nameTagY = py + 1.2;
 
-          const worldPos = [p.x, nameTagY, p.z, 1.0];
+          const worldPos = [px, nameTagY, pz, 1.0];
           const clipPos = [
             mvp[0] * worldPos[0] + mvp[4] * worldPos[1] + mvp[8] * worldPos[2] + mvp[12],
             mvp[1] * worldPos[0] + mvp[5] * worldPos[1] + mvp[9] * worldPos[2] + mvp[13],
@@ -2085,6 +2736,12 @@
               overlay.style.display = 'none';
             }
           }
+        } else {
+          // Dead or invalid player - hide their tag
+          const overlay = nameTagOverlays.get(id);
+          if (overlay) {
+            overlay.style.display = 'none';
+          }
         }
       }
     }
@@ -2093,6 +2750,7 @@
     const myPlayerId = push(ref(database, 'players')).key;
     const myPlayerRef = ref(database, `players/${myPlayerId}`);
     const remotePlayers = {};
+    const playerAnimState = new Map(); // id -> { prevX, prevZ, phase }
     const remotePlayerBuffer = gl.createBuffer();
 
     const myColor = [Math.random(), Math.random(), Math.random()];
@@ -2162,7 +2820,7 @@
       updateHealthDisplay();
       
       camPos = [0, 2, 5];
-      yaw = 0;
+      yaw = Math.PI;
       pitch = 0;
       
       canvas.classList.remove('dead');
@@ -2300,14 +2958,17 @@
       const scores = snapshot.val();
       
       if (scores) {
-        playerScores.clear();
         for (const playerId in scores) {
+          // Our own score accumulates locally - remote copy may lag behind
+          if (playerId === myPlayerId) continue;
           if (scores[playerId].score !== undefined) {
             playerScores.set(playerId, scores[playerId].score);
           }
         }
       }
     });
+
+    const processedWins = new Set();
 
     onValue(ref(database, 'kotpWins'), (snapshot) => {
       const wins = snapshot.val();
@@ -2317,14 +2978,15 @@
         for (const winId in wins) {
           const win = wins[winId];
           
-          if (win.timestamp && (now - win.timestamp) < 2000) {
-            const winnerName = playerNames.get(win.winnerId) || 'Unknown';
-            addKillToFeed('🏆 ' + winnerName, 'won King of the Pillar!');
-            
-            // Clean up old win entries
-            if ((now - win.timestamp) > 5000) {
-              remove(ref(database, `kotpWins/${winId}`));
-            }
+          if (win.timestamp && (now - win.timestamp) < 2000 && !processedWins.has(winId)) {
+            processedWins.add(winId);
+            const winnerName = win.winnerId === myPlayerId ? 'You' : (playerNames.get(win.winnerId) || 'Unknown');
+            showWinBanner(winnerName);
+          }
+          
+          // Clean up old win entries
+          if (win.timestamp && (now - win.timestamp) > 5000) {
+            remove(ref(database, `kotpWins/${winId}`));
           }
         }
       }
@@ -2631,7 +3293,9 @@
         sinYaw
       ];
 
-      const speed = moveSpeed * dt;
+      const isMoving = move.forward || move.backward || move.left || move.right;
+      const currentSpeed = moveSpeed * (move.sprint && move.forward ? sprintMultiplier : 1.0);
+      const speed = currentSpeed * dt;
       if (move.forward && isAlive) {
         camPos[0] += forward[0] * speed;
         camPos[2] += forward[2] * speed;
@@ -2649,20 +3313,54 @@
         camPos[2] += right[2] * speed;
       }
 
+      // Head bob while moving on the ground; recoil decays back to zero
+      if (isMoving && isGrounded && isAlive) {
+        bobPhase += dt * (move.sprint && move.forward ? 14 : 10);
+        bobOffset = Math.sin(bobPhase) * 0.06;
+      } else {
+        bobOffset *= 0.85;
+      }
+      recoilPitch *= Math.pow(0.005, dt); // fast exponential decay
+
       if (isAlive) {
         velocityY -= gravity * dt;
         camPos[1] += velocityY * dt;
 
+        // All solid pillars: capture pillars + bottle pillar
+        const solidPillars = capturePillars
+          .map(p => ({ x: p.x, z: p.z, h: p.h }))
+          .concat([{ x: bottlePillarPos.x, z: bottlePillarPos.z, h: bottlePillarPos.h }]);
+
         let groundHeight = 2;
-
-        const pillarX = bottlePillarPos.x;
-        const pillarZ = bottlePillarPos.z;
-        const pillarH = bottlePillarPos.h;
         const pillarSize = 1.0;
+        const playerRadius = 0.35;
 
-        if (Math.abs(camPos[0] - pillarX) < pillarSize && 
-            Math.abs(camPos[2] - pillarZ) < pillarSize) {
-          groundHeight = pillarH + 2;
+        for (const pillar of solidPillars) {
+          const dx = camPos[0] - pillar.x;
+          const dz = camPos[2] - pillar.z;
+          const reach = pillarSize + playerRadius;
+
+          if (Math.abs(dx) < reach && Math.abs(dz) < reach) {
+            const feetY = camPos[1] - 2; // eye height is 2 above feet
+            // Mantle: if your feet reach within ~1m of the top, climb up.
+            // A full jump lifts feet ~1.3m, so the 2m bottle box is climbable
+            // but the 5m capture pillars are not (from the ground).
+            if (feetY >= pillar.h - 1.05) {
+              // On or near the top - stand on it
+              if (pillar.h + 2 > groundHeight) {
+                groundHeight = pillar.h + 2;
+              }
+            } else {
+              // Inside the side of the pillar - push out along shallower axis
+              const overlapX = reach - Math.abs(dx);
+              const overlapZ = reach - Math.abs(dz);
+              if (overlapX < overlapZ) {
+                camPos[0] = pillar.x + Math.sign(dx || 1) * reach;
+              } else {
+                camPos[2] = pillar.z + Math.sign(dz || 1) * reach;
+              }
+            }
+          }
         }
 
         if (camPos[1] <= groundHeight) {
@@ -2717,21 +3415,36 @@
       const proj = new Float32Array(16);
       mat4Perspective(proj, (60 * Math.PI) / 180, aspect, 0.1, 1000);
 
+      // View-only pitch/height: recoil kick + head bob don't affect physics
+      const viewPitch = Math.min(pitch + recoilPitch, Math.PI / 2 - 0.05);
+      const vCosPitch = Math.cos(viewPitch);
+      const vSinPitch = Math.sin(viewPitch);
+      const viewForward = [
+        sinYaw * vCosPitch,
+        vSinPitch,
+        cosYaw * vCosPitch
+      ];
+      const eye = [camPos[0], camPos[1] + bobOffset, camPos[2]];
+
       const center = [
-        camPos[0] + forward[0],
-        camPos[1] + forward[1],
-        camPos[2] + forward[2]
+        eye[0] + viewForward[0],
+        eye[1] + viewForward[1],
+        eye[2] + viewForward[2]
       ];
       const view = new Float32Array(16);
-      mat4LookAt(view, camPos, center, [0, 1, 0]);
+      mat4LookAt(view, eye, center, [0, 1, 0]);
 
       const mvp = new Float32Array(16);
       mat4Multiply(mvp, proj, view);
       gl.uniformMatrix4fv(uMatrixLoc, false, mvp);
 
+      drawSky(mvp);
+
       gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexBuffer);
       bindAttributes();
       gl.drawArrays(gl.TRIANGLES, 0, worldVertices.length / 6);
+
+      drawCloudsAndSun(now / 1000);
 
       drawCaptureCircles();
 
@@ -2753,13 +3466,78 @@
       }
 
       const remotePlayerVerts = [];
+      const nowSec = now / 1000;
       
       for (const id in remotePlayers) {
         const p = remotePlayers[id];
-        if (p && p.x !== undefined) {
-          const playerColor = p.color || [1, 0, 0];
-          addStickmanVertices(remotePlayerVerts, p.x, p.y - 1.3, p.z, p.yaw, playerColor);
+        if (!p || p.x === undefined) continue;
+        if (p.alive === false) continue; // hide dead players until they respawn
+
+        let anim = playerAnimState.get(id);
+        if (!anim) {
+          anim = {
+            rx: p.x, ry: p.y, rz: p.z,
+            ryaw: p.yaw || 0, rpitch: p.pitch || 0,
+            phase: Math.random() * 6, amp: 0, speed: 0, vy: 0,
+            mdx: Math.sin(p.yaw || 0), mdz: Math.cos(p.yaw || 0),
+            idle: Math.random() * 100
+          };
+          playerAnimState.set(id, anim);
         }
+
+        // Respawn/teleport detection - snap rather than glide across the map
+        const jumpSq = (p.x - anim.rx) ** 2 + (p.z - anim.rz) ** 2;
+        if (jumpSq > 25) {
+          anim.rx = p.x; anim.ry = p.y; anim.rz = p.z;
+          anim.speed = 0; anim.vy = 0;
+        }
+
+        // Smoothly interpolate toward the latest network position.
+        // Firebase updates arrive every ~50-100ms; rendering the raw values
+        // makes players teleport in steps (the "gliding" look).
+        const k = Math.min(1, dt * 12);
+        const prevX = anim.rx, prevY = anim.ry, prevZ = anim.rz;
+        anim.rx += (p.x - anim.rx) * k;
+        anim.ry += (p.y - anim.ry) * k;
+        anim.rz += (p.z - anim.rz) * k;
+
+        // Shortest-path yaw smoothing so turns don't spin the long way round
+        let dyaw = (p.yaw || 0) - anim.ryaw;
+        while (dyaw > Math.PI) dyaw -= Math.PI * 2;
+        while (dyaw < -Math.PI) dyaw += Math.PI * 2;
+        anim.ryaw += dyaw * k;
+        anim.rpitch += ((p.pitch || 0) - anim.rpitch) * k;
+
+        // Ground speed estimate drives the stride, so step rate matches
+        // movement and feet don't slide
+        const instSpeed = dt > 0 ? Math.hypot(anim.rx - prevX, anim.rz - prevZ) / dt : 0;
+        anim.speed += (instSpeed - anim.speed) * Math.min(1, dt * 8);
+
+        // Smoothed direction of travel (drives leg swing and lean)
+        let mvx = anim.rx - prevX, mvz = anim.rz - prevZ;
+        const mlen = Math.hypot(mvx, mvz);
+        if (mlen > 1e-4) {
+          mvx /= mlen; mvz /= mlen;
+          const km = Math.min(1, dt * 10);
+          anim.mdx += (mvx - anim.mdx) * km;
+          anim.mdz += (mvz - anim.mdz) * km;
+          const dlen = Math.hypot(anim.mdx, anim.mdz) || 1;
+          anim.mdx /= dlen; anim.mdz /= dlen;
+        }
+        const moving = anim.speed > 0.8;
+        anim.amp += ((moving ? 1 : 0) - anim.amp) * Math.min(1, dt * 6);
+        if (moving) anim.phase += dt * (4 + anim.speed * 0.75);
+
+        // Vertical velocity -> airborne factor (legs tuck mid-jump)
+        const instVy = dt > 0 ? (anim.ry - prevY) / dt : 0;
+        anim.vy += (instVy - anim.vy) * Math.min(1, dt * 10);
+        const air = Math.min(1, Math.abs(anim.vy) / 5);
+
+        addStickmanVertices(remotePlayerVerts,
+          anim.rx, anim.ry - 1.3, anim.rz,
+          anim.ryaw, p.color || [1, 0, 0],
+          anim.phase, anim.rpitch, anim.amp,
+          nowSec + anim.idle, air, anim.mdx, anim.mdz);
       }
       
       if (remotePlayerVerts.length > 0) {
@@ -2864,6 +3642,8 @@
         gl.drawArrays(gl.POINTS, 0, shards.length);
       }
 
+      drawViewmodel(proj, now);
+
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
@@ -2871,4 +3651,3 @@
 </body>
 
 </html>
-
