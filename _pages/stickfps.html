@@ -79,6 +79,48 @@
       font-size: 24px;
       margin-right: 8px;
     }
+    #weaponHud {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      pointer-events: none;
+    }
+    #weaponHud .weapon-slot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: #999;
+      font-size: 13px;
+      transition: all 0.15s ease;
+    }
+    #weaponHud .weapon-slot .slot-key {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 11px;
+      font-weight: bold;
+    }
+    #weaponHud .weapon-slot.active {
+      background: rgba(255, 193, 7, 0.18);
+      border-color: #ffc107;
+      color: #ffc107;
+      font-weight: bold;
+    }
+    #weaponHud .weapon-slot.active .slot-key {
+      background: #ffc107;
+      color: #000;
+    }
     #stats {
       position: absolute;
       top: 90px;
@@ -115,7 +157,7 @@
     }
     #killFeed {
       position: absolute;
-      bottom: 20px;
+      bottom: 72px;
       left: 20px;
       z-index: 10;
       display: flex;
@@ -526,7 +568,9 @@
     <b>Shift</b> to sprint.<br>
     <b>Space</b> to jump.<br>
     <b>Left click</b> to shoot.<br>
-    <b>Right click</b> to throw grenade.<br>
+    <b>Right click</b> to melee.<br>
+    <b>G</b> or <b>scroll</b> to throw grenade.<br>
+    <b>1</b>/<b>2</b> or <b>Q</b> to switch weapon.<br>
     Press <b>Esc</b> to release mouse.
   </div>
   <div id="scoreHud">
@@ -547,6 +591,7 @@
   <div id="grenadeCount">
     <span class="icon">💣</span><span id="grenadeAmount">0</span>
   </div>
+  <div id="weaponHud"></div>
   <div id="stats">
     Players online: <span id="playerCount">0</span>
   </div>
@@ -1013,7 +1058,7 @@
     //   amp:   0..1 walk amplitude (ramps in/out as the player starts/stops)
     //   idleT: per-player time offset for idle breathing
     //   air:   0..1 airborne factor (legs tuck while jumping/falling)
-    function addStickmanVertices(arr, x, y, z, yaw, color, walkPhase = 0, aimPitch = 0, amp = 0, idleT = 0, air = 0, moveDX = null, moveDZ = null) {
+    function addStickmanVertices(arr, x, y, z, yaw, color, walkPhase = 0, aimPitch = 0, amp = 0, idleT = 0, air = 0, moveDX = null, moveDZ = null, weaponId = 'rifle', meleeSwing = 0) {
       const limbRadius = 0.075;
       const darkColor = [color[0] * 0.65, color[1] * 0.65, color[2] * 0.65];
       const gunDark = [0.14, 0.14, 0.16];
@@ -1079,30 +1124,56 @@
       addSphereVertices(arr, eyeBaseX - rgtX * 0.09, eyeBaseY, eyeBaseZ - rgtZ * 0.09, 0.045, eyeColor, 5);
       addSphereVertices(arr, eyeBaseX + rgtX * 0.09, eyeBaseY, eyeBaseZ + rgtZ * 0.09, 0.045, eyeColor, 5);
 
-      // ===== Rifle: chest height, aimed along look direction, bobs with stride =====
+      // ===== Held weapon: chest height, aimed along look direction =====
       const gunBobY = Math.sin(walkPhase * 2) * 0.02 * amp + Math.sin(idleT * 1.3) * 0.008;
-      const gunBaseX = chestX + fwdX * 0.3 + rgtX * 0.06;
-      const gunBaseY = chestY - 0.12 + gunBobY;
-      const gunBaseZ = chestZ + fwdZ * 0.3 + rgtZ * 0.06;
 
-      // Stock (wood, behind base) -> receiver -> barrel
-      addCylinderVertices(arr,
-        gunBaseX - aimX * 0.28, gunBaseY - aimY * 0.28 - 0.03, gunBaseZ - aimZ * 0.28,
-        gunBaseX - aimX * 0.1, gunBaseY - aimY * 0.1, gunBaseZ - aimZ * 0.1,
-        0.045, woodColor, 6);
-      addCylinderVertices(arr,
-        gunBaseX - aimX * 0.12, gunBaseY - aimY * 0.12, gunBaseZ - aimZ * 0.12,
-        gunBaseX + aimX * 0.32, gunBaseY + aimY * 0.32, gunBaseZ + aimZ * 0.32,
-        0.05, gunDark, 6);
-      addCylinderVertices(arr,
-        gunBaseX + aimX * 0.32, gunBaseY + aimY * 0.32, gunBaseZ + aimZ * 0.32,
-        gunBaseX + aimX * 0.68, gunBaseY + aimY * 0.68, gunBaseZ + aimZ * 0.68,
-        0.024, gunLight, 6);
-      // Magazine hanging below the receiver
-      addCylinderVertices(arr,
-        gunBaseX + aimX * 0.08, gunBaseY + aimY * 0.08, gunBaseZ + aimZ * 0.08,
-        gunBaseX + aimX * 0.08, gunBaseY + aimY * 0.08 - 0.14, gunBaseZ + aimZ * 0.08,
-        0.035, gunDark, 5);
+      // Melee = a gun bash: the whole held weapon lunges forward and dips, then
+      // recovers, rather than sprouting a blade. arc peaks mid-swing.
+      const meleeArc = meleeSwing > 0.01 ? Math.sin(meleeSwing * Math.PI) : 0;
+      const bashFwd = meleeArc * 0.45;   // thrust distance along facing
+      const bashDrop = meleeArc * 0.18;  // slight downward chop
+
+      const gunBaseX = chestX + fwdX * (0.3 + bashFwd) + rgtX * 0.06;
+      const gunBaseY = chestY - 0.12 + gunBobY - bashDrop;
+      const gunBaseZ = chestZ + fwdZ * (0.3 + bashFwd) + rgtZ * 0.06;
+
+      if (weaponId === 'shotgun') {
+        // Twin-barrel scattergun - shorter and fatter than the rifle
+        const shSteel = [0.34, 0.34, 0.4];
+        const spread = 0.05;
+        // Two parallel barrels offset on the right vector
+        addCylinderVertices(arr,
+          gunBaseX - aimX * 0.14 - rgtX * spread, gunBaseY - aimY * 0.14, gunBaseZ - aimZ * 0.14 - rgtZ * spread,
+          gunBaseX + aimX * 0.5 - rgtX * spread, gunBaseY + aimY * 0.5, gunBaseZ + aimZ * 0.5 - rgtZ * spread,
+          0.04, shSteel, 6);
+        addCylinderVertices(arr,
+          gunBaseX - aimX * 0.14 + rgtX * spread, gunBaseY - aimY * 0.14, gunBaseZ - aimZ * 0.14 + rgtZ * spread,
+          gunBaseX + aimX * 0.5 + rgtX * spread, gunBaseY + aimY * 0.5, gunBaseZ + aimZ * 0.5 + rgtZ * spread,
+          0.04, shSteel, 6);
+        // Wooden stock behind
+        addCylinderVertices(arr,
+          gunBaseX - aimX * 0.32, gunBaseY - aimY * 0.32 - 0.04, gunBaseZ - aimZ * 0.32,
+          gunBaseX - aimX * 0.1, gunBaseY - aimY * 0.1, gunBaseZ - aimZ * 0.1,
+          0.055, woodColor, 6);
+      } else {
+        // Rifle: stock (wood) -> receiver -> barrel -> magazine
+        addCylinderVertices(arr,
+          gunBaseX - aimX * 0.28, gunBaseY - aimY * 0.28 - 0.03, gunBaseZ - aimZ * 0.28,
+          gunBaseX - aimX * 0.1, gunBaseY - aimY * 0.1, gunBaseZ - aimZ * 0.1,
+          0.045, woodColor, 6);
+        addCylinderVertices(arr,
+          gunBaseX - aimX * 0.12, gunBaseY - aimY * 0.12, gunBaseZ - aimZ * 0.12,
+          gunBaseX + aimX * 0.32, gunBaseY + aimY * 0.32, gunBaseZ + aimZ * 0.32,
+          0.05, gunDark, 6);
+        addCylinderVertices(arr,
+          gunBaseX + aimX * 0.32, gunBaseY + aimY * 0.32, gunBaseZ + aimZ * 0.32,
+          gunBaseX + aimX * 0.68, gunBaseY + aimY * 0.68, gunBaseZ + aimZ * 0.68,
+          0.024, gunLight, 6);
+        addCylinderVertices(arr,
+          gunBaseX + aimX * 0.08, gunBaseY + aimY * 0.08, gunBaseZ + aimZ * 0.08,
+          gunBaseX + aimX * 0.08, gunBaseY + aimY * 0.08 - 0.14, gunBaseZ + aimZ * 0.08,
+          0.035, gunDark, 5);
+      }
 
       // ===== Arms: both hands on the rifle (follow the gun's bob naturally) =====
       const rHandX = gunBaseX - aimX * 0.02, rHandY = gunBaseY - aimY * 0.02 - 0.05, rHandZ = gunBaseZ - aimZ * 0.02;
@@ -1937,6 +2008,17 @@
       document.getElementById('grenadeAmount').textContent = myGrenadeCount;
     }
 
+    function updateWeaponHud() {
+      const hud = document.getElementById('weaponHud');
+      if (!hud) return;
+      hud.innerHTML = WEAPON_ORDER.map((id, i) => {
+        const w = WEAPONS[id];
+        const active = id === currentWeaponId ? ' active' : '';
+        return `<div class="weapon-slot${active}">` +
+               `<span class="slot-key">${i + 1}</span>${w.name}</div>`;
+      }).join('');
+    }
+
     function checkGrenadePickup() {
       grenadePickups.forEach((pickup, idx) => {
         if (!pickup.available) return;
@@ -2106,7 +2188,77 @@
     const bulletBuffer = gl.createBuffer();
     const shardBuffer = gl.createBuffer();
 
-    // ====== First-person rifle viewmodel ======
+    // ====== Weapon table ======
+    // Every weapon is data: fire behaviour, damage, cadence, and the id used
+    // to pick a viewmodel/held-model. v1 ships a rifle and a shotgun; adding a
+    // third is just another entry here plus a geometry branch in the builders.
+    // Melee lives in the same table so the swing/cooldown share one code path.
+    const WEAPONS = {
+      rifle: {
+        id: 'rifle',
+        name: 'Rifle',
+        kind: 'hitscan',      // spawns a networked bullet down the look ray
+        pellets: 1,
+        spread: 0,            // radians of cone half-angle
+        damage: 1,
+        cooldown: 120,        // ms between shots
+        recoil: 0.025,
+        muzzleFlash: 70
+      },
+      shotgun: {
+        id: 'shotgun',
+        name: 'Shotgun',
+        kind: 'hitscan',
+        pellets: 5,           // max 5 dmg/blast < 8 HP, so never a one-shot from full
+        spread: 0.11,
+        damage: 1,            // per pellet
+        cooldown: 700,
+        recoil: 0.06,
+        muzzleFlash: 90,
+        range: 40             // pellets fade fast; shorter useful range
+      },
+      melee: {
+        id: 'melee',
+        name: 'Knife',
+        kind: 'melee',        // short-range instant cone, no projectile
+        damage: 3,
+        cooldown: 450,
+        reach: 3.2,           // metres in front
+        coneDot: 0.6          // cos of half-angle; wider = easier to land
+      }
+    };
+
+    // Selectable loadout order for cycling with 1/2/wheel
+    const WEAPON_ORDER = ['rifle', 'shotgun'];
+    let currentWeaponId = 'rifle';
+    let lastFireTime = -Infinity;     // shared cooldown clock for the held gun
+    let lastMeleeTime = -Infinity;
+
+    // Melee swing animation clock - drives both the viewmodel arc and the
+    // networked meleeAt timestamp so other players see the swing too.
+    let meleeSwingUntil = 0;
+    const MELEE_SWING_MS = 260;
+
+    function currentWeapon() { return WEAPONS[currentWeaponId]; }
+
+    function setWeapon(id) {
+      if (!WEAPONS[id] || id === currentWeaponId) return;
+      currentWeaponId = id;
+      lastFireTime = -Infinity; // let the new weapon fire immediately
+      updateWeaponHud();
+      // Push the swap to the network so held-model updates for everyone
+      lastUpdate = 0;
+      updateMyPosition();
+    }
+
+    function cycleWeapon(dir) {
+      const i = WEAPON_ORDER.indexOf(currentWeaponId);
+      const base = i < 0 ? 0 : i;
+      const next = (base + dir + WEAPON_ORDER.length) % WEAPON_ORDER.length;
+      setWeapon(WEAPON_ORDER[next]);
+    }
+
+    // ====== First-person weapon viewmodel ======
     // Rendered in view space after the world (depth cleared so it never clips
     // into walls), with sway, bob, recoil, and a muzzle flash.
     const viewmodelBuffer = gl.createBuffer();
@@ -2114,45 +2266,66 @@
     let swayYaw = 0, swayPitch = 0;
     let prevYawForSway = 0, prevPitchForSway = 0;
 
-    function buildViewmodelVerts(timeMs) {
-      const v = [];
+    // Rifle geometry in local space, barrel pointing down -Z
+    function buildRifleVerts(v, timeMs) {
       const dark = [0.13, 0.13, 0.15];
       const mid = [0.22, 0.22, 0.25];
       const light = [0.4, 0.4, 0.44];
       const wood = [0.4, 0.26, 0.13];
       const woodDark = [0.32, 0.2, 0.1];
 
-      // All geometry in local space, barrel pointing down -Z
-      // Receiver
-      addBoxVertices(v, 0, 0, -0.08, 0.07, 0.1, 0.42, mid);
-      // Top rail
-      addBoxVertices(v, 0, 0.06, -0.1, 0.05, 0.025, 0.34, dark);
-      // Barrel
-      addCylinderVertices(v, 0, 0.015, -0.29, 0, 0.015, -0.74, 0.022, light, 8);
-      // Muzzle
-      addBoxVertices(v, 0, 0.015, -0.76, 0.05, 0.05, 0.07, dark);
-      // Fore-end (wood, under the barrel)
-      addBoxVertices(v, 0, -0.03, -0.38, 0.06, 0.06, 0.24, wood);
-      // Stock
-      addBoxVertices(v, 0, -0.035, 0.24, 0.06, 0.1, 0.22, wood);
+      addBoxVertices(v, 0, 0, -0.08, 0.07, 0.1, 0.42, mid);       // Receiver
+      addBoxVertices(v, 0, 0.06, -0.1, 0.05, 0.025, 0.34, dark);  // Top rail
+      addCylinderVertices(v, 0, 0.015, -0.29, 0, 0.015, -0.74, 0.022, light, 8); // Barrel
+      addBoxVertices(v, 0, 0.015, -0.76, 0.05, 0.05, 0.07, dark); // Muzzle
+      addBoxVertices(v, 0, -0.03, -0.38, 0.06, 0.06, 0.24, wood); // Fore-end
+      addBoxVertices(v, 0, -0.035, 0.24, 0.06, 0.1, 0.22, wood);  // Stock
       addBoxVertices(v, 0, -0.07, 0.36, 0.06, 0.13, 0.06, woodDark);
-      // Grip
-      addBoxVertices(v, 0, -0.13, 0.07, 0.05, 0.12, 0.07, woodDark);
-      // Magazine
-      addBoxVertices(v, 0, -0.15, -0.1, 0.05, 0.16, 0.09, dark);
-      // Front sight post
-      addBoxVertices(v, 0, 0.09, -0.66, 0.014, 0.05, 0.02, dark);
-      // Rear sight
-      addBoxVertices(v, 0, 0.095, 0.06, 0.05, 0.03, 0.02, dark);
+      addBoxVertices(v, 0, -0.13, 0.07, 0.05, 0.12, 0.07, woodDark); // Grip
+      addBoxVertices(v, 0, -0.15, -0.1, 0.05, 0.16, 0.09, dark);  // Magazine
+      addBoxVertices(v, 0, 0.09, -0.66, 0.014, 0.05, 0.02, dark); // Front sight
+      addBoxVertices(v, 0, 0.095, 0.06, 0.05, 0.03, 0.02, dark);  // Rear sight
 
-      // Muzzle flash - layered bright spheres for ~70ms after firing
       if (timeMs < muzzleFlashUntil) {
         addSphereVertices(v, 0, 0.015, -0.84, 0.08, [1.0, 0.85, 0.3], 6);
         addSphereVertices(v, 0, 0.015, -0.84, 0.045, [1.0, 1.0, 0.85], 6);
-        // Side spikes
         addBoxVertices(v, 0, 0.015, -0.84, 0.2, 0.015, 0.015, [1.0, 0.7, 0.2]);
         addBoxVertices(v, 0, 0.015, -0.84, 0.015, 0.2, 0.015, [1.0, 0.7, 0.2]);
       }
+    }
+
+    // Shotgun: shorter, fatter, double-barrelled pump - reads clearly different
+    function buildShotgunVerts(v, timeMs) {
+      const dark = [0.12, 0.12, 0.14];
+      const steel = [0.34, 0.34, 0.4];
+      const wood = [0.36, 0.22, 0.11];
+      const woodDark = [0.28, 0.17, 0.09];
+
+      addBoxVertices(v, 0, -0.01, 0.0, 0.09, 0.09, 0.34, dark);   // Receiver (chunky)
+      // Twin barrels, side by side
+      addCylinderVertices(v, -0.028, 0.03, -0.16, -0.028, 0.03, -0.66, 0.028, steel, 8);
+      addCylinderVertices(v,  0.028, 0.03, -0.16,  0.028, 0.03, -0.66, 0.028, steel, 8);
+      addBoxVertices(v, 0, 0.03, -0.67, 0.11, 0.07, 0.05, dark);  // Muzzle block
+      // Pump fore-grip
+      addBoxVertices(v, 0, -0.05, -0.3, 0.1, 0.05, 0.16, wood);
+      addBoxVertices(v, 0, -0.05, 0.22, 0.07, 0.11, 0.2, wood);   // Stock
+      addBoxVertices(v, 0, -0.09, 0.34, 0.07, 0.13, 0.06, woodDark);
+      addBoxVertices(v, 0, -0.15, 0.05, 0.05, 0.12, 0.07, woodDark); // Grip
+
+      if (timeMs < muzzleFlashUntil) {
+        // Wider, dirtier flash for the scattergun
+        addSphereVertices(v, -0.028, 0.03, -0.76, 0.09, [1.0, 0.8, 0.3], 6);
+        addSphereVertices(v,  0.028, 0.03, -0.76, 0.09, [1.0, 0.8, 0.3], 6);
+        addSphereVertices(v, 0, 0.03, -0.78, 0.06, [1.0, 1.0, 0.85], 6);
+        addBoxVertices(v, 0, 0.03, -0.78, 0.34, 0.02, 0.02, [1.0, 0.65, 0.2]);
+      }
+    }
+
+    function buildViewmodelVerts(timeMs) {
+      const v = [];
+      const w = currentWeapon();
+      if (w.id === 'shotgun') buildShotgunVerts(v, timeMs);
+      else buildRifleVerts(v, timeMs);
       return v;
     }
 
@@ -2169,12 +2342,20 @@
       swayYaw = Math.max(-0.08, Math.min(0.08, swayYaw));
       swayPitch = Math.max(-0.08, Math.min(0.08, swayPitch));
 
+      // Melee bash in first person: thrust the whole gun forward + tilt it,
+      // then recover. No separate knife model — you swing the weapon you hold.
+      let meleeSwing01 = 0;
+      if (timeMs < meleeSwingUntil) {
+        meleeSwing01 = 1 - (meleeSwingUntil - timeMs) / MELEE_SWING_MS;
+      }
+      const bashArc = Math.sin(meleeSwing01 * Math.PI); // 0..1..0
+
       // Position: right of center, below eye line; bob + recoil pushback
-      const tx = 0.34 + swayYaw * 0.5;
-      const ty = -0.36 + bobOffset * 0.6 - swayPitch * 0.5;
-      const tz = -1.05 + recoilPitch * 2.0;
-      const rotX = swayPitch * 1.5 + recoilPitch * 1.4; // recoil tilts muzzle up
-      const rotY = -swayYaw * 1.5;
+      const tx = 0.34 + swayYaw * 0.5 - bashArc * 0.12;      // swing slightly inward
+      const ty = -0.36 + bobOffset * 0.6 - swayPitch * 0.5 - bashArc * 0.05;
+      const tz = -1.05 + recoilPitch * 2.0 - bashArc * 0.5;  // lunge toward the screen
+      const rotX = swayPitch * 1.5 + recoilPitch * 1.4 - bashArc * 0.9; // chop downward
+      const rotY = -swayYaw * 1.5 + bashArc * 0.5;           // twist across
 
       const cx = Math.cos(rotX), sx = Math.sin(rotX);
       const cy2 = Math.cos(rotY), sy2 = Math.sin(rotY);
@@ -2208,18 +2389,8 @@
     const SHARD_LIFETIME = 0.6;
     const SHARD_SPEED = 10.0;
 
-    function spawnBullet(camPos, yaw, pitch) {
-      const cosPitch = Math.cos(pitch);
-      const sinPitch = Math.sin(pitch);
-      const cosYaw = Math.cos(yaw);
-      const sinYaw = Math.sin(yaw);
-
-      const dir = [
-        sinYaw * cosPitch,
-        sinPitch,
-        cosYaw * cosPitch
-      ];
-
+    // Spawn one hitscan pellet/bullet down a direction. Reused by every gun.
+    function spawnBulletDir(dir, damage) {
       const start = [
         camPos[0] + dir[0] * 0.5,
         camPos[1] + dir[1] * 0.5,
@@ -2230,11 +2401,9 @@
         pos: start,
         dir: dir,
         life: BULLET_LIFETIME,
-        ownerId: myPlayerId
+        ownerId: myPlayerId,
+        damage: damage
       });
-
-      playGunshotSound();
-      recoilPitch += 0.025;
 
       const shotRef = push(ref(database, 'shots'));
       set(shotRef, {
@@ -2247,9 +2416,97 @@
         dirZ: dir[2],
         timestamp: Date.now()
       });
+    }
 
-      muzzleFlashUntil = performance.now() + 70;
-    }    function spawnShards(bottle) {
+    // Fire the currently held weapon. Handles cooldown, multi-pellet spread,
+    // recoil and muzzle flash from weapon data so adding guns needs no new code.
+    function fireWeapon() {
+      const w = currentWeapon();
+      const now = performance.now();
+      if (now - lastFireTime < w.cooldown) return;
+      lastFireTime = now;
+
+      const cosPitch = Math.cos(pitch), sinPitch = Math.sin(pitch);
+      const cosYaw = Math.cos(yaw), sinYaw = Math.sin(yaw);
+      const baseDir = [sinYaw * cosPitch, sinPitch, cosYaw * cosPitch];
+
+      // Build an orthonormal basis around the aim ray for cone spread
+      let ux = baseDir[2], uy = 0, uz = -baseDir[0]; // right-ish (baseDir x up)
+      const ulen = Math.hypot(ux, uy, uz) || 1;
+      ux /= ulen; uy /= ulen; uz /= ulen;
+      const vx = uy * baseDir[2] - uz * baseDir[1];
+      const vy = uz * baseDir[0] - ux * baseDir[2];
+      const vz = ux * baseDir[1] - uy * baseDir[0];
+
+      const pellets = w.pellets || 1;
+      for (let i = 0; i < pellets; i++) {
+        let dir = baseDir;
+        if (w.spread > 0) {
+          const a = Math.random() * Math.PI * 2;
+          const r = Math.sqrt(Math.random()) * w.spread;
+          const ox = Math.cos(a) * r, oy = Math.sin(a) * r;
+          dir = [
+            baseDir[0] + (ux * ox + vx * oy),
+            baseDir[1] + (uy * ox + vy * oy),
+            baseDir[2] + (uz * ox + vz * oy)
+          ];
+          const dl = Math.hypot(dir[0], dir[1], dir[2]) || 1;
+          dir = [dir[0] / dl, dir[1] / dl, dir[2] / dl];
+        }
+        spawnBulletDir(dir, w.damage);
+      }
+
+      playGunshotSound();
+      recoilPitch += w.recoil;
+      muzzleFlashUntil = now + (w.muzzleFlash || 70);
+    }
+
+    // Melee: short-range instant cone in front of you. Writes straight to the
+    // existing damage node (arbitrary attacker/victim/direction), so no schema
+    // change is needed. The swing is broadcast via meleeAt on the player node.
+    function meleeAttack() {
+      const w = WEAPONS.melee;
+      const now = performance.now();
+      if (now - lastMeleeTime < w.cooldown) return;
+      lastMeleeTime = now;
+
+      // Trigger the local swing animation and network it
+      meleeSwingUntil = now + MELEE_SWING_MS;
+      myMeleeAt = Date.now();
+      lastUpdate = 0;
+      updateMyPosition();
+      playHitSound();
+
+      const cosPitch = Math.cos(pitch), sinPitch = Math.sin(pitch);
+      const cosYaw = Math.cos(yaw), sinYaw = Math.sin(yaw);
+      const look = [sinYaw * cosPitch, sinPitch, cosYaw * cosPitch];
+
+      // Hit every enemy within reach and inside the frontal cone
+      for (const id in remotePlayers) {
+        const p = remotePlayers[id];
+        if (!p || p.x === undefined || p.alive === false) continue;
+
+        const dx = p.x - camPos[0];
+        const dy = (p.y || camPos[1]) - camPos[1];
+        const dz = p.z - camPos[2];
+        const dist = Math.hypot(dx, dy, dz);
+        if (dist > w.reach || dist < 0.001) continue;
+
+        const dot = (dx * look[0] + dy * look[1] + dz * look[2]) / dist;
+        if (dot < w.coneDot) continue; // outside the swing arc
+
+        const damageRef = push(ref(database, 'damage'));
+        set(damageRef, {
+          attackerId: myPlayerId,
+          victimId: id,
+          damage: w.damage,
+          direction: 'bottom', // must be one of left/right/top/bottom per rules
+          timestamp: Date.now()
+        });
+      }
+    }
+
+    function spawnShards(bottle) {
       const [bx, by, bz] = bottle.pos;
       for (let i = 0; i < 12; i++) {
         const dx = (Math.random() - 0.5);
@@ -2445,6 +2702,18 @@
             isGrounded = false;
           }
           break;
+        case "KeyG":
+          if (isAlive) throwGrenade();
+          break;
+        case "Digit1":
+          if (isAlive) setWeapon('rifle');
+          break;
+        case "Digit2":
+          if (isAlive) setWeapon('shotgun');
+          break;
+        case "KeyQ":
+          if (isAlive) cycleWeapon(1);
+          break;
       }
     });
 
@@ -2471,12 +2740,19 @@
     document.addEventListener("mousedown", (e) => {
       if (document.pointerLockElement === canvas && isAlive) {
         if (e.button === 0) {
-          spawnBullet(camPos, yaw, pitch);
+          fireWeapon();
         } else if (e.button === 2) {
-          throwGrenade();
+          meleeAttack();
         }
       }
     });
+
+    // Mouse wheel throws a grenade (bonus binding alongside G)
+    document.addEventListener("wheel", (e) => {
+      if (document.pointerLockElement === canvas && isAlive) {
+        throwGrenade();
+      }
+    }, { passive: true });
 
     // ====== Collision ======
     function checkBulletBottleCollision(bullet) {
@@ -2545,7 +2821,7 @@
         set(damageRef, {
           attackerId: bullet.ownerId,
           victimId: myPlayerId,
-          damage: 1,
+          damage: bullet.damage || 1,
           direction: direction,
           timestamp: Date.now()
         });
@@ -2754,6 +3030,7 @@
     const remotePlayerBuffer = gl.createBuffer();
 
     const myColor = [Math.random(), Math.random(), Math.random()];
+    let myMeleeAt = 0; // timestamp of last melee swing, broadcast to others
     
     let myHealth = 8;
     const MAX_HEALTH = 8;
@@ -2770,6 +3047,7 @@
       initGrenadePickups();
       initCaptureCircles();
       updateGrenadeDisplay();
+      updateWeaponHud();
       
       updateMyPosition();
     })();
@@ -2860,6 +3138,8 @@
           health: myHealth,
           alive: isAlive,
           name: myName,
+          weapon: currentWeaponId,
+          meleeAt: myMeleeAt,
           lastUpdate: now
         });
         lastUpdate = now;
@@ -3043,6 +3323,15 @@
     const processedDamage = new Set();
     const processedKills = new Set();
 
+    // Hard anti-one-shot control: cap how much health a single burst of damage
+    // (many pellets landing within a few frames) can remove. A full-health
+    // player can always survive one shot from any current or future weapon,
+    // dropping to at least MIN_HP_AFTER_BURST. Sustained fire still kills.
+    const BURST_WINDOW_MS = 150;   // pellets from one blast arrive within this
+    const MIN_HP_AFTER_BURST = 2;  // one burst can't take you below this from full
+    let burstStart = 0;
+    let burstHpAtStart = MAX_HEALTH;
+
     onValue(ref(database, 'damage'), (snapshot) => {
       const damages = snapshot.val();
       const now = Date.now();
@@ -3065,7 +3354,17 @@
             }
             
             const damageAmount = dmg.damage || 1;
-            myHealth = Math.max(0, myHealth - damageAmount);
+
+            // Start or continue a burst window. Within one burst, clamp total
+            // loss so a single volley can't drop a full-health player below
+            // MIN_HP_AFTER_BURST — prevents any one shot being an instant kill.
+            if (now - burstStart > BURST_WINDOW_MS) {
+              burstStart = now;
+              burstHpAtStart = myHealth;
+            }
+            const proposed = Math.max(0, myHealth - damageAmount);
+            const burstFloor = burstHpAtStart >= MAX_HEALTH ? MIN_HP_AFTER_BURST : 0;
+            myHealth = Math.max(burstFloor, proposed);
             updateHealthDisplay();
             
             console.log(`Took ${damageAmount} damage from ${dmg.attackerId}`);
@@ -3480,7 +3779,8 @@
             ryaw: p.yaw || 0, rpitch: p.pitch || 0,
             phase: Math.random() * 6, amp: 0, speed: 0, vy: 0,
             mdx: Math.sin(p.yaw || 0), mdz: Math.cos(p.yaw || 0),
-            idle: Math.random() * 100
+            idle: Math.random() * 100,
+            lastMeleeAt: 0, meleeShownAt: 0
           };
           playerAnimState.set(id, anim);
         }
@@ -3533,11 +3833,22 @@
         anim.vy += (instVy - anim.vy) * Math.min(1, dt * 10);
         const air = Math.min(1, Math.abs(anim.vy) / 5);
 
+        // Trigger a swing when a newer meleeAt arrives from the network
+        if (p.meleeAt && p.meleeAt !== anim.lastMeleeAt) {
+          anim.lastMeleeAt = p.meleeAt;
+          anim.meleeShownAt = now;
+        }
+        const meleeElapsed = now - anim.meleeShownAt;
+        const meleeSwing = (anim.meleeShownAt && meleeElapsed < MELEE_SWING_MS)
+          ? meleeElapsed / MELEE_SWING_MS
+          : 0;
+
         addStickmanVertices(remotePlayerVerts,
           anim.rx, anim.ry - 1.3, anim.rz,
           anim.ryaw, p.color || [1, 0, 0],
           anim.phase, anim.rpitch, anim.amp,
-          nowSec + anim.idle, air, anim.mdx, anim.mdz);
+          nowSec + anim.idle, air, anim.mdx, anim.mdz,
+          p.weapon || 'rifle', meleeSwing);
       }
       
       if (remotePlayerVerts.length > 0) {
