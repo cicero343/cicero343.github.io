@@ -335,7 +335,7 @@ layout: default
     async function fetchRepositories() {
         try {
             const username = 'cicero343';
-            const repos = ['IoCFinder', 'KQL-Queries', 'CyberSecBookmarks', 'RaffleTool', 'PopupWindowsAPI'];
+            const repos = ['IoCFinder', 'KQL-Queries', 'CyberSecBookmarks', 'pentest-builder', 'PopupWindowsAPI'];
             const container = document.getElementById('repos-container');
             container.innerHTML = '';
 
