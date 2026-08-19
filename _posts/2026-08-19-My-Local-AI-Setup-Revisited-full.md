@@ -388,6 +388,26 @@ layout: default
     }
     .repo-link:hover { background-color: var(--hover-bg-color); }
     .repo-link i { font-size: 1.1rem; }
+
+    /* ---- Full-width header/footer fix ----
+       Something in this page was constraining the theme's header and footer
+       to a partial width on mobile. These overrides force the theme's own
+       wrapper, header and footer elements back to the full screen width. */
+    .site-header,
+    .site-footer,
+    .wrapper,
+    header.site-header > .wrapper,
+    footer.site-footer > .wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    body {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden;
+    }
   </style>
 </head>
 <body>
