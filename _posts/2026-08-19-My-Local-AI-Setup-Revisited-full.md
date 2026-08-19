@@ -13,20 +13,7 @@ layout: default
 
 <div class="post-content e-content" itemprop="articleBody">
 
-<head>
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
-  <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
-</head>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Local AI Setup, Revisited (2026) | A Diary of IT Projects</title>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
     :root {
@@ -409,8 +396,6 @@ layout: default
       overflow-x: hidden;
     }
   </style>
-</head>
-<body>
 
   <!-- Table of Contents -->
   <div class="tableOfContents_bqdL">
@@ -773,8 +758,6 @@ layout: default
       });
     }
   </script>
-</body>
-</html>
 
 <br>
 <br>
