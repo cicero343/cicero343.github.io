@@ -426,10 +426,11 @@ layout: default
       <img src="{{ '/assets/images/OpenWebUIAudioSettings.png' | relative_url }}" alt="OpenWebUI Admin audio settings with the TTS engine pointed at the local Chatterbox endpoint">
       <figcaption>OpenWebUI's audio settings, pointed at the local Chatterbox TTS endpoint.</figcaption>
     </figure>
-
+<!--
     <div class="placeholder">
       I was kind of inspired by <a href="https://www.youtube.com/watch?v=E-dHYiEcWN8" target="_blank" rel="noopener noreferrer">this video</a> from No place like localhost. But I note that he uses <a href="https://github.com/studio-dots-ai/dots.tts" target="_blank" rel="noopener noreferrer">dots.tts</a> on Linux for voice cloning and wires it via OpenCode. My Chatterbox setup is on Windows. I've not tried it through OpenCode yet, but I see no reason why it wouldn't work.
     </div>
+    -->
 
     <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:5px;">
       <iframe src="https://www.youtube-nocookie.com/embed/P3kxNzqStdk"
