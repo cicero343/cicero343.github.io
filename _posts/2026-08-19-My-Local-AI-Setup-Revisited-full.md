@@ -13,8 +13,6 @@ layout: default
 
 <div class="post-content e-content" itemprop="articleBody">
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
@@ -140,8 +138,6 @@ layout: default
       max-width: 900px;
       margin: 40px auto;
       padding: 0 20px 20px 20px;
-      box-sizing: border-box;
-      overflow-x: hidden;
     }
 
     .tableOfContents_bqdL {
@@ -210,8 +206,6 @@ layout: default
       padding: 2px 6px;
       border-radius: 3px;
       font-family: 'Courier New', monospace;
-      overflow-wrap: break-word;
-      word-break: break-word;
     }
 
     pre {
@@ -219,15 +213,12 @@ layout: default
       padding: 15px;
       border-radius: 5px;
       overflow-x: auto;
-      max-width: 100%;
       border-left: 4px solid var(--link-color-light);
     }
 
     pre code {
       background: none;
       padding: 0;
-      overflow-wrap: normal;
-      word-break: normal;
     }
 
     .info-box {
@@ -347,6 +338,29 @@ layout: default
       opacity: 0.75;
     }
 
+    /* Responsive YouTube embed — caps the player to the content width so it
+       can never push the page wider than the screen on mobile. */
+    .video-embed {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      padding-bottom: 56.25%;   /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      margin: 15px 0;
+      border-radius: 5px;
+    }
+
+    .video-embed iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      border: 0;
+    }
+
     .repo-link {
       display: inline-flex;
       align-items: center;
@@ -431,17 +445,15 @@ layout: default
       I was kind of inspired by <a href="https://www.youtube.com/watch?v=E-dHYiEcWN8" target="_blank" rel="noopener noreferrer">this video</a> from No place like localhost. But I note that he uses <a href="https://github.com/studio-dots-ai/dots.tts" target="_blank" rel="noopener noreferrer">dots.tts</a> on Linux for voice cloning and wires it via OpenCode. My Chatterbox setup is on Windows. I've not tried it through OpenCode yet, but I see no reason why it wouldn't work.
     </div>
 
-<!--
-    <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:5px;">
+    <div class="video-embed">
       <iframe src="https://www.youtube-nocookie.com/embed/P3kxNzqStdk"
-              style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
               title="Local AI voice demo"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"
               allowfullscreen loading="lazy">
       </iframe>
     </div>
-    -->
+
     <div class="warning-box">
       <strong>Disclaimer:</strong> The voice used in the demo is for illustration only — I don't own the rights to it, and this is a non-commercial personal project.
     </div>
