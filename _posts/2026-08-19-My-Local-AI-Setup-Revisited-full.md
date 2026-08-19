@@ -141,6 +141,17 @@ layout: default
       box-sizing: border-box;
     }
 
+    /* The post carries its own main.page-content which nests inside the theme's
+       main.page-content. The nested one's padding/margin pushed body text to the
+       right of the title. Neutralise the inner one so everything left-aligns. */
+    .post-content main.page-content,
+    .home main.page-content {
+      padding: 0;
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
+    }
+
     .tableOfContents_bqdL {
       position: fixed;
       top: 120px;
