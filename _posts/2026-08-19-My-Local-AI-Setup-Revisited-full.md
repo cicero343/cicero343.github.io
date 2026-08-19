@@ -13,7 +13,21 @@ layout: default
 
 <div class="post-content e-content" itemprop="articleBody">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
+  <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
+</head>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Local AI Setup, Revisited (2026) | A Diary of IT Projects</title>
+
+  <!-- Add Font Awesome for the up arrow icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
     :root {
@@ -396,6 +410,18 @@ layout: default
       overflow-x: hidden;
     }
   </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="site-title">
+      <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Avatar" class="site-logo">
+      <h1>A Diary of IT Projects</h1>
+    </a>
+    <div class="toggle-switch">
+      <input type="checkbox" id="theme-toggle">
+      <label for="theme-toggle"></label>
+    </div>
+  </header>
 
   <!-- Table of Contents -->
   <div class="tableOfContents_bqdL">
@@ -758,6 +784,8 @@ layout: default
       });
     }
   </script>
+</body>
+</html>
 
 <br>
 <br>
