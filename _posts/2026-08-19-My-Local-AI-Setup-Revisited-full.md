@@ -12,22 +12,7 @@ layout: default
 </header>
 
 <div class="post-content e-content" itemprop="articleBody">
-
-<head>
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/apple-touch-icon.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon-32x32.png' | relative_url }}" />
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon-16x16.png' | relative_url }}" />
-  <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}" />
-</head>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Local AI Setup, Revisited (2026) | A Diary of IT Projects</title>
-
-  <!-- Add Font Awesome for the up arrow icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
     :root {
@@ -390,38 +375,48 @@ layout: default
     .repo-link:hover { background-color: var(--hover-bg-color); }
     .repo-link i { font-size: 1.1rem; }
 
-    /* ---- Full-width header/footer fix ----
-       Something in this page was constraining the theme's header and footer
-       to a partial width on mobile. These overrides force the theme's own
-       wrapper, header and footer elements back to the full screen width. */
-    .site-header,
-    .site-footer,
-    .wrapper,
-    header.site-header > .wrapper,
-    footer.site-footer > .wrapper {
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
+    /* ---- Mobile overflow guards ----
+       Keep wide elements (code blocks, tables, images, the video) contained so
+       they can't stretch the page wider than the screen on phones. Everything
+       here is scoped to the post's own content, so it won't touch the site
+       header or footer. */
+
+    /* Code blocks: scroll inside their own box instead of pushing the page. */
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
     }
 
-    body {
-      width: 100% !important;
-      max-width: 100% !important;
-      overflow-x: hidden;
+    /* Long inline code (e.g. file paths) wraps instead of forcing width. */
+    code {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    pre code {
+      overflow-wrap: normal;
+      word-break: normal;
+      white-space: pre;
+    }
+
+    /* Tables: allow horizontal scroll within the content column on small screens. */
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Images and figures never exceed the column. */
+    img,
+    figure.screenshot {
+      max-width: 100%;
+    }
+
+    /* Responsive video wrapper hard-cap (belt and braces with its inline style). */
+    .post-content iframe {
+      max-width: 100%;
     }
   </style>
-</head>
-<body>
-  <header class="site-header">
-    <a href="/" class="site-title">
-      <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Avatar" class="site-logo">
-      <h1>A Diary of IT Projects</h1>
-    </a>
-    <div class="toggle-switch">
-      <input type="checkbox" id="theme-toggle">
-      <label for="theme-toggle"></label>
-    </div>
-  </header>
 
   <!-- Table of Contents -->
   <div class="tableOfContents_bqdL">
@@ -784,8 +779,6 @@ layout: default
       });
     }
   </script>
-</body>
-</html>
 
 <br>
 <br>
