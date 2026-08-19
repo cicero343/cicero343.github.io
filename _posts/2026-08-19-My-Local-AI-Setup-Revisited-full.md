@@ -134,9 +134,11 @@ layout: default
     }
 
     .page-content {
+      width: 100%;
       max-width: 900px;
       margin: 40px auto;
       padding: 0 20px 20px 20px;
+      box-sizing: border-box;
     }
 
     .tableOfContents_bqdL {
