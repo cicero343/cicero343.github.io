@@ -13,6 +13,8 @@ layout: default
 
 <div class="post-content e-content" itemprop="articleBody">
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <style>
@@ -138,6 +140,8 @@ layout: default
       max-width: 900px;
       margin: 40px auto;
       padding: 0 20px 20px 20px;
+      box-sizing: border-box;
+      overflow-x: hidden;
     }
 
     .tableOfContents_bqdL {
@@ -206,6 +210,8 @@ layout: default
       padding: 2px 6px;
       border-radius: 3px;
       font-family: 'Courier New', monospace;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     pre {
@@ -213,12 +219,15 @@ layout: default
       padding: 15px;
       border-radius: 5px;
       overflow-x: auto;
+      max-width: 100%;
       border-left: 4px solid var(--link-color-light);
     }
 
     pre code {
       background: none;
       padding: 0;
+      overflow-wrap: normal;
+      word-break: normal;
     }
 
     .info-box {
