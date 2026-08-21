@@ -532,6 +532,8 @@ layout: default
       </a>
     </div>
 
+    <p>For the speech-to-text side specifically, there are polished off-the-shelf options — <a href="https://wisprflow.ai/" target="_blank" rel="noopener noreferrer">Wispr Flow</a> is one many developers use for dictation. It won't do the cloned-voice output, and it isn't fully local (its cleanup step hits the cloud), so it wasn't the route for me — my openwebui-voice-clone setup uses local Whisper for that. But it's worth knowing about if you just want quick, accurate dictation.</p>
+
     <!-- ============================================================= -->
     <h2 id="models">The Model Stack — Why These, Why Not Others</h2>
     <!-- ============================================================= -->
@@ -654,6 +656,13 @@ layout: default
     <div class="info-box">
       <strong>Remember — context length.</strong> The first time I wired a model into OpenCode it kept failing, and the cause turned out to be the context window. LM Studio was loading the model with a small default context (8192 tokens), which an agent chews through quickly once it's carrying a system prompt, tool definitions and file contents. Bumping the context length up (I use 32768) in LM Studio's model load settings fixed it.
     </div>
+
+    <p>OpenCode isn't the only option here. If you'd rather stay in a familiar & dedicated IDE, you can point VS Code at LM Studio using the <a href="https://marketplace.visualstudio.com/items?itemName=DanLambiase.lmstudio-copilot-provider" target="_blank" rel="noopener noreferrer">LM Studio for Copilot Chat</a> extension. It auto-discovers your models and adds them to VS Code's chat picker, no GitHub sign-in needed. Pick one from the dropdown and it even loads it into LM Studio's server automatically.</p>
+
+    <figure class="screenshot" style="max-width:440px;">
+      <img src="{{ '/assets/images/vscode-lmstudio-models.png' | relative_url }}" alt="VS Code chat model picker showing local LM Studio models available for selection">
+      <figcaption>The LM Studio models appearing in VS Code's chat model picker.</figcaption>
+    </figure>
 
     <!-- ============================================================= -->
     <h2 id="testing">Testing the Models in OpenCode</h2>
