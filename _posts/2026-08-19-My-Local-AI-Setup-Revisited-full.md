@@ -458,7 +458,7 @@ layout: default
     <h2 id="introduction">Introduction</h2>
     <!-- ============================================================= -->
 
-    <p>Nine months ago I wrote a step-by-step guide to running a local AI with tool access. That post built a specific stack: LM Studio serving a model, OpenWebUI as the chat front-end, and (to give the AI the ability to touch files on my machine) <code>mcpo</code> plus a custom Python MCP server. The whole thing was built around Nous Hermes 2 Mistral 7B, which at the time was a sensible pick for an uncensored model that could use tools.</p>
+    <p>Nine months ago I wrote a step-by-step guide to running a local AI with tool access. That post built a specific stack: LM Studio serving a model, OpenWebUI as the chat front-end, and (to give the AI the ability to touch files on my machine) <code>mcpo</code> plus a custom Python MCP server. The whole thing was built around Nous Hermes 2 Mistral 7B, which at the time was a sensible pick for an uncensored model that could use tools. TEST</p>
 
     <p>I've kept tinkering since, and enough has changed that a "here's the current state" post felt worth writing. This one is less of a build tutorial and more of a reflection — what I'd do differently now, and what I got slightly wrong the first time. Three things in particular have shifted:</p>
 
