@@ -709,7 +709,7 @@ layout: default
     <p>Second, and less obviously: maxing out the offload was <em>slower</em> than a partial offload. Pushing all 48 layers onto the card still beat pure CPU, but it lost to the middle setting of 20 — at a 32K context the KV cache needs its own slice of VRAM, and cramming every layer onto a 12&nbsp;GB card leaves too little room for it. A partial offload was the sweet spot, and a good reminder that "turn it all the way up" isn't always fastest.</p>
 
     <!-- SCREENSHOT: LM Studio chat showing the tok/s stats line under a Qwen response (partial-offload run) -->
-    <figure class="screenshot" style="max-width:440px;">
+    <figure class="screenshot" style="max-width:560px;">
       <img src="{{ '/assets/images/GPUOffload20.png' | relative_url }}" alt="LM Studio chat showing the tokens-per-second stats line under a Qwen response">
       <figcaption>LM Studio's per-response stats line, where the tokens-per-second figures above come from.</figcaption>
     </figure>
