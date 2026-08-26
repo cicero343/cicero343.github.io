@@ -29,99 +29,45 @@ layout: default
     <!-- Add Font Awesome for the up arrow icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <style>
-        /* Default light mode settings */
-        :root {
-            --bg-color: #ffffff;
-            --txt-color: #000000;
-            --link-color-light: blue; /* Blue links in light mode */
-            --link-hover-color-light: darkblue; /* Darker blue on hover in light mode */
-            --button-bg-light: #000000; /* Black background for button in light mode */
-            --button-text-light: #ffffff; /* White text color for button in light mode */
-            --button-bg-hover-light: #333333; /* Darker background for button on hover in light mode */
-        }
+<style>
+    /* Back-to-top button colours, mapped onto the layout's terminal palette.
+       The site layout (main.css) owns the base theme, body, links and header. */
+    :root, [data-theme="light"] {
+      --button-bg: #1a1a1a;
+      --button-text: #fbfbf7;
+      --button-bg-hover: #333;
+    }
+    [data-theme="dark"] {
+      --button-bg: #161b22;
+      --button-text: #3fb950;
+      --button-bg-hover: #21262d;
+    }
 
-        /* Dark mode settings */
-        [data-theme="dark"] {
-            --bg-color: #000000;
-            --txt-color: #ffffff;
-            --link-color-dark: #00ff00; /* Green links in dark mode */
-            --link-hover-color-dark: #00cc00; /* Slightly darker green on hover in dark mode */
-            --button-bg-dark: #000000; /* Black background for button in dark mode */
-            --button-text-dark: #00ff00; /* Green text color for button in dark mode */
-            --button-bg-hover-dark: #333333; /* Darker background for button on hover in dark mode */
-        }
-
-        /* Apply the variables to the body */
-        body {
-            background-color: var(--bg-color);
-            color: var(--txt-color);
-        }
-
-        /* Link styling */
-        a:link, a:visited {
-            color: var(--link-color-light); /* Use default blue color for light mode */
-        }
-
-        /* Dark mode overrides */
-        [data-theme="dark"] a:link, [data-theme="dark"] a:visited {
-            color: var(--link-color-dark); /* Use green color for dark mode */
-        }
-
-        a:hover {
-            color: var(--link-hover-color-light); /* Hover color in light mode */
-        }
-
-        /* Dark mode hover overrides */
-        [data-theme="dark"] a:hover {
-            color: var(--link-hover-color-dark); /* Hover color in dark mode */
-        }
-
-        a:active {
-            color: inherit; /* Maintain inherited color when clicked */
-        }
-
-        /* Dark mode active overrides */
-        [data-theme="dark"] a:active {
-            color: var(--link-color-dark); /* Maintain green when clicked in dark mode */
-        }
-
-        /* Circular Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--button-bg-light); /* Light mode background */
-            color: var(--button-text-light); /* Light mode icon color */
-            border: none;
-            border-radius: 50%; /* Makes the button circular */
-            width: 50px; /* Diameter of the circle */
-            height: 50px; /* Diameter of the circle */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px; /* Icon size */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Shadow effect */
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            display: none; /* Initially hidden */
-        }
-
-        .back-to-top:hover {
-            background-color: var(--button-bg-hover-light); /* Darker background on hover */
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Dark mode overrides for the Back to Top button */
-        [data-theme="dark"] .back-to-top {
-            background-color: var(--button-bg-dark); /* Dark mode background */
-            color: var(--button-text-dark); /* Dark mode icon color */
-        }
-
-        [data-theme="dark"] .back-to-top:hover {
-            background-color: var(--button-bg-hover-dark); /* Darker background on hover in dark mode */
-        }
-    </style>
+    /* Circular Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: none; /* Initially hidden; shown via the post's scroll script */
+    }
+    .back-to-top:hover {
+      background-color: var(--button-bg-hover);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
+    }
+  </style>
 </head>
 
 <body>
