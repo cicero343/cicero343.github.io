@@ -238,8 +238,19 @@ a {
 
 @media (max-width: 820px) {
   .site-nav { display: none; }
-  .dropdown { display: block; margin-left: auto; }
-  .site-title .path-long { display: none; } // shorten title on small screens
+  // Group the toggle + hamburger together on the right: auto-margin on the
+  // FIRST right-side item (the toggle) pushes both across; the dropdown then
+  // sits just after it with a small gap.
+  .toggle-switch { margin-left: auto; }
+  .dropdown { display: block; margin-left: 10px; }
+  // Let the title take remaining space and truncate rather than clip/overflow.
+  .site-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .site-title .path-long { display: none; } // drop the long path on small screens
 }
 
 // True phone widths: reclaim horizontal space so the title never clips.
@@ -257,6 +268,15 @@ a {
   max-width: 820px;
   margin: 0 auto;
   padding: 2rem 1.25rem 3rem;
+}
+
+// Some older posts wrap their body in a second <main class="page-content">
+// nested inside the layout's. Neutralise the inner one so it doesn't add its
+// own max-width, padding or centring on top of the outer wrapper.
+.page-content .page-content {
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .page-content h1,
