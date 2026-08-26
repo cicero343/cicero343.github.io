@@ -104,6 +104,23 @@ layout: default
             object-fit: cover; /* Ensure the image fits within the dimensions */
         }
 
+        /* Nyan cat: small accent pushed to the right of the header row */
+        .nyan-cat {
+            margin-left: auto; /* push flush-right, away from the profile icon */
+            width: 175px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        /* On phones the four-across row gets tight; shrink the cat further,
+           and hide it on very narrow screens so the title never squashes. */
+        @media only screen and (max-width: 600px) {
+            .nyan-cat { width: 120px; height: 55px; }
+        }
+        @media only screen and (max-width: 420px) {
+            .nyan-cat { display: none; }
+        }
+
         /* Content container styling */
         .content-container {
             background-color: var(--container-bg-color);
@@ -162,6 +179,7 @@ layout: default
     <div class="header-container">
         <h1 class="page-title">About Me</h1>
         <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
+        <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="Nyan Cat" class="nyan-cat">
     </div>
 
     <div class="content-container">
@@ -170,21 +188,18 @@ layout: default
 
     <br>
 
-    <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="Nyan Cat" class="nyan-cat" style="width: 438px; height: 200px;">
-
-    <br>
-    
     <div class="iframe-container">
         <iframe
             src="https://cicero343.github.io/mygame/index.html"
-            class="responsive-iframe">
+            class="responsive-iframe"
+            loading="lazy">
         </iframe>
     </div>
 
      <!-- Typing effect script -->
     <script>
         const text = `Hello and welcome to my site, I’m so happy you’re here! 🥳\n
-I'm just a law graduate with a passion for tech. I also enjoy a bit of music production.\n
+I'm a law graduate and tech enthusiast, with a background in IT support and a passion for cybersecurity, self-hosted AI, and building things. I also enjoy a bit of music production.\n
 Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed!`;
         let i = 0;
 
@@ -222,19 +237,6 @@ Here's a cool nyan cat GIF I permanently borrowed. Your day has now been blessed
             setTimeout(() => emojiElement.remove(), 1500);
         });
 
-    </script>
-
-
- <!-- Trigger the confetti script -->
-    <script>
-        // This triggers confetti when the page is loaded
-        window.addEventListener('load', function() {
-            confetti({
-                particleCount: 200,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-        });
     </script>
 
 
