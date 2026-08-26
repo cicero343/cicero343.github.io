@@ -179,7 +179,10 @@ layout: default
     <div class="header-container">
         <h1 class="page-title">About Me</h1>
         <img src="https://avatars.githubusercontent.com/u/175522457?v=4" alt="Profile Image" class="profile-image">
+        <picture>
+        <souce media="(max-width: 420px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
         <img src="https://github.com/user-attachments/assets/a8b39c6a-10cd-4444-9f93-423f0972b035" alt="Nyan Cat" class="nyan-cat">
+        </picture>
     </div>
 
     <div class="content-container">
