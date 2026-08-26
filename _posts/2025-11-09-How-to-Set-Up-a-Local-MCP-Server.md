@@ -30,25 +30,24 @@ layout: default
     top: 120px;
     right: 20px;
     width: 250px;
-    background-color: #e8e8e8;
-    color: #000000;
+    background-color: #f0f0e8;
+    color: var(--text);
     padding: 15px;
+    border: 1px solid var(--border);
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     max-height: 70vh;
     overflow-y: auto;
   }
 
   [data-theme="dark"] .tableOfContents_bqdL {
-    background-color: #2a2a2a;
-    color: #ffffff;
+    background-color: #161b22;
   }
 
   .tableOfContents_bqdL h3 {
     margin-top: 0;
     font-size: 1.1rem;
-    border-bottom: 2px solid currentColor;
+    border-bottom: 2px solid var(--border);
     padding-bottom: 5px;
   }
 
@@ -64,17 +63,13 @@ layout: default
 
   .tableOfContents_bqdL a {
     text-decoration: none;
-    color: inherit;
+    color: var(--text);
     transition: font-weight 0.2s;
   }
 
   .tableOfContents_bqdL a.toc-highlight {
     font-weight: bold;
-    color: blue;
-  }
-
-  [data-theme="dark"] .tableOfContents_bqdL a.toc-highlight {
-    color: #00ff00;
+    color: var(--accent);
   }
 
   @media (max-width: 1200px) {
