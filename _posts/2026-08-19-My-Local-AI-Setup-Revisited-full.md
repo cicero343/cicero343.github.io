@@ -443,6 +443,7 @@ layout: default
       <li><a href="#testing">Testing in OpenCode</a></li>
       <li><a href="#speed">Local Speed on a 12&nbsp;GB Card</a></li>
       <li><a href="#karpathy">The Command-Wiki Experiment</a></li>
+      <li><a href="#skills">Bonus: Skills in OpenCode</a></li>
       <li><a href="#wrap">Where This Leaves Me</a></li>
     </ul>
   </div>
@@ -751,6 +752,19 @@ layout: default
     <div class="warning-box">
       <strong>Does the structure actually help?</strong> Honestly, I haven't run a formal head-to-head against just grepping the raw <code>commands.yaml</code>, so I can't give you a benchmark. But it's not a shot in the dark: watching Qwen work, I could see it reading the relevant category and tool notes before generating, and the output came back noticeably more structured and complete than a bare prompt gives. So my read is that the structure does help, probably by steering retrieval to the right notes — I just haven't measured by how much.
     </div>
+
+    <!-- ============================================================= -->
+    <h2 id="skills">Bonus: trying Skills in OpenCode</h2>
+    <!-- ============================================================= -->
+
+    <p>One last thing worth a mention: <strong>skills</strong>. A skill is a small, self-contained instruction set (plus any helper scripts) you drop into a folder for the agent to pick up; a repeatable capability rather than a one-off prompt. OpenCode discovers them and the model can invoke them on request.</p>
+
+    <p>As a quick test I gave Gemma4 12B QAT Uncensored a <a href="https://playwright.dev/agent-cli/introduction" target="_blank" rel="noopener noreferrer"><code>playwright-cli</code></a> skill and asked it to open google.com, take a screenshot, and close the window. It did exactly that, saving the screenshot into the skill's folder. It's a neat example of a skill handing the model a capability it wouldn't otherwise have.</p>
+
+    <figure class="screenshot">
+      <img src="{{ '/assets/images/opencode-skill-playwright.png' | relative_url }}" alt="OpenCode using a playwright-cli skill to open google.com, screenshot it, and close the browser">
+      <figcaption>The <code>playwright-cli</code> skill driving a browser from a plain-language request.</figcaption>
+    </figure>
 
     <!-- ============================================================= -->
     <h2 id="wrap">Where This Leaves Me</h2>
