@@ -22,19 +22,23 @@ collections:
     output: true
     
 navbar:
+  - title: "About Me"
+    url: /about/
   - title: "My Projects"
     url: /projects/
-  - title: "About me"
-    url: /about/
+  - title: "2D Game"
+    url: /rowanmyst
+  - title: "3D Game"
+    url: /stickfps
   - title: "All Posts"
     url: /posts/
   - title: "Dashboard"
     url: /dashboard/
   - title: "Cyber News"
     url: /cybernews/
-  - title: "Admin Login"
+  - title: "Admin"
     url: /admin/
-  - title: "Guest Portal"
+  - title: "Guest"
     url: /guest/
 
 # Exclude from processing
@@ -45,6 +49,7 @@ exclude:
   - vendor/
   - Gemfile
   - Gemfile.lock
+  - pagefind
 
-
-
+keep_files:
+  - pagefind
