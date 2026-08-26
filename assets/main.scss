@@ -250,7 +250,10 @@ a {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .site-title .path-long { display: none; } // drop the long path on small screens
+  // Swap what the title shows: drop the shell prompt, show the blog path
+  // (the more informative bit), tinted with the terminal accent.
+  .site-title .title-prompt { display: none; }
+  .site-title .path-long { color: var(--accent); }
 }
 
 // True phone widths: reclaim horizontal space so the title never clips.
