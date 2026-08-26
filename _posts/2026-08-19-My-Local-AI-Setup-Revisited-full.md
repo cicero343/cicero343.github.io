@@ -14,154 +14,40 @@ layout: default
 <div class="post-content e-content" itemprop="articleBody">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  <style>
-    :root {
-      --bg-color-light: #ffffff;
-      --txt-color-light: #000000;
-      --link-color-light: blue;
-      --link-hover-color-light: darkblue;
-      --bg-color-dark: #000000;
-      --txt-color-dark: #ffffff;
-      --link-color-dark: #00ff00;
-      --link-hover-color-dark: #00cc00;
-      --navbar-bg-color: #f5f5f5;
-      --hover-bg-color: #e0e0e0;
-      --toc-bg-color: #e8e8e8;
-      --code-bg-light: #f5f5f5;
-      --code-bg-dark: #1e1e1e;
-      --button-bg-light: #000000;
-      --button-text-light: #ffffff;
-      --button-bg-hover-light: #333333;
-      --button-bg-dark: #000000;
-      --button-text-dark: #00ff00;
-      --button-bg-hover-dark: #333333;
+<style>
+    /* Post-local theme aliases.
+       The site layout (main.css) owns the base theme, colours, header, nav and
+       toggle. This post only defines the extra variables its own components need,
+       mapped onto the layout's terminal palette so light/dark both work. */
+    :root, [data-theme="light"] {
+      --toc-bg-color: #f0f0e8;
+      --code-bg-local: #f0f0e8;
+      --hover-bg-color: #e8e8e0;
+      --button-bg: #1a1a1a;
+      --button-text: #fbfbf7;
+      --button-bg-hover: #333;
     }
 
     [data-theme="dark"] {
-      --bg-color: var(--bg-color-dark);
-      --txt-color: var(--txt-color-dark);
-      --link-color-light: var(--link-color-dark);
-      --link-hover-color-light: var(--link-hover-color-dark);
-      --navbar-bg-color: #333;
-      --toc-bg-color: #2a2a2a;
-      --code-bg-light: var(--code-bg-dark);
+      --toc-bg-color: #161b22;
+      --code-bg-local: #161b22;
+      --hover-bg-color: #21262d;
+      --button-bg: #161b22;
+      --button-text: #3fb950;
+      --button-bg-hover: #21262d;
     }
 
-    [data-theme="light"] {
-      --bg-color: var(--bg-color-light);
-      --txt-color: var(--txt-color-light);
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--txt-color);
-      margin: 0;
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-    }
-
-    a:link, a:visited {
-      color: var(--link-color-light);
-    }
-
-    a:hover {
-      color: var(--link-hover-color-light);
-    }
-
-    .site-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: var(--navbar-bg-color);
-    }
-
-    .site-title {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .site-logo {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
-    }
-
-    .site-title h1 {
-      font-size: 1.3rem;
-      margin: 0;
-    }
-
-    .toggle-switch {
-      display: flex;
-      align-items: center;
-      margin-left: auto;
-    }
-
-    .toggle-switch input {
-      display: none;
-    }
-
-    .toggle-switch label {
-      width: 50px;
-      height: 25px;
-      position: relative;
-      display: block;
-      background: #ebebeb;
-      border-radius: 12.5px;
-      box-shadow: inset 0px 5px 15px rgba(0,0,0,0.4);
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .toggle-switch label:after {
-      content: "";
-      width: 23px;
-      height: 23px;
-      position: absolute;
-      top: 1px;
-      left: 1px;
-      background: linear-gradient(180deg, #ffcc89, #d8860b);
-      border-radius: 50%;
-      box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
-      transition: 0.3s;
-    }
-
-    .toggle-switch input:checked + label:after {
-      left: 26px;
-    }
-
-    .page-content {
-      width: 100%;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px 20px 20px;
-      box-sizing: border-box;
-    }
-
-    /* The post carries its own main.page-content which nests inside the theme's
-       main.page-content. The nested one's padding/margin pushed body text to the
-       right of the title. Neutralise the inner one so everything left-aligns. */
-    .post-content main.page-content,
-    .home main.page-content {
-      padding: 0;
-      margin: 0;
-      max-width: 100%;
-      width: 100%;
-    }
-
+    /* Table of contents (fixed sidebar) */
     .tableOfContents_bqdL {
       position: fixed;
       top: 120px;
       right: 20px;
       width: 250px;
       background-color: var(--toc-bg-color);
-      color: var(--txt-color);
+      color: var(--text);
       padding: 15px;
+      border: 1px solid var(--border);
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       z-index: 1000;
       max-height: 70vh;
       overflow-y: auto;
@@ -170,75 +56,53 @@ layout: default
     .tableOfContents_bqdL h3 {
       margin-top: 0;
       font-size: 1.1rem;
-      border-bottom: 2px solid var(--txt-color);
+      border-bottom: 2px solid var(--border);
       padding-bottom: 5px;
     }
 
-    .tableOfContents_bqdL ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .tableOfContents_bqdL li {
-      margin: 8px 0;
-    }
+    .tableOfContents_bqdL ul { list-style: none; padding: 0; margin: 0; }
+    .tableOfContents_bqdL li { margin: 8px 0; }
 
     .tableOfContents_bqdL a {
       text-decoration: none;
-      color: var(--txt-color);
+      color: var(--text);
       transition: font-weight 0.2s;
     }
 
     .tableOfContents_bqdL a.toc-highlight {
       font-weight: bold;
-      color: var(--link-color-light);
+      color: var(--accent);
     }
 
     @media (max-width: 1200px) {
-      .tableOfContents_bqdL {
-        display: none;
-      }
+      .tableOfContents_bqdL { display: none; }
     }
 
-    h2 {
-      color: var(--txt-color);
-      border-bottom: 2px solid var(--txt-color);
-      padding-bottom: 10px;
-      margin-top: 40px;
-    }
-
-    h3 {
-      color: var(--txt-color);
-      margin-top: 30px;
-    }
-
+    /* Local code styling uses the post's own bg var (layout already styles code,
+       these just tweak it for this post's density). */
     code {
-      background-color: var(--code-bg-light);
+      background-color: var(--code-bg-local);
       padding: 2px 6px;
       border-radius: 3px;
-      font-family: 'Courier New', monospace;
     }
 
     pre {
-      background-color: var(--code-bg-light);
+      background-color: var(--code-bg-local);
       padding: 15px;
       border-radius: 5px;
       overflow-x: auto;
-      border-left: 4px solid var(--link-color-light);
+      border-left: 4px solid var(--accent);
+      max-width: 100%;
     }
 
-    pre code {
-      background: none;
-      padding: 0;
-    }
+    pre code { background: none; padding: 0; }
 
     .info-box {
       background-color: var(--toc-bg-color);
       padding: 15px;
       border-radius: 5px;
       margin: 20px 0;
-      border-left: 4px solid var(--link-color-light);
+      border-left: 4px solid var(--accent);
     }
 
     .warning-box {
@@ -259,25 +123,27 @@ layout: default
       width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     th, td {
-      border: 1px solid var(--txt-color);
+      border: 1px solid var(--border);
       padding: 10px;
       text-align: left;
     }
 
-    th {
-      background-color: var(--toc-bg-color);
-    }
+    th { background-color: var(--toc-bg-color); }
 
-    /* Circular Back to Top Button - Updated to match GitHub Pages style */
+    /* Back to top button */
     .back-to-top {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: var(--button-bg-light);
-      color: var(--button-text-light);
+      background-color: var(--button-bg);
+      color: var(--button-text);
       border: none;
       border-radius: 50%;
       width: 50px;
@@ -293,17 +159,8 @@ layout: default
     }
 
     .back-to-top:hover {
-      background-color: var(--button-bg-hover-light);
+      background-color: var(--button-bg-hover);
       box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
-    }
-
-    [data-theme="dark"] .back-to-top {
-      background-color: var(--button-bg-dark);
-      color: var(--button-text-dark);
-    }
-
-    [data-theme="dark"] .back-to-top:hover {
-      background-color: var(--button-bg-hover-dark);
     }
 
     img {
@@ -313,10 +170,9 @@ layout: default
       margin: 15px 0;
     }
 
-    /* Screenshot / media placeholder styling — remove before publishing */
     .placeholder {
       background-color: var(--toc-bg-color);
-      border: 2px dashed var(--link-color-light);
+      border: 2px dashed var(--accent);
       border-radius: 5px;
       padding: 25px 15px;
       margin: 20px 0;
@@ -325,19 +181,16 @@ layout: default
       opacity: 0.85;
     }
 
-    /* Consistent screenshot / figure formatting.
-       max-width caps how large a screenshot gets on desktop (so they don't dominate
-       the column), while width:100% + height:auto lets them shrink on mobile. */
     figure.screenshot {
       margin: 25px auto;
-      max-width: 720px;   /* desktop cap — lower this to ~560px for smaller shots if you like */
+      max-width: 720px;
       text-align: center;
     }
 
     figure.screenshot img {
       width: 100%;
       height: auto;
-      border: 1px solid var(--txt-color);
+      border: 1px solid var(--border);
       border-radius: 6px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       margin: 0;
@@ -350,13 +203,11 @@ layout: default
       opacity: 0.75;
     }
 
-    /* Responsive YouTube embed — caps the player to the content width so it
-       can never push the page wider than the screen on mobile. */
     .video-embed {
       position: relative;
       width: 100%;
       max-width: 100%;
-      padding-bottom: 56.25%;   /* 16:9 aspect ratio */
+      padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
       margin: 15px 0;
@@ -378,29 +229,16 @@ layout: default
       align-items: center;
       gap: 8px;
       padding: 6px 12px;
-      border: 1px solid var(--txt-color);
+      border: 1px solid var(--border);
       border-radius: 6px;
       text-decoration: none;
-      font-family: 'Courier New', monospace;
       font-size: 0.9rem;
       transition: background-color 0.2s;
     }
     .repo-link:hover { background-color: var(--hover-bg-color); }
     .repo-link i { font-size: 1.1rem; }
 
-    /* ---- Mobile overflow guards ----
-       Keep wide elements (code blocks, tables, images, the video) contained so
-       they can't stretch the page wider than the screen on phones. Everything
-       here is scoped to the post's own content, so it won't touch the site
-       header or footer. */
-
-    /* Code blocks: scroll inside their own box instead of pushing the page. */
-    pre {
-      max-width: 100%;
-      overflow-x: auto;
-    }
-
-    /* Long inline code (e.g. file paths) wraps instead of forcing width. */
+    /* Mobile overflow guards (post content only) */
     code {
       overflow-wrap: break-word;
       word-break: break-word;
@@ -410,25 +248,8 @@ layout: default
       word-break: normal;
       white-space: pre;
     }
-
-    /* Tables: allow horizontal scroll within the content column on small screens. */
-    table {
-      display: block;
-      max-width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Images and figures never exceed the column. */
-    img,
-    figure.screenshot {
-      max-width: 100%;
-    }
-
-    /* Responsive video wrapper hard-cap (belt and braces with its inline style). */
-    .post-content iframe {
-      max-width: 100%;
-    }
+    figure.screenshot { max-width: 100%; }
+    .post-content iframe { max-width: 100%; }
   </style>
 
   <!-- Table of Contents -->
