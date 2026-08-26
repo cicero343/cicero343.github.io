@@ -269,7 +269,7 @@ layout: default
     </ul>
   </div>
 
-  <main class="page-content">
+  <div class="post-body">
     <p><em>Nine months on from my last post — leaner models, simpler tooling, and a better understanding of what MCP actually is.</em></p>
 
     <div class="info-box">
@@ -594,7 +594,7 @@ layout: default
     <p>The thing that stands out, looking back over nine months, is that everything got <em>simpler</em>. Rather than the stack getting more complex as it got more capable, it actually became leaner: fewer models, each with one clear job. The tooling got simpler too, less MCP rather than more, once OpenCode's native file tools removed the proxy layer I'd built last time. The voice layer went the same way, from a fragile scraper to a supported native path.</p>
 
     <p>What's changed most, though, is the kind of question I find myself asking. Nine months ago it was "can I even run a capable model locally?" — and the answer now is a comfortable yes, on a mid-range gaming GPU, with several to choose from. The one I'm on now is a level up: "can I organise my own knowledge so a local model makes good use of it?" The command-vault is my first proper attempt, and from what I've seen so far it does seem to help. The next thing I want to poke at is browser automation with a local model — I've written Playwright scripts before, and something like <a href="https://hermes-agent.org/" target="_blank" rel="noopener noreferrer">Hermes Agent</a> (an agent layer from Nous Research that sits on top of an LM Studio server and can drive a browser) looks like a natural fit. The part that intrigues me most is that it builds up a library of reusable skills as it works, so in theory it gets more capable the more you use it.</p>
-  </main>
+  </div>
 
   <!-- Back to Top Button -->
   <button onclick="topFunction()" class="back-to-top" title="Go to top">
