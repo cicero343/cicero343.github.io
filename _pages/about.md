@@ -199,7 +199,7 @@ layout: default
      <!-- Typing effect script -->
     <script>
         const text = `Hello and welcome to my site, I’m so happy you’re here! 🥳\n
-I'm a a law graduate and tech enthusiast, with a background in IT support and a passion for cybersecurity, self-hosted AI, and building things. I also enjoy a bit of music production.`;
+I'm a law graduate and tech enthusiast, with a background in IT support and a passion for cybersecurity, self-hosted AI, and building things. I also enjoy a bit of music production.`;
         let i = 0;
 
         function typeWriter() {
