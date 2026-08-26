@@ -242,6 +242,14 @@ a {
   .site-title .path-long { display: none; } // shorten title on small screens
 }
 
+// True phone widths: reclaim horizontal space so the title never clips.
+@media (max-width: 500px) {
+  .traffic-lights { display: none; }        // drop the faux window dots
+  .site-header { gap: 8px; padding: 10px 12px; }
+  .site-title { font-size: 0.82rem; }
+  .site-logo { width: 20px; height: 20px; }
+}
+
 // ---- Main content -------------------------------------------
 .page-content {
   flex: 1 0 auto;
