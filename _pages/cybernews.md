@@ -891,7 +891,7 @@ permalink: /cybernews/
 <div class="cybernews-container">
     <div class="cybernews-header">
         <h1>cybersec/news</h1>
-        <span class="subtitle">enhanced reliability v4.5</span>
+        <span class="subtitle">enhanced reliability v4.6</span>
         <span class="api-status">3-tier + intelligent filtering</span>
     </div>
 
@@ -926,7 +926,7 @@ permalink: /cybernews/
     </div>
 
     <div class="info-notice">
-        <strong>Enhanced Reliability v4.5:</strong> 23 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
+        <strong>Enhanced Reliability v4.6:</strong> 23 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
     </div>
 
     <div id="source-status" class="source-status"></div>
@@ -1648,14 +1648,15 @@ permalink: /cybernews/
     }
 
     // ── Cross-source corroboration clustering ────────────────────
-    // Groups stories about the SAME incident across different sources. Tuned for
-    // precision: needs a shared distinctive token (CVE or proper noun) AND word overlap.
-    const CLUSTER_STOP = new Set(("the a an and or but of to for in on at by with from as is are was be it its this that new using how why what when after before over under into out up down more most other some such no not only own same than then once here there all any both each few said says say two one three million people company critical flaw flaws vulnerability vulnerabilities attack attackers hackers hacker security platform launches launch data breach cyber malware patches patch ransomware known exploited catalog adds warning webinar agentic agent access users report reveals").split(" "));
-    const CLUSTER_WORD_THRESH = 0.30;
+    // Groups stories about the SAME incident across DIFFERENT sources. Tuned against
+    // live RSS+HN data for precision: better to miss a cluster than mis-merge two stories.
+    const CLUSTER_STOP = new Set(("the a an and or but of to for in on at by with from as is are was be it its this that new using how why what when after before over under into out up down more most other some such no not only own same than then once here there all any both each few said says say two one three million people company critical flaw flaws vulnerability vulnerabilities attack attacks attacker attackers hackers hacker security platform launches launch data breach cyber malware patches patch ransomware known exploited catalog adds warning webinar agentic agent access users user report reveals targeted emerging third party").split(" "));
+    // Generic words that get title-case capitalisation but aren't real entities — don't count as distinctive.
+    const CLUSTER_WEAKCAPS = new Set("linux windows cloud security update read this before that using new report how why what when server code root flaw self benchmark bad economy siege attack emerging".split(" "));
 
     function clusterTokens(title) {
         const cves = (title.toLowerCase().match(/cve-\d{4}-\d+/g) || []);
-        const caps = (title.match(/\b[A-Z][a-zA-Z0-9]{3,}\b/g) || []).map(w => w.toLowerCase());
+        const caps = (title.match(/\b[A-Z][a-zA-Z0-9]{3,}\b/g) || []).map(w => w.toLowerCase()).filter(w => !CLUSTER_WEAKCAPS.has(w));
         const words = (title.toLowerCase().match(/[a-z0-9]+/g) || []).filter(w => w.length > 3 && !CLUSTER_STOP.has(w));
         return {
             all: new Set([...cves, ...words]),
@@ -1669,16 +1670,29 @@ permalink: /cybernews/
         return n / Math.min(a.size, b.size || 1);
     }
 
-    function sharesDistinctive(a, b) {
-        for (const t of a.distinctive) if (b.distinctive.has(t)) return true;
+    function sharedDistinctive(a, b) {
+        const shared = [];
+        for (const t of a.distinctive) if (b.distinctive.has(t)) shared.push(t);
+        return shared;
+    }
+
+    // Same incident if: shared CVE, OR 2+ shared entities + decent overlap, OR near-identical titles.
+    function sameIncident(a, b) {
+        const shared = sharedDistinctive(a, b);
+        if (shared.some(t => t.startsWith('cve-'))) return true;
+        const overlap = clusterOverlap(a.all, b.all);
+        if (shared.length >= 2 && overlap >= 0.34) return true;
+        if (overlap >= 0.60 && shared.length >= 1) return true;
         return false;
     }
 
-    // Takes a score-sorted array; returns lead stories (cluster members folded in), order preserved.
+    // Takes a score-sorted array; returns lead stories with same-incident coverage folded in.
+    // Only promotes a cluster (badge + corroboration) when it spans 2+ DISTINCT sources.
     function clusterStories(sorted) {
         const items = sorted.map((s, i) => ({ s, i, tok: clusterTokens(s.title || '') }));
         const used = new Array(items.length).fill(false);
         const leads = [];
+        const srcOf = st => st.rss_source || st.source;
 
         for (let i = 0; i < items.length; i++) {
             if (used[i]) continue;
@@ -1687,25 +1701,27 @@ permalink: /cybernews/
             const members = [];
             for (let j = i + 1; j < items.length; j++) {
                 if (used[j]) continue;
-                if (clusterOverlap(items[i].tok.all, items[j].tok.all) >= CLUSTER_WORD_THRESH
-                    && sharesDistinctive(items[i].tok, items[j].tok)) {
+                if (sameIncident(items[i].tok, items[j].tok)) {
                     used[j] = true;
                     members.push(items[j].s);
                 }
             }
 
-            if (members.length > 0) {
-                // Distinct sources across the whole cluster (lead + members).
-                const srcOf = st => st.rss_source || st.source;
-                const distinctSources = new Set([srcOf(lead), ...members.map(srcOf)]);
+            const distinctSources = new Set([srcOf(lead), ...members.map(srcOf)]);
+            // Corroboration is cross-source by definition: ignore single-source "clusters".
+            if (members.length > 0 && distinctSources.size >= 2) {
                 const extra = distinctSources.size - 1;
                 const corroboration = Math.min(extra * CORROBORATION_PER_SOURCE, CORROBORATION_CAP);
                 lead.corroboration = corroboration;
                 lead.totalScore += corroboration;
                 lead.clusterSize = distinctSources.size;
                 lead.clusterMembers = members.map(m => ({ title: m.title, source: m.rss_source || m.source, url: m.url }));
+                leads.push(lead);
+            } else {
+                // No genuine cross-source cluster — release any same-source members back as singletons.
+                leads.push(lead);
+                members.forEach(m => leads.push(m));
             }
-            leads.push(lead);
         }
 
         // Corroboration can lift a lead above earlier singletons — re-sort.
@@ -1723,7 +1739,7 @@ permalink: /cybernews/
         resetProgress();
         sourceHealth = { rss: null, reddit: null, hn: null };
         
-        log('Enhanced Reliability v4.5 starting...');
+        log('Enhanced Reliability v4.6 starting...');
         log(`Fetch mode: ${usingWorker() ? 'Cloudflare Worker' : 'public CORS proxies'}`);
         log(`3-Tier Stack: RSS Feeds → Reddit → HN`);
         log(`Config: ${currentTimeframe}d timeframe, ${displayPerPage} per page`);
@@ -2064,7 +2080,7 @@ permalink: /cybernews/
     });
     
     window.addEventListener('load', () => {
-        log('Enhanced Reliability v4.5 loaded');
+        log('Enhanced Reliability v4.6 loaded');
         log('3-Tier Stack: RSS Feeds → Reddit → HN');
         // Option 1: no auto-fetch — user picks a timeframe to trigger the first fetch.
         updateButtons();
