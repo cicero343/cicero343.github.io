@@ -240,6 +240,37 @@ permalink: /cybernews/
     color: #006600;
 }
 
+.empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: #888;
+}
+
+.empty-icon {
+    font-size: 2em;
+    color: #00ff00;
+    margin-bottom: 12px;
+}
+
+[data-theme="light"] .empty-icon {
+    color: #006600;
+}
+
+.empty-title {
+    font-size: 1em;
+    color: var(--txt-color-dark, #e0e0e0);
+    margin-bottom: 6px;
+}
+
+[data-theme="light"] .empty-title {
+    color: #333;
+}
+
+.empty-sub {
+    font-size: 0.85em;
+    color: #666;
+}
+
 .error {
     text-align: center;
     padding: 40px;
@@ -391,6 +422,39 @@ permalink: /cybernews/
 .clear-filter-btn:hover {
     background: #ff6666;
 }
+
+/* Per-source status line */
+.source-status {
+    padding: 6px 15px;
+    margin: 8px 15px;
+    font-size: 0.75em;
+    font-family: 'Courier New', monospace;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-left: 3px solid #00ff00;
+    color: #ccc;
+    display: none;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .source-status {
+    background: #f0f8f0;
+    border: 1px solid #ddd;
+    border-left: 3px solid #006600;
+    color: #333;
+}
+
+.source-status.active {
+    display: block;
+}
+
+.source-status .ss-ok { color: #00ff00; }
+.source-status .ss-warn { color: #ffaa00; }
+.source-status .ss-fail { color: #ff6666; }
+
+[data-theme="light"] .source-status .ss-ok { color: #006600; }
+[data-theme="light"] .source-status .ss-warn { color: #aa6600; }
+[data-theme="light"] .source-status .ss-fail { color: #cc0000; }
 
 .debug-info {
     background: #1a1a2e;
@@ -780,7 +844,7 @@ permalink: /cybernews/
 <div class="cybernews-container">
     <div class="cybernews-header">
         <h1>cybersec/news</h1>
-        <span class="subtitle">enhanced reliability v4.2</span>
+        <span class="subtitle">enhanced reliability v4.3</span>
         <span class="api-status">3-tier + intelligent filtering</span>
     </div>
 
@@ -789,7 +853,7 @@ permalink: /cybernews/
             <button class="refresh-btn" onclick="fetchStories()">refresh</button>
             <button class="cyber-btn active" id="debug-btn" onclick="toggleDebug()">hide</button>
             <button class="cyber-btn" id="btn-1d" onclick="setTimeframe(1)">1d</button>
-            <button class="cyber-btn active" id="btn-3d" onclick="setTimeframe(3)">3d</button>
+            <button class="cyber-btn" id="btn-3d" onclick="setTimeframe(3)">3d</button>
             <button class="cyber-btn" id="btn-7d" onclick="setTimeframe(7)">7d</button>
             <button class="cyber-btn" id="btn-14d" onclick="setTimeframe(14)">14d</button>
             
@@ -819,8 +883,10 @@ permalink: /cybernews/
     </div>
 
     <div class="info-notice">
-        <strong>Enhanced Reliability v4.2:</strong> 25+ specialized security RSS feeds → 3-tier proxy fallbacks → Intelligent content filtering. CVE/zero-day priority scoring.
+        <strong>Enhanced Reliability v4.3:</strong> 25+ specialized security RSS feeds → 3-tier proxy fallbacks → Intelligent content filtering. CVE/zero-day priority scoring.
     </div>
+
+    <div id="source-status" class="source-status"></div>
 
     <div id="debug-info" class="debug-info"></div>
     
@@ -845,8 +911,10 @@ permalink: /cybernews/
 
     <div class="main-content">
         <div id="content">
-            <div class="loading">
-                <div style="display: inline-block; animation: spin 1s linear infinite;">3-tier reliability system loading...</div>
+            <div class="empty-state">
+                <div class="empty-icon">▶</div>
+                <div class="empty-title">Pick a timeframe to fetch the latest news</div>
+                <div class="empty-sub">1d, 3d, 7d, or 14d — each runs its own search</div>
             </div>
         </div>
     </div>
@@ -856,8 +924,19 @@ permalink: /cybernews/
 <script src="https://unpkg.com/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
 
 <script>
+    // ── FETCH CONFIG ─────────────────────────────────────────────
+    // Public CORS proxies are dying (2026). Set WORKER_URL to a Cloudflare
+    // Worker to route all fetches through it; leave "" to use corsProxies below.
+    // WORKER: paste your Worker origin here to go live (one-line switch).
+    const WORKER_URL = "https://cybernews-proxy.cicerodev-343.workers.dev"; // WORKER: origin only, no path
+
+    const usingWorker = () => WORKER_URL.trim().length > 0;
+    // ─────────────────────────────────────────────────────────────
+
     // Global state
-    let currentTimeframe = 3;
+    let currentTimeframe = null; // Option 1: no timeframe until the user picks one
+    let hasFetched = false;
+    let lastFetchLabel = '';
     let debugMode = true;
     let displayPerPage = 30;
     let currentPage = 1;
@@ -867,6 +946,9 @@ permalink: /cybernews/
     let keywordsExpanded = true;
     let activeKeywordFilter = null;
     let extractedKeywords = {};
+
+    // Per-source health for the status line (reset each fetch)
+    let sourceHealth = { rss: null, reddit: null, hn: null };
     
     // Progress tracking
     let totalOperations = 0;
@@ -877,6 +959,9 @@ permalink: /cybernews/
         'reddit-proxy': true,
         'rss-feeds': true
     };
+
+    // Fixed base score for RSS items (was Math.random — kept ranking non-deterministic).
+    const RSS_BASE_POINTS = 40;
 
     // Tier 1: Specialized RSS feeds
     const rssFeeds = {
@@ -907,6 +992,7 @@ permalink: /cybernews/
         cyberscoop: 'https://www.cyberscoop.com/feed/'
     };
 
+    // WORKER: this array + the proxy branch below are dead weight once WORKER_URL is set — safe to delete then.
     const corsProxies = [
         'https://corsproxy.io/?',
         'https://api.allorigins.win/get?url=',
@@ -925,8 +1011,35 @@ permalink: /cybernews/
         }
         updateProgress();
     }
+
+    // Mode-aware per-source status line. Fastest signal that the Worker is live.
+    function updateSourceStatus() {
+        const el = document.getElementById('source-status');
+        if (!el) return;
+
+        const mode = usingWorker() ? 'via Worker' : 'via public proxies';
+        const parts = [];
+
+        const fmt = (label, h) => {
+            if (h === null || h === undefined) return `<span class="ss-warn">${label}: —</span>`;
+            if (h.disabled) return `<span class="ss-warn">${label}: off</span>`;
+            const cls = h.ok === 0 ? 'ss-fail' : (h.total && h.ok < h.total ? 'ss-warn' : 'ss-ok');
+            const count = h.total ? ` (${h.ok}/${h.total})` : ` (${h.ok})`;
+            return `<span class="${cls}">${label}: ${count.trim()}</span>`;
+        };
+
+        parts.push(`<strong>sources</strong> [${mode}]:`);
+        parts.push(fmt('RSS', sourceHealth.rss));
+        parts.push(fmt('Reddit', sourceHealth.reddit));
+        parts.push(fmt('HN', sourceHealth.hn));
+
+        let html = parts.join(' &nbsp; ');
+        if (lastFetchLabel) html += ` &nbsp; <span style="color:#666;">${lastFetchLabel}</span>`;
+        el.innerHTML = html;
+        el.classList.add('active');
+    }
     
-    // FIXED: New function that extracts keywords only from the final displayed story titles
+    // Extract keywords only from the final displayed story titles
     function extractKeywordsFromFinalResults(stories) {
         const keywordCounts = {};
         const stopWords = new Set([
@@ -986,7 +1099,7 @@ permalink: /cybernews/
             }, {});
     }
     
-    // FIXED: Simplified function that only regenerates keywords when filtering
+    // Only regenerates keywords when filtering
     function updateKeywordsFromVisibleStories() {
         // For filtering, re-extract from the stories being shown
         const storiesToAnalyze = activeKeywordFilter ? filteredStories : allStories;
@@ -1150,6 +1263,18 @@ permalink: /cybernews/
             return [];
         });
     }
+
+    // Build the fetch URL for a target feed/api, honouring Worker vs proxy mode.
+    // Worker contract: WORKER_URL + "?url=" + encoded target, returning raw body.
+    function buildFetchUrl(targetUrl, proxy) {
+        if (usingWorker()) {
+            return WORKER_URL.replace(/\/$/, '') + '/?url=' + encodeURIComponent(targetUrl);
+        }
+        if (proxy.includes('allorigins') || proxy.includes('corsproxy.io')) {
+            return proxy + encodeURIComponent(targetUrl);
+        }
+        return proxy + targetUrl;
+    }
     
     function updateButtons() {
         document.querySelectorAll('.cyber-btn').forEach(btn => btn.classList.remove('active'));
@@ -1157,8 +1282,8 @@ permalink: /cybernews/
         const timeframeBtnId = currentTimeframe === 1 ? 'btn-1d' :
                              currentTimeframe === 3 ? 'btn-3d' :
                              currentTimeframe === 7 ? 'btn-7d' :
-                             currentTimeframe === 14 ? 'btn-14d' : 'btn-3d';
-        document.getElementById(timeframeBtnId).classList.add('active');
+                             currentTimeframe === 14 ? 'btn-14d' : null;
+        if (timeframeBtnId) document.getElementById(timeframeBtnId).classList.add('active');
         
         document.getElementById(`btn-${displayPerPage}`).classList.add('active');
         
@@ -1184,29 +1309,35 @@ permalink: /cybernews/
                 'User-Agent': 'Mozilla/5.0 (compatible; RSS Reader)',
             }
         });
-        
-        for (let i = 0; i < corsProxies.length; i++) {
-            const proxy = corsProxies[i];
+
+        // Worker mode: single attempt through the Worker, no proxy loop.
+        const attempts = usingWorker() ? [WORKER_URL] : corsProxies;
+
+        for (let i = 0; i < attempts.length; i++) {
+            const proxy = attempts[i];
             try {
-                log(`${sourceName}: trying proxy ${i + 1}/${corsProxies.length}`);
-                
-                let proxyUrl;
-                if (proxy.includes('allorigins')) {
-                    proxyUrl = proxy + encodeURIComponent(feedUrl);
-                } else if (proxy.includes('corsproxy.io')) {
-                    proxyUrl = proxy + encodeURIComponent(feedUrl);  
+                if (usingWorker()) {
+                    log(`${sourceName}: fetching via Worker`);
                 } else {
-                    proxyUrl = proxy + feedUrl;
+                    log(`${sourceName}: trying proxy ${i + 1}/${corsProxies.length}`);
                 }
-                
+
+                const proxyUrl = buildFetchUrl(feedUrl, proxy);
+
                 let feedData;
-                if (proxy.includes('allorigins')) {
+                if (!usingWorker() && proxy.includes('allorigins')) {
                     const response = await fetch(proxyUrl);
                     if (response.ok) {
                         const data = await response.json();
                         if (data.contents) {
                             feedData = await parser.parseString(data.contents);
                         }
+                    }
+                } else if (usingWorker()) {
+                    const response = await fetch(proxyUrl);
+                    if (response.ok) {
+                        const text = await response.text();
+                        feedData = await parser.parseString(text);
                     }
                 } else {
                     feedData = await parser.parseURL(proxyUrl);
@@ -1217,7 +1348,7 @@ permalink: /cybernews/
                         objectID: `rss_${sourceName}_${index}_${Date.now()}`,
                         title: item.title,
                         author: sourceName,
-                        points: Math.floor(Math.random() * 50) + 25,
+                        points: RSS_BASE_POINTS,
                         num_comments: 0,
                         created_at: item.pubDate || item.isoDate || new Date().toISOString(),
                         url: item.link,
@@ -1225,27 +1356,30 @@ permalink: /cybernews/
                         source: 'rss',
                         rss_source: sourceName
                     })).filter(story => story.title && story.url);
-                    
-                    log(`${sourceName}: proxy ${i + 1} succeeded with ${stories.length} stories`);
+
+                    const via = usingWorker() ? 'Worker' : `proxy ${i + 1}`;
+                    log(`${sourceName}: ${via} succeeded with ${stories.length} stories`);
                     return stories;
                 }
                 
             } catch (error) {
-                log(`${sourceName}: proxy ${i + 1} failed - ${error.message}`);
+                const via = usingWorker() ? 'Worker' : `proxy ${i + 1}`;
+                log(`${sourceName}: ${via} failed - ${error.message}`);
             }
             
             await new Promise(r => setTimeout(r, 300));
         }
-        
-        log(`${sourceName}: all proxy methods failed`);
+
+        log(`${sourceName}: ${usingWorker() ? 'Worker fetch failed' : 'all proxy methods failed'}`);
         return [];
     }
 
     async function fetchAllRSSFeeds() {
-        if (!sources['rss-feeds']) return [];
+        if (!sources['rss-feeds']) { sourceHealth.rss = { disabled: true }; return []; }
         
-        log('TIER 1: Fetching RSS feeds with enhanced proxy fallbacks');
+        log('TIER 1: Fetching RSS feeds' + (usingWorker() ? ' via Worker' : ' with enhanced proxy fallbacks'));
         let allRSSStories = [];
+        let feedsOk = 0;
         
         const feedEntries = Object.entries(rssFeeds);
         const batchSize = 4;
@@ -1253,42 +1387,50 @@ permalink: /cybernews/
         for (let i = 0; i < feedEntries.length; i += batchSize) {
             const batch = feedEntries.slice(i, i + batchSize);
             log(`Processing batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(feedEntries.length/batchSize)}`);
-            
+
+            // Per-feed timeout lives INSIDE the batch now, so a slow feed can't
+            // outlive the outer flow and get its results silently discarded.
             const batchPromises = batch.map(([feedName, feedUrl]) => 
                 fetchWithTimeout(() => fetchRSSWithEnhancedFallback(feedUrl, feedName), 20000)
             );
             
             const batchResults = await Promise.all(batchPromises);
             batchResults.forEach(stories => {
+                if (stories.length > 0) feedsOk++;
                 allRSSStories = allRSSStories.concat(stories);
             });
             
             incrementProgress(`RSS batch ${Math.floor(i/batchSize) + 1} complete`);
             await new Promise(r => setTimeout(r, 800));
         }
-        
-        log(`TIER 1 complete: ${allRSSStories.length} stories from RSS feeds`);
+
+        sourceHealth.rss = { ok: feedsOk, total: feedEntries.length };
+        log(`TIER 1 complete: ${allRSSStories.length} stories from ${feedsOk}/${feedEntries.length} RSS feeds`);
         return allRSSStories;
     }
 
     async function fetchRedditViaProxy() {
-        if (!sources['reddit-proxy']) return [];
+        if (!sources['reddit-proxy']) { sourceHealth.reddit = { disabled: true }; return []; }
         
-        log('TIER 2: Fetching Reddit via proxy');
+        log('TIER 2: Fetching Reddit' + (usingWorker() ? ' via Worker' : ' via proxy'));
         const subreddits = ['cybersecurity', 'netsec'];
         let allStories = [];
+        let subsOk = 0;
         
         for (const sub of subreddits) {
-            const workingProxies = ['https://corsproxy.io/?', 'https://api.allorigins.win/get?url='];
+            const attempts = usingWorker()
+                ? [WORKER_URL]
+                : ['https://corsproxy.io/?', 'https://api.allorigins.win/get?url='];
             
-            for (const proxy of workingProxies) {
+            for (const proxy of attempts) {
                 try {
-                    const url = `${proxy}${encodeURIComponent(`https://www.reddit.com/r/${sub}/hot.json?limit=25`)}`;
+                    const target = `https://www.reddit.com/r/${sub}/hot.json?limit=25`;
+                    const url = buildFetchUrl(target, proxy);
                     const response = await fetch(url);
                     
                     if (response.ok) {
                         let data;
-                        if (proxy.includes('allorigins')) {
+                        if (!usingWorker() && proxy.includes('allorigins')) {
                             const json = await response.json();
                             data = JSON.parse(json.contents);
                         } else {
@@ -1323,6 +1465,7 @@ permalink: /cybernews/
                         });
                         
                         allStories = allStories.concat(stories);
+                        subsOk++;
                         log(`Reddit r/${sub}: ${stories.length} stories`);
                         break;
                     }
@@ -1334,13 +1477,14 @@ permalink: /cybernews/
             incrementProgress(`Reddit r/${sub} complete`);
             await new Promise(r => setTimeout(r, 600));
         }
-        
-        log(`TIER 2 complete: ${allStories.length} stories from Reddit`);
+
+        sourceHealth.reddit = { ok: subsOk, total: subreddits.length };
+        log(`TIER 2 complete: ${allStories.length} stories from ${subsOk}/${subreddits.length} subreddits`);
         return allStories;
     }
     
     async function fetchHackerNewsSimple() {
-        if (!sources.hackernews) return [];
+        if (!sources.hackernews) { sourceHealth.hn = { disabled: true }; return []; }
         
         log('TIER 3: Fetching Hacker News');
         try {
@@ -1350,16 +1494,19 @@ permalink: /cybernews/
             
             const queries = ['security', 'vulnerability', 'WhatsApp', 'cybersecurity', 'breach', 'malware'];
             let stories = [];
+            let queriesOk = 0;
             
             for (let i = 0; i < queries.length; i++) {
                 const query = queries[i];
                 try {
+                    // HN Algolia sends permissive CORS headers — always direct, no proxy/Worker.
                     const url = `https://hn.algolia.com/api/v1/search?query=${encodeURIComponent(query)}&tags=story&hitsPerPage=15&numericFilters=created_at_i>${timestamp}`;
                     const response = await fetch(url);
                     
                     if (response.ok) {
                         const data = await response.json();
                         stories = stories.concat(data.hits.map(hit => ({ ...hit, source: 'hackernews' })));
+                        queriesOk++;
                         log(`HN "${query}": ${data.hits.length} results`);
                     }
                 } catch (e) {
@@ -1369,11 +1516,13 @@ permalink: /cybernews/
                 incrementProgress(`HN query "${query}" complete`);
                 await new Promise(r => setTimeout(r, 400));
             }
-            
-            log(`TIER 3 complete: ${stories.length} stories from Hacker News`);
+
+            sourceHealth.hn = { ok: queriesOk, total: queries.length };
+            log(`TIER 3 complete: ${stories.length} stories from ${queriesOk}/${queries.length} HN queries`);
             return stories;
             
         } catch (error) {
+            sourceHealth.hn = { ok: 0, total: 6 };
             log(`HN error: ${error.message}`);
             return [];
         }
@@ -1434,10 +1583,17 @@ permalink: /cybernews/
     
     async function fetchStories() {
         const contentDiv = document.getElementById('content');
+        // Refresh before any timeframe is chosen: nudge the user, don't fetch.
+        if (currentTimeframe === null) {
+            contentDiv.innerHTML = '<div class="empty-state"><div class="empty-icon">▶</div><div class="empty-title">Pick a timeframe to fetch the latest news</div><div class="empty-sub">1d, 3d, 7d, or 14d — each runs its own search</div></div>';
+            return;
+        }
         debugOutput = '';
         resetProgress();
+        sourceHealth = { rss: null, reddit: null, hn: null };
         
-        log('Enhanced Reliability v4.2 starting...');
+        log('Enhanced Reliability v4.3 starting...');
+        log(`Fetch mode: ${usingWorker() ? 'Cloudflare Worker' : 'public CORS proxies'}`);
         log(`3-Tier Stack: RSS Feeds → Reddit → HN`);
         log(`Config: ${currentTimeframe}d timeframe, ${displayPerPage} per page`);
         
@@ -1459,18 +1615,22 @@ permalink: /cybernews/
         
         try {
             let all = [];
-            
-            const rssStories = await fetchWithTimeout(fetchAllRSSFeeds, 60000);
+
+            // Await each tier directly. The per-feed/per-request timeouts already
+            // bound the work; no outer race that could discard late successes.
+            const rssStories = await fetchAllRSSFeeds();
             all = all.concat(rssStories);
             log(`TIER 1 summary: ${rssStories.length} stories`);
             
-            const reddit = await fetchWithTimeout(fetchRedditViaProxy, 20000);
+            const reddit = await fetchRedditViaProxy();
             all = all.concat(reddit);
             log(`TIER 2 summary: ${reddit.length} stories`);
             
-            const hn = await fetchWithTimeout(fetchHackerNewsSimple, 15000);
+            const hn = await fetchHackerNewsSimple();
             all = all.concat(hn);
             log(`TIER 3 summary: ${hn.length} stories`);
+
+            updateSourceStatus();
             
             log(`=== TOTAL COLLECTED: ${all.length} stories ===`);
             incrementProgress('Processing: Time filtering...');
@@ -1551,7 +1711,7 @@ permalink: /cybernews/
             activeKeywordFilter = null;
             filteredStories = [];
             
-            // FIXED: NOW extract keywords from the final 150 displayed stories ONLY
+            // Extract keywords from the final 150 displayed stories ONLY
             incrementProgress('Processing: Extracting trending keywords from final results...');
             extractedKeywords = extractKeywordsFromFinalResults(allStories);
             
@@ -1583,12 +1743,15 @@ permalink: /cybernews/
                 }
             }
             
+            hasFetched = true;
+            lastFetchLabel = `last fetched: ${currentTimeframe}d at ${new Date().toLocaleTimeString()}`;
             updateProgress('Complete! Displaying results...');
             displayStories();
             
         } catch (error) {
             log(`Fatal error: ${error.message}`);
             resetProgress();
+            updateSourceStatus();
             displayError();
         }
     }
@@ -1598,7 +1761,7 @@ permalink: /cybernews/
         const storiesToShow = activeKeywordFilter ? filteredStories : allStories;
         
         if (storiesToShow.length === 0) {
-            contentDiv.innerHTML = '<div class="error"><h3>No cybersecurity stories found</h3><p>Try refresh or different timeframe. Check debug for details.</p></div>';
+            contentDiv.innerHTML = '<div class="error"><h3>No cybersecurity stories found</h3><p>Try refresh or different timeframe. Check the source status line and debug for details.</p></div>';
             return;
         }
         
@@ -1742,12 +1905,9 @@ permalink: /cybernews/
     });
     
     window.addEventListener('load', () => {
-        log('Enhanced Reliability v4.2 loaded');
+        log('Enhanced Reliability v4.3 loaded');
         log('3-Tier Stack: RSS Feeds → Reddit → HN');
+        // Option 1: no auto-fetch — user picks a timeframe to trigger the first fetch.
         updateButtons();
-        
-        setTimeout(() => {
-            fetchStories();
-        }, 1000);
     });
 </script>
