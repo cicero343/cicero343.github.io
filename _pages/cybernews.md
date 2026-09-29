@@ -668,6 +668,53 @@ permalink: /cybernews/
     margin-left: 5px;
 }
 
+.cluster-badge {
+    background: #0099ff;
+    color: #000;
+    font-size: 0.6em;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 5px;
+}
+
+.cluster-toggle {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #444;
+    font-size: 0.8em;
+    color: #0099ff;
+    cursor: pointer;
+}
+
+[data-theme="light"] .cluster-toggle {
+    border-top: 1px solid #ccc;
+    color: #0066cc;
+}
+
+.cluster-members {
+    margin-top: 6px;
+    padding-left: 12px;
+    font-size: 0.8em;
+}
+
+.cluster-member {
+    padding: 3px 0;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.cluster-member:hover {
+    color: #00ff00;
+}
+
+[data-theme="light"] .cluster-member {
+    color: #555;
+}
+
+[data-theme="light"] .cluster-member:hover {
+    color: #006600;
+}
+
 /* Header dropdown fixes - NEW SECTION */
 .site-header {
     position: relative;
@@ -844,7 +891,7 @@ permalink: /cybernews/
 <div class="cybernews-container">
     <div class="cybernews-header">
         <h1>cybersec/news</h1>
-        <span class="subtitle">enhanced reliability v4.4</span>
+        <span class="subtitle">enhanced reliability v4.5</span>
         <span class="api-status">3-tier + intelligent filtering</span>
     </div>
 
@@ -879,7 +926,7 @@ permalink: /cybernews/
     </div>
 
     <div class="info-notice">
-        <strong>Enhanced Reliability v4.4:</strong> 23 specialized security RSS feeds + Hacker News via Cloudflare Worker. Native XML parsing, CVE/zero-day priority scoring.
+        <strong>Enhanced Reliability v4.5:</strong> 23 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
     </div>
 
     <div id="source-status" class="source-status"></div>
@@ -955,6 +1002,12 @@ permalink: /cybernews/
 
     // Fixed base score for RSS items (was Math.random — kept ranking non-deterministic).
     const RSS_BASE_POINTS = 40;
+
+    // Gentle cap so keyword-dense text (e.g. CISA advisories) can't run away on bonus alone.
+    const CONTENT_BONUS_CAP = 60;
+    // Corroboration: +N per extra source covering the same story, capped.
+    const CORROBORATION_PER_SOURCE = 12;
+    const CORROBORATION_CAP = 48;
 
     // Tier 1: Specialized RSS feeds
     const rssFeeds = {
@@ -1146,6 +1199,15 @@ permalink: /cybernews/
         }
     }
     
+    function toggleCluster(rowId) {
+        const el = document.getElementById(rowId);
+        const arrow = document.getElementById(rowId + '-arrow');
+        if (!el) return;
+        const open = el.style.display !== 'none';
+        el.style.display = open ? 'none' : 'block';
+        if (arrow) arrow.textContent = open ? '▶' : '▼';
+    }
+
     function filterByKeyword(keyword) {
         if (activeKeywordFilter === keyword) {
             clearKeywordFilter();
@@ -1584,6 +1646,71 @@ permalink: /cybernews/
         
         return include.some(word => text.includes(word));
     }
+
+    // ── Cross-source corroboration clustering ────────────────────
+    // Groups stories about the SAME incident across different sources. Tuned for
+    // precision: needs a shared distinctive token (CVE or proper noun) AND word overlap.
+    const CLUSTER_STOP = new Set(("the a an and or but of to for in on at by with from as is are was be it its this that new using how why what when after before over under into out up down more most other some such no not only own same than then once here there all any both each few said says say two one three million people company critical flaw flaws vulnerability vulnerabilities attack attackers hackers hacker security platform launches launch data breach cyber malware patches patch ransomware known exploited catalog adds warning webinar agentic agent access users report reveals").split(" "));
+    const CLUSTER_WORD_THRESH = 0.30;
+
+    function clusterTokens(title) {
+        const cves = (title.toLowerCase().match(/cve-\d{4}-\d+/g) || []);
+        const caps = (title.match(/\b[A-Z][a-zA-Z0-9]{3,}\b/g) || []).map(w => w.toLowerCase());
+        const words = (title.toLowerCase().match(/[a-z0-9]+/g) || []).filter(w => w.length > 3 && !CLUSTER_STOP.has(w));
+        return {
+            all: new Set([...cves, ...words]),
+            distinctive: new Set([...cves, ...caps].filter(w => !CLUSTER_STOP.has(w)))
+        };
+    }
+
+    function clusterOverlap(a, b) {
+        let n = 0;
+        for (const t of a) if (b.has(t)) n++;
+        return n / Math.min(a.size, b.size || 1);
+    }
+
+    function sharesDistinctive(a, b) {
+        for (const t of a.distinctive) if (b.distinctive.has(t)) return true;
+        return false;
+    }
+
+    // Takes a score-sorted array; returns lead stories (cluster members folded in), order preserved.
+    function clusterStories(sorted) {
+        const items = sorted.map((s, i) => ({ s, i, tok: clusterTokens(s.title || '') }));
+        const used = new Array(items.length).fill(false);
+        const leads = [];
+
+        for (let i = 0; i < items.length; i++) {
+            if (used[i]) continue;
+            used[i] = true;
+            const lead = items[i].s;
+            const members = [];
+            for (let j = i + 1; j < items.length; j++) {
+                if (used[j]) continue;
+                if (clusterOverlap(items[i].tok.all, items[j].tok.all) >= CLUSTER_WORD_THRESH
+                    && sharesDistinctive(items[i].tok, items[j].tok)) {
+                    used[j] = true;
+                    members.push(items[j].s);
+                }
+            }
+
+            if (members.length > 0) {
+                // Distinct sources across the whole cluster (lead + members).
+                const srcOf = st => st.rss_source || st.source;
+                const distinctSources = new Set([srcOf(lead), ...members.map(srcOf)]);
+                const extra = distinctSources.size - 1;
+                const corroboration = Math.min(extra * CORROBORATION_PER_SOURCE, CORROBORATION_CAP);
+                lead.corroboration = corroboration;
+                lead.totalScore += corroboration;
+                lead.clusterSize = distinctSources.size;
+                lead.clusterMembers = members.map(m => ({ title: m.title, source: m.rss_source || m.source, url: m.url }));
+            }
+            leads.push(lead);
+        }
+
+        // Corroboration can lift a lead above earlier singletons — re-sort.
+        return leads.sort((a, b) => b.totalScore - a.totalScore);
+    }
     
     async function fetchStories() {
         const contentDiv = document.getElementById('content');
@@ -1596,7 +1723,7 @@ permalink: /cybernews/
         resetProgress();
         sourceHealth = { rss: null, reddit: null, hn: null };
         
-        log('Enhanced Reliability v4.4 starting...');
+        log('Enhanced Reliability v4.5 starting...');
         log(`Fetch mode: ${usingWorker() ? 'Cloudflare Worker' : 'public CORS proxies'}`);
         log(`3-Tier Stack: RSS Feeds → Reddit → HN`);
         log(`Config: ${currentTimeframe}d timeframe, ${displayPerPage} per page`);
@@ -1705,15 +1832,19 @@ permalink: /cybernews/
                         contentBonus += 15;
                     }
                     
+                    contentBonus = Math.min(contentBonus, CONTENT_BONUS_CAP);
                     const recencyScore = (new Date(story.created_at).getTime() / 1000000);
                     const totalScore = ((story.points || 0) * sourceMultiplier) + contentBonus + recencyScore;
                     
                     return { ...story, totalScore, contentBonus, sourceMultiplier };
                 })
-                .sort((a, b) => b.totalScore - a.totalScore)
-                .slice(0, 150);
-            
-            log(`=== FINAL RANKED SET: ${allStories.length} stories ===`);
+                .sort((a, b) => b.totalScore - a.totalScore);
+
+            // Cross-source corroboration: group same-story coverage, reward the lead, fold the rest.
+            allStories = clusterStories(allStories).slice(0, 150);
+
+            const clusterCount = allStories.filter(s => s.clusterSize > 1).length;
+            log(`=== FINAL RANKED SET: ${allStories.length} lead stories, ${clusterCount} multi-source clusters ===`);
             
             // Clear any previous filter state
             activeKeywordFilter = null;
@@ -1730,7 +1861,8 @@ permalink: /cybernews/
                 allStories.slice(0, 15).forEach((story, i) => {
                     const sourceDisplay = story.source === 'rss' ? `RSS-${story.rss_source}` : story.source;
                     const bonusInfo = story.contentBonus > 0 ? ` +${story.contentBonus}bonus` : '';
-                    log(`${i + 1}. [${sourceDisplay}] "${story.title.substring(0, 80)}..." (${story.points}pts, x${story.sourceMultiplier?.toFixed(1)}${bonusInfo})`);
+                    const clusterInfo = story.clusterSize > 1 ? ` ⛓${story.clusterSize}src+${story.corroboration}` : '';
+                    log(`${i + 1}. [${sourceDisplay}] "${story.title.substring(0, 80)}..." (${story.points}pts, x${story.sourceMultiplier?.toFixed(1)}${bonusInfo}${clusterInfo})`);
                 });
                 
                 const priorityStories = allStories.filter(story => {
@@ -1808,26 +1940,45 @@ permalink: /cybernews/
             const isPriority = story.contentBonus >= 20;
             const priorityClass = isPriority ? ' priority' : '';
             const priorityIndicator = isPriority ? '<span class="priority-indicator">HIGH</span>' : '';
-            
+
+            // Corroboration cluster badge + expandable "also covered by"
+            const clustered = story.clusterSize > 1;
+            const clusterBadge = clustered ? `<span class="cluster-badge">⛓ ${story.clusterSize} sources</span>` : '';
+            let clusterExpand = '';
+            if (clustered) {
+                const rowId = `cl-${start + i}`;
+                const memberRows = story.clusterMembers.map(m =>
+                    `<div class="cluster-member" onclick="window.open(${JSON.stringify(m.url)}, '_blank')">· ${m.title} — <span style="color:#666;">${m.source}</span></div>`
+                ).join('');
+                const others = story.clusterMembers.map(m => m.source).join(', ');
+                clusterExpand = `
+                    <div class="cluster-toggle" onclick="toggleCluster('${rowId}')">
+                        <span id="${rowId}-arrow">▶</span> also covered by ${others}
+                    </div>
+                    <div id="${rowId}" class="cluster-members" style="display:none;">${memberRows}</div>`;
+            }
+
             const commentsUrl = story.reddit_url || 
                               (story.source === 'hackernews' ? `https://news.ycombinator.com/item?id=${story.objectID}` : story.url);
             
             return `
                 <div class="story ${sourceCss}${priorityClass}">
                     <div style="font-size: 0.8em; color: #666; margin-bottom: 5px;">
-                        ${num}. <span class="source-indicator source-${sourceCss}">${sourceLabel}</span>${priorityIndicator}
+                        ${num}. <span class="source-indicator source-${sourceCss}">${sourceLabel}</span>${priorityIndicator}${clusterBadge}
                     </div>
-                    <div class="story-title" onclick="window.open('${story.url}', '_blank')">
+                    <div class="story-title" onclick="window.open(${JSON.stringify(story.url || '')}, '_blank')">
                         ${story.title}
                     </div>
                     <div class="story-meta">
                         <div class="meta-item"><span>${story.author}</span></div>
                         <div class="meta-item"><span>${story.points}pts</span></div>
                         ${story.contentBonus > 0 ? `<div class="meta-item"><span style="color: #00ff00;">+${story.contentBonus}</span></div>` : ''}
-                        ${story.num_comments > 0 ? `<div class="meta-item clickable" onclick="window.open('${commentsUrl}', '_blank')"><span>${story.num_comments} comments</span></div>` : ''}
+                        ${story.corroboration > 0 ? `<div class="meta-item"><span style="color: #0099ff;">+${story.corroboration} corrob</span></div>` : ''}
+                        ${story.num_comments > 0 ? `<div class="meta-item clickable" onclick="window.open(${JSON.stringify(commentsUrl || '')}, '_blank')"><span>${story.num_comments} comments</span></div>` : ''}
                         <div class="meta-item"><span>${date}</span></div>
                         <div class="meta-item"><span style="color: #666;">${domain}</span></div>
                     </div>
+                    ${clusterExpand}
                 </div>
             `;
         }).join('');
@@ -1913,7 +2064,7 @@ permalink: /cybernews/
     });
     
     window.addEventListener('load', () => {
-        log('Enhanced Reliability v4.4 loaded');
+        log('Enhanced Reliability v4.5 loaded');
         log('3-Tier Stack: RSS Feeds → Reddit → HN');
         // Option 1: no auto-fetch — user picks a timeframe to trigger the first fetch.
         updateButtons();
