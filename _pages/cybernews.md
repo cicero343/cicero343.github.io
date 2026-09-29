@@ -891,7 +891,7 @@ permalink: /cybernews/
 <div class="cybernews-container">
     <div class="cybernews-header">
         <h1>cybersec/news</h1>
-        <span class="subtitle">enhanced reliability v4.6</span>
+        <span class="subtitle">enhanced reliability v4.6.1</span>
         <span class="api-status">3-tier + intelligent filtering</span>
     </div>
 
@@ -1045,6 +1045,11 @@ permalink: /cybernews/
         'https://api.codetabs.com/v1/proxy?quest='
     ];
     
+    // Escape a value for safe use inside a double-quoted HTML attribute.
+    function attr(v) {
+        return String(v || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
     function log(message) {
         console.log(message);
         const timestamp = new Date().toLocaleTimeString();
@@ -1739,7 +1744,7 @@ permalink: /cybernews/
         resetProgress();
         sourceHealth = { rss: null, reddit: null, hn: null };
         
-        log('Enhanced Reliability v4.6 starting...');
+        log('Enhanced Reliability v4.6.1 starting...');
         log(`Fetch mode: ${usingWorker() ? 'Cloudflare Worker' : 'public CORS proxies'}`);
         log(`3-Tier Stack: RSS Feeds → Reddit → HN`);
         log(`Config: ${currentTimeframe}d timeframe, ${displayPerPage} per page`);
@@ -1964,7 +1969,7 @@ permalink: /cybernews/
             if (clustered) {
                 const rowId = `cl-${start + i}`;
                 const memberRows = story.clusterMembers.map(m =>
-                    `<div class="cluster-member" onclick="window.open(${JSON.stringify(m.url)}, '_blank')">· ${m.title} — <span style="color:#666;">${m.source}</span></div>`
+                    `<div class="cluster-member" data-url="${attr(m.url)}">· ${m.title} — <span style="color:#666;">${m.source}</span></div>`
                 ).join('');
                 const others = story.clusterMembers.map(m => m.source).join(', ');
                 clusterExpand = `
@@ -1982,7 +1987,7 @@ permalink: /cybernews/
                     <div style="font-size: 0.8em; color: #666; margin-bottom: 5px;">
                         ${num}. <span class="source-indicator source-${sourceCss}">${sourceLabel}</span>${priorityIndicator}${clusterBadge}
                     </div>
-                    <div class="story-title" onclick="window.open(${JSON.stringify(story.url || '')}, '_blank')">
+                    <div class="story-title" data-url="${attr(story.url)}">
                         ${story.title}
                     </div>
                     <div class="story-meta">
@@ -1990,7 +1995,7 @@ permalink: /cybernews/
                         <div class="meta-item"><span>${story.points}pts</span></div>
                         ${story.contentBonus > 0 ? `<div class="meta-item"><span style="color: #00ff00;">+${story.contentBonus}</span></div>` : ''}
                         ${story.corroboration > 0 ? `<div class="meta-item"><span style="color: #0099ff;">+${story.corroboration} corrob</span></div>` : ''}
-                        ${story.num_comments > 0 ? `<div class="meta-item clickable" onclick="window.open(${JSON.stringify(commentsUrl || '')}, '_blank')"><span>${story.num_comments} comments</span></div>` : ''}
+                        ${story.num_comments > 0 ? `<div class="meta-item clickable" data-url="${attr(commentsUrl)}"><span>${story.num_comments} comments</span></div>` : ''}
                         <div class="meta-item"><span>${date}</span></div>
                         <div class="meta-item"><span style="color: #666;">${domain}</span></div>
                     </div>
@@ -2000,6 +2005,14 @@ permalink: /cybernews/
         }).join('');
         
         contentDiv.innerHTML = `<div class="stories">${storiesHTML}</div>`;
+
+        // Delegated click: open any element carrying a data-url (title, comments, cluster member).
+        contentDiv.querySelectorAll('[data-url]').forEach(el => {
+            el.addEventListener('click', () => {
+                const u = el.getAttribute('data-url');
+                if (u) window.open(u, '_blank');
+            });
+        });
         
         // Update keywords display after stories are shown
         updateKeywordsFromVisibleStories();
@@ -2080,7 +2093,7 @@ permalink: /cybernews/
     });
     
     window.addEventListener('load', () => {
-        log('Enhanced Reliability v4.6 loaded');
+        log('Enhanced Reliability v4.6.1 loaded');
         log('3-Tier Stack: RSS Feeds → Reddit → HN');
         // Option 1: no auto-fetch — user picks a timeframe to trigger the first fetch.
         updateButtons();
