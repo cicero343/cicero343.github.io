@@ -844,7 +844,7 @@ permalink: /cybernews/
 <div class="cybernews-container">
     <div class="cybernews-header">
         <h1>cybersec/news</h1>
-        <span class="subtitle">enhanced reliability v4.3</span>
+        <span class="subtitle">enhanced reliability v4.4</span>
         <span class="api-status">3-tier + intelligent filtering</span>
     </div>
 
@@ -864,13 +864,9 @@ permalink: /cybernews/
                         <div class="dropdown-checkbox" id="check-hackernews">✓</div>
                         <span>hacker news</span>
                     </div>
-                    <div class="dropdown-item" onclick="toggleSource('reddit-proxy')">
-                        <div class="dropdown-checkbox" id="check-reddit-proxy">✓</div>
-                        <span>reddit (proxy)</span>
-                    </div>
                     <div class="dropdown-item" onclick="toggleSource('rss-feeds')">
                         <div class="dropdown-checkbox" id="check-rss-feeds">✓</div>
-                        <span>rss feeds (25+)</span>
+                        <span>rss feeds (23)</span>
                     </div>
                 </div>
             </div>
@@ -883,7 +879,7 @@ permalink: /cybernews/
     </div>
 
     <div class="info-notice">
-        <strong>Enhanced Reliability v4.3:</strong> 25+ specialized security RSS feeds → 3-tier proxy fallbacks → Intelligent content filtering. CVE/zero-day priority scoring.
+        <strong>Enhanced Reliability v4.4:</strong> 23 specialized security RSS feeds + Hacker News via Cloudflare Worker. Native XML parsing, CVE/zero-day priority scoring.
     </div>
 
     <div id="source-status" class="source-status"></div>
@@ -920,9 +916,6 @@ permalink: /cybernews/
     </div>
 </div>
 
-<!-- RSS Parser Library -->
-<script src="https://unpkg.com/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
-
 <script>
     // ── FETCH CONFIG ─────────────────────────────────────────────
     // Public CORS proxies are dying (2026). Set WORKER_URL to a Cloudflare
@@ -956,7 +949,7 @@ permalink: /cybernews/
     
     const sources = {
         hackernews: true,
-        'reddit-proxy': true,
+        'reddit-proxy': false, // dropped: Reddit blocks Cloudflare Worker IPs
         'rss-feeds': true
     };
 
@@ -983,7 +976,6 @@ permalink: /cybernews/
         paloalto: 'https://unit42.paloaltonetworks.com/feed/',
         microsoft_security: 'https://www.microsoft.com/security/blog/feed/',
         google_security: 'https://security.googleblog.com/feeds/posts/default',
-        fireeye: 'https://www.mandiant.com/resources/blog/rss.xml',
         securelist: 'https://securelist.com/feed/',
         recorded_future: 'https://www.recordedfuture.com/feed',
         badcyber: 'https://badcyber.com/feed/',
@@ -1021,17 +1013,16 @@ permalink: /cybernews/
         const parts = [];
 
         const fmt = (label, h) => {
+            if (h && h.disabled) return null; // omit disabled sources entirely
             if (h === null || h === undefined) return `<span class="ss-warn">${label}: —</span>`;
-            if (h.disabled) return `<span class="ss-warn">${label}: off</span>`;
             const cls = h.ok === 0 ? 'ss-fail' : (h.total && h.ok < h.total ? 'ss-warn' : 'ss-ok');
             const count = h.total ? ` (${h.ok}/${h.total})` : ` (${h.ok})`;
             return `<span class="${cls}">${label}: ${count.trim()}</span>`;
         };
 
         parts.push(`<strong>sources</strong> [${mode}]:`);
-        parts.push(fmt('RSS', sourceHealth.rss));
-        parts.push(fmt('Reddit', sourceHealth.reddit));
-        parts.push(fmt('HN', sourceHealth.hn));
+        [fmt('RSS', sourceHealth.rss), fmt('Reddit', sourceHealth.reddit), fmt('HN', sourceHealth.hn)]
+            .filter(Boolean).forEach(p => parts.push(p));
 
         let html = parts.join(' &nbsp; ');
         if (lastFetchLabel) html += ` &nbsp; <span style="color:#666;">${lastFetchLabel}</span>`;
@@ -1079,7 +1070,8 @@ permalink: /cybernews/
                     'cisa', 'china', 'russia', 'iran', 'android', 'ios', 'windows', 'linux',
                     'bitcoin', 'cryptocurrency', 'api', 'database', 'cloud', 'aws', 'azure',
                     'chrome', 'firefox', 'safari', 'edge', 'github', 'docker', 'kubernetes',
-                    'nvidia', 'intel', 'amd', 'cisco', 'zoom', 'slack', 'teams', 'discord'
+                    'nvidia', 'intel', 'amd', 'cisco', 'zoom', 'slack', 'teams', 'discord',
+                    'agent', 'agentic', 'openai', 'npm', 'supply', 'spectre', 'backdoor', 'spyware'
                 ];
                 
                 if (securityTerms.includes(cleanWord)) {
@@ -1303,13 +1295,44 @@ permalink: /cybernews/
         }
     }
 
-    async function fetchRSSWithEnhancedFallback(feedUrl, sourceName) {
-        const parser = new RSSParser({
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; RSS Reader)',
-            }
-        });
+    // Native XML parsing via DOMParser — handles RSS <item> and Atom <entry>.
+    // Replaces the rss-parser library, which choked on some valid feeds.
+    const MAX_ITEMS_PER_FEED = 100; // large feeds (e.g. F5) get trimmed here; recency filter does the rest
 
+    function parseFeed(xmlText, sourceName) {
+        const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
+        if (doc.querySelector('parsererror')) throw new Error('malformed XML');
+
+        const text = (el, sel) => {
+            const n = el.querySelector(sel);
+            return n ? n.textContent.trim() : '';
+        };
+
+        // Atom links use href; RSS links use text content. Try both.
+        const linkOf = (el) => {
+            const rss = el.querySelector('link');
+            if (rss && rss.textContent.trim()) return rss.textContent.trim();
+            const atom = el.querySelector('link[href]');
+            return atom ? atom.getAttribute('href') : '';
+        };
+
+        const nodes = [...doc.querySelectorAll('item'), ...doc.querySelectorAll('entry')].slice(0, MAX_ITEMS_PER_FEED);
+
+        return nodes.map((el, index) => ({
+            objectID: `rss_${sourceName}_${index}_${Date.now()}`,
+            title: text(el, 'title'),
+            author: sourceName,
+            points: RSS_BASE_POINTS,
+            num_comments: 0,
+            created_at: text(el, 'pubDate') || text(el, 'published') || text(el, 'updated') || new Date().toISOString(),
+            url: linkOf(el),
+            description: text(el, 'description') || text(el, 'summary') || text(el, 'content') || '',
+            source: 'rss',
+            rss_source: sourceName
+        })).filter(story => story.title && story.url);
+    }
+
+    async function fetchRSSWithEnhancedFallback(feedUrl, sourceName) {
         // Worker mode: single attempt through the Worker, no proxy loop.
         const attempts = usingWorker() ? [WORKER_URL] : corsProxies;
 
@@ -1323,40 +1346,21 @@ permalink: /cybernews/
                 }
 
                 const proxyUrl = buildFetchUrl(feedUrl, proxy);
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-                let feedData;
+                // allorigins wraps the body in JSON; every other path returns raw XML.
+                let xmlText;
                 if (!usingWorker() && proxy.includes('allorigins')) {
-                    const response = await fetch(proxyUrl);
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.contents) {
-                            feedData = await parser.parseString(data.contents);
-                        }
-                    }
-                } else if (usingWorker()) {
-                    const response = await fetch(proxyUrl);
-                    if (response.ok) {
-                        const text = await response.text();
-                        feedData = await parser.parseString(text);
-                    }
+                    const data = await response.json();
+                    xmlText = data.contents || '';
                 } else {
-                    feedData = await parser.parseURL(proxyUrl);
+                    xmlText = await response.text();
                 }
-                
-                if (feedData && feedData.items && feedData.items.length > 0) {
-                    const stories = feedData.items.map((item, index) => ({
-                        objectID: `rss_${sourceName}_${index}_${Date.now()}`,
-                        title: item.title,
-                        author: sourceName,
-                        points: RSS_BASE_POINTS,
-                        num_comments: 0,
-                        created_at: item.pubDate || item.isoDate || new Date().toISOString(),
-                        url: item.link,
-                        description: item.contentSnippet || item.content || '',
-                        source: 'rss',
-                        rss_source: sourceName
-                    })).filter(story => story.title && story.url);
 
+                const stories = parseFeed(xmlText, sourceName);
+
+                if (stories.length > 0) {
                     const via = usingWorker() ? 'Worker' : `proxy ${i + 1}`;
                     log(`${sourceName}: ${via} succeeded with ${stories.length} stories`);
                     return stories;
@@ -1562,7 +1566,7 @@ permalink: /cybernews/
                 'infosecmag', 'darkreading', 'thehackernews', 'securityaffairs',
                 'hackread', 'cisa', 'exploitdb', 'apisecurity', 'f5labs',
                 'crowdstrike', 'checkpoint', 'paloalto', 'microsoft_security',
-                'google_security', 'fireeye', 'securelist', 'recorded_future',
+                'google_security', 'securelist', 'recorded_future',
                 'malwaretech', 'schneier', 'badcyber'
             ];
             
@@ -1592,7 +1596,7 @@ permalink: /cybernews/
         resetProgress();
         sourceHealth = { rss: null, reddit: null, hn: null };
         
-        log('Enhanced Reliability v4.3 starting...');
+        log('Enhanced Reliability v4.4 starting...');
         log(`Fetch mode: ${usingWorker() ? 'Cloudflare Worker' : 'public CORS proxies'}`);
         log(`3-Tier Stack: RSS Feeds → Reddit → HN`);
         log(`Config: ${currentTimeframe}d timeframe, ${displayPerPage} per page`);
@@ -1694,6 +1698,10 @@ permalink: /cybernews/
                         contentBonus += 20;
                     }
                     if (text.includes('data breach') || text.includes('security incident')) {
+                        contentBonus += 15;
+                    }
+                    // 2026 threat classes: agentic-AI abuse and supply-chain compromise
+                    if (text.includes('agentic') || text.includes('ai agent') || text.includes('supply chain')) {
                         contentBonus += 15;
                     }
                     
@@ -1905,7 +1913,7 @@ permalink: /cybernews/
     });
     
     window.addEventListener('load', () => {
-        log('Enhanced Reliability v4.3 loaded');
+        log('Enhanced Reliability v4.4 loaded');
         log('3-Tier Stack: RSS Feeds → Reddit → HN');
         // Option 1: no auto-fetch — user picks a timeframe to trigger the first fetch.
         updateButtons();
