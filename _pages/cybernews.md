@@ -891,8 +891,8 @@ permalink: /cybernews/
 <div class="cybernews-container">
     <div class="cybernews-header">
         <h1>cybersec/news</h1>
-        <span class="subtitle">enhanced reliability v4.6.1</span>
-        <span class="api-status">3-tier + intelligent filtering</span>
+        <span class="subtitle">enhanced reliability v4.7</span>
+        <span class="api-status">RSS + HN + corroboration clustering</span>
     </div>
 
     <div class="cybernews-controls">
@@ -926,7 +926,7 @@ permalink: /cybernews/
     </div>
 
     <div class="info-notice">
-        <strong>Enhanced Reliability v4.6:</strong> 23 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
+        <strong>Enhanced Reliability v4.7:</strong> 23 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
     </div>
 
     <div id="source-status" class="source-status"></div>
@@ -988,7 +988,7 @@ permalink: /cybernews/
     let extractedKeywords = {};
 
     // Per-source health for the status line (reset each fetch)
-    let sourceHealth = { rss: null, reddit: null, hn: null };
+    let sourceHealth = { rss: null, hn: null };
     
     // Progress tracking
     let totalOperations = 0;
@@ -1009,7 +1009,7 @@ permalink: /cybernews/
     const CORROBORATION_PER_SOURCE = 12;
     const CORROBORATION_CAP = 48;
 
-    // Tier 1: Specialized RSS feeds
+    // Specialized security RSS feeds
     const rssFeeds = {
         bleeping: 'https://www.bleepingcomputer.com/feed/',
         thehackernews: 'https://thehackernews.com/feeds/posts/default',
@@ -1079,7 +1079,7 @@ permalink: /cybernews/
         };
 
         parts.push(`<strong>sources</strong> [${mode}]:`);
-        [fmt('RSS', sourceHealth.rss), fmt('Reddit', sourceHealth.reddit), fmt('HN', sourceHealth.hn)]
+        [fmt('RSS', sourceHealth.rss), fmt('HN', sourceHealth.hn)]
             .filter(Boolean).forEach(p => parts.push(p));
 
         let html = parts.join(' &nbsp; ');
@@ -1448,7 +1448,7 @@ permalink: /cybernews/
     async function fetchAllRSSFeeds() {
         if (!sources['rss-feeds']) { sourceHealth.rss = { disabled: true }; return []; }
         
-        log('TIER 1: Fetching RSS feeds' + (usingWorker() ? ' via Worker' : ' with enhanced proxy fallbacks'));
+        log('Fetching RSS feeds' + (usingWorker() ? ' via Worker' : ' with enhanced proxy fallbacks'));
         let allRSSStories = [];
         let feedsOk = 0;
         
@@ -1476,88 +1476,14 @@ permalink: /cybernews/
         }
 
         sourceHealth.rss = { ok: feedsOk, total: feedEntries.length };
-        log(`TIER 1 complete: ${allRSSStories.length} stories from ${feedsOk}/${feedEntries.length} RSS feeds`);
+        log(`RSS complete: ${allRSSStories.length} stories from ${feedsOk}/${feedEntries.length} RSS feeds`);
         return allRSSStories;
     }
 
-    async function fetchRedditViaProxy() {
-        if (!sources['reddit-proxy']) { sourceHealth.reddit = { disabled: true }; return []; }
-        
-        log('TIER 2: Fetching Reddit' + (usingWorker() ? ' via Worker' : ' via proxy'));
-        const subreddits = ['cybersecurity', 'netsec'];
-        let allStories = [];
-        let subsOk = 0;
-        
-        for (const sub of subreddits) {
-            const attempts = usingWorker()
-                ? [WORKER_URL]
-                : ['https://corsproxy.io/?', 'https://api.allorigins.win/get?url='];
-            
-            for (const proxy of attempts) {
-                try {
-                    const target = `https://www.reddit.com/r/${sub}/hot.json?limit=25`;
-                    const url = buildFetchUrl(target, proxy);
-                    const response = await fetch(url);
-                    
-                    if (response.ok) {
-                        let data;
-                        if (!usingWorker() && proxy.includes('allorigins')) {
-                            const json = await response.json();
-                            data = JSON.parse(json.contents);
-                        } else {
-                            data = await response.json();
-                        }
-                        
-                        const posts = data.data?.children || [];
-                        const now = new Date();
-                        const cutoff = new Date(now.getTime() - (currentTimeframe * 24 * 60 * 60 * 1000));
-                        
-                        const stories = posts.filter(post => {
-                            const p = post.data;
-                            const createdDate = new Date(p.created_utc * 1000);
-                            return createdDate >= cutoff && 
-                                   p.url && 
-                                   !p.url.includes('reddit.com/r/') && 
-                                   p.score >= 10;
-                        }).map(post => {
-                            const p = post.data;
-                            return {
-                                objectID: `reddit_${p.id}`,
-                                title: p.title,
-                                author: `u/${p.author}`,
-                                points: p.score,
-                                num_comments: p.num_comments,
-                                created_at: new Date(p.created_utc * 1000).toISOString(),
-                                url: p.url,
-                                reddit_url: `https://reddit.com${p.permalink}`,
-                                source: 'reddit',
-                                subreddit: sub
-                            };
-                        });
-                        
-                        allStories = allStories.concat(stories);
-                        subsOk++;
-                        log(`Reddit r/${sub}: ${stories.length} stories`);
-                        break;
-                    }
-                } catch (error) {
-                    log(`Reddit r/${sub} failed: ${error.message}`);
-                }
-            }
-            
-            incrementProgress(`Reddit r/${sub} complete`);
-            await new Promise(r => setTimeout(r, 600));
-        }
-
-        sourceHealth.reddit = { ok: subsOk, total: subreddits.length };
-        log(`TIER 2 complete: ${allStories.length} stories from ${subsOk}/${subreddits.length} subreddits`);
-        return allStories;
-    }
-    
     async function fetchHackerNewsSimple() {
         if (!sources.hackernews) { sourceHealth.hn = { disabled: true }; return []; }
         
-        log('TIER 3: Fetching Hacker News');
+        log('Fetching Hacker News');
         try {
             const now = new Date();
             const cutoff = new Date(now.getTime() - (currentTimeframe * 24 * 60 * 60 * 1000));
@@ -1589,7 +1515,7 @@ permalink: /cybernews/
             }
 
             sourceHealth.hn = { ok: queriesOk, total: queries.length };
-            log(`TIER 3 complete: ${stories.length} stories from ${queriesOk}/${queries.length} HN queries`);
+            log(`HN complete: ${stories.length} stories from ${queriesOk}/${queries.length} HN queries`);
             return stories;
             
         } catch (error) {
@@ -1742,45 +1668,37 @@ permalink: /cybernews/
         }
         debugOutput = '';
         resetProgress();
-        sourceHealth = { rss: null, reddit: null, hn: null };
+        sourceHealth = { rss: null, hn: null };
         
-        log('Enhanced Reliability v4.6.1 starting...');
+        log('Enhanced Reliability v4.7 starting...');
         log(`Fetch mode: ${usingWorker() ? 'Cloudflare Worker' : 'public CORS proxies'}`);
-        log(`3-Tier Stack: RSS Feeds → Reddit → HN`);
         log(`Config: ${currentTimeframe}d timeframe, ${displayPerPage} per page`);
         
         let totalOps = 0;
         if (sources['rss-feeds']) {
             totalOps += Math.ceil(Object.keys(rssFeeds).length / 4);
         }
-        if (sources['reddit-proxy']) {
-            totalOps += 2;
-        }
         if (sources.hackernews) {
             totalOps += 6;
         }
         totalOps += 5; // Processing stages + keyword extraction
         
-        initializeProgress(totalOps, 'Initializing 3-tier system...');
+        initializeProgress(totalOps, 'Initializing...');
         
-        contentDiv.innerHTML = '<div class="loading"><div style="animation: spin 1s linear infinite;">3-tier reliability system loading...</div></div>';
+        contentDiv.innerHTML = '<div class="loading"><div style="animation: spin 1s linear infinite;">fetching latest news...</div></div>';
         
         try {
             let all = [];
 
-            // Await each tier directly. The per-feed/per-request timeouts already
-            // bound the work; no outer race that could discard late successes.
+            // Await each source directly. Per-feed/per-request timeouts bound the work;
+            // no outer race that could discard late successes.
             const rssStories = await fetchAllRSSFeeds();
             all = all.concat(rssStories);
-            log(`TIER 1 summary: ${rssStories.length} stories`);
-            
-            const reddit = await fetchRedditViaProxy();
-            all = all.concat(reddit);
-            log(`TIER 2 summary: ${reddit.length} stories`);
-            
+            log(`RSS summary: ${rssStories.length} stories`);
+
             const hn = await fetchHackerNewsSimple();
             all = all.concat(hn);
-            log(`TIER 3 summary: ${hn.length} stories`);
+            log(`HN summary: ${hn.length} stories`);
 
             updateSourceStatus();
             
@@ -1827,7 +1745,6 @@ permalink: /cybernews/
                     
                     if (story.source === 'rss') sourceMultiplier = 1.8;
                     else if (story.source === 'hackernews') sourceMultiplier = 1.3;
-                    else if (story.source === 'reddit') sourceMultiplier = 1.1;
                     
                     const title = story.title?.toLowerCase() || '';
                     const desc = story.description?.toLowerCase() || '';
@@ -2093,8 +2010,7 @@ permalink: /cybernews/
     });
     
     window.addEventListener('load', () => {
-        log('Enhanced Reliability v4.6.1 loaded');
-        log('3-Tier Stack: RSS Feeds → Reddit → HN');
+        log('Enhanced Reliability v4.7 loaded');
         // Option 1: no auto-fetch — user picks a timeframe to trigger the first fetch.
         updateButtons();
     });
