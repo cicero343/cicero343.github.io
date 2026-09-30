@@ -913,7 +913,7 @@ permalink: /cybernews/
                     </div>
                     <div class="dropdown-item" onclick="toggleSource('rss-feeds')">
                         <div class="dropdown-checkbox" id="check-rss-feeds">✓</div>
-                        <span>rss feeds (23)</span>
+                        <span>rss feeds (24)</span>
                     </div>
                 </div>
             </div>
@@ -926,7 +926,7 @@ permalink: /cybernews/
     </div>
 
     <div class="info-notice">
-        <strong>Enhanced Reliability v4.7:</strong> 23 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
+        <strong>Enhanced Reliability v4.7:</strong> 24 security RSS feeds + Hacker News via Cloudflare Worker. Cross-source corroboration clustering, CVE/zero-day priority scoring.
     </div>
 
     <div id="source-status" class="source-status"></div>
