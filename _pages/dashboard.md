@@ -3,458 +3,490 @@ title: Dashboard
 layout: default
 permalink: /dashboard/
 ---
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fa;
-    margin: 0;
-    padding: 0;
-  }
+/* =============================================================
+   Dashboard — terminal theme
+   Uses the site-wide theme variables from assets/main.scss
+   (--bg, --chrome, --border, --text, --text-dim, --heading,
+   --accent, --accent-2) so light/dark switch automatically.
+   Only colours/typography/chrome changed vs the old design;
+   class names, layout behaviour and JS hooks are unchanged.
+   ============================================================= */
 
-  [data-theme="dark"] body {
-    background: #000000;
-  }
+/* ---- Extra tokens (severity + helpers) ---------------------- */
+:root,
+[data-theme="light"] {
+  --db-bar:   #e8e8de;          /* title / header bars           */
+  --db-raise: #ffffff;          /* cards that sit on --bg        */
+  --db-ink:   #ffffff;          /* text on an --accent fill      */
+  --db-crit:  #cf222e;
+  --db-high:  #bc4c00;
+  --db-med:   #9a6700;
+  --db-low:   #1a7f37;
+  --db-info:  #0969da;
+  --db-tint:  rgba(26, 127, 55, 0.08);
+  --db-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
 
-  .dashboard-tabs {
-    display: flex;
-    justify-content: center;
-    background: #1565c0;
-    padding: 10px;
-    flex-wrap: wrap;
-  }
+[data-theme="dark"] {
+  --db-bar:   #1c2129;
+  --db-raise: #161b22;
+  --db-ink:   #0d1117;
+  --db-crit:  #ff7b72;
+  --db-high:  #ffa657;
+  --db-med:   #d29922;
+  --db-low:   #3fb950;
+  --db-info:  #58a6ff;
+  --db-tint:  rgba(63, 185, 80, 0.10);
+  --db-shadow: none;
+}
 
-  .dashboard-tabs a {
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-  }
+/* ---- Shell: one terminal-style panel ------------------------- */
+#dashboard-app {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  overflow: hidden;
+}
 
-  /* Mobile-friendly tab layout - Fixed for 3 per line */
-  @media (max-width: 768px) {
-    .dashboard-tabs {
-      padding: 8px 2px;
-      gap: 2px;
-    }
-    
-    .dashboard-tabs a {
-      flex: 0 0 calc(33.333% - 4px);
-      width: calc(33.333% - 4px);
-      padding: 8px 4px;
-      margin: 1px;
-      font-size: 0.8em;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      box-sizing: border-box;
-    }
-  }
+.dashboard-titlebar {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 8px 15px;
+  background: var(--db-bar);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
 
-  /* Extra small screens */
-  @media (max-width: 480px) {
-    .dashboard-tabs a {
-      font-size: 0.75em;
-      padding: 7px 2px;
-    }
-  }
+.dashboard-titlebar h1 {
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  color: var(--heading);
+}
 
-  .dashboard-tabs a.active,
-  .dashboard-tabs a:hover {
-    background: #64b5f6;
-  }
+.dashboard-titlebar .subtitle {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
 
-  /* Secondary CVE Navigation */
-  .cve-secondary-nav {
-    display: none;
-    justify-content: center;
-    background: #1976d2;
-    padding: 8px;
-    flex-wrap: wrap;
-    border-top: 1px solid rgba(255,255,255,0.2);
-  }
+/* Primary tabs */
+.dashboard-tabs {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 15px;
+  background: var(--chrome);
+  border-bottom: 1px solid var(--border);
+}
 
-  .cve-secondary-nav.show {
-    display: flex;
-  }
+.dashboard-tabs a,
+.cve-secondary-nav a,
+.tools-secondary-nav a {
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 3px;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
 
-  .cve-secondary-nav a {
-    color: white;
-    padding: 8px 16px;
-    text-decoration: none;
-    margin: 3px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    background: rgba(255,255,255,0.1);
-  }
+.dashboard-tabs a:visited,
+.cve-secondary-nav a:visited,
+.tools-secondary-nav a:visited { color: var(--text); }
 
-  .cve-secondary-nav a.active,
-  .cve-secondary-nav a:hover {
-    background: rgba(255,255,255,0.2);
-  }
+.dashboard-tabs a:hover,
+.cve-secondary-nav a:hover,
+.tools-secondary-nav a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  text-decoration: none;
+}
 
-  @media (max-width: 768px) {
-    .cve-secondary-nav {
-      padding: 6px 4px;
-    }
-    
-    .cve-secondary-nav a {
-      flex: 0 0 calc(50% - 8px);
-      width: calc(50% - 8px);
-      padding: 10px 4px;
-      margin: 2px;
-      font-size: 0.75em;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      box-sizing: border-box;
-    }
-  }
+.dashboard-tabs a.active,
+.dashboard-tabs a.active:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+}
 
-  @media (max-width: 480px) {
-    .cve-secondary-nav a {
-      flex: 0 0 calc(50% - 6px);
-      width: calc(50% - 6px);
-      padding: 8px 2px;
-      margin: 1px;
-      font-size: 0.7em;
-    }
-  }
+/* Secondary navs (CVE + Tools) */
+.cve-secondary-nav,
+.tools-secondary-nav {
+  display: none;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 15px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
 
-/* Secondary Tools Navigation */
-  .tools-secondary-nav {
-    display: none;
-    justify-content: center;
-    background: #1976d2;
-    padding: 8px;
-    flex-wrap: wrap;
-    border-top: 1px solid rgba(255,255,255,0.2);
-  }
+.cve-secondary-nav.show,
+.tools-secondary-nav.show {
+  display: flex;
+}
 
-  .tools-secondary-nav.show {
-    display: flex;
-  }
+.cve-secondary-nav::before,
+.tools-secondary-nav::before {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  margin-right: 4px;
+}
+.cve-secondary-nav::before   { content: "cve/"; }
+.tools-secondary-nav::before { content: "tools/"; }
 
-  .tools-secondary-nav a {
-    color: white;
-    padding: 8px 16px;
-    text-decoration: none;
-    margin: 3px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    background: rgba(255,255,255,0.1);
-  }
+.cve-secondary-nav a.active,
+.tools-secondary-nav a.active,
+.cve-secondary-nav a.active:hover,
+.tools-secondary-nav a.active:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--db-tint);
+}
 
-  .tools-secondary-nav a.active,
-  .tools-secondary-nav a:hover {
-    background: rgba(255,255,255,0.2);
-  }
+/* Content area */
+.dashboard-content {
+  padding: 20px;
+  background: var(--bg);
+}
 
-  @media (max-width: 768px) {
-  .tools-secondary-nav {
-      padding: 6px 4px;
-    }
-    
-  .tools-secondary-nav a {
-      flex: 0 0 calc(50% - 8px);
-      width: calc(50% - 8px);
-      padding: 10px 4px;
-      margin: 2px;
-      font-size: 0.75em;
-      text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      box-sizing: border-box;
-    }
-  }
+.tab-content,
+.cve-sub-tab,
+.tools-sub-tab { display: none; }
 
-  @media (max-width: 480px) {
-  .tools-secondary-nav a {
-      flex: 0 0 calc(50% - 6px);
-      width: calc(50% - 6px);
-      padding: 8px 2px;
-      margin: 1px;
-      font-size: 0.7em;
-    }
-  }
+.tab-content.active,
+.cve-sub-tab.active,
+.tools-sub-tab.active { display: block; }
 
-  .dashboard-content {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);  
-  }
+/* ---- Base elements inside the dashboard (zero-specificity scope
+        so component classes below always win) ------------------ */
+:where(#dashboard-app, .nvd-popup-overlay) :where(input, select, textarea, button) {
+  font-family: inherit;
+}
 
-  .tab-content {
-    display: none;
-  }
+:where(#dashboard-app) :where(input[type="text"], input[type="number"], select, textarea) {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
 
-  .tab-content.active {
-    display: block;
-  }
+:where(#dashboard-app) :where(input[type="text"], input[type="number"], select, textarea):focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--db-tint);
+}
 
-  /* CVE Sub-tab styles */
-  .cve-sub-tab {
-    display: none;
-  }
+:where(#dashboard-app, .nvd-popup-overlay) button {
+  background: var(--chrome);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
 
-  .cve-sub-tab.active {
-    display: block;
-  }
+:where(#dashboard-app, .nvd-popup-overlay) button:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
 
-  /* Tools Sub-tab styles */
-  .tools-sub-tab {
-    display: none;
-  }
+:where(#dashboard-app, .nvd-popup-overlay) button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-  .tools-sub-tab.active {
-    display: block;
-  }
+:where(#dashboard-app) label { font-size: 0.85rem; }
 
-  textarea {
-    width: 100%;
-    height: 200px;
-    margin-top: 10px;
-    font-size: 1em;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    resize: vertical;
-  }
+/* Section headings ("$ World Clock & Weather" etc.) */
+#dashboard-app .tab-content > h2,
+#dashboard-app .tools-sub-tab > h2 {
+  font-size: 1.05rem;
+  color: var(--heading);
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
 
-  button.export-btn, button.table-btn {
-    margin: 10px 5px 20px 0;
-    padding: 8px 18px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.95em;
-    cursor: pointer;
-  }
+#dashboard-app .tab-content > h2::before,
+#dashboard-app .tools-sub-tab > h2::before {
+  content: "$ ";
+  color: var(--accent);
+}
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    background: white;
-    margin-bottom: 20px;
-  }
+/* Tool header bar (shared look for Domain / NVD / GHSA / MSRC / CVEDB) */
+.domain-header,
+.nvd-header,
+.cve-header,
+.msrc-header,
+.shodan-header,
+.currency-header {
+  background: var(--db-bar);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  text-align: left;
+  color: var(--text);
+  position: relative;
+}
 
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
+.domain-header h1, .domain-header h2,
+.nvd-header h1,
+.cve-header h1,
+.msrc-header h1,
+.shodan-header h1,
+.currency-header h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  text-shadow: none;
+  line-height: 1.4;
+}
 
-  th[contenteditable], td[contenteditable] {
-    background-color: #fafafa;
-  }
+.domain-header p,
+.nvd-header p,
+.cve-header p,
+.msrc-header p,
+.shodan-header p,
+.currency-header p {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  margin: 4px 0 0 15px;
+  opacity: 1;
+}
 
-  .canvas-controls {
-    text-align: center;
-    margin-top: 10px;
-  }
+/* Small callouts / info boxes */
+.msrc-api-info,
+.shodan-disclaimer {
+  background: var(--db-tint);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 0 0 16px;
+  font-size: 0.8rem;
+  color: var(--text);
+  text-align: left;
+  line-height: 1.6;
+}
 
-  canvas {
-    border: 2px solid #444;
-    border-radius: 4px;
-    background: #ffffff;
-    cursor: crosshair;
-    display: block;
-    margin: 20px auto;
-  }
+.msrc-api-info p { color: var(--text); margin: 0; font-size: 0.8rem; }
+.msrc-api-info code,
+.shodan-disclaimer code { font-size: 0.85em; }
+.shodan-disclaimer strong { color: var(--heading); }
 
-  /* World Clock & Weather styles */
-  .grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 20px;
-  }
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-  .card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    width: calc(33.333% - 22px);
-    box-sizing: border-box;
-    text-align: left;
-    transition: transform 0.2s ease;
-  }
+/* =============================================================
+   World Clock & Weather
+   ============================================================= */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
 
-  .card:hover {
-    transform: translateY(-2px);
-  }
+.card {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px;
+  width: calc(33.333% - 11px);
+  box-sizing: border-box;
+  text-align: left;
+  transition: border-color 0.2s ease;
+}
 
-  .card h2 {
-    margin-top: 0;
-    font-size: 1em;
-    margin-bottom: 10px;
-  }
+.card:hover { border-color: var(--accent); }
 
-  .card p {
-    margin: 6px 0;
-    font-size: 0.9em;
-  }
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--heading);
+}
 
-  .card .loading {
-    font-style: italic;
-    color: #888;
-  }
+.card p {
+  margin: 4px 0;
+  font-size: 0.82rem;
+  color: var(--text);
+}
 
-  @media (max-width: 900px) {
-    .card {
-      width: calc(50% - 20px);
-    }
-  }
+.card p strong { color: var(--text-dim); font-weight: 500; }
+.card .clock { color: var(--accent); }
 
-  @media (max-width: 600px) {
-    .card {
-      width: 100%;
-    }
-  }
+.card .loading {
+  font-style: italic;
+  color: var(--text-dim);
+}
 
- /* Currency Exchange Dashboard Styles */
+@media (max-width: 900px) {
+  .card { width: calc(50% - 8px); }
+}
+
+@media (max-width: 600px) {
+  .card { width: 100%; }
+}
+
+/* =============================================================
+   UK Foodbanks
+   ============================================================= */
+#foodbanks form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 1rem;
+}
+
+#foodbanks input[type="text"] { width: 180px; }
+
+#foodbanks button[type="submit"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+}
+#foodbanks button[type="submit"]:hover { color: var(--db-ink); filter: brightness(1.1); }
+
+#error {
+  color: var(--db-crit);
+  margin-bottom: 15px;
+  display: none;
+  font-size: 0.85rem;
+}
+
+.foodbank {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}
+
+.foodbank h3 {
+  margin: 0 0 6px !important;
+  font-size: 0.95rem;
+  color: var(--heading);
+}
+
+.foodbank p { margin: 4px 0 !important; }
+
+/* =============================================================
+   Currency Exchange
+   ============================================================= */
 .currency-exchange-container {
   max-width: 480px;
   margin: 0 auto;
-  padding: 8px 16px 16px 16px;
 }
 
-.currency-header {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.currency-header h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #212529;
-  margin-bottom: 2px;
-}
-
-.currency-header p {
-  font-size: 14px;
-  color: #6c757d;
-  margin-bottom: 0;
+.currency-control-panel,
+.currency-rates-container {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
 }
 
 .currency-control-panel {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
+  padding: 14px;
   margin-bottom: 16px;
-  border: 1px solid #e9ecef;
 }
 
 .currency-controls {
   display: grid;
-  grid-template-columns: 80px 1fr auto; /* Amount, Currency, Convert button */
+  grid-template-columns: 80px 1fr auto; /* Amount, Currency, Convert */
   gap: 8px;
   align-items: end;
 }
 
-.currency-control-group select, .currency-control-group input {
+.currency-control-group label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 2px;
+}
+
+.currency-control-group select,
+.currency-control-group input {
   width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  font-size: 14px;
-  background: white;
-  color: #495057;
   box-sizing: border-box;
 }
 
 .currency-control-group input[type="number"] {
   text-align: center;
-  max-width: 80px; /* Constrains the amount field */
+  max-width: 80px;
 }
 
 .currency-convert-btn {
-  padding: 8px 14px;
-  background: #0d6efd;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--db-ink) !important;
   white-space: nowrap;
 }
+.currency-convert-btn:hover:not(:disabled) { filter: brightness(1.1); }
 
-.currency-convert-btn:hover {
-  background: #0b5ed7;
-}
-
-.currency-convert-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.currency-rates-container {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
-  overflow: hidden;
-}
+.currency-rates-container { overflow: hidden; }
 
 .currency-rates-header {
-  background: #f8f9fa;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e9ecef;
+  background: var(--db-bar);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .currency-base-amount {
-  font-size: 18px;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--heading);
 }
 
 .currency-last-updated {
-  font-size: 12px;
-  color: #6c757d;
+  font-size: 0.72rem;
+  color: var(--text-dim);
   text-align: right;
 }
 
 .currency-rate-row {
   display: flex;
   align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid #f1f3f4;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
 }
 
-.currency-rate-row:last-child {
-  border-bottom: none;
-}
-
-.currency-rate-row:active {
-  background-color: #f8f9fa;
-}
+.currency-rate-row:last-child { border-bottom: none; }
+.currency-rate-row:hover,
+.currency-rate-row:active { background-color: var(--bg); }
 
 .currency-flag {
   width: 24px;
   height: 18px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
   margin-right: 12px;
   object-fit: cover;
 }
@@ -468,2589 +500,1875 @@ permalink: /dashboard/
 
 .currency-code {
   font-weight: 600;
-  font-size: 15px;
-  color: #212529;
+  font-size: 0.88rem;
+  color: var(--accent);
   line-height: 1.2;
-  min-width: 45px; /* Ensures consistent spacing */
+  min-width: 45px;
 }
 
 .currency-name {
-  color: #6c757d;
-  font-size: 12px;
+  color: var(--text-dim);
+  font-size: 0.72rem;
   line-height: 1.2;
 }
 
 .currency-rate-value {
-  font-size: 16px;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--heading);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.currency-loading, .currency-error {
-  text-align: center;
-  padding: 32px 20px;
-  color: #6c757d;
-  font-size: 14px;
-}
-
+.currency-loading,
 .currency-error {
-  color: #dc3545;
-  background: #f8d7da;
+  text-align: center;
+  padding: 28px 20px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
 }
 
-/* Mobile styles */
+.currency-error { color: var(--db-crit); }
+
 @media (max-width: 576px) {
-  .currency-control-panel {
-    padding: 10px;
-  }
+  .currency-control-panel { padding: 10px; }
   .currency-controls {
-    grid-template-columns: 60px 1fr auto; /* Smaller amount field on mobile */
+    grid-template-columns: 60px 1fr auto;
     gap: 6px;
   }
-  .currency-convert-btn {
-    padding: 8px 12px;
-    font-size: 13px;
-  }
-
-  .currency-rate-row {
-    padding: 16px;
-  }
-
+  .currency-rate-row { padding: 12px 14px; }
   .currency-rates-header {
-    padding: 16px;
+    padding: 12px 14px;
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
   }
-
-  .currency-last-updated {
-    text-align: left;
-  }
+  .currency-last-updated { text-align: left; }
 }
 
-  /* Foodbanks Finder styles */
-  form {
-    margin-bottom: 1rem;
-  }
-  
-  label, select, input {
-    font-size: 1.1em;
-  }
-  
-  input[type="text"] {
-    width: 180px;
-    padding: 6px;
-    margin-right: 10px;
-  }
-  
-  select {
-    padding: 6px;
-    margin-right: 10px;
-  }
-  
-  button {
-    padding: 7px 15px;
-    font-size: 1.1em;
-    cursor: pointer;
-  }
-  
-  #error {
-    color: red;
-    margin-bottom: 15px;
-    display: none;
-  }
-  
-  .foodbank {
-    border: 1px solid #ddd;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    background: #f9f9f9;
-  }
-  
-  .foodbank h3 {
-    margin-top: 0;
-    margin-bottom: 6px;
+/* =============================================================
+   Domain Lookup
+   ============================================================= */
+.domain-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.domain-search-section {
+  padding: 0 0 16px;
+}
+
+.domain-search-box {
+  display: flex;
+  gap: 8px;
+}
+
+#domain-input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+#analyze-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+  white-space: nowrap;
+}
+#analyze-btn:hover:not(:disabled) { color: var(--db-ink); filter: brightness(1.1); }
+
+.domain-results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.domain-result-card {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.domain-card-header {
+  background: var(--db-bar);
+  color: var(--heading);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.domain-card-content {
+  padding: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 0.8rem;
+  word-break: break-word;
+}
+
+.domain-dns-record {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  margin: 5px 0;
+  border-radius: 3px;
+}
+
+.domain-cert-item {
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.domain-cert-item:last-child { border-bottom: none; }
+
+.domain-cert-cn     { font-weight: bold; color: var(--heading); }
+.domain-cert-dates  { font-size: 0.72rem; color: var(--text-dim); margin: 4px 0; }
+.domain-cert-issuer { font-size: 0.72rem; color: var(--accent); }
+
+.domain-archive-info {
+  text-align: center;
+  padding: 16px;
+}
+
+.domain-archive-link,
+.domain-archive-link:visited {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--db-ink);
+  padding: 6px 14px;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+.domain-archive-link:hover { color: var(--db-ink); text-decoration: none; filter: brightness(1.1); }
+
+.domain-loading {
+  text-align: center;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 16px;
+}
+
+.domain-error,
+.domain-card-content .error {
+  background: rgba(207, 34, 46, 0.08);
+  color: var(--db-crit);
+  border: 1px solid var(--db-crit);
+  padding: 8px 10px;
+  border-radius: 3px;
+  margin: 8px 0;
+}
+
+.domain-status-indicator,
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.domain-status-online,  .status-online  { background: var(--db-low); }
+.domain-status-offline, .status-offline { background: var(--db-crit); }
+
+/* =============================================================
+   Food Recipes (+ modal)
+   ============================================================= */
+.recipe-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.recipe-search-bar input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+}
+
+.recipe-search-bar button:first-of-type {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+}
+.recipe-search-bar button:first-of-type:hover { color: var(--db-ink); filter: brightness(1.1); }
+
+.recipe-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.results-per-page {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.recipe-card {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.recipe-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe-card-content { padding: 12px 14px; }
+
+.recipe-card h3 {
+  margin: 0 0 8px !important;
+  font-size: 0.95rem;
+  color: var(--heading);
+}
+
+.recipe-card p {
+  margin: 4px 0 !important;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.recipe-card .category,
+.recipe-tag {
+  display: inline-block;
+  background: var(--db-tint);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+}
+
+.recipe-card .category { margin-top: 8px; }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.pagination button { padding: 4px 10px; font-size: 0.8rem; }
+
+.pagination button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+}
+
+.pagination-info {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.recipe-loading,
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.no-results {
+  background: var(--chrome);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  margin: 20px 0;
+  font-style: normal;
+}
+
+.recipe-error {
+  text-align: center;
+  padding: 30px;
+  color: var(--db-crit);
+  border: 1px solid var(--db-crit);
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.recipe-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow-y: auto;
+}
+
+.recipe-modal-content {
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  margin: 2% auto;
+  padding: 0;
+  border-radius: 6px;
+  width: 90%;
+  max-width: 800px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.recipe-modal-header {
+  position: relative;
+  padding: 0;
+}
+
+.recipe-modal-header img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 6px 6px 0 0;
+  display: block;
+}
+
+.close-modal,
+.nvd-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 50% !important;
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.close-modal:hover,
+.nvd-popup-close:hover { background: rgba(0, 0, 0, 0.75) !important; color: #fff !important; }
+
+.recipe-modal-body { padding: 24px; }
+
+.recipe-modal-body h2 {
+  margin: 0 0 12px;
+  color: var(--heading);
+  font-size: 1.3rem;
+}
+
+.recipe-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.recipe-meta-item {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.recipe-tags { margin-bottom: 20px; }
+.recipe-tag { margin: 0 6px 6px 0; }
+
+.recipe-section { margin-bottom: 26px; }
+
+.recipe-section h3 {
+  color: var(--heading);
+  margin: 0 0 12px;
+  font-size: 1rem;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 6px;
+}
+
+.ingredients-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.ingredient-item {
+  background: var(--chrome);
+  padding: 8px 12px;
+  border-radius: 3px;
+  border-left: 3px solid var(--accent);
+  font-size: 0.82rem;
+}
+
+.ingredient-name    { font-weight: bold; color: var(--heading); }
+.ingredient-measure { color: var(--text-dim); font-size: 0.9em; }
+
+.instructions {
+  line-height: 1.7;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.youtube-link,
+.youtube-link:visited {
+  display: inline-block;
+  background: #cc0000;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 15px;
+}
+.youtube-link:hover { background: #a30000; color: #fff; text-decoration: none; }
+
+@media (max-width: 600px) {
+  .recipe-modal-content { width: 95%; margin: 5% auto; }
+  .recipe-modal-body { padding: 18px; }
+  .ingredients-list { grid-template-columns: 1fr; }
+}
+
+/* =============================================================
+   Notes & Tools
+   ============================================================= */
+#notesArea {
+  width: 100%;
+  height: 200px;
+  margin-top: 4px;
+  padding: 10px;
+  font-size: 0.85rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+button.export-btn,
+button.table-btn {
+  margin: 10px 5px 20px 0;
+}
+
+button.export-btn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+}
+button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.1); }
+
+#spreadsheet {
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--bg);
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+}
+
+#spreadsheet th,
+#spreadsheet td {
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+  text-align: left;
+}
+
+#spreadsheet th {
+  background: var(--db-bar);
+  color: var(--heading);
+}
+
+#spreadsheet td[contenteditable] { background-color: var(--chrome); }
+
+#spreadsheet th:focus,
+#spreadsheet td:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.canvas-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.canvas-controls input[type="color"] {
+  vertical-align: middle;
+  width: 34px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: none;
+}
+
+.canvas-controls input[type="range"] {
+  vertical-align: middle;
+  accent-color: var(--accent);
+}
+
+#drawCanvas {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #ffffff; /* drawing surface stays white in both themes */
+  cursor: crosshair;
+  display: block;
+  margin: 16px auto;
+  /* no max-width: the drawing code maps pointer coords 1:1 to canvas pixels */
+}
+
+/* =============================================================
+   CVE Tracker — GHSA calendar
+   ============================================================= */
+.cve-tracker-container {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.cve-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.cve-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cve-filter-label {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.cve-filter-select { font-size: 0.8rem !important; padding: 4px 8px !important; }
+
+.cve-calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.cve-nav-btn {
+  padding: 4px 10px !important;
+  font-size: 0.8rem !important;
+}
+
+.cve-current-month {
+  font-weight: bold;
+  color: var(--heading);
+  min-width: 120px;
+  text-align: center;
+  font-size: 0.9em;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+
+.cve-month-text { color: var(--heading); }
+
+.cve-year-text {
+  color: var(--accent);
+  font-size: 0.85em;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.cve-year-text:hover { color: var(--link-hover); }
+
+.cve-year-picker {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px;
+  z-index: 1000;
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+  min-width: 100px;
+  margin-top: 5px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.cve-year-picker.cve-show { display: block; }
+
+.cve-year-option {
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--text);
+  text-align: center;
+  border-radius: 3px;
+}
+
+.cve-year-option:hover,
+.cve-year-option.cve-current {
+  background: var(--db-tint);
+  color: var(--accent);
+}
+
+.cve-dashboard {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+  margin: 0 auto;
+  height: calc(100vh - 160px);
+}
+
+.cve-main-panel,
+.cve-side-panel {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cve-side-panel { max-height: calc(100vh - 160px); }
+
+.cve-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.cve-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.cve-api-status {
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.cve-api-live  { color: var(--db-low);  background: var(--db-tint); }
+.cve-api-error { color: var(--db-crit); background: transparent; }
+
+.cve-calendar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+
+/* The JS never removes .cve-loading from #cve-calendar-content, so once the
+   grid is rendered undo the fixed 150px centred box (the old design hid this
+   with a big margin-top). */
+#cve-calendar-content.cve-loading:has(.cve-calendar-grid) {
+  display: block;
+  height: auto;
+}
+
+.cve-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  flex: 1;
+}
+
+.cve-calendar-header {
+  background: var(--db-bar);
+  padding: 6px 4px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-dim);
+  border-radius: 3px;
+  font-size: 0.75em;
+}
+
+.cve-calendar-day {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  position: relative;
+  min-height: 45px;
+  padding: 3px;
+  color: var(--text);
+}
+
+.cve-calendar-day:hover {
+  border-color: var(--accent);
+  transform: scale(1.04);
+  z-index: 5;
+}
+
+.cve-calendar-day.selected {
+  border: 2px solid var(--accent);
+  transform: scale(1.04);
+}
+
+.cve-calendar-day.other-month { opacity: 0.35; }
+
+.cve-calendar-day.today {
+  border: 2px solid var(--accent-2);
+}
+
+.cve-day-number {
+  font-size: 0.85em;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.cve-day-count {
+  font-size: 0.68em;
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  padding: 0 4px;
+  border-radius: 3px;
+  min-width: 16px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Heatmap: accent for light activity, warming up to red */
+.cve-day-heat-0 { background: var(--bg) !important; }
+.cve-day-heat-1 { background: color-mix(in srgb, var(--db-low)  14%, var(--bg)) !important; }
+.cve-day-heat-2 { background: color-mix(in srgb, var(--db-low)  30%, var(--bg)) !important; }
+.cve-day-heat-3 { background: color-mix(in srgb, var(--db-med)  32%, var(--bg)) !important; }
+.cve-day-heat-4 { background: color-mix(in srgb, var(--db-high) 36%, var(--bg)) !important; }
+.cve-day-heat-5 { background: color-mix(in srgb, var(--db-crit) 40%, var(--bg)) !important; }
+
+.cve-stats-summary {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.cve-stat-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+  flex: 1;
+}
+
+.cve-stat-number {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: var(--heading);
+  margin-bottom: 2px;
+}
+.cve-stat-box:first-child .cve-stat-number { color: var(--db-crit); }
+.cve-stat-box:nth-child(2) .cve-stat-number { color: var(--db-high); }
+
+.cve-stat-label {
+  font-size: 0.75em;
+  color: var(--text-dim);
+}
+
+.cve-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  color: var(--text-dim);
+  font-size: 0.9em;
+}
+
+.cve-spinner,
+.msrc-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+.cve-error {
+  color: var(--db-crit);
+  text-align: center;
+  padding: 30px;
+  font-size: 0.9em;
+}
+
+.cve-no-advisories {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 30px;
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+.cve-advisory-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--db-crit);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+.cve-advisory-item:hover {
+  border-color: var(--accent);
+  transform: translateX(2px);
+}
+
+.cve-advisory-item.expanded { border-color: var(--accent); }
+
+/* Severity badges (shared look across GHSA / NVD / MSRC / CVEDB) */
+.cve-severity-badge,
+.nvd-cvss-badge,
+.msrc-cve-severity,
+.shodan-badge,
+.shodan-cvss-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border: 1px solid currentColor;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.cve-severity-critical, .nvd-cvss-critical, .msrc-severity-critical,
+.shodan-badge.kev, .shodan-badge.epss-high {
+  color: var(--db-crit);
+  background: color-mix(in srgb, var(--db-crit) 10%, transparent);
+}
+.cve-severity-high, .nvd-cvss-high, .msrc-severity-important {
+  color: var(--db-high);
+  background: color-mix(in srgb, var(--db-high) 10%, transparent);
+}
+.cve-severity-medium, .nvd-cvss-medium, .msrc-severity-moderate,
+.shodan-badge.epss-medium {
+  color: var(--db-med);
+  background: color-mix(in srgb, var(--db-med) 10%, transparent);
+}
+.cve-severity-low, .nvd-cvss-low, .msrc-severity-low,
+.shodan-badge.epss-low {
+  color: var(--db-low);
+  background: color-mix(in srgb, var(--db-low) 10%, transparent);
+}
+.nvd-cvss-none, .msrc-severity-unknown {
+  color: var(--text-dim);
+}
+.shodan-badge.cvss, .shodan-cvss-tag {
+  color: var(--db-info);
+  background: color-mix(in srgb, var(--db-info) 10%, transparent);
+}
+
+.cve-advisory-details {
+  display: none;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.cve-advisory-details.cve-show { display: block; }
+
+.cve-selected-date-info {
+  background: var(--db-tint);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 10px 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.cve-selected-date {
+  font-size: 0.95em;
+  font-weight: bold;
+  color: var(--heading);
+  margin-bottom: 2px;
+}
+
+.cve-date-summary {
+  font-size: 0.8em;
+  color: var(--text-dim);
+}
+
+.cve-advisory-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.cve-advisory-list::-webkit-scrollbar { width: 4px; }
+.cve-advisory-list::-webkit-scrollbar-track { background: var(--chrome); border-radius: 2px; }
+.cve-advisory-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.cve-advisory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.cve-advisory-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cve-advisory-id {
+  font-size: 0.85em;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.cve-id {
+  font-size: 0.75em;
+  color: var(--accent-2);
+}
+
+.cve-advisory-summary {
+  font-size: 0.78em;
+  line-height: 1.4;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cve-detail-row {
+  display: flex;
+  margin: 5px 0;
+  font-size: 0.75em;
+}
+
+.cve-detail-label {
+  font-weight: bold;
+  color: var(--text-dim);
+  min-width: 80px;
+}
+
+.cve-detail-value {
+  color: var(--text);
+  word-break: break-word;
+}
+
+.cve-external-link,
+.cve-external-link:visited {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.75em;
+}
+
+.cve-external-link:hover {
+  background: var(--accent);
+  color: var(--db-ink);
+  text-decoration: none;
+}
+
+/* =============================================================
+   CVE Tracker — MSRC
+   ============================================================= */
+.msrc-tracker-container { color: var(--text); }
+
+.msrc-loading {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  display: none;
+}
+
+.msrc-loading .msrc-spinner { margin-right: 0; }
+
+.msrc-controls { margin-bottom: 16px; }
+
+.msrc-stats {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.msrc-stat-item {
+  flex: 1;
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-align: center;
+  min-width: 80px;
+}
+
+.msrc-stat-number {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--heading);
+}
+.msrc-stat-item:nth-child(2) .msrc-stat-number { color: var(--db-crit); }
+
+.msrc-stat-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.msrc-demo-section > h2 {
+  font-size: 1rem !important;
+  color: var(--heading) !important;
+  margin: 0 0 12px !important;
+}
+
+.msrc-demo-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.msrc-demo-btn.msrc-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+}
+.msrc-demo-btn.msrc-primary:hover:not(:disabled) { color: var(--db-ink); filter: brightness(1.1); }
+
+.msrc-filter-controls {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.msrc-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.msrc-filter-group label {
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.msrc-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0 0;
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.msrc-pagination-info {
+  margin: 0 10px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.msrc-cve-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.msrc-cve-item {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: 4px;
+  padding: 14px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.msrc-cve-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.msrc-cve-item:active { transform: translateY(-1px); }
+
+.msrc-external-link-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  margin-left: 8px;
+  font-size: 0.9rem;
+  color: var(--accent);
+}
+
+.msrc-cve-item:hover .msrc-external-link-icon { opacity: 1; }
+
+.msrc-cve-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.msrc-cve-id {
+  font-weight: bold;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+.msrc-cve-date {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.msrc-cve-title {
+  margin-bottom: 8px;
+  color: var(--heading);
+  line-height: 1.4;
+  font-size: 0.85rem;
+}
+
+.msrc-cve-description {
+  margin-top: 8px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.msrc-no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 36px;
+  background: var(--chrome);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.msrc-error,
+.msrc-success,
+.msrc-results-summary {
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin: 12px 0;
+  font-size: 0.85rem;
+  border: 1px solid currentColor;
+  border-left-width: 3px;
+}
+
+.msrc-error   { color: var(--db-crit); background: color-mix(in srgb, var(--db-crit) 8%, transparent); }
+.msrc-success { color: var(--db-low);  background: var(--db-tint); }
+
+.msrc-results-summary {
+  color: var(--text);
+  border-color: var(--border);
+  border-left-color: var(--accent);
+  background: var(--db-tint);
+}
+
+/* =============================================================
+   CVE Tracker — NVD
+   ============================================================= */
+.nvd-status-badge {
+  display: inline-block;
+  color: var(--db-low);
+  border: 1px solid currentColor;
+  background: var(--db-tint);
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin: 8px 0 0 15px;
+}
+
+.nvd-search-section {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.nvd-input-group { margin-bottom: 14px; }
+
+.nvd-input-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.nvd-input-group input,
+.nvd-input-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+}
+
+.nvd-grid-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.nvd-button,
+.shodan-search-btn {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--db-ink) !important;
+  font-weight: 600;
+}
+.nvd-button:hover:not(:disabled),
+.shodan-search-btn:hover:not(:disabled) { filter: brightness(1.1); }
+
+.nvd-results-container {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  display: none;
+  font-size: 0.85rem;
+}
+
+.nvd-vulnerability-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.nvd-vulnerability-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+}
+
+.nvd-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.nvd-cve-id {
+  font-size: 0.95em;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.nvd-card-description {
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nvd-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.nvd-click-hint {
+  color: var(--accent);
+  font-weight: 600;
+  border: 1px solid var(--border);
+  padding: 0 6px;
+  border-radius: 3px;
+}
+
+.nvd-loading {
+  text-align: center;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 30px;
+}
+
+.nvd-error {
+  color: var(--db-crit);
+  background: color-mix(in srgb, var(--db-crit) 8%, transparent);
+  border: 1px solid currentColor;
+  border-left-width: 3px;
+  padding: 12px 14px;
+  border-radius: 4px;
+}
+
+/* NVD popup (lives outside #dashboard-app) */
+.nvd-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: none;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.nvd-popup-content {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  top: 0;
+  font-size: 0.88rem;
+}
+
+.nvd-popup-content h2,
+.nvd-popup-content h3 { margin-top: 0; }
+
+.nvd-popup-close { color: #fff; }
+
+.nvd-popup-body { padding: 24px; }
+
+/* =============================================================
+   CVE Tracker — Shodan CVEDB
+   ============================================================= */
+.shodan-search-section {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.shodan-search-controls {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 12px;
+  margin-bottom: 0;
+  align-items: end;
+}
+
+.shodan-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.shodan-form-group label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+.shodan-form-group select,
+.shodan-form-group input {
+  padding: 8px 12px;
+  font-size: 0.88rem;
+}
+
+.shodan-search-btn { padding: 8px 14px !important; }
+
+.shodan-disclaimer { margin: 14px 0 0; }
+
+.shodan-results-section { padding: 0; }
+
+.shodan-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-dim);
+}
+
+.shodan-loading::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.shodan-error {
+  color: var(--db-crit);
+  background: color-mix(in srgb, var(--db-crit) 8%, transparent);
+  border: 1px solid currentColor;
+  border-left-width: 3px;
+  padding: 12px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.shodan-results-summary {
+  background: var(--db-tint);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.shodan-vulnerability-card,
+.shodan-list-item {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: 4px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.shodan-cve-header,
+.shodan-list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.shodan-cve-id,
+.shodan-list-item-cve {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.shodan-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.shodan-vulnerability-summary,
+.shodan-list-item-summary {
+  margin-bottom: 18px;
+  line-height: 1.6;
+  color: var(--text);
+  font-size: 0.88em;
+}
+
+.shodan-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.shodan-metric {
+  text-align: center;
+  padding: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.shodan-metric-value {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--heading);
+  display: block;
+}
+
+.shodan-metric-label {
+  font-size: 0.75em;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.shodan-proposed-action {
+  background: var(--db-tint);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.shodan-proposed-action h4 {
+  color: var(--accent);
+  margin: 0 0 6px;
+  font-size: 0.9em;
+}
+
+.shodan-proposed-action p {
+  color: var(--text);
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.85em;
+}
+
+.shodan-published-date {
+  color: var(--text-dim);
+  font-size: 0.8em;
+  margin-top: 12px;
+}
+
+.shodan-additional-info { margin: 18px 0; }
+
+.shodan-expand-btn { margin-bottom: 12px; }
+
+.shodan-details-section {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.shodan-detail-block { margin-bottom: 16px; }
+
+.shodan-detail-block h4 {
+  color: var(--heading);
+  margin: 0 0 8px;
+  font-size: 0.9em;
+}
+
+.shodan-cpe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.shodan-cpe-tag {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.75em;
+  word-break: break-all;
+}
+
+.shodan-cpe-more,
+.shodan-ref-more {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 0.85em;
+}
+
+.shodan-ref-more { margin: 5px 0 0 0; }
+
+.shodan-references-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shodan-reference-link,
+.shodan-reference-link:visited {
+  color: var(--accent);
+  text-decoration: none;
+  padding: 6px 10px;
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  font-size: 0.8em;
+  word-break: break-all;
+}
+
+.shodan-reference-link:hover { border-color: var(--accent); text-decoration: none; }
+
+.shodan-cvss-versions {
+  display: flex;
+  gap: 8px;
+}
+
+.shodan-external-links {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 10px;
+  flex-wrap: wrap;
+}
+
+.shodan-external-link,
+.shodan-external-link:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.shodan-external-link:hover {
+  background: var(--accent);
+  color: var(--db-ink);
+  text-decoration: none;
+}
+
+.shodan-no-results {
+  text-align: center;
+  padding: 36px 20px;
+  color: var(--text-dim);
+  background: var(--chrome);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.shodan-no-results h3 {
+  margin: 0 0 10px;
+  color: var(--heading);
+  font-size: 1rem;
+}
+
+.shodan-results-list {
+  display: grid;
+  gap: 12px;
+}
+
+.shodan-list-item-metrics {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8em;
+}
+
+.shodan-list-metric {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+/* =============================================================
+   Responsive
+   ============================================================= */
+@media (max-width: 1200px) {
+  .cve-dashboard {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    height: auto;
   }
 
-  /* Food Recipes styles */
-  .recipe-search-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .recipe-search-bar input[type="text"] {
-    flex: 1;
-    min-width: 200px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-  }
-
-  .recipe-search-bar button {
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-  }
-
-  .recipe-search-bar button:hover {
-    background: #0056b3;
-  }
-
-  .recipe-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .results-per-page {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .results-per-page select {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-
-  .recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-
-  .recipe-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.2s ease;
-    cursor: pointer;
-  }
-
-  .recipe-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  }
-
-  .recipe-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  .recipe-card-content {
-    padding: 15px;
-  }
-
-  .recipe-card h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.1em;
-    color: #333;
-  }
-
-  .recipe-card p {
-    margin: 5px 0;
-    color: #666;
-    font-size: 0.9em;
-  }
-
-  .recipe-card .category {
-    background: #e3f2fd;
-    color: #1976d2;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    display: inline-block;
-    margin-top: 8px;
-  }
-
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-
-  .pagination button {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    background: white;
-    color: #333;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-  }
-
-  .pagination button:hover:not(:disabled) {
-    background: #f0f0f0;
-  }
-
-  .pagination button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .pagination button.active {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-  }
-
-  .pagination-info {
-    font-size: 0.9em;
-    color: #666;
-  }
-
-  .recipe-loading {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    font-style: italic;
-  }
-
-  .recipe-error {
-    text-align: center;
-    padding: 40px;
-    color: #d32f2f;
-    background: #ffebee;
-    border-radius: 8px;
-    margin: 20px 0;
-  }
-
-  .no-results {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    background: #f5f5f5;
-    border-radius: 8px;
-    margin: 20px 0;
-  }
-
-  /* Recipe Detail Modal */
-  .recipe-modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    overflow-y: auto;
-  }
-
-  .recipe-modal-content {
-    background-color: white;
-    margin: 2% auto;
-    padding: 0;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 800px;
-    position: relative;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .recipe-modal-header {
-    position: relative;
-    padding: 0;
-  }
-
-  .recipe-modal-header img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-  }
-
-  .close-modal {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-  }
-
-  .close-modal:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
-
-  .recipe-modal-body {
-    padding: 30px;
-  }
-
-  .recipe-modal-body h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
-    font-size: 1.8em;
-  }
-
-  .recipe-meta {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-  }
-
-  .recipe-meta-item {
-    background: #f8f9fa;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    color: #666;
-  }
-
-  .recipe-tags {
-    margin-bottom: 25px;
-  }
-
-  .recipe-tag {
-    background: #e3f2fd;
-    color: #1976d2;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.85em;
-    display: inline-block;
-    margin-right: 8px;
-    margin-bottom: 5px;
-  }
-
-  .recipe-section {
-    margin-bottom: 30px;
-  }
-
-  .recipe-section h3 {
-    color: #333;
-    margin-bottom: 15px;
-    font-size: 1.3em;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
-  }
-
-  .ingredients-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .ingredient-item {
-    background: #f8f9fa;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border-left: 4px solid #007bff;
-  }
-
-  .ingredient-name {
-    font-weight: bold;
-    color: #333;
-  }
-
-  .ingredient-measure {
-    color: #666;
-    font-size: 0.9em;
-  }
-
-  .instructions {
-    line-height: 1.7;
-    color: #444;
-    font-size: 1.05em;
-  }
-
-  .youtube-link {
-    display: inline-block;
-    background: #ff0000;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 15px;
-  }
-
-  .youtube-link:hover {
-    background: #cc0000;
-    color: white;
-  }
-
-  @media (max-width: 600px) {
-    .recipe-modal-content {
-      width: 95%;
-      margin: 5% auto;
-    }
-    
-    .recipe-modal-body {
-      padding: 20px;
-    }
-    
-    .ingredients-list {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Domain Intelligence Styles */
-  .domain-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    overflow: hidden;
-  }
-  
-  .domain-header {
-    background: #2c3e50;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .domain-search-section {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .domain-search-box {
-    display: flex;
-    gap: 10px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  #domain-input {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  #analyze-btn {
-    padding: 12px 25px;
-    background: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  #analyze-btn:hover {
-    background: #2980b9;
-  }
-  
-  #analyze-btn:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-  }
-  
-  .domain-results-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .domain-result-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .domain-card-header {
-    background: #34495e;
-    color: white;
-    padding: 15px;
-    font-weight: bold;
-  }
-  
-  .domain-card-content {
-    padding: 15px;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  
-  .domain-dns-record {
-    background: #ecf0f1;
-    padding: 8px;
-    margin: 5px 0;
-    border-radius: 4px;
-    font-family: monospace;
-  }
-  
-  .domain-cert-item {
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
-  }
-  
-  .domain-cert-item:last-child {
-    border-bottom: none;
-  }
-  
-  .domain-cert-cn {
-    font-weight: bold;
-    color: #2c3e50;
-  }
-  
-  .domain-cert-dates {
-    font-size: 12px;
-    color: #7f8c8d;
-    margin: 5px 0;
-  }
-  
-  .domain-cert-issuer {
-    font-size: 12px;
-    color: #27ae60;
-  }
-  
-  .domain-archive-info {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .domain-archive-link {
-    display: inline-block;
-    background: #e74c3c;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-  
-  .domain-archive-link:hover {
-    background: #c0392b;
-  }
-  
-  .domain-loading {
-    text-align: center;
-    color: #7f8c8d;
-    font-style: italic;
-    padding: 20px;
-  }
-  
-  .domain-error {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-  }
-  
-  .domain-status-indicator {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 8px;
-  }
-  
-  .domain-status-online { background: #27ae60; }
-  .domain-status-offline { background: #e74c3c; }
-  
-  @media (max-width: 768px) {
-    .domain-results-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .domain-search-box {
-      flex-direction: column;
-    }
-  }
-
-  /* CVE Tracker Styles */
-  .cve-tracker-container {
-    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 100%);
-    color: #ffffff;
-    min-height: 100vh;
-    font-size: 14px;
-    margin: -20px;
-    padding: 0;
-    border-radius: 0;
-  }
-
-  .cve-header {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 20px;
-    text-align: center;
-    border-bottom: 2px solid #00ff88;
-    backdrop-filter: blur(10px);
-  }
-
-  .cve-header h1 {
-    font-size: 2.2em;
-    color: #00ff88;
-    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
-    margin-bottom: 8px;
-  }
-
-  .cve-header p {
-    color: #cccccc;
-    font-size: 1em;
-  }
+  .cve-main-panel { min-height: 380px; }
 
   .cve-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    flex-wrap: wrap;
-  }
-
-  .cve-filter-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .cve-filter-label {
-    color: #00ff88;
-    font-weight: bold;
-    font-size: 0.9em;
-  }
-
-  .cve-filter-select {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    border-radius: 6px;
-    padding: 6px 10px;
-    color: #ffffff;
-    font-size: 13px;
-  }
-
-  .cve-filter-select option {
-    background: #1a1a3a;
-    color: #ffffff;
-  }
-
-  .cve-calendar-nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(0, 255, 136, 0.1);
-    padding: 8px 15px;
-    border-radius: 15px;
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    position: relative;
-  }
-
-  .cve-nav-btn {
-    background: transparent;
-    border: 1px solid #00ff88;
-    color: #00ff88;
-    padding: 6px 12px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 13px;
-  }
-
-  .cve-nav-btn:hover {
-    background: #00ff88;
-    color: #000;
-  }
-
-  .cve-current-month {
-    font-weight: bold;
-    color: #00ff88;
-    min-width: 120px;
-    text-align: center;
-    font-size: 0.95em;
-    cursor: pointer;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    position: relative;
-  }
-
-  .cve-month-text {
-    color: #00ff88;
-  }
-
-  .cve-year-text {
-    color: #4ecdc4;
-    font-size: 0.85em;
-    text-decoration: underline;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-
-  .cve-year-text:hover {
-    color: #00ff88;
-  }
-
-  .cve-year-picker {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(26, 26, 58, 0.98);
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    border-radius: 8px;
-    padding: 10px;
-    z-index: 1000;
-    display: none;
-    max-height: 200px;
-    overflow-y: auto;
-    min-width: 100px;
-    margin-top: 5px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  }
-
-  .cve-year-picker.cve-show {
-    display: block;
-  }
-
-  .cve-year-option {
-    padding: 5px 10px;
-    cursor: pointer;
-    color: #cccccc;
-    text-align: center;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-  }
-
-  .cve-year-option:hover {
-    background: rgba(0, 255, 136, 0.2);
-    color: #00ff88;
-  }
-
-  .cve-year-option.cve-current {
-    background: rgba(0, 255, 136, 0.3);
-    color: #00ff88;
-  }
-
-  .cve-dashboard {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1600px;
-    margin: 0 auto;
-    height: calc(100vh - 160px);
-  }
-
-  .cve-main-panel {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 20px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .cve-side-panel {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    padding: 20px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 160px);
-  }
-
-  .cve-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-  }
-
-  .cve-panel-title {
-    display: flex;
     align-items: center;
     gap: 10px;
-    color: #00ff88;
-    font-size: 1.3em;
-    font-weight: 600;
   }
 
-  .cve-api-status {
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .cve-api-live {
-    background: #00ff88;
-    color: #000;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-  }
-
-  .cve-api-error {
-    background: #ff6b6b;
-    color: #fff;
-  }
-
-  .cve-calendar-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    margin-top: 80px;
-  }
-
-  @media (max-width: 1200px) {
-    .cve-calendar-container {
-      margin-top: 40px;
-    }
-  }
-
-  .cve-calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    flex: 1;
-  }
-
-  .cve-calendar-header {
-    background: rgba(0, 255, 136, 0.2);
-    padding: 8px 5px;
-    text-align: center;
-    font-weight: bold;
-    color: #00ff88;
-    border-radius: 6px;
-    font-size: 0.8em;
-  }
-
-  .cve-calendar-day {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    min-height: 45px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 3px;
-  }
-
-  .cve-calendar-day:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-    z-index: 5;
-  }
-
-  .cve-calendar-day.selected {
-    background: rgba(0, 255, 136, 0.3);
-    border-color: #00ff88;
-    transform: scale(1.05);
-  }
-
-  .cve-calendar-day.other-month {
-    opacity: 0.3;
-  }
-
-  .cve-calendar-day.today {
-    border: 2px solid #4ecdc4;
-    box-shadow: 0 0 8px rgba(78, 205, 196, 0.3);
-  }
-
-  .cve-day-number {
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-bottom: 2px;
-  }
-
-  .cve-day-count {
-    font-size: 0.7em;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 1px 4px;
-    border-radius: 8px;
-    min-width: 16px;
-    text-align: center;
-  }
-
-  .cve-day-heat-0 { background: rgba(255, 255, 255, 0.03) !important; }
-  .cve-day-heat-1 { background: rgba(0, 255, 136, 0.2) !important; }
-  .cve-day-heat-2 { background: rgba(0, 255, 136, 0.4) !important; }
-  .cve-day-heat-3 { background: rgba(255, 183, 0, 0.4) !important; }
-  .cve-day-heat-4 { background: rgba(255, 121, 0, 0.4) !important; }
-  .cve-day-heat-5 { background: rgba(255, 107, 107, 0.4) !important; }
-
-  .cve-stats-summary {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 15px;
-    flex-shrink: 0;
-  }
-
-  .cve-stat-box {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    flex: 1;
-  }
-
-  .cve-stat-number {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #00ff88;
-    margin-bottom: 3px;
-  }
-
-  .cve-stat-label {
-    font-size: 0.8em;
-    color: #cccccc;
-  }
-
-  .cve-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 150px;
-    color: #666;
-    font-size: 1em;
-  }
-
-  .cve-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(0, 255, 136, 0.1);
-    border-top: 3px solid #00ff88;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 12px;
-  }
-
-  .cve-error {
-    color: #ff6b6b;
-    text-align: center;
-    padding: 30px;
-    font-size: 1em;
-  }
-
-  .cve-no-advisories {
-    text-align: center;
-    color: #666;
-    padding: 30px;
-    font-style: italic;
-    font-size: 0.9em;
-  }
-
-  .cve-advisory-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-left: 3px solid #ff6b6b;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-
-  .cve-advisory-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateX(3px);
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
-  }
-
-  .cve-advisory-item.expanded {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
-  .cve-severity-badge {
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 0.7em;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  .cve-severity-critical {
-    background: #ff6b6b;
-    color: white;
-  }
-
-  .cve-severity-high {
-    background: #ff8c00;
-    color: white;
-  }
-
-  .cve-severity-medium {
-    background: #ffa500;
-    color: black;
-  }
-
-  .cve-severity-low {
-    background: #00ff88;
-    color: black;
-  }
-
-  .cve-advisory-details {
-    display: none;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .cve-advisory-details.cve-show {
-    display: block;
-  }
-
-  .cve-selected-date-info {
-    background: rgba(0, 255, 136, 0.1);
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    flex-shrink: 0;
-  }
-
-  .cve-selected-date {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #00ff88;
-    margin-bottom: 3px;
-  }
-
-  .cve-date-summary {
-    font-size: 0.85em;
-    color: #cccccc;
-  }
-
-  .cve-advisory-list {
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 5px;
-  }
-
-  .cve-advisory-list::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .cve-advisory-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-  }
-
-  .cve-advisory-list::-webkit-scrollbar-thumb {
-    background: rgba(0, 255, 136, 0.3);
-    border-radius: 2px;
-  }
-
-  .cve-advisory-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-  }
-
-  .cve-advisory-title {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .cve-advisory-id {
-    font-size: 0.9em;
-    font-weight: bold;
-    color: #00ff88;
-  }
-
-  .cve-id {
-    font-size: 0.75em;
-    color: #4ecdc4;
-    font-family: monospace;
-  }
-
-  .cve-advisory-summary {
-    font-size: 0.8em;
-    line-height: 1.3;
-    color: #e0e0e0;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .cve-detail-row {
-    display: flex;
-    margin: 6px 0;
-    font-size: 0.75em;
-  }
-
-  .cve-detail-label {
-    font-weight: bold;
-    color: #00ff88;
-    min-width: 80px;
-  }
-
-  .cve-detail-value {
-    color: #cccccc;
-    word-break: break-word;
-  }
-
-  .cve-external-link {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 6px 12px;
-    background: rgba(0, 255, 136, 0.1);
-    border: 1px solid #00ff88;
-    border-radius: 15px;
-    color: #00ff88;
-    text-decoration: none;
-    font-size: 0.75em;
-    transition: all 0.3s ease;
-  }
-
-  .cve-external-link:hover {
-    background: #00ff88;
-    color: #000;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  /* MSRC Tracker Styles */
-  .msrc-tracker-container {
-    max-width: none;
-    margin: -20px;
-    padding: 0;
-    background: white;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .msrc-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 30px;
-    text-align: center;
-    position: relative;
-  }
-
-  .msrc-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    font-weight: 300;
-  }
-
-  .msrc-header p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-  }
-
-  .msrc-loading {
-    position: absolute;
-    top: 50%;
-    right: 30px;
-    transform: translateY(-50%);
-    display: none;
-  }
-
-  .msrc-spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  .msrc-controls {
-    padding: 20px 30px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .msrc-stats {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
-
-  .msrc-stat-item {
-    background: white;
-    padding: 10px 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    min-width: 80px;
-  }
-
-  .msrc-stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #667eea;
-  }
-
-  .msrc-stat-label {
-    font-size: 0.8rem;
-    color: #666;
-    margin-top: 2px;
-  }
-
-  .msrc-api-info {
-    background: #e3f2fd;
-    padding: 15px 30px;
-    border-left: 4px solid #2196f3;
-    margin: 20px 30px;
-    border-radius: 10px;
-    text-align: center;
-  }
-
-  .msrc-api-info p {
-    color: #1976d2;
-    margin: 0;
-    font-size: 0.9rem;
-  }
-
-  .msrc-api-info code {
-    background: rgba(25, 118, 210, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-  }
+  .msrc-cve-grid { grid-template-columns: 1fr; }
 
+  .msrc-demo-controls,
   .msrc-filter-controls {
-    background: #f8f9fa;
-    padding: 20px 30px;
-    border-bottom: 1px solid #e9ecef;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .msrc-filter-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .msrc-filter-group { justify-content: space-between; }
 
-  .msrc-filter-group label {
-    font-weight: 600;
-    color: #333;
-    font-size: 0.9rem;
-  }
-
-  .msrc-filter-select {
-    padding: 8px 12px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    background: white;
-  }
-
-  .msrc-filter-select:focus {
-    border-color: #667eea;
-    outline: none;
-  }
-
-  .msrc-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-  }
-
-  .msrc-pagination-btn {
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-
-  .msrc-pagination-btn:hover {
-    background: #5a67d8;
-  }
-
-  .msrc-pagination-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-
-  .msrc-pagination-info {
-    margin: 0 20px;
-    font-weight: 600;
-    color: #333;
-  }
-
-  .msrc-demo-controls {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .msrc-demo-btn {
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-
-  .msrc-demo-btn:hover {
-    background: #218838;
-    transform: translateY(-1px);
-  }
-
-  .msrc-demo-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .msrc-month-selector {
-    padding: 8px 12px;
-    border: 2px solid #667eea;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-
-  .msrc-cve-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .msrc-cve-item {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    border-left: 4px solid #667eea;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-
-  .msrc-cve-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-    border-left-color: #5a67d8;
-  }
-
-  .msrc-cve-item:active {
-    transform: translateY(-1px);
-  }
-
-  .msrc-external-link-icon {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    margin-left: 8px;
-    font-size: 0.9rem;
-    color: #667eea;
-  }
-
-  .msrc-cve-item:hover .msrc-external-link-icon {
-    opacity: 1;
-  }
-
-  .msrc-cve-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .msrc-cve-id {
-    font-weight: bold;
-    color: #667eea;
-    font-size: 1.1rem;
-  }
-
-  .msrc-cve-date {
-    color: #666;
-    font-size: 0.9rem;
-  }
-
-  .msrc-cve-title {
-    margin-bottom: 10px;
-    color: #333;
-    line-height: 1.4;
-    font-size: 1rem;
-  }
-
-  .msrc-cve-severity {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  .msrc-severity-critical {
-    background: #ffebee;
-    color: #c62828;
-  }
-
-  .msrc-severity-important {
-    background: #fff3e0;
-    color: #ef6c00;
-  }
-
-  .msrc-severity-moderate {
-    background: #fff8e1;
-    color: #f57f17;
-  }
-
-  .msrc-severity-low {
-    background: #e8f5e8;
-    color: #2e7d32;
-  }
-
-  .msrc-severity-unknown {
-    background: #f5f5f5;
-    color: #666;
-  }
-
-  .msrc-cve-description {
-    margin-top: 10px;
-    color: #666;
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-
-  .msrc-no-data {
-    text-align: center;
-    color: #666;
-    font-style: italic;
-    padding: 40px;
-    background: white;
-    border-radius: 10px;
-  }
-
-  .msrc-error {
-    background: #ffebee;
-    color: #c62828;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
-    border-left: 4px solid #c62828;
-  }
-
-  .msrc-success {
-    background: #e8f5e8;
-    color: #2e7d32;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
-    border-left: 4px solid #2e7d32;
-  }
-
-  .msrc-demo-section {
-    padding: 30px;
-  }
-
-  .msrc-results-summary {
-    background: #e8f5e8;
-    padding: 15px 30px;
-    border-left: 4px solid #28a745;
-    margin: 0 30px 20px 30px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    color: #155724;
-  }
-
-  /* NVD Lookup Styles */
-  .nvd-container {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    padding: 20px;
-    margin: -20px;
-    border-radius: 0;
-  }
-  
-  .nvd-inner-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-  }
-  
-  .nvd-header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  
-  .nvd-header h1.auto-adjust {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    background: linear-gradient(45deg,
-    hsl(245, 80%, 70%),
-    hsl(270, 60%, 75%),
-    hsl(320, 80%, 70%)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .nvd-status-badge {
-    display: inline-block;
-    background: linear-gradient(45deg, #38a169, #2f855a);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 20px;
-  }
-  
-  .nvd-search-section {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  }
-  
-  .nvd-input-group {
-    margin-bottom: 20px;
-  }
-  
-  .nvd-input-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #2d3748;
-    font-size: 16px;
-  }
-  
-  .nvd-input-group input, .nvd-input-group select {
-    width: 100%;
-    padding: 15px 20px;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-  }
-  
-  .nvd-input-group input:focus, .nvd-input-group select:focus {
-    border-color: #667eea;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  }
-  
   .nvd-grid-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
+    grid-template-columns: 1fr;
+    gap: 0;
   }
-  
-  .nvd-button {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-right: 15px;
-    margin-bottom: 10px;
+
+  .shodan-search-controls { grid-template-columns: 1fr; }
+
+  .shodan-metrics { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  /* Tab bar: 3 per row on phones (same layout as before) */
+  .dashboard-tabs {
+    padding: 8px;
+    gap: 4px;
   }
-  
-  .nvd-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-  }
-  
-  .nvd-button:disabled {
-    background: #cbd5e0;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-  
-  .nvd-results-container {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    display: none;
-  }
-  
-  .nvd-vulnerability-card {
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 18px;
-    border-left: 4px solid #667eea;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid #e2e8f0;
-  }
-  
-  .nvd-vulnerability-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
-    border-left-color: #4c51bf;
-    background: #f1f5f9;
-  }
-  
-  .nvd-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .nvd-cve-id {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #2d3748;
-    font-family: 'Monaco', monospace;
-  }
-  
-  .nvd-cvss-badge {
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .nvd-cvss-critical { background: linear-gradient(45deg, #dc2626, #b91c1c); }
-  .nvd-cvss-high { background: linear-gradient(45deg, #ea580c, #c2410c); }
-  .nvd-cvss-medium { background: linear-gradient(45deg, #d97706, #b45309); }
-  .nvd-cvss-low { background: linear-gradient(45deg, #059669, #047857); }
-  .nvd-cvss-none { background: linear-gradient(45deg, #6b7280, #4b5563); }
-  
-  .nvd-card-description {
-    color: #4b5563;
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 10px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .nvd-card-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: #6b7280;
-  }
-  
-  .nvd-click-hint {
-    color: #667eea;
-    font-weight: 600;
-    background: rgba(102, 126, 234, 0.1);
-    padding: 3px 8px;
-    border-radius: 10px;
-  }
-  
-  .nvd-loading {
+
+  .dashboard-tabs a {
+    flex: 0 0 calc(33.333% - 3px);
+    width: calc(33.333% - 3px);
+    padding: 6px 2px;
+    font-size: 0.72rem;
     text-align: center;
-    color: #667eea;
-    font-style: italic;
-    padding: 40px;
-  }
-  
-  .nvd-error {
-    background: #fef2f2;
-    color: #dc2626;
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #dc2626;
-  }
-  
-  /* NVD Popup Styles - FIXED for proper centering */
-  .nvd-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
-    display: none;
-    overflow-y: auto;
-    padding: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     box-sizing: border-box;
   }
-  
-  .nvd-popup-content {
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-    top: 0;
-    transition: all 0.3s ease;
-  }
-  
-  .nvd-popup-close {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    border: none;
+
+  /* Secondary navs: 2 per row */
+  .cve-secondary-nav,
+  .tools-secondary-nav {
+    padding: 6px 8px;
+    gap: 4px;
   }
 
-  .nvd-popup-close:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
+  .cve-secondary-nav::before,
+  .tools-secondary-nav::before { display: none; }
 
-  .nvd-popup-body {
-    padding: 30px;
-  }
-
-  /* Shodan CVEDB Styles */
-  .shodan-container {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    padding: 20px;
-    margin: -20px;
-    border-radius: 0;
-  }
-
-  .shodan-inner-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  .cve-secondary-nav a,
+  .tools-secondary-nav a {
+    flex: 0 0 calc(50% - 2px);
+    width: calc(50% - 2px);
+    padding: 6px 2px;
+    font-size: 0.72rem;
+    text-align: center;
     overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
   }
 
-  .shodan-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    color: white;
-    padding: 30px 40px;
-    text-align: center;
+  .tools-secondary-nav a { flex-basis: calc(33.333% - 3px); width: calc(33.333% - 3px); }
+
+  .dashboard-content { padding: 14px 12px; }
+
+
+  .cve-main-panel { min-height: 350px; }
+
+  .cve-calendar-day {
+    min-height: 34px;
+    font-size: 0.85em;
+    padding: 2px;
   }
 
-  .shodan-header h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    font-weight: 300;
-  }
+  .cve-day-number { font-size: 0.75em; margin-bottom: 1px; }
+  .cve-day-count  { font-size: 0.55em; padding: 0 3px; }
+  .cve-calendar-grid { gap: 2px; }
 
-  .shodan-header p {
-    opacity: 0.9;
-    font-size: 1.1em;
-  }
+  .msrc-stats { flex-wrap: wrap; }
 
-  .shodan-search-section {
-    padding: 40px;
-    background: white;
-    border-bottom: 1px solid #e1e8ed;
-  }
-
-  .shodan-search-controls {
-    display: grid;
-    grid-template-columns: 1fr 120px;
-    gap: 15px;
-    margin-bottom: 30px;
-    align-items: end;
-  }
-
-  .shodan-form-group {
-    display: flex;
+  .nvd-card-header {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 
-  .shodan-form-group label {
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #2c3e50;
-    font-size: 0.9em;
-  }
-
-  .shodan-form-group select,
-  .shodan-form-group input {
-    padding: 12px 15px;
-    border: 2px solid #e1e8ed;
-    border-radius: 10px;
-    font-size: 1em;
-    transition: all 0.3s ease;
-  }
-
-  .shodan-form-group select:focus,
-  .shodan-form-group input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  }
-
-  .shodan-search-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    margin-top: 25px;
-  }
-
-  .shodan-search-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-  }
-
-  .shodan-search-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .shodan-disclaimer {
-    background: #e8f4fd;
-    border-left: 4px solid #0084ff;
-    padding: 15px 20px;
-    border-radius: 5px;
-    margin-top: 25px;
-    font-size: 0.9em;
-    color: #2c3e50;
-    line-height: 1.5;
-  }
-
-  .shodan-disclaimer code {
-    background: rgba(0, 132, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9em;
-    color: #0056b3;
-  }
-
-  .shodan-disclaimer strong {
-    color: #0056b3;
-  }
-
-  .shodan-results-section {
-    padding: 40px;
-  }
-
-  .shodan-loading {
-    text-align: center;
-    padding: 60px;
-    color: #6c757d;
-  }
-
-  .shodan-loading::after {
-    content: '';
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-left: 10px;
-  }
-
-  .shodan-error {
-    background: #fee;
-    color: #c33;
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 5px solid #c33;
-    margin-bottom: 20px;
-  }
-
-  .shodan-results-summary {
-    background: #e8f4fd;
-    border-left: 5px solid #0084ff;
-    padding: 15px 20px;
-    border-radius: 5px;
-    margin-bottom: 30px;
-    font-weight: 500;
-  }
-
-  .shodan-vulnerability-card {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-left: 5px solid #667eea;
-    transition: all 0.3s ease;
-  }
-
-  .shodan-vulnerability-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  }
+  .nvd-popup-overlay { padding: 10px; }
+  .nvd-popup-body { padding: 16px 8px; }
 
   .shodan-cve-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .shodan-cve-id {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: #2c3e50;
-  }
-
-  .shodan-badges {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .shodan-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8em;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .shodan-badge.kev {
-    background: #ff4757;
-    color: white;
-  }
-
-  .shodan-badge.epss-high {
-    background: #ff6b6b;
-    color: white;
-  }
-
-  .shodan-badge.epss-medium {
-    background: #ffa726;
-    color: white;
-  }
-
-  .shodan-badge.epss-low {
-    background: #66bb6a;
-    color: white;
-  }
-
-  .shodan-badge.cvss {
-    background: #5c6bc0;
-    color: white;
-  }
-
-  .shodan-vulnerability-summary {
-    margin-bottom: 25px;
-    line-height: 1.6;
-    color: #4a5568;
-    font-size: 1.1em;
-  }
-
-  .shodan-metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 25px;
-  }
-
-  .shodan-metric {
-    text-align: center;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 10px;
-  }
-
-  .shodan-metric-value {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: #2c3e50;
-    display: block;
-  }
-
-  .shodan-metric-label {
-    font-size: 0.9em;
-    color: #6c757d;
-    margin-top: 5px;
-  }
-
-  .shodan-proposed-action {
-    background: #e8f5e8;
-    border-left: 4px solid #28a745;
-    padding: 15px 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-
-  .shodan-proposed-action h4 {
-    color: #155724;
-    margin-bottom: 8px;
-    font-size: 1em;
-  }
-
-  .shodan-proposed-action p {
-    color: #155724;
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  .shodan-published-date {
-    color: #6c757d;
-    font-size: 0.9em;
-    margin-top: 15px;
-  }
-
-  .shodan-additional-info {
-    margin: 25px 0;
-  }
-
-  .shodan-expand-btn {
-    background: linear-gradient(135deg, #28a745, #20c997);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    margin-bottom: 15px;
-  }
-
-  .shodan-expand-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
-  }
-
-  .shodan-details-section {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 15px;
-  }
-
-  .shodan-detail-block {
-    margin-bottom: 20px;
-  }
-
-  .shodan-detail-block h4 {
-    color: #2c3e50;
-    margin-bottom: 10px;
-    font-size: 1em;
-  }
-
-  .shodan-cpe-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .shodan-cpe-tag {
-    background: #e9ecef;
-    padding: 4px 8px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-family: 'Courier New', monospace;
-  }
-
-  .shodan-cpe-more {
-    color: #6c757d;
-    font-style: italic;
-    font-size: 0.9em;
-  }
-
-  .shodan-references-list {
-    display: flex;
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
   }
 
-  .shodan-reference-link {
-    color: #0084ff;
-    text-decoration: none;
-    padding: 8px 12px;
-    background: white;
-    border-radius: 5px;
-    border-left: 3px solid #0084ff;
-    font-size: 0.9em;
-    transition: all 0.2s ease;
-  }
+  .domain-results-grid { grid-template-columns: 1fr; }
 
-  .shodan-reference-link:hover {
-    background: #f0f8ff;
-    transform: translateX(5px);
-  }
+  .domain-search-box { flex-direction: column; }
+}
 
-  .shodan-ref-more {
-    color: #6c757d;
-    font-style: italic;
-    margin: 5px 0 0 0;
-  }
-
-  .shodan-cvss-versions {
-    display: flex;
-    gap: 10px;
-  }
-
-  .shodan-cvss-tag {
-    background: #5c6bc0;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 0.9em;
-    font-weight: 600;
-  }
-
-  .shodan-external-links {
-    display: flex;
-    gap: 15px;
-    margin: 25px 0 15px 0;
-    flex-wrap: wrap;
-  }
-
-  .shodan-external-link {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    text-decoration: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .shodan-external-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    color: white;
-    text-decoration: none;
-  }
-
-  .shodan-no-results {
-    text-align: center;
-    padding: 60px;
-    color: #6c757d;
-  }
-
-  .shodan-no-results h3 {
-    margin-bottom: 15px;
-    color: #495057;
-  }
-
-  .shodan-results-list {
-    display: grid;
-    gap: 20px;
-  }
-
-  .shodan-list-item {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #667eea;
-    transition: all 0.3s ease;
-  }
-
-  .shodan-list-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-  }
-
-  .shodan-list-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .shodan-list-item-cve {
-    font-weight: 700;
-    color: #2c3e50;
-    font-size: 1.1em;
-  }
-
-  .shodan-list-item-summary {
-    color: #4a5568;
-    line-height: 1.5;
-    margin-bottom: 15px;
-  }
-
-  .shodan-list-item-metrics {
-    display: flex;
-    gap: 15px;
-    font-size: 0.9em;
-  }
-
-  .shodan-list-metric {
-    background: #f8f9fa;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: 600;
-  }
-
-  /* Dark mode styles for Currency Exchange */
-  [data-theme="dark"] .currency-header h2 {
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] .currency-header p {
-    color: #00aa00 !important;
-  }
-
-  [data-theme="dark"] .currency-control-panel,
-  [data-theme="dark"] .currency-rates-container,
-  [data-theme="dark"] .currency-rates-header {
-    background: #111 !important;
-    border-color: #333 !important;
-  }
-
-  [data-theme="dark"] .currency-control-group label,
-  [data-theme="dark"] .currency-base-amount,
-  [data-theme="dark"] .currency-code {
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] .currency-control-group select,
-  [data-theme="dark"] .currency-control-group input {
-    background: #111 !important;
-    color: #00ff00 !important;
-    border-color: #333 !important;
-  }
-
-  [data-theme="dark"] .currency-last-updated,
-  [data-theme="dark"] .currency-name {
-    color: #00aa00 !important;
-  }
-
-  [data-theme="dark"] .currency-rate-value {
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] .currency-convert-btn {
-    background: #006400 !important;
-    color: #00ff00 !important;
-  }
-
-  /* Combined Dark Mode Overrides */
-  [data-theme="dark"] .dashboard-content {
-    background-color: #111;
-  }
-  
-  [data-theme="dark"] .dashboard-content .card,
-  [data-theme="dark"] .dashboard-content .card h2,
-  [data-theme="dark"] .dashboard-content .card p,
-  [data-theme="dark"] .dashboard-content h2,
-  [data-theme="dark"] .dashboard-content p,
-  [data-theme="dark"] .dashboard-content textarea,
-  [data-theme="dark"] .dashboard-content table,
-  [data-theme="dark"] .dashboard-content th,
-  [data-theme="dark"] .dashboard-content td,
-  [data-theme="dark"] .dashboard-content .foodbank,
-  [data-theme="dark"] .dashboard-content .recipe-card,
-  [data-theme="dark"] .dashboard-content .recipe-card-content {
-    background-color: #111 !important;
-    color: #00ff00 !important;
-  }
-  
-  [data-theme="dark"] .dashboard-content .card .loading {
-    color: #00aa00;
-  }
-  
-  [data-theme="dark"] .dashboard-content button.export-btn,
-  [data-theme="dark"] .dashboard-content button.table-btn,
-  [data-theme="dark"] .dashboard-content button {
-    background-color: #006400;
-    color: #00ff00;
-  }
-  
-  [data-theme="dark"] .dashboard-content canvas {
-    background: #fff !important;
-  }
-  
-  [data-theme="dark"] .dashboard-tabs {
-    background: #000 !important;
-  }
-  
-  [data-theme="dark"] .dashboard-tabs a {
-    color: #00ff00 !important;
-  }
-  
-  [data-theme="dark"] .recipe-modal-content,
-  [data-theme="dark"] .recipe-modal-body {
-    background-color: #111 !important;
-    color: #00ff00 !important;
-  }
-
-  /* Dark mode overrides for CVE sub-tab containers */
-  [data-theme="dark"] .nvd-inner-container,
-  [data-theme="dark"] .msrc-tracker-container,
-  [data-theme="dark"] .shodan-inner-container {
-    background: rgba(255, 255, 255, 0.95) !important;
-  }
-  
-  [data-theme="dark"] .msrc-header h1,
-  [data-theme="dark"] .msrc-header p,
-  [data-theme="dark"] .shodan-header h1,
-  [data-theme="dark"] .shodan-header p {
-    color: white !important;
-    background: transparent !important;
-  }
-
-  [data-theme="dark"] .msrc-tracker-container .msrc-header p,
-  [data-theme="dark"] .shodan-inner-container .shodan-header p {
-    color: white !important;
-  }
-  
-  [data-theme="dark"] .nvd-inner-container h1,
-  [data-theme="dark"] .nvd-inner-container p,
-  [data-theme="dark"] .msrc-tracker-container h2,
-  [data-theme="dark"] .msrc-tracker-container p,
-  [data-theme="dark"] .msrc-api-info,
-  [data-theme="dark"] .msrc-api-info p,
-  [data-theme="dark"] .shodan-inner-container p,
-  [data-theme="dark"] .shodan-no-results h3,
-  [data-theme="dark"] .shodan-no-results p {
-    color: #333 !important;
-    background: transparent !important;
-  }
-
-  /* Dark mode styles for Domain Intelligence */
-  [data-theme="dark"] .domain-container,
-  [data-theme="dark"] .domain-header,
-  [data-theme="dark"] .domain-search-section,
-  [data-theme="dark"] .domain-result-card,
-  [data-theme="dark"] .domain-card-header,
-  [data-theme="dark"] .domain-card-content {
-    background: #111 !important;
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] #domain-input {
-    background: #111 !important;
-    color: #00ff00 !important;
-    border-color: #333 !important;
-  }
-
-  [data-theme="dark"] #analyze-btn {
-    background: #006400 !important;
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] .domain-dns-record {
-    background: #222 !important;
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] .domain-cert-cn {
-    color: #00ff00 !important;
-  }
-
-  [data-theme="dark"] .domain-cert-dates {
-    color: #00aa00 !important;
-  }
-
-  [data-theme="dark"] .domain-cert-issuer {
-    color: #00aa00 !important;
-  }
-
-  @media (max-width: 1200px) {
-    .cve-dashboard {
-      grid-template-columns: 1fr;
-      gap: 15px;
-      height: auto;
-    }
-    
-    .cve-main-panel {
-      min-height: 380px;
-    }
-    
-    .cve-controls {
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .msrc-cve-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .msrc-header h1 {
-      font-size: 2rem;
-    }
-
-    .msrc-demo-controls {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .msrc-filter-controls {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .msrc-filter-group {
-      justify-content: space-between;
-    }
-
-    .nvd-grid-controls {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .shodan-search-controls {
-      grid-template-columns: 1fr;
-    }
-
-    .shodan-metrics {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .cve-calendar-container {
-      margin-top: 25px;
-    }
-    
-    .cve-main-panel {
-      min-height: 350px;
-    }
-    
-    .cve-calendar-day {
-      min-height: 28px;
-      font-size: 0.85em;
-      padding: 2px;
-    }
-    
-    .cve-day-number {
-      font-size: 0.75em;
-      margin-bottom: 1px;
-    }
-    
-    .cve-day-count {
-      font-size: 0.55em;
-      padding: 1px 3px;
-    }
-    
-    .cve-calendar-grid {
-      gap: 1px;
-    }
-    
-    .cve-header h1 {
-      font-size: 1.8em;
-    }
-
-    .msrc-controls {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .nvd-card-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-
-    .nvd-popup-content {
-      padding: 25px;
-      margin: 10px;
-      width: calc(100% - 20px);
-    }
-
-    .shodan-cve-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .domain-results-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .domain-search-box {
-      flex-direction: column;
-    }
-  }
+@media (max-width: 480px) {
+  .dashboard-tabs a,
+  .cve-secondary-nav a,
+  .tools-secondary-nav a { font-size: 0.68rem; }
+  .dashboard-titlebar .subtitle { display: none; }
+}
 </style>
-</head>
-<body>
 
 <div id="dashboard-app">
+
+  <!-- Title bar -->
+  <div class="dashboard-titlebar">
+    <h1>~/dashboard</h1>
+    <span class="subtitle">clocks, cve feeds, lookups &amp; tools</span>
+  </div>
 
   <!-- Primary Navigation -->
   <nav class="dashboard-tabs">
@@ -3096,7 +2414,7 @@ permalink: /dashboard/
             <div class="nvd-header">
               <h1>🛡️ NVD Vulnerability Lookup</h1>
               <div class="nvd-status-badge">✅ Live API - NIST National Vulnerability Database</div>
-              <p style="color: #666; font-size: 1.1em;">Real-time vulnerability data from the official US government database</p>
+              <p>Real-time vulnerability data from the official US government database</p>
             </div>
             
             <div class="nvd-search-section">
@@ -3251,8 +2569,8 @@ permalink: /dashboard/
           </div>
 
           <div class="msrc-api-info">
-            <p>This page uses <code>CorsProxy.io</code> to access the MSRC API directly from your browser.</p>
-            <p><strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.</p>
+            <p>The MSRC API doesn't allow direct browser calls, so this tab goes through a small Cloudflare Worker proxy (or the public <code>CorsProxy.io</code> if no Worker is configured).</p>
+            <p><strong>Note:</strong> a full month of MSRC data is large (~20&nbsp;MB), so loading can take a few seconds.</p>
           </div>
 
           <div class="msrc-controls">
@@ -3273,7 +2591,7 @@ permalink: /dashboard/
           </div>
 
           <div class="msrc-demo-section">
-            <h2 style="margin-bottom: 20px; color: #333;">Microsoft Security Updates Browser</h2>
+            <h2>Microsoft Security Updates Browser</h2>
             
             <div class="msrc-demo-controls">
               <button class="msrc-demo-btn" onclick="msrcTool.previousMonth()">← Previous Month</button>
@@ -3281,7 +2599,7 @@ permalink: /dashboard/
                 <!-- Dynamically populated -->
               </select>
               <button class="msrc-demo-btn" onclick="msrcTool.nextMonth()">Next Month →</button>
-              <button class="msrc-demo-btn" onclick="msrcTool.fetchMonthData()" style="background: #28a745;">Load Security Updates</button>
+              <button class="msrc-demo-btn msrc-primary" onclick="msrcTool.fetchMonthData()">Load Security Updates</button>
             </div>
 
             <div class="msrc-filter-controls" id="msrc-filterControls" style="display: none;">
@@ -3305,7 +2623,7 @@ permalink: /dashboard/
                 </select>
               </div>
               <div class="msrc-filter-group">
-                <button class="msrc-demo-btn" onclick="msrcTool.resetFilters()" style="background: #6c757d;">Reset Filters</button>
+                <button class="msrc-demo-btn" onclick="msrcTool.resetFilters()">Reset Filters</button>
               </div>
             </div>
 
@@ -3346,8 +2664,7 @@ permalink: /dashboard/
               </div>
 
               <div class="shodan-disclaimer">
-                This page uses <code>CorsProxy.io</code> to access the CVEDB API directly from your browser.<br>
-                <strong>Note:</strong> This relies on a free third-party proxy service. If you experience issues, the proxy may be temporarily unavailable.
+                The CVEDB API doesn't allow direct browser calls, so lookups go through a small Cloudflare Worker proxy (or the public <code>CorsProxy.io</code> if no Worker is configured).
               </div>
             </div>
 
@@ -3600,6 +2917,21 @@ permalink: /dashboard/
 </div>
 
 <script>
+
+// ---------------------------------------------------------------------
+// Proxy for APIs that don't send CORS headers (MSRC, Shodan CVEDB, crt.sh).
+// WORKER: paste your dashboard-proxy Worker origin here (no path) to stop
+// relying on the public CorsProxy.io. Leave "" to keep using CorsProxy.io.
+// Worker contract: WORKER_URL + "/?url=" + encoded target (same as cybernews).
+// ---------------------------------------------------------------------
+const DASH_WORKER_URL = ""; // e.g. "https://dashboard-proxy.<your-subdomain>.workers.dev"
+
+function proxied(targetUrl) {
+  const w = DASH_WORKER_URL.trim().replace(/\/$/, '');
+  return w
+    ? `${w}/?url=${encodeURIComponent(targetUrl)}`
+    : `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+}
 
 // Tab switching logic for primary navigation
 document.querySelectorAll('.dashboard-tabs a').forEach(tabLink => {
@@ -4156,7 +3488,7 @@ if (targetTab) {
           <p><strong>Cuisine:</strong> ${recipe.strArea}</p>
           ${recipe.strTags ? `<div class="category">${recipe.strTags.split(',')[0]}</div>` : ''}
           <p style="margin-top: 10px;"><strong>Instructions:</strong> ${recipe.strInstructions.substring(0, 120)}...</p>
-          <p style="color: #007bff; font-weight: bold; margin-top: 10px;">Click to view full recipe →</p>
+          <p style="color: var(--accent); font-weight: bold; margin-top: 10px;">Click to view full recipe →</p>
         </div>
       </div>
     `).join('');
@@ -4293,7 +3625,7 @@ if (targetTab) {
       .catch(error => {
         console.error('Error fetching recipe details:', error);
         document.getElementById('modalRecipeTitle').textContent = 'Error loading recipe';
-        document.getElementById('modalIngredients').innerHTML = '<div style="text-align: center; padding: 20px; color: red;">Failed to load recipe details. Please try again.</div>';
+        document.getElementById('modalIngredients').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--db-crit);">Failed to load recipe details. Please try again.</div>';
         document.getElementById('modalInstructions').innerHTML = '';
       });
   }
@@ -4464,7 +3796,7 @@ if (targetTab) {
       // Show limitation note for keyword searches
       if (this.currentSearch.searchType === 'keyword') {
         html += `
-          <div style="background: #fef7e0; border: 1px solid #f6cc4d; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+          <div style="background: color-mix(in srgb, var(--db-med) 10%, transparent); border: 1px solid var(--db-med); border-radius: 4px; padding: 10px 14px; margin-bottom: 14px;">
             <strong>ℹ️ Search Limitations:</strong> Keyword Search may not find all relevant CVEs - searches description text but not all product names
           </div>
         `;
@@ -4472,7 +3804,7 @@ if (targetTab) {
       
       // Search results header
       html += `
-        <div style="margin-bottom: 25px; padding: 20px; background: #ebf8ff; border-radius: 10px; border-left: 4px solid #3182ce;">
+        <div style="margin-bottom: 16px; padding: 10px 14px; background: var(--db-tint); border: 1px solid var(--border); border-radius: 4px; border-left: 3px solid var(--accent);">
           <strong>📊 Search Results:</strong> Found ${this.totalResults.toLocaleString()} vulnerabilities
           <br><small>Showing ${this.currentResults.length} results</small>
         </div>
@@ -4490,12 +3822,12 @@ if (targetTab) {
         const hasNext = (this.currentPage + 1) * this.currentSearch.resultsPerPage < this.totalResults;
         
         html += `
-          <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 10px;">
+          <div style="text-align: center; margin-top: 20px; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px;">
             <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
               <button onclick="nvdTool.goToPage(${this.currentPage - 1})" ${this.currentPage === 0 ? 'disabled' : ''} 
                       style="padding: 10px 20px;">← Previous</button>
               
-              <span style="color: #4b5563; font-weight: 600;">
+              <span style="color: var(--text-dim); font-weight: 600;">
                 Page ${this.currentPage + 1} of ${totalPages}
               </span>
               
@@ -4503,7 +3835,7 @@ if (targetTab) {
                       style="padding: 10px 20px;">Next →</button>
             </div>
             
-            <div style="color: #6b7280; font-size: 14px;">
+            <div style="color: var(--text-dim); font-size: 0.8rem;">
               Showing ${this.currentResults.length} of ${this.totalResults.toLocaleString()} total results
             </div>
           </div>
@@ -4608,7 +3940,7 @@ if (targetTab) {
       const popupContentHTML = `
         <div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-            <h2 style="color: #2d3748; font-family: 'Monaco', monospace; margin: 0;">${cve.id}</h2>
+            <h2 style="color: var(--accent); margin: 0; font-size: 1.2rem;">${cve.id}</h2>
             <div style="display: flex; gap: 10px;">
               ${cvssData.score ? `<div class="nvd-cvss-badge ${cvssClass}">${cvssData.severity} - ${cvssData.score}</div>` : ''}
               ${cvssData.version ? `<div class="nvd-cvss-badge nvd-cvss-none">CVSS ${cvssData.version}</div>` : ''}
@@ -4616,38 +3948,38 @@ if (targetTab) {
           </div>
           
           <div style="margin-bottom: 25px;">
-            <h3 style="margin-bottom: 15px; color: #374151;">🔍 Full Description</h3>
-            <div style="line-height: 1.6; color: #374151; font-size: 16px; padding: 20px; background: #f8fafc; border-radius: 10px; border-left: 4px solid #667eea;">
+            <h3 style="margin-bottom: 10px; color: var(--heading); font-size: 1rem;">🔍 Full Description</h3>
+            <div style="line-height: 1.6; color: var(--text); font-size: 0.9rem; padding: 14px; background: var(--chrome); border: 1px solid var(--border); border-radius: 4px; border-left: 3px solid var(--accent);">
               ${description}
             </div>
           </div>
           
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px;">
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">📅 PUBLISHED</div>
-              <div style="color: #1f2937;">${publishedDate}</div>
+            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
+              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">📅 PUBLISHED</div>
+              <div style="color: var(--heading);">${publishedDate}</div>
             </div>
             
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">📄 MODIFIED</div>
-              <div style="color: #1f2937;">${modifiedDate}</div>
+            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
+              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">📄 MODIFIED</div>
+              <div style="color: var(--heading);">${modifiedDate}</div>
             </div>
             
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">⚡ CVSS SCORE</div>
-              <div style="color: #1f2937;">${cvssData.score || 'Not scored'}</div>
+            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
+              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">⚡ CVSS SCORE</div>
+              <div style="color: var(--heading);">${cvssData.score || 'Not scored'}</div>
             </div>
             
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-              <div style="font-weight: 600; color: #4b5563; margin-bottom: 5px; font-size: 12px;">🎯 SEVERITY</div>
-              <div style="color: #1f2937;">${cvssData.severity || 'Unknown'}</div>
+            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
+              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">🎯 SEVERITY</div>
+              <div style="color: var(--heading);">${cvssData.severity || 'Unknown'}</div>
             </div>
           </div>
           
           ${cvssData.vector ? `
             <div style="margin-bottom: 25px;">
-              <h3 style="margin-bottom: 15px; color: #374151;">🔢 CVSS Vector</h3>
-              <div style="background: #1a202c; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; word-break: break-all;">
+              <h3 style="margin-bottom: 10px; color: var(--heading); font-size: 1rem;">🔢 CVSS Vector</h3>
+              <div style="background: var(--chrome); color: var(--text); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px; font-size: 0.8rem; word-break: break-all;">
                 ${cvssData.vector}
               </div>
             </div>
@@ -4655,10 +3987,10 @@ if (targetTab) {
           
           ${cve.references && cve.references.length > 0 ? `
             <div>
-              <h3 style="margin-bottom: 15px; color: #374151;">🔗 References (${cve.references.length})</h3>
-              <div style="max-height: 200px; overflow-y: auto; background: #f8fafc; padding: 15px; border-radius: 8px;">
+              <h3 style="margin-bottom: 10px; color: var(--heading); font-size: 1rem;">🔗 References (${cve.references.length})</h3>
+              <div style="max-height: 200px; overflow-y: auto; background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
                 ${cve.references.map(ref => 
-                  `<a href="${ref.url}" target="_blank" style="display: block; color: #3182ce; text-decoration: none; margin: 5px 0; padding: 8px 12px; background: white; border-radius: 6px; word-break: break-all;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='white'">
+                  `<a href="${ref.url}" target="_blank" style="display: block; color: var(--accent); text-decoration: none; margin: 5px 0; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; word-break: break-all; font-size: 0.8rem;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='white'">
                     ${ref.url.length > 70 ? ref.url.substring(0, 70) + '...' : ref.url}
                   </a>`
                 ).join('')}
@@ -5241,7 +4573,7 @@ if (targetTab) {
 
       try {
         const targetUrl = `https://api.msrc.microsoft.com/cvrf/v3.0/cvrf/${selectedMonth}`;
-        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+        const proxyUrl = proxied(targetUrl);
 
         console.log('Target URL:', targetUrl);
 
@@ -5623,9 +4955,8 @@ if (targetTab) {
         const cveId = query.toUpperCase().replace(/^CVE-/, '');
         const targetUrl = `https://cvedb.shodan.io/cve/CVE-${cveId}`;
 
-        // Use CORS proxy 
-        const corsProxyUrl = 'https://corsproxy.io/';
-        const url = corsProxyUrl + targetUrl;
+        // Use CORS proxy (Worker if configured, else CorsProxy.io)
+        const url = proxied(targetUrl);
 
         console.log('Fetching URL:', url); // Debug log
         
@@ -5913,7 +5244,7 @@ if (targetTab) {
         // Certificate Analysis
         async function analyzeCertificates() {
             try {
-                const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(`https://crt.sh/?q=${currentDomain}&output=json`)}`);
+                const response = await fetch(proxied(`https://crt.sh/?q=${currentDomain}&output=json`));
                 const data = await response.json();
                 
                 // Store certificate count globally for summary
@@ -6010,11 +5341,11 @@ if (targetTab) {
             // Risk assessment
             html += `<div><strong>Assessment:</strong></div>`;
             if (dnsOnline && certCount > 0) {
-                html += `<div style="color: #27ae60;">✓ Active domain with SSL certificates</div>`;
+                html += `<div style="color: var(--db-low);">✓ Active domain with SSL certificates</div>`;
             } else if (dnsOnline) {
-                html += `<div style="color: #f39c12;">⚠ Domain resolves but no certificates found</div>`;
+                html += `<div style="color: var(--db-med);">⚠ Domain resolves but no certificates found</div>`;
             } else {
-                html += `<div style="color: #e74c3c;">⚠ Domain does not resolve</div>`;
+                html += `<div style="color: var(--db-crit);">⚠ Domain does not resolve</div>`;
             }
             
             document.getElementById('summary-content').innerHTML = html;
@@ -6027,5 +5358,3 @@ if (targetTab) {
             }
         });
 </script>
-</body>
-</html>
