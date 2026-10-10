@@ -2924,7 +2924,7 @@ button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.
 // relying on the public CorsProxy.io. Leave "" to keep using CorsProxy.io.
 // Worker contract: WORKER_URL + "/?url=" + encoded target (same as cybernews).
 // ---------------------------------------------------------------------
-const DASH_WORKER_URL = ""; // e.g. "https://dashboard-proxy.<your-subdomain>.workers.dev"
+const DASH_WORKER_URL = "https://dashboard-proxy.cicerodev-343.workers.dev";
 
 function proxied(targetUrl) {
   const w = DASH_WORKER_URL.trim().replace(/\/$/, '');
