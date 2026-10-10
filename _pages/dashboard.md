@@ -170,7 +170,7 @@ permalink: /dashboard/
 
 /* ---- Base elements inside the dashboard (zero-specificity scope
         so component classes below always win) ------------------ */
-:where(#dashboard-app, .nvd-popup-overlay) :where(input, select, textarea, button) {
+:where(#dashboard-app) :where(input, select, textarea, button) {
   font-family: inherit;
 }
 
@@ -189,7 +189,7 @@ permalink: /dashboard/
   box-shadow: 0 0 0 2px var(--db-tint);
 }
 
-:where(#dashboard-app, .nvd-popup-overlay) button {
+:where(#dashboard-app) button {
   background: var(--chrome);
   color: var(--text);
   border: 1px solid var(--border);
@@ -200,12 +200,12 @@ permalink: /dashboard/
   transition: background-color 0.15s, color 0.15s, border-color 0.15s;
 }
 
-:where(#dashboard-app, .nvd-popup-overlay) button:hover:not(:disabled) {
+:where(#dashboard-app) button:hover:not(:disabled) {
   color: var(--accent);
   border-color: var(--accent);
 }
 
-:where(#dashboard-app, .nvd-popup-overlay) button:disabled {
+:where(#dashboard-app) button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -228,12 +228,8 @@ permalink: /dashboard/
   color: var(--accent);
 }
 
-/* Tool header bar (shared look for Domain / NVD / GHSA / MSRC / CVEDB) */
+/* Tool header bar (shared look for Domain / Currency) */
 .domain-header,
-.nvd-header,
-.cve-header,
-.msrc-header,
-.shodan-header,
 .currency-header {
   background: var(--db-bar);
   border: 1px solid var(--border);
@@ -246,10 +242,6 @@ permalink: /dashboard/
 }
 
 .domain-header h1, .domain-header h2,
-.nvd-header h1,
-.cve-header h1,
-.msrc-header h1,
-.shodan-header h1,
 .currency-header h2 {
   font-size: 1.05rem;
   font-weight: 600;
@@ -262,36 +254,12 @@ permalink: /dashboard/
 }
 
 .domain-header p,
-.nvd-header p,
-.cve-header p,
-.msrc-header p,
-.shodan-header p,
 .currency-header p {
   color: var(--text-dim);
   font-size: 0.78rem;
   margin: 4px 0 0 15px;
   opacity: 1;
 }
-
-/* Small callouts / info boxes */
-.msrc-api-info,
-.shodan-disclaimer {
-  background: var(--db-tint);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 4px;
-  padding: 10px 14px;
-  margin: 0 0 16px;
-  font-size: 0.8rem;
-  color: var(--text);
-  text-align: left;
-  line-height: 1.6;
-}
-
-.msrc-api-info p { color: var(--text); margin: 0; font-size: 0.8rem; }
-.msrc-api-info code,
-.shodan-disclaimer code { font-size: 0.85em; }
-.shodan-disclaimer strong { color: var(--heading); }
 
 @keyframes spin {
   0%   { transform: rotate(0deg); }
@@ -853,8 +821,7 @@ permalink: /dashboard/
   display: block;
 }
 
-.close-modal,
-.nvd-popup-close {
+.close-modal {
   position: absolute;
   top: 12px;
   right: 14px;
@@ -875,8 +842,7 @@ permalink: /dashboard/
   line-height: 1;
 }
 
-.close-modal:hover,
-.nvd-popup-close:hover { background: rgba(0, 0, 0, 0.75) !important; color: #fff !important; }
+.close-modal:hover { background: rgba(0, 0, 0, 0.75) !important; color: #fff !important; }
 
 .recipe-modal-body { padding: 24px; }
 
@@ -1047,1235 +1013,482 @@ button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.
 }
 
 /* =============================================================
-   CVE Tracker — GHSA calendar
+   CVE hub (Lookup + GHSA / Patch Tuesday / KEV feeds)
    ============================================================= */
-.cve-tracker-container {
-  color: var(--text);
-  font-size: 14px;
-}
-
-.cve-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  flex-wrap: wrap;
-}
-
-.cve-filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.cve-filter-label {
-  color: var(--text-dim);
-  font-weight: 600;
-  font-size: 0.8rem;
-}
-
-.cve-filter-select { font-size: 0.8rem !important; padding: 4px 8px !important; }
-
-.cve-calendar-nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-}
-
-.cve-nav-btn {
-  padding: 4px 10px !important;
-  font-size: 0.8rem !important;
-}
-
-.cve-current-month {
-  font-weight: bold;
-  color: var(--heading);
-  min-width: 120px;
-  text-align: center;
-  font-size: 0.9em;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  position: relative;
-}
-
-.cve-month-text { color: var(--heading); }
-
-.cve-year-text {
-  color: var(--accent);
-  font-size: 0.85em;
-  text-decoration: underline;
-  cursor: pointer;
-}
-.cve-year-text:hover { color: var(--link-hover); }
-
-.cve-year-picker {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 6px;
-  z-index: 1000;
-  display: none;
-  max-height: 200px;
-  overflow-y: auto;
-  min-width: 100px;
-  margin-top: 5px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-}
-
-.cve-year-picker.cve-show { display: block; }
-
-.cve-year-option {
-  padding: 4px 10px;
-  cursor: pointer;
-  color: var(--text);
-  text-align: center;
-  border-radius: 3px;
-}
-
-.cve-year-option:hover,
-.cve-year-option.cve-current {
-  background: var(--db-tint);
-  color: var(--accent);
-}
-
-.cve-dashboard {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 16px;
-  margin: 0 auto;
-  height: calc(100vh - 160px);
-}
-
-.cve-main-panel,
-.cve-side-panel {
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.cve-side-panel { max-height: calc(100vh - 160px); }
-
-.cve-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.cve-panel-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--heading);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.cve-api-status {
-  padding: 1px 8px;
-  border-radius: 3px;
-  font-size: 0.68rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid currentColor;
-  white-space: nowrap;
-}
-
-.cve-api-live  { color: var(--db-low);  background: var(--db-tint); }
-.cve-api-error { color: var(--db-crit); background: transparent; }
-
-.cve-calendar-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-top: 4px;
-}
-
-/* The JS never removes .cve-loading from #cve-calendar-content, so once the
-   grid is rendered undo the fixed 150px centred box (the old design hid this
-   with a big margin-top). */
-#cve-calendar-content.cve-loading:has(.cve-calendar-grid) {
-  display: block;
-  height: auto;
-}
-
-.cve-calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
-  flex: 1;
-}
-
-.cve-calendar-header {
+.cvh-head {
   background: var(--db-bar);
-  padding: 6px 4px;
-  text-align: center;
-  font-weight: bold;
-  color: var(--text-dim);
-  border-radius: 3px;
-  font-size: 0.75em;
-}
-
-.cve-calendar-day {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-  position: relative;
-  min-height: 45px;
-  padding: 3px;
-  color: var(--text);
-}
-
-.cve-calendar-day:hover {
-  border-color: var(--accent);
-  transform: scale(1.04);
-  z-index: 5;
-}
-
-.cve-calendar-day.selected {
-  border: 2px solid var(--accent);
-  transform: scale(1.04);
-}
-
-.cve-calendar-day.other-month { opacity: 0.35; }
-
-.cve-calendar-day.today {
-  border: 2px solid var(--accent-2);
-}
-
-.cve-day-number {
-  font-size: 0.85em;
-  font-weight: bold;
-  margin-bottom: 2px;
-}
-
-.cve-day-count {
-  font-size: 0.68em;
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  padding: 0 4px;
-  border-radius: 3px;
-  min-width: 16px;
-  text-align: center;
-  line-height: 1.4;
-}
-
-/* Heatmap: accent for light activity, warming up to red */
-.cve-day-heat-0 { background: var(--bg) !important; }
-.cve-day-heat-1 { background: color-mix(in srgb, var(--db-low)  14%, var(--bg)) !important; }
-.cve-day-heat-2 { background: color-mix(in srgb, var(--db-low)  30%, var(--bg)) !important; }
-.cve-day-heat-3 { background: color-mix(in srgb, var(--db-med)  32%, var(--bg)) !important; }
-.cve-day-heat-4 { background: color-mix(in srgb, var(--db-high) 36%, var(--bg)) !important; }
-.cve-day-heat-5 { background: color-mix(in srgb, var(--db-crit) 40%, var(--bg)) !important; }
-
-.cve-stats-summary {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 14px;
-  flex-shrink: 0;
-}
-
-.cve-stat-box {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 8px;
-  border-radius: 4px;
-  text-align: center;
-  flex: 1;
-}
-
-.cve-stat-number {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: var(--heading);
-  margin-bottom: 2px;
-}
-.cve-stat-box:first-child .cve-stat-number { color: var(--db-crit); }
-.cve-stat-box:nth-child(2) .cve-stat-number { color: var(--db-high); }
-
-.cve-stat-label {
-  font-size: 0.75em;
-  color: var(--text-dim);
-}
-
-.cve-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 150px;
-  color: var(--text-dim);
-  font-size: 0.9em;
-}
-
-.cve-spinner,
-.msrc-spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid var(--border);
-  border-top: 3px solid var(--accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 12px;
-}
-
-.cve-error {
-  color: var(--db-crit);
-  text-align: center;
-  padding: 30px;
-  font-size: 0.9em;
-}
-
-.cve-no-advisories {
-  text-align: center;
-  color: var(--text-dim);
-  padding: 30px;
-  font-style: italic;
-  font-size: 0.85em;
-}
-
-.cve-advisory-item {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--db-crit);
-  border-radius: 4px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-  cursor: pointer;
-}
-
-.cve-advisory-item:hover {
-  border-color: var(--accent);
-  transform: translateX(2px);
-}
-
-.cve-advisory-item.expanded { border-color: var(--accent); }
-
-/* Severity badges (shared look across GHSA / NVD / MSRC / CVEDB) */
-.cve-severity-badge,
-.nvd-cvss-badge,
-.msrc-cve-severity,
-.shodan-badge,
-.shodan-cvss-tag {
-  display: inline-block;
-  padding: 1px 8px;
-  border-radius: 3px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  border: 1px solid currentColor;
-  background: transparent;
-  white-space: nowrap;
-}
-
-.cve-severity-critical, .nvd-cvss-critical, .msrc-severity-critical,
-.shodan-badge.kev, .shodan-badge.epss-high {
-  color: var(--db-crit);
-  background: color-mix(in srgb, var(--db-crit) 10%, transparent);
-}
-.cve-severity-high, .nvd-cvss-high, .msrc-severity-important {
-  color: var(--db-high);
-  background: color-mix(in srgb, var(--db-high) 10%, transparent);
-}
-.cve-severity-medium, .nvd-cvss-medium, .msrc-severity-moderate,
-.shodan-badge.epss-medium {
-  color: var(--db-med);
-  background: color-mix(in srgb, var(--db-med) 10%, transparent);
-}
-.cve-severity-low, .nvd-cvss-low, .msrc-severity-low,
-.shodan-badge.epss-low {
-  color: var(--db-low);
-  background: color-mix(in srgb, var(--db-low) 10%, transparent);
-}
-.nvd-cvss-none, .msrc-severity-unknown {
-  color: var(--text-dim);
-}
-.shodan-badge.cvss, .shodan-cvss-tag {
-  color: var(--db-info);
-  background: color-mix(in srgb, var(--db-info) 10%, transparent);
-}
-
-.cve-advisory-details {
-  display: none;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-}
-
-.cve-advisory-details.cve-show { display: block; }
-
-.cve-selected-date-info {
-  background: var(--db-tint);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  padding: 10px 12px;
-  border-radius: 4px;
-  margin-bottom: 12px;
-  flex-shrink: 0;
-}
-
-.cve-selected-date {
-  font-size: 0.95em;
-  font-weight: bold;
-  color: var(--heading);
-  margin-bottom: 2px;
-}
-
-.cve-date-summary {
-  font-size: 0.8em;
-  color: var(--text-dim);
-}
-
-.cve-advisory-list {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 5px;
-}
-
-.cve-advisory-list::-webkit-scrollbar { width: 4px; }
-.cve-advisory-list::-webkit-scrollbar-track { background: var(--chrome); border-radius: 2px; }
-.cve-advisory-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-.cve-advisory-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.cve-advisory-title {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.cve-advisory-id {
-  font-size: 0.85em;
-  font-weight: bold;
-  color: var(--accent);
-}
-
-.cve-id {
-  font-size: 0.75em;
-  color: var(--accent-2);
-}
-
-.cve-advisory-summary {
-  font-size: 0.78em;
-  line-height: 1.4;
-  color: var(--text);
-  margin-bottom: 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.cve-detail-row {
-  display: flex;
-  margin: 5px 0;
-  font-size: 0.75em;
-}
-
-.cve-detail-label {
-  font-weight: bold;
-  color: var(--text-dim);
-  min-width: 80px;
-}
-
-.cve-detail-value {
-  color: var(--text);
-  word-break: break-word;
-}
-
-.cve-external-link,
-.cve-external-link:visited {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 3px 10px;
-  border: 1px solid var(--accent);
-  border-radius: 3px;
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.75em;
-}
-
-.cve-external-link:hover {
-  background: var(--accent);
-  color: var(--db-ink);
-  text-decoration: none;
-}
-
-/* =============================================================
-   CVE Tracker — MSRC
-   ============================================================= */
-.msrc-tracker-container { color: var(--text); }
-
-.msrc-loading {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  transform: translateY(-50%);
-  display: none;
-}
-
-.msrc-loading .msrc-spinner { margin-right: 0; }
-
-.msrc-controls { margin-bottom: 16px; }
-
-.msrc-stats {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-}
-
-.msrc-stat-item {
-  flex: 1;
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  padding: 8px 12px;
-  border-radius: 4px;
-  text-align: center;
-  min-width: 80px;
-}
-
-.msrc-stat-number {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: var(--heading);
-}
-.msrc-stat-item:nth-child(2) .msrc-stat-number { color: var(--db-crit); }
-
-.msrc-stat-label {
-  font-size: 0.72rem;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-
-.msrc-demo-section > h2 {
-  font-size: 1rem !important;
-  color: var(--heading) !important;
-  margin: 0 0 12px !important;
-}
-
-.msrc-demo-controls {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.msrc-demo-btn.msrc-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--db-ink);
-}
-.msrc-demo-btn.msrc-primary:hover:not(:disabled) { color: var(--db-ink); filter: brightness(1.1); }
-
-.msrc-filter-controls {
-  background: var(--chrome);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.msrc-filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.msrc-filter-group label {
-  font-weight: 600;
-  color: var(--text-dim);
-  font-size: 0.8rem;
-}
-
-.msrc-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 0 0;
-  margin-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-.msrc-pagination-info {
-  margin: 0 10px;
-  font-weight: 600;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-}
-
-.msrc-cve-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.msrc-cve-item {
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent-2);
-  border-radius: 4px;
-  padding: 14px;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-  cursor: pointer;
-  min-width: 0;
-}
-
-.msrc-cve-item:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-}
-
-.msrc-cve-item:active { transform: translateY(-1px); }
-
-.msrc-external-link-icon {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  margin-left: 8px;
-  font-size: 0.9rem;
-  color: var(--accent);
-}
-
-.msrc-cve-item:hover .msrc-external-link-icon { opacity: 1; }
-
-.msrc-cve-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.msrc-cve-id {
-  font-weight: bold;
-  color: var(--accent);
-  font-size: 0.95rem;
-}
-
-.msrc-cve-date {
-  color: var(--text-dim);
-  font-size: 0.78rem;
-}
-
-.msrc-cve-title {
-  margin-bottom: 8px;
-  color: var(--heading);
-  line-height: 1.4;
-  font-size: 0.85rem;
-}
-
-.msrc-cve-description {
-  margin-top: 8px;
-  color: var(--text-dim);
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
-
-.msrc-no-data {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--text-dim);
-  font-style: italic;
-  padding: 36px;
-  background: var(--chrome);
-  border: 1px dashed var(--border);
-  border-radius: 4px;
-  font-size: 0.85rem;
-}
-
-.msrc-error,
-.msrc-success,
-.msrc-results-summary {
   padding: 10px 14px;
-  border-radius: 4px;
-  margin: 12px 0;
-  font-size: 0.85rem;
-  border: 1px solid currentColor;
-  border-left-width: 3px;
+  margin-bottom: 14px;
 }
 
-.msrc-error   { color: var(--db-crit); background: color-mix(in srgb, var(--db-crit) 8%, transparent); }
-.msrc-success { color: var(--db-low);  background: var(--db-tint); }
-
-.msrc-results-summary {
-  color: var(--text);
-  border-color: var(--border);
-  border-left-color: var(--accent);
-  background: var(--db-tint);
-}
-
-/* =============================================================
-   CVE Tracker — NVD
-   ============================================================= */
-.nvd-status-badge {
-  display: inline-block;
-  color: var(--db-low);
-  border: 1px solid currentColor;
-  background: var(--db-tint);
-  padding: 1px 8px;
-  border-radius: 3px;
-  font-size: 0.72rem;
+.cvh-head h1 {
+  font-size: 1.05rem !important;
   font-weight: 600;
-  margin: 8px 0 0 15px;
+  color: var(--heading);
+  margin: 0 !important;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  line-height: 1.4;
 }
 
-.nvd-search-section {
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.nvd-input-group { margin-bottom: 14px; }
-
-.nvd-input-group label {
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 600;
+.cvh-head p {
   color: var(--text-dim);
   font-size: 0.78rem;
+  margin: 4px 0 0 15px !important;
+  line-height: 1.5;
 }
 
-.nvd-input-group input,
-.nvd-input-group select {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px 12px;
-  font-size: 0.88rem;
+/* search + controls */
+.cvh-search,
+.cvh-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.nvd-grid-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
+.cvh-search input[type="text"] { flex: 1 1 220px; min-width: 0; padding: 8px 12px; font-size: 0.9rem; }
+.cvh-controls input[type="text"] { flex: 1 1 160px; min-width: 0; }
+.cvh-controls select,
+.cvh-search select { font-size: 0.8rem; }
 
-.nvd-button,
-.shodan-search-btn {
+.cvh-primary {
   background: var(--accent) !important;
   border-color: var(--accent) !important;
   color: var(--db-ink) !important;
   font-weight: 600;
 }
-.nvd-button:hover:not(:disabled),
-.shodan-search-btn:hover:not(:disabled) { filter: brightness(1.1); }
+.cvh-primary:hover { filter: brightness(1.1); }
 
-.nvd-results-container {
+.cvh-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem !important;
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cvh-check input { accent-color: var(--accent); }
+
+.cvh-seg { display: inline-flex; }
+.cvh-seg button {
+  border-radius: 0 !important;
+  margin-left: -1px;
+  padding: 5px 12px !important;
+  font-size: 0.8rem !important;
+}
+.cvh-seg button:first-child { border-radius: 4px 0 0 4px !important; margin-left: 0; }
+.cvh-seg button:last-child  { border-radius: 0 4px 4px 0 !important; }
+.cvh-seg button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--db-ink);
+  position: relative;
+}
+
+.cvh-examples {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.cvh-examples button {
+  padding: 1px 8px !important;
+  font-size: 0.72rem !important;
+  background: transparent;
+}
+
+/* per-source status chips */
+.cvh-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.cvh-status:empty { display: none; }
+
+.cvh-chip {
+  font-size: 0.7rem !important;
+  padding: 1px 8px !important;
+  border-radius: 3px !important;
+  background: var(--chrome);
+  cursor: default !important;
+}
+.cvh-chip small { color: inherit; opacity: 0.85; }
+.cvh-chip-loading { color: var(--text-dim) !important; }
+.cvh-chip-ok      { color: var(--db-low) !important; border-color: color-mix(in srgb, var(--db-low) 45%, var(--border)) !important; }
+.cvh-chip-none    { color: var(--text-dim) !important; border-style: dashed !important; }
+.cvh-chip-fail    { color: var(--db-crit) !important; border-color: var(--db-crit) !important; cursor: pointer !important; }
+.cvh-chip-ok:hover, .cvh-chip-none:hover, .cvh-chip-loading:hover { border-color: var(--border) !important; }
+
+/* source tag */
+.cvh-src {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  border: 1px solid color-mix(in srgb, var(--accent-2) 45%, var(--border));
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 1.5;
+  vertical-align: middle;
+  white-space: nowrap;
+  cursor: help;
+}
+.cvh-tags { display: inline-flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* result card */
+.cvh-card {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.cvh-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+
+.cvh-id { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+
+.cvh-quicklinks { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 0.75rem; }
+
+.cvh-title { margin-top: 4px; color: var(--heading); font-weight: 600; font-size: 0.9rem; }
+
+.cvh-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin: 6px 0 10px;
+}
+
+.cvh-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+.cvh-tiles-sm { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); margin-bottom: 8px; }
+
+.cvh-tile {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  min-width: 0;
+}
+.cvh-tile-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.cvh-tile-val { font-size: 1.15rem; font-weight: 700; color: var(--heading); margin: 2px 0; line-height: 1.3; }
+.cvh-tile-val .cvh-sev { font-size: 0.85rem; }
+.cvh-tile-text { font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cvh-tile-sub { font-size: 0.7rem; color: var(--text-dim); line-height: 1.4; }
+.cvh-hot { color: var(--db-crit) !important; }
+.cvh-c-crit { color: var(--db-crit) !important; }
+.cvh-c-high { color: var(--db-high) !important; }
+
+/* collapsible sections */
+.cvh-sec {
   background: var(--chrome);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 16px;
-  display: none;
-  font-size: 0.85rem;
+  margin-bottom: 8px;
 }
-
-.nvd-vulnerability-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent-2);
-  border-radius: 4px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s ease;
-}
-
-.nvd-vulnerability-card:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent);
-}
-
-.nvd-card-header {
+.cvh-sec > summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--heading);
+  list-style: none;
+}
+.cvh-sec > summary::-webkit-details-marker { display: none; }
+.cvh-sec > summary > span:first-child::before { content: "▸ "; color: var(--accent); }
+.cvh-sec[open] > summary > span:first-child::before { content: "▾ "; }
+.cvh-sec[open] > summary { border-bottom: 1px solid var(--border); }
+.cvh-sec-body { padding: 10px 12px; font-size: 0.82rem; }
+
+.cvh-count {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  font-weight: 400;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 5px;
+  margin-left: 4px;
 }
 
-.nvd-cve-id {
-  font-size: 0.95em;
-  font-weight: bold;
-  color: var(--accent);
-}
+.cvh-desc { margin: 0 0 8px !important; line-height: 1.6; white-space: pre-line; }
+.cvh-cwes { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.75rem; }
 
-.nvd-card-description {
-  color: var(--text);
+.cvh-dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 14px;
+  margin: 0;
   font-size: 0.8rem;
-  line-height: 1.45;
+}
+.cvh-dl dt { color: var(--text-dim); }
+.cvh-dl dd { margin: 0; min-width: 0; word-break: break-word; }
+
+.cvh-table-wrap { overflow-x: auto; margin-bottom: 6px; }
+.cvh-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+.cvh-table th, .cvh-table td {
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.cvh-table th { color: var(--text-dim); font-weight: 600; white-space: nowrap; }
+.cvh-table tr:last-child td { border-bottom: none; }
+.cvh-vector { font-size: 0.7rem; color: var(--text-dim); word-break: break-all; }
+
+.cvh-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 3px;
+  padding: 0 6px;
+  margin: 0 4px 3px 0;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.cvh-pill-warn { border-color: var(--db-med); color: var(--db-med); }
+.cvh-pills { display: flex; flex-wrap: wrap; }
+.cvh-eco { color: var(--accent-2); font-size: 0.68rem; text-transform: lowercase; }
+
+.cvh-refs { margin: 0; padding-left: 0; list-style: none; font-size: 0.75rem; }
+.cvh-refs li { padding: 3px 0; border-bottom: 1px dashed var(--border); word-break: break-all; }
+.cvh-refs li:last-child { border-bottom: none; }
+.cvh-refs-inline { word-break: break-all; }
+
+/* severity + flags */
+.cvh-sev {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 6px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.cvh-sev-crit { color: var(--db-crit); background: color-mix(in srgb, var(--db-crit) 10%, transparent); }
+.cvh-sev-high { color: var(--db-high); background: color-mix(in srgb, var(--db-high) 10%, transparent); }
+.cvh-sev-med  { color: var(--db-med);  background: color-mix(in srgb, var(--db-med) 10%, transparent); }
+.cvh-sev-low  { color: var(--db-low);  background: color-mix(in srgb, var(--db-low) 10%, transparent); }
+.cvh-sev-none { color: var(--text-dim); }
+
+.cvh-flag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--db-crit);
+  border-radius: 3px;
+  padding: 0 5px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.cvh-flag-soft { background: transparent; color: var(--db-high); border: 1px solid currentColor; }
+[data-theme="dark"] .cvh-flag:not(.cvh-flag-soft) { color: #0d1117; }
+
+/* lists (keyword results + feeds) */
+.cvh-list { display: flex; flex-direction: column; gap: 6px; }
+
+.cvh-listhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
   margin-bottom: 8px;
+}
+
+.cvh-row,
+.cvh-item {
+  background: var(--chrome);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-2);
+  border-radius: 4px;
+  padding: 8px 10px;
+  min-width: 0;
+}
+.cvh-item-hot { border-left-color: var(--db-crit); }
+.cvh-item > summary { list-style: none; cursor: pointer; }
+.cvh-item > summary::-webkit-details-marker { display: none; }
+.cvh-item[open] { border-color: var(--accent); }
+.cvh-item-body { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+.cvh-item-body p { margin: 0 0 6px !important; }
+
+.cvh-row-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 0.78rem;
+}
+.cvh-date { margin-left: auto; font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; }
+.cvh-row-title { font-size: 0.82rem; color: var(--heading); margin-top: 4px; line-height: 1.45; }
+.cvh-row-desc {
+  font-size: 0.78rem;
+  color: var(--text);
+  margin-top: 4px;
+  line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.cvh-pkgs { margin-top: 5px; }
+.cvh-mono-sm { font-size: 0.7rem; }
 
-.nvd-card-meta {
+.cvh-cvebtn {
+  font-weight: 700 !important;
+  color: var(--accent) !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 0.82rem !important;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+.cvh-cvebtn:hover { text-decoration-style: solid; }
+
+.cvh-link {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  color: var(--accent) !important;
+  text-decoration: underline;
+  font-size: inherit !important;
+}
+
+.cvh-pager {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 0.72rem;
-  color: var(--text-dim);
-}
-
-.nvd-click-hint {
-  color: var(--accent);
-  font-weight: 600;
-  border: 1px solid var(--border);
-  padding: 0 6px;
-  border-radius: 3px;
-}
-
-.nvd-loading {
-  text-align: center;
-  color: var(--text-dim);
-  font-style: italic;
-  padding: 30px;
-}
-
-.nvd-error {
-  color: var(--db-crit);
-  background: color-mix(in srgb, var(--db-crit) 8%, transparent);
-  border: 1px solid currentColor;
-  border-left-width: 3px;
-  padding: 12px 14px;
-  border-radius: 4px;
-}
-
-/* NVD popup (lives outside #dashboard-app) */
-.nvd-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-  display: none;
-  overflow-y: auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.nvd-popup-content {
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 10px;
-  max-width: 800px;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-  top: 0;
-  font-size: 0.88rem;
-}
-
-.nvd-popup-content h2,
-.nvd-popup-content h3 { margin-top: 0; }
-
-.nvd-popup-close { color: #fff; }
-
-.nvd-popup-body { padding: 24px; }
-
-/* =============================================================
-   CVE Tracker — Shodan CVEDB
-   ============================================================= */
-.shodan-search-section {
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.shodan-search-controls {
-  display: grid;
-  grid-template-columns: 1fr 120px;
   gap: 12px;
-  margin-bottom: 0;
-  align-items: end;
+  margin-top: 12px;
+  font-size: 0.8rem;
 }
 
-.shodan-form-group {
+/* GHSA per-day histogram */
+.cvh-hist {
   display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 64px;
+  margin: 4px 0 6px;
+}
+.cvh-bar {
+  flex: 1;
+  height: 100%;
+  display: flex !important;
   flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  min-width: 0;
 }
-
-.shodan-form-group label {
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: var(--text-dim);
-  font-size: 0.78rem;
-}
-
-.shodan-form-group select,
-.shodan-form-group input {
-  padding: 8px 12px;
-  font-size: 0.88rem;
-}
-
-.shodan-search-btn { padding: 8px 14px !important; }
-
-.shodan-disclaimer { margin: 14px 0 0; }
-
-.shodan-results-section { padding: 0; }
-
-.shodan-loading {
-  text-align: center;
-  padding: 40px;
-  color: var(--text-dim);
-}
-
-.shodan-loading::after {
-  content: '';
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 3px solid var(--border);
-  border-top: 3px solid var(--accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-left: 10px;
-  vertical-align: middle;
-}
-
-.shodan-error {
-  color: var(--db-crit);
-  background: color-mix(in srgb, var(--db-crit) 8%, transparent);
-  border: 1px solid currentColor;
-  border-left-width: 3px;
-  padding: 12px 14px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-
-.shodan-results-summary {
-  background: var(--db-tint);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  padding: 10px 14px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-
-.shodan-vulnerability-card,
-.shodan-list-item {
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent-2);
-  border-radius: 4px;
-  padding: 18px;
-  margin-bottom: 16px;
-}
-
-.shodan-cve-header,
-.shodan-list-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.shodan-cve-id,
-.shodan-list-item-cve {
-  font-size: 1.1em;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.shodan-badges {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.shodan-vulnerability-summary,
-.shodan-list-item-summary {
-  margin-bottom: 18px;
-  line-height: 1.6;
-  color: var(--text);
-  font-size: 0.88em;
-}
-
-.shodan-metrics {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.shodan-metric {
-  text-align: center;
-  padding: 10px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-}
-
-.shodan-metric-value {
-  font-size: 1.3em;
-  font-weight: 700;
-  color: var(--heading);
+.cvh-bar span {
   display: block;
+  min-height: 2px;
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 2px 2px 0 0;
 }
+.cvh-bar em { font-style: normal; font-size: 0.6rem; color: var(--text-dim); line-height: 1.4; }
+.cvh-bar:hover span, .cvh-bar.active span { background: var(--accent); }
+.cvh-bar.active em { color: var(--accent); font-weight: 700; }
 
-.shodan-metric-label {
-  font-size: 0.75em;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-
-.shodan-proposed-action {
-  background: var(--db-tint);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  padding: 10px 14px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-
-.shodan-proposed-action h4 {
-  color: var(--accent);
-  margin: 0 0 6px;
-  font-size: 0.9em;
-}
-
-.shodan-proposed-action p {
-  color: var(--text);
-  margin: 0;
-  line-height: 1.5;
-  font-size: 0.85em;
-}
-
-.shodan-published-date {
-  color: var(--text-dim);
-  font-size: 0.8em;
-  margin-top: 12px;
-}
-
-.shodan-additional-info { margin: 18px 0; }
-
-.shodan-expand-btn { margin-bottom: 12px; }
-
-.shodan-details-section {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 14px;
-  margin-top: 12px;
-}
-
-.shodan-detail-block { margin-bottom: 16px; }
-
-.shodan-detail-block h4 {
-  color: var(--heading);
-  margin: 0 0 8px;
-  font-size: 0.9em;
-}
-
-.shodan-cpe-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.shodan-cpe-tag {
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-size: 0.75em;
-  word-break: break-all;
-}
-
-.shodan-cpe-more,
-.shodan-ref-more {
-  color: var(--text-dim);
-  font-style: italic;
-  font-size: 0.85em;
-}
-
-.shodan-ref-more { margin: 5px 0 0 0; }
-
-.shodan-references-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.shodan-reference-link,
-.shodan-reference-link:visited {
-  color: var(--accent);
-  text-decoration: none;
-  padding: 6px 10px;
-  background: var(--chrome);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 3px;
-  font-size: 0.8em;
-  word-break: break-all;
-}
-
-.shodan-reference-link:hover { border-color: var(--accent); text-decoration: none; }
-
-.shodan-cvss-versions {
-  display: flex;
-  gap: 8px;
-}
-
-.shodan-external-links {
-  display: flex;
-  gap: 8px;
-  margin: 18px 0 10px;
-  flex-wrap: wrap;
-}
-
-.shodan-external-link,
-.shodan-external-link:visited {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  text-decoration: none;
-  padding: 4px 12px;
-  border-radius: 3px;
-  font-size: 0.85em;
-  font-weight: 600;
-}
-
-.shodan-external-link:hover {
-  background: var(--accent);
-  color: var(--db-ink);
-  text-decoration: none;
-}
-
-.shodan-no-results {
+/* misc */
+.cvh-empty {
   text-align: center;
-  padding: 36px 20px;
+  padding: 32px 16px;
   color: var(--text-dim);
+  font-size: 0.85rem;
   background: var(--chrome);
   border: 1px dashed var(--border);
   border-radius: 4px;
-  font-size: 0.85rem;
+}
+.cvh-big { font-size: 1.6rem; color: var(--accent); }
+.cvh-error {
+  color: var(--db-crit);
+  background: color-mix(in srgb, var(--db-crit) 8%, transparent);
+  border: 1px solid var(--db-crit);
+  border-left-width: 3px;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+}
+.cvh-small { font-size: 0.75rem; line-height: 1.55; margin: 6px 0 0; }
+.cvh-dim { color: var(--text-dim); }
+
+.cvh-spin {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  vertical-align: -1px;
 }
 
-.shodan-no-results h3 {
-  margin: 0 0 10px;
-  color: var(--heading);
-  font-size: 1rem;
-}
-
-.shodan-results-list {
-  display: grid;
-  gap: 12px;
-}
-
-.shodan-list-item-metrics {
-  display: flex;
-  gap: 10px;
-  font-size: 0.8em;
-}
-
-.shodan-list-metric {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-weight: 600;
+@media (max-width: 600px) {
+  .cvh-search select { flex: 1 1 auto; }
+  .cvh-search .cvh-primary { flex: 0 0 auto; }
+  .cvh-controls select { flex: 1 1 40%; }
+  .cvh-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cvh-tiles-sm { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cvh-dl { grid-template-columns: 1fr; gap: 0; }
+  .cvh-dl dt { margin-top: 6px; }
+  .cvh-table th:nth-child(4), .cvh-table td:nth-child(4) { display: none; } /* hide long vectors / advisory col on phones */
+  .cvh-date { margin-left: 0; }
 }
 
 /* =============================================================
    Responsive
    ============================================================= */
-@media (max-width: 1200px) {
-  .cve-dashboard {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    height: auto;
-  }
-
-  .cve-main-panel { min-height: 380px; }
-
-  .cve-controls {
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .msrc-cve-grid { grid-template-columns: 1fr; }
-
-  .msrc-demo-controls,
-  .msrc-filter-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .msrc-filter-group { justify-content: space-between; }
-
-  .nvd-grid-controls {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .shodan-search-controls { grid-template-columns: 1fr; }
-
-  .shodan-metrics { grid-template-columns: repeat(2, 1fr); }
-}
-
 @media (max-width: 768px) {
   /* Tab bar: 3 per row on phones (same layout as before) */
   .dashboard-tabs {
@@ -2321,34 +1534,6 @@ button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.
   .dashboard-content { padding: 14px 12px; }
 
 
-  .cve-main-panel { min-height: 350px; }
-
-  .cve-calendar-day {
-    min-height: 34px;
-    font-size: 0.85em;
-    padding: 2px;
-  }
-
-  .cve-day-number { font-size: 0.75em; margin-bottom: 1px; }
-  .cve-day-count  { font-size: 0.55em; padding: 0 3px; }
-  .cve-calendar-grid { gap: 2px; }
-
-  .msrc-stats { flex-wrap: wrap; }
-
-  .nvd-card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .nvd-popup-overlay { padding: 10px; }
-  .nvd-popup-body { padding: 16px 8px; }
-
-  .shodan-cve-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .domain-results-grid { grid-template-columns: 1fr; }
 
   .domain-search-box { flex-direction: column; }
@@ -2383,10 +1568,10 @@ button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.
 
   <!-- Secondary CVE Navigation -->
   <nav class="cve-secondary-nav" id="cve-secondary-nav">
-    <a href="#" class="active" data-cve-tab="nvd">NVD Lookup</a>
-    <a href="#" data-cve-tab="ghsa">GHSA Tracker</a>
-    <a href="#" data-cve-tab="msrc">MSRC Tracker</a>
-    <a href="#" data-cve-tab="shodan">Shodan CVEDB</a>
+    <a href="#" class="active" data-cve-tab="cve-lookup">Lookup</a>
+    <a href="#" data-cve-tab="cve-ghsa">GHSA feed</a>
+    <a href="#" data-cve-tab="cve-msrc">Patch Tuesday</a>
+    <a href="#" data-cve-tab="cve-kev">CISA KEV</a>
   </nav>
 
   <!-- Secondary Tools Navigation -->
@@ -2404,281 +1589,99 @@ button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.
       <div class="grid" id="dashboard-grid"></div>
     </section>
 
-    <!-- CVE Tracker Tab (Container for sub-tabs) -->
+    <!-- CVE Tracker Tab: Lookup + feeds (every result is tagged with its source) -->
     <section id="cve" class="tab-content">
-      
-      <!-- NVD Lookup Sub-tab -->
-      <div id="nvd" class="cve-sub-tab active">
-        <div class="nvd-container">
-          <div class="nvd-inner-container">
-            <div class="nvd-header">
-              <h1>🛡️ NVD Vulnerability Lookup</h1>
-              <div class="nvd-status-badge">✅ Live API - NIST National Vulnerability Database</div>
-              <p>Real-time vulnerability data from the official US government database</p>
-            </div>
-            
-            <div class="nvd-search-section">
-              <div class="nvd-input-group">
-                <label for="nvd-searchType">Search Type:</label>
-                <select id="nvd-searchType" onchange="nvdTool.updatePlaceholder()">
-                  <option value="cve">Specific CVE ID</option>
-                  <option value="keyword">Keyword Search</option>
-                </select>
-              </div>
-              
-              <div class="nvd-input-group">
-                <label for="nvd-searchInput">Search Term:</label>
-                <input type="text" id="nvd-searchInput" placeholder="CVE-2024-3094" value="CVE-2024-3094">
-              </div>
-              
-              <div class="nvd-grid-controls">
-                <div class="nvd-input-group" style="margin-bottom: 0;">
-                  <label for="nvd-resultsPerPage">Results Per Page:</label>
-                  <select id="nvd-resultsPerPage">
-                    <option value="10">10 results</option>
-                    <option value="20" selected>20 results</option>
-                    <option value="50">50 results</option>
-                    <option value="100">100 results</option>
-                  </select>
-                </div>
-                
-                <div class="nvd-input-group" style="margin-bottom: 0;">
-                  <label for="nvd-cvssFilter">CVSS Severity Filter:</label>
-                  <select id="nvd-cvssFilter">
-                    <option value="">All Severities</option>
-                    <option value="CRITICAL">Critical (9.0-10.0)</option>
-                    <option value="HIGH">High (7.0-8.9)</option>
-                    <option value="MEDIUM">Medium (4.0-6.9)</option>
-                    <option value="LOW">Low (0.1-3.9)</option>
-                  </select>
-                </div>
-                
-                <div class="nvd-input-group" style="margin-bottom: 0;">
-                  <label for="nvd-sortBy">Sort By:</label>
-                  <select id="nvd-sortBy">
-                    <option value="published" selected>Published Date</option>
-                    <option value="modified">Last Modified</option>
-                  </select>
-                </div>
-              </div>
-              
-              <button onclick="nvdTool.searchNVD()" id="nvd-searchBtn" class="nvd-button">Search NVD Database</button>
-            </div>
-            
-            <div id="nvd-results" class="nvd-results-container"></div>
-          </div>
+
+      <!-- Lookup: one CVE across every source, or a keyword/product search -->
+      <div id="cve-lookup" class="cve-sub-tab active">
+        <div class="cvh-head">
+          <h1>🔎 CVE lookup</h1>
+          <p>One search across NVD, CVE.org, Shodan CVEDB, FIRST EPSS, OSV/GHSA and MSRC. Each source loads on its own, so if one is down the rest still show.</p>
         </div>
+        <form id="cvh-lookup-form" class="cvh-search" autocomplete="off">
+          <input type="text" id="cvh-q" placeholder="CVE-2024-3094, or a keyword" spellcheck="false" autocapitalize="off">
+          <select id="cvh-mode" title="Where to search when the query isn't a CVE ID">
+            <option value="nvd">keyword · NVD</option>
+            <option value="cvedb">product · CVEDB by EPSS</option>
+          </select>
+          <button type="submit" class="cvh-primary">lookup</button>
+        </form>
+        <div class="cvh-examples">try:
+          <button type="button" data-q="CVE-2024-3094">CVE-2024-3094</button>
+          <button type="button" data-q="CVE-2021-44228">CVE-2021-44228</button>
+          <button type="button" data-q="CVE-2023-23397">CVE-2023-23397</button>
+          <button type="button" data-q="fortios" data-mode="cvedb">fortios (by EPSS)</button>
+        </div>
+        <div id="cvh-status" class="cvh-status"></div>
+        <div id="cvh-result"></div>
       </div>
 
-      <!-- GHSA Tracker Sub-tab -->
-      <div id="ghsa" class="cve-sub-tab">
-        <div class="cve-tracker-container">
-          <div class="cve-header">
-            <h1>📅 GitHub Security Advisory Calendar</h1>
-            <p>Interactive vulnerability timeline and analysis</p>
-          </div>
-
-          <div class="cve-controls">
-            <div class="cve-filter-group">
-              <label class="cve-filter-label">Severity:</label>
-              <select id="cve-severity-filter" class="cve-filter-select">
-                <option value="">All Severities</option>
-                <option value="critical">Critical</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-            </div>
-            <div class="cve-filter-group">
-              <label class="cve-filter-label">Type:</label>
-              <select id="cve-type-filter" class="cve-filter-select">
-                <option value="reviewed">Reviewed</option>
-                <option value="unreviewed">Unreviewed</option>
-                <option value="malware">Malware</option>
-              </select>
-            </div>
-            <div class="cve-calendar-nav">
-              <button class="cve-nav-btn" onclick="cveTool.changeMonth(-1)">‹ Prev</button>
-              <div class="cve-current-month" id="cve-current-month-container">
-                <div class="cve-month-text" id="cve-current-month">Loading...</div>
-                <div class="cve-year-text" id="cve-current-year" onclick="cveTool.toggleYearPicker()">2025</div>
-                <div class="cve-year-picker" id="cve-year-picker"></div>
-              </div>
-              <button class="cve-nav-btn" onclick="cveTool.changeMonth(1)">Next ›</button>
-            </div>
-          </div>
-
-          <div class="cve-dashboard">
-            <!-- Main Panel - Calendar -->
-            <div class="cve-main-panel">
-              <div class="cve-panel-header">
-                <div class="cve-panel-title">
-                  <span>📅</span>
-                  Security Advisory Calendar
-                </div>
-                <div id="cve-github-status" class="cve-api-status cve-api-error">Loading</div>
-              </div>
-              
-              <div class="cve-calendar-container">
-                <div id="cve-calendar-content" class="cve-loading">
-                  <div class="cve-spinner"></div>
-                  Loading security advisory data...
-                </div>
-              </div>
-            </div>
-
-            <!-- Side Panel - Selected Date Details -->
-            <div class="cve-side-panel">
-              <div class="cve-panel-header">
-                <div class="cve-panel-title">
-                  <span>🔍</span>
-                  Advisory Details
-                </div>
-              </div>
-              
-              <div class="cve-stats-summary">
-                <div class="cve-stat-box">
-                  <div class="cve-stat-number" id="cve-critical-count">0</div>
-                  <div class="cve-stat-label">Critical</div>
-                </div>
-                <div class="cve-stat-box">
-                  <div class="cve-stat-number" id="cve-high-count">0</div>
-                  <div class="cve-stat-label">High</div>
-                </div>
-              </div>
-              
-              <div id="cve-advisory-details" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
-                <div class="cve-no-advisories">
-                  Click on a calendar date to view security advisories for that day
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- GHSA feed -->
+      <div id="cve-ghsa" class="cve-sub-tab">
+        <div class="cvh-head">
+          <h1>📦 GitHub Security Advisories</h1>
+          <p>Newest advisories from the GitHub Advisory Database. Pick a timeframe to load.</p>
         </div>
+        <div class="cvh-controls">
+          <div class="cvh-seg" id="cvh-ghsa-range">
+            <button type="button" data-range="1">1d</button><button type="button" data-range="3">3d</button><button type="button" data-range="7">7d</button>
+          </div>
+          <select id="cvh-ghsa-sev" title="Severity (filtered by GitHub)">
+            <option value="">all severities</option><option value="critical">critical</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option>
+          </select>
+          <select id="cvh-ghsa-eco" title="Ecosystem">
+            <option value="">all ecosystems</option><option value="npm">npm</option><option value="pip">pip</option><option value="maven">maven</option><option value="go">go</option><option value="nuget">nuget</option><option value="composer">composer</option><option value="rubygems">rubygems</option><option value="rust">rust</option><option value="actions">actions</option>
+          </select>
+          <select id="cvh-ghsa-type" title="Advisory type">
+            <option value="reviewed">reviewed</option><option value="unreviewed">unreviewed</option><option value="malware">malware</option>
+          </select>
+          <input type="text" id="cvh-ghsa-filter" placeholder="filter: package, CVE, text">
+        </div>
+        <div id="cvh-ghsa-stats"></div>
+        <div id="cvh-ghsa-list" class="cvh-list"><div class="cvh-empty"><span class="cvh-big">▸</span><br>Pick a timeframe to fetch the latest advisories</div></div>
       </div>
 
-      <!-- MSRC Tracker Sub-tab -->
-      <div id="msrc" class="cve-sub-tab">
-        <div class="msrc-tracker-container">
-          <div class="msrc-header">
-            <h1>Microsoft Security Response Center</h1>
-            <p>CVE Dashboard - MSRC API Integration Page</p>
-            <div class="msrc-loading" id="msrc-loading">
-              <div class="msrc-spinner"></div>
-            </div>
-          </div>
-
-          <div class="msrc-api-info">
-            <p>The MSRC API doesn't allow direct browser calls, so this tab goes through a small Cloudflare Worker proxy (or the public <code>CorsProxy.io</code> if no Worker is configured).</p>
-            <p><strong>Note:</strong> a full month of MSRC data is large (~20&nbsp;MB), so loading can take a few seconds.</p>
-          </div>
-
-          <div class="msrc-controls">
-            <div class="msrc-stats">
-              <div class="msrc-stat-item">
-                <div class="msrc-stat-number" id="msrc-totalCves">-</div>
-                <div class="msrc-stat-label">Total CVEs</div>
-              </div>
-              <div class="msrc-stat-item">
-                <div class="msrc-stat-number" id="msrc-criticalCount">-</div>
-                <div class="msrc-stat-label">Critical</div>
-              </div>
-              <div class="msrc-stat-item">
-                <div class="msrc-stat-number" id="msrc-apiCalls">0</div>
-                <div class="msrc-stat-label">API Calls</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="msrc-demo-section">
-            <h2>Microsoft Security Updates Browser</h2>
-            
-            <div class="msrc-demo-controls">
-              <button class="msrc-demo-btn" onclick="msrcTool.previousMonth()">← Previous Month</button>
-              <select class="msrc-month-selector" id="msrc-monthSelector" onchange="msrcTool.onMonthSelectorChange()">
-                <!-- Dynamically populated -->
-              </select>
-              <button class="msrc-demo-btn" onclick="msrcTool.nextMonth()">Next Month →</button>
-              <button class="msrc-demo-btn msrc-primary" onclick="msrcTool.fetchMonthData()">Load Security Updates</button>
-            </div>
-
-            <div class="msrc-filter-controls" id="msrc-filterControls" style="display: none;">
-              <div class="msrc-filter-group">
-                <label for="msrc-severityFilter">Severity:</label>
-                <select class="msrc-filter-select" id="msrc-severityFilter" onchange="msrcTool.applyFilters()">
-                  <option value="all">All Severities</option>
-                  <option value="critical">Critical Only</option>
-                  <option value="important">Important Only</option>
-                  <option value="moderate">Moderate Only</option>
-                  <option value="low">Low Only</option>
-                </select>
-              </div>
-              <div class="msrc-filter-group">
-                <label for="msrc-pageSize">Show:</label>
-                <select class="msrc-filter-select" id="msrc-pageSize" onchange="msrcTool.applyFilters()">
-                  <option value="20">20 per page</option>
-                  <option value="50">50 per page</option>
-                  <option value="100">100 per page</option>
-                  <option value="all">All results</option>
-                </select>
-              </div>
-              <div class="msrc-filter-group">
-                <button class="msrc-demo-btn" onclick="msrcTool.resetFilters()">Reset Filters</button>
-              </div>
-            </div>
-
-            <div id="msrc-resultsSummary" style="display: none;"></div>
-            <div id="msrc-messageArea"></div>
-            
-            <div class="msrc-cve-grid" id="msrc-cveGrid">
-              <div class="msrc-no-data">
-                Select a month and click "Load Security Updates" to fetch CVE data.
-              </div>
-            </div>
-            
-            <div class="msrc-pagination" id="msrc-pagination" style="display: none;">
-              <button class="msrc-pagination-btn" id="msrc-prevPage" onclick="msrcTool.changePage(-1)">Previous</button>
-              <span class="msrc-pagination-info" id="msrc-paginationInfo"></span>
-              <button class="msrc-pagination-btn" id="msrc-nextPage" onclick="msrcTool.changePage(1)">Next</button>
-            </div>
-          </div>
+      <!-- Patch Tuesday (MSRC) -->
+      <div id="cve-msrc" class="cve-sub-tab">
+        <div class="cvh-head">
+          <h1>🪟 Microsoft Patch Tuesday</h1>
+          <p>Microsoft's Security Update Guide for a release month. Falls back to the full CVRF document if the API is unavailable.</p>
         </div>
+        <div class="cvh-controls">
+          <select id="cvh-msrc-month" title="Release month"></select>
+          <select id="cvh-msrc-src" title="Data source">
+            <option value="sug">Update Guide API (fast)</option>
+            <option value="cvrf">CVRF document (~20 MB)</option>
+          </select>
+          <button type="button" id="cvh-msrc-load" class="cvh-primary">load</button>
+        </div>
+        <div class="cvh-controls">
+          <select id="cvh-msrc-sev" title="Severity">
+            <option value="">all severities</option><option value="critical">critical</option><option value="important">important</option><option value="moderate">moderate</option><option value="low">low</option>
+          </select>
+          <label class="cvh-check"><input type="checkbox" id="cvh-msrc-ex"> exploited / disclosed only</label>
+          <label class="cvh-check" title="Chromium (Edge), GitHub, Azure Linux etc."><input type="checkbox" id="cvh-msrc-third"> include third-party</label>
+          <input type="text" id="cvh-msrc-filter" placeholder="filter: product, CVE, title">
+        </div>
+        <div id="cvh-msrc-stats"></div>
+        <div id="cvh-msrc-list" class="cvh-list"><div class="cvh-empty"><span class="cvh-big">▸</span><br>Choose a month and press load</div></div>
       </div>
 
-      <!-- Shodan CVEDB Sub-tab -->
-      <div id="shodan" class="cve-sub-tab">
-        <div class="shodan-container">
-          <div class="shodan-inner-container">
-            <div class="shodan-header">
-              <h1>CVEDB Dashboard</h1>
-              <p>Powered by Shodan - CVE Lookup with EPSS Risk Intelligence & KEV Status</p>
-            </div>
-
-            <div class="shodan-search-section">
-              <div class="shodan-search-controls">
-                <div class="shodan-form-group">
-                  <label for="shodan-searchQuery">CVE ID</label>
-                  <input type="text" id="shodan-searchQuery" placeholder="Enter CVE-2024-1234...">
-                </div>
-                <button class="shodan-search-btn" onclick="shodanTool.performSearch()">Search</button>
-              </div>
-
-              <div class="shodan-disclaimer">
-                The CVEDB API doesn't allow direct browser calls, so lookups go through a small Cloudflare Worker proxy (or the public <code>CorsProxy.io</code> if no Worker is configured).
-              </div>
-            </div>
-
-            <div class="shodan-results-section">
-              <div id="shodan-results">
-                <div class="shodan-no-results">
-                  <h3>Welcome to CVEDB Dashboard</h3>
-                  <p>Search for vulnerabilities by CVE ID to get started.</p>
-                  <p><strong>Examples:</strong> CVE-2024-21413, CVE-2021-44228, CVE-2023-23397</p>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- CISA KEV -->
+      <div id="cve-kev" class="cve-sub-tab">
+        <div class="cvh-head">
+          <h1>🚨 CISA Known Exploited Vulnerabilities</h1>
+          <p>CVEs confirmed as exploited in the wild, newest additions first.</p>
         </div>
+        <div class="cvh-controls">
+          <div class="cvh-seg" id="cvh-kev-range">
+            <button type="button" data-range="7">7d</button><button type="button" data-range="30">30d</button><button type="button" data-range="90">90d</button><button type="button" data-range="0">all</button>
+          </div>
+          <label class="cvh-check"><input type="checkbox" id="cvh-kev-ransom"> ransomware-linked only</label>
+          <input type="text" id="cvh-kev-filter" placeholder="filter: vendor, product, CVE">
+        </div>
+        <div id="cvh-kev-stats"></div>
+        <div id="cvh-kev-list" class="cvh-list"><div class="cvh-empty"><span class="cvh-big">▸</span><br>Pick a timeframe to load the catalogue</div></div>
       </div>
 
     </section>
@@ -2906,16 +1909,6 @@ button.export-btn:hover { color: var(--db-ink) !important; filter: brightness(1.
   </div> <!-- Close dashboard-content -->
 </div> <!-- Close dashboard-app -->
 
-<!-- NVD Popup Overlay - Moved outside dashboard-content to avoid width restrictions -->
-<div id="nvd-popupOverlay" class="nvd-popup-overlay" onclick="nvdTool.closePopup(event)">
-  <div class="nvd-popup-content" onclick="event.stopPropagation()">
-    <button class="nvd-popup-close" onclick="nvdTool.closePopup()">&times;</button>
-    <div class="nvd-popup-body">
-      <div id="nvd-popupContent"></div>
-    </div>
-  </div>
-</div>
-
 <script>
 
 // ---------------------------------------------------------------------
@@ -2964,12 +1957,7 @@ document.querySelectorAll('.dashboard-tabs a').forEach(tabLink => {
     // Initialize tools when first accessed
     if (this.dataset.tab === 'cve' && !window.cveToolsInitialized) {
       window.cveToolsInitialized = true;
-      setTimeout(() => {
-        cveTool.initDashboard();
-        msrcTool.init();
-        nvdTool.init();
-        shodanTool.init();
-      }, 100);
+      setTimeout(() => cveHub.init(), 0);
     }
   });
 });
@@ -3697,1481 +2685,902 @@ if (targetTab) {
   document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
       closeRecipeModal();
-      nvdTool.closePopup();
     }
   });
 
-  // NVD Tool functionality
-  const nvdTool = {
-    currentResults: [],
-    totalResults: 0,
-    currentPage: 0,
-    currentSearch: null,
+  // ===================================================================
+  // CVE hub — Lookup + GHSA / Patch Tuesday / KEV feeds
+  // Every block of data carries a source tag (NVD, CVE.org, CVEDB, EPSS,
+  // OSV, GHSA, MSRC, KEV). Sources load independently and fail on their
+  // own; nothing is fetched until you search or pick a timeframe.
+  // ===================================================================
+  const cveHub = (() => {
+    const CVE_RE = /^CVE-\d{4}-\d{4,}$/i;
+    const workerBase = () => DASH_WORKER_URL.trim().replace(/\/$/, '');
 
-    init: function() {
-      console.log('Initializing NVD Tool...');
-      this.updatePlaceholder();
-      
-      // Add event listeners
-      document.getElementById('nvd-searchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          this.searchNVD();
-        }
-      });
-    },
+    // ---------- helpers ----------
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    // Inert HTML -> text (DOMParser documents never run scripts or load images)
+    const htmlToText = s => s ? (new DOMParser().parseFromString(String(s), 'text/html').body.textContent || '').trim() : '';
+    const $ = id => document.getElementById(id);
+    const fmtDate = d => {
+      if (!d) return '';
+      const t = new Date(d);
+      return isNaN(t) ? String(d).slice(0, 10) : t.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+    const isoDay = d => d.toISOString().slice(0, 10);
+    const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
+    const link = (u, text) => `<a href="${esc(safeUrl(u))}" target="_blank" rel="noopener">${esc(text || u)}</a>`;
+    const pct = x => (x == null || isNaN(x)) ? '–' : (Number(x) * 100).toFixed(Number(x) < 0.1 ? 2 : 1) + '%';
 
-    async searchNVD() {
-      const searchType = document.getElementById('nvd-searchType').value;
-      const searchInput = document.getElementById('nvd-searchInput').value.trim();
-      const resultsPerPage = parseInt(document.getElementById('nvd-resultsPerPage').value);
-      const cvssFilter = document.getElementById('nvd-cvssFilter').value;
-      const resultsDiv = document.getElementById('nvd-results');
-      const searchBtn = document.getElementById('nvd-searchBtn');
-      
-      if (!searchInput) {
-        this.showError('Please enter search criteria');
-        return;
-      }
-      
-      // Reset pagination
-      this.currentPage = 0;
-      this.currentResults = [];
-      this.currentSearch = { searchType, searchInput, resultsPerPage, cvssFilter };
-      
-      // Show loading
-      resultsDiv.style.display = 'block';
-      resultsDiv.innerHTML = '<div class="nvd-loading">🔍 Searching NIST NVD database...</div>';
-      searchBtn.disabled = true;
-      
+    function sevFromScore(score) {
+      const s = Number(score);
+      if (isNaN(s)) return '';
+      if (s >= 9) return 'CRITICAL';
+      if (s >= 7) return 'HIGH';
+      if (s >= 4) return 'MEDIUM';
+      if (s > 0) return 'LOW';
+      return 'NONE';
+    }
+    function sevBadge(sev, score) {
+      const s = String(sev || sevFromScore(score) || '').toUpperCase();
+      const cls = { CRITICAL: 'crit', HIGH: 'high', IMPORTANT: 'high', MEDIUM: 'med', MODERATE: 'med', LOW: 'low' }[s] || 'none';
+      const label = s ? s.toLowerCase() : 'n/a';
+      return `<span class="cvh-sev cvh-sev-${cls}">${esc(label)}${score != null && score !== '' ? ' ' + esc(Number(score).toFixed(1)) : ''}</span>`;
+    }
+
+    const SOURCES = {
+      nvd:    { label: 'NVD',     title: 'NIST National Vulnerability Database' },
+      cveorg: { label: 'CVE.org', title: 'CVE Program record (CNA + CISA ADP)' },
+      cvedb:  { label: 'CVEDB',   title: 'Shodan CVEDB' },
+      epss:   { label: 'EPSS',    title: 'FIRST Exploit Prediction Scoring System' },
+      osv:    { label: 'OSV',     title: 'OSV.dev open source vulnerability database' },
+      ghsa:   { label: 'GHSA',    title: 'GitHub Advisory Database' },
+      msrc:   { label: 'MSRC',    title: 'Microsoft Security Update Guide' },
+      kev:    { label: 'KEV',     title: 'CISA Known Exploited Vulnerabilities catalogue' },
+      adp:    { label: 'CISA-ADP', title: 'CISA vulnrichment (ADP container on the CVE record)' },
+    };
+    const tag = (k, note) => `<span class="cvh-src" title="${esc(SOURCES[k].title)}${note ? ' · ' + esc(note) : ''}">${SOURCES[k].label}</span>`;
+    const cveBtn = id => id ? `<button type="button" class="cvh-cvebtn" data-cve="${esc(id)}" title="Look up ${esc(id)}">${esc(id)}</button>` : '';
+
+    // ---------- fetching ----------
+    async function getJSON(url, opts = {}) {
+      const t0 = performance.now();
       try {
-        let apiUrl;
-        
-        switch(searchType) {
-          case 'cve':
-            if (!searchInput.match(/^CVE-\d{4}-\d+$/)) {
-              this.showError('Please enter a valid CVE ID (format: CVE-YYYY-NNNN)');
-              return;
-            }
-            apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${searchInput}`;
-            break;
-            
-          case 'keyword':
-            apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(searchInput)}&resultsPerPage=${resultsPerPage}`;
-            if (cvssFilter) {
-              apiUrl += `&cvssV3Severity=${cvssFilter}`;
-            }
-            break;
-        }
-        
-        const response = await fetch(apiUrl);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        this.currentResults = data.vulnerabilities || [];
-        this.totalResults = data.totalResults || 0;
-        
-        this.displayResults();
-        
-      } catch (error) {
-        console.error('NVD API error:', error);
-        this.showError(`Search failed: ${error.message}`);
-      } finally {
-        searchBtn.disabled = false;
-      }
-    },
-
-    displayResults() {
-      const resultsDiv = document.getElementById('nvd-results');
-      
-      if (this.currentResults.length === 0) {
-        this.showError('No vulnerabilities found for your search criteria');
-        return;
-      }
-      
-      let html = '';
-      
-      // Show limitation note for keyword searches
-      if (this.currentSearch.searchType === 'keyword') {
-        html += `
-          <div style="background: color-mix(in srgb, var(--db-med) 10%, transparent); border: 1px solid var(--db-med); border-radius: 4px; padding: 10px 14px; margin-bottom: 14px;">
-            <strong>ℹ️ Search Limitations:</strong> Keyword Search may not find all relevant CVEs - searches description text but not all product names
-          </div>
-        `;
-      }
-      
-      // Search results header
-      html += `
-        <div style="margin-bottom: 16px; padding: 10px 14px; background: var(--db-tint); border: 1px solid var(--border); border-radius: 4px; border-left: 3px solid var(--accent);">
-          <strong>📊 Search Results:</strong> Found ${this.totalResults.toLocaleString()} vulnerabilities
-          <br><small>Showing ${this.currentResults.length} results</small>
-        </div>
-      `;
-      
-      // Add vulnerability cards
-      this.currentResults.forEach(vuln => {
-        const cve = vuln.cve;
-        html += this.createCompactCard(cve);
-      });
-      
-      // Add pagination for multi-page results
-      if (this.totalResults > this.currentSearch.resultsPerPage) {
-        const totalPages = Math.ceil(this.totalResults / this.currentSearch.resultsPerPage);
-        const hasNext = (this.currentPage + 1) * this.currentSearch.resultsPerPage < this.totalResults;
-        
-        html += `
-          <div style="text-align: center; margin-top: 20px; padding: 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px;">
-            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
-              <button onclick="nvdTool.goToPage(${this.currentPage - 1})" ${this.currentPage === 0 ? 'disabled' : ''} 
-                      style="padding: 10px 20px;">← Previous</button>
-              
-              <span style="color: var(--text-dim); font-weight: 600;">
-                Page ${this.currentPage + 1} of ${totalPages}
-              </span>
-              
-              <button onclick="nvdTool.goToPage(${this.currentPage + 1})" ${!hasNext ? 'disabled' : ''} 
-                      style="padding: 10px 20px;">Next →</button>
-            </div>
-            
-            <div style="color: var(--text-dim); font-size: 0.8rem;">
-              Showing ${this.currentResults.length} of ${this.totalResults.toLocaleString()} total results
-            </div>
-          </div>
-        `;
-      }
-      
-      resultsDiv.innerHTML = html;
-    },
-
-    async goToPage(pageNumber) {
-      if (pageNumber < 0) return;
-      
-      const startIndex = pageNumber * this.currentSearch.resultsPerPage;
-      if (startIndex >= this.totalResults) return;
-      
-      this.currentPage = pageNumber;
-      
-      const resultsDiv = document.getElementById('nvd-results');
-      resultsDiv.innerHTML = '<div class="nvd-loading">📖 Loading page ' + (pageNumber + 1) + '...</div>';
-      
-      try {
-        let apiUrl;
-        
-        switch(this.currentSearch.searchType) {
-          case 'keyword':
-            apiUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(this.currentSearch.searchInput)}&resultsPerPage=${this.currentSearch.resultsPerPage}&startIndex=${startIndex}`;
-            if (this.currentSearch.cvssFilter) {
-              apiUrl += `&cvssV3Severity=${this.currentSearch.cvssFilter}`;
-            }
-            break;
-            
-          default:
-            return;
-        }
-        
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        this.currentResults = data.vulnerabilities || [];
-        
-        this.displayResults();
-        
-        // Scroll to top of results
-        document.getElementById('nvd-results').scrollIntoView({ behavior: 'smooth' });
-        
-      } catch (error) {
-        this.showError(`Failed to load page: ${error.message}`);
-      }
-    },
-
-    createCompactCard(cve) {
-      const cvssData = this.extractCVSSData(cve);
-      const cvssClass = this.getCVSSClass(cvssData.score);
-      const description = cve.descriptions?.find(d => d.lang === 'en')?.value || 'No description available';
-      const publishedDate = cve.published ? new Date(cve.published).toLocaleDateString('en-GB') : 'Unknown';
-      
-      return `
-        <div class="nvd-vulnerability-card" onclick="nvdTool.showCVEDetails('${cve.id.replace(/'/g, "\\'")}')">
-          <div class="nvd-card-header">
-            <div class="nvd-cve-id">${cve.id}</div>
-            ${cvssData.score ? `<div class="nvd-cvss-badge ${cvssClass}">${cvssData.severity} - ${cvssData.score}</div>` : ''}
-          </div>
-          
-          <div class="nvd-card-description">
-            ${description}
-          </div>
-          
-          <div class="nvd-card-meta">
-            <div>
-              <span>📅 ${publishedDate}</span>
-              <span style="margin-left: 15px;">🔗 ${cve.references?.length || 0} refs</span>
-            </div>
-            <div class="nvd-click-hint">Click for details</div>
-          </div>
-        </div>
-      `;
-    },
-
-    showCVEDetails(cveId) {
-      const cve = this.currentResults.find(vuln => vuln.cve.id === cveId)?.cve;
-      if (!cve) return;
-      
-      const cvssData = this.extractCVSSData(cve);
-      const cvssClass = this.getCVSSClass(cvssData.score);
-      const description = cve.descriptions?.find(d => d.lang === 'en')?.value || 'No description available';
-      
-      const publishedDate = cve.published ? new Date(cve.published).toLocaleDateString('en-GB', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }) : 'Unknown';
-      
-      const modifiedDate = cve.lastModified ? new Date(cve.lastModified).toLocaleDateString('en-GB', {
-        year: 'numeric', 
-        month: 'long',
-        day: 'numeric'
-      }) : 'Unknown';
-      
-      const popupContentHTML = `
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
-            <h2 style="color: var(--accent); margin: 0; font-size: 1.2rem;">${cve.id}</h2>
-            <div style="display: flex; gap: 10px;">
-              ${cvssData.score ? `<div class="nvd-cvss-badge ${cvssClass}">${cvssData.severity} - ${cvssData.score}</div>` : ''}
-              ${cvssData.version ? `<div class="nvd-cvss-badge nvd-cvss-none">CVSS ${cvssData.version}</div>` : ''}
-            </div>
-          </div>
-          
-          <div style="margin-bottom: 25px;">
-            <h3 style="margin-bottom: 10px; color: var(--heading); font-size: 1rem;">🔍 Full Description</h3>
-            <div style="line-height: 1.6; color: var(--text); font-size: 0.9rem; padding: 14px; background: var(--chrome); border: 1px solid var(--border); border-radius: 4px; border-left: 3px solid var(--accent);">
-              ${description}
-            </div>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px;">
-            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
-              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">📅 PUBLISHED</div>
-              <div style="color: var(--heading);">${publishedDate}</div>
-            </div>
-            
-            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
-              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">📄 MODIFIED</div>
-              <div style="color: var(--heading);">${modifiedDate}</div>
-            </div>
-            
-            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
-              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">⚡ CVSS SCORE</div>
-              <div style="color: var(--heading);">${cvssData.score || 'Not scored'}</div>
-            </div>
-            
-            <div style="background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
-              <div style="font-weight: 600; color: var(--text-dim); margin-bottom: 4px; font-size: 0.72rem;">🎯 SEVERITY</div>
-              <div style="color: var(--heading);">${cvssData.severity || 'Unknown'}</div>
-            </div>
-          </div>
-          
-          ${cvssData.vector ? `
-            <div style="margin-bottom: 25px;">
-              <h3 style="margin-bottom: 10px; color: var(--heading); font-size: 1rem;">🔢 CVSS Vector</h3>
-              <div style="background: var(--chrome); color: var(--text); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px; font-size: 0.8rem; word-break: break-all;">
-                ${cvssData.vector}
-              </div>
-            </div>
-          ` : ''}
-          
-          ${cve.references && cve.references.length > 0 ? `
-            <div>
-              <h3 style="margin-bottom: 10px; color: var(--heading); font-size: 1rem;">🔗 References (${cve.references.length})</h3>
-              <div style="max-height: 200px; overflow-y: auto; background: var(--chrome); border: 1px solid var(--border); padding: 10px 12px; border-radius: 4px;">
-                ${cve.references.map(ref => 
-                  `<a href="${ref.url}" target="_blank" style="display: block; color: var(--accent); text-decoration: none; margin: 5px 0; padding: 6px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; word-break: break-all; font-size: 0.8rem;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='white'">
-                    ${ref.url.length > 70 ? ref.url.substring(0, 70) + '...' : ref.url}
-                  </a>`
-                ).join('')}
-              </div>
-            </div>
-          ` : ''}
-        </div>
-      `;
-      
-      // Set popup content
-      document.getElementById('nvd-popupContent').innerHTML = popupContentHTML;
-      
-      // Show popup using exact same method as recipe modal
-      const popup = document.getElementById('nvd-popupOverlay');
-      popup.style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    },
-
-    closePopup(event) {
-      if (event && event.target !== document.getElementById('nvd-popupOverlay')) return;
-      
-      document.getElementById('nvd-popupOverlay').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    },
-
-    extractCVSSData(cve) {
-      let cvssData = { score: null, severity: null, vector: null, version: null };
-      
-      const metrics = cve.metrics;
-      if (metrics?.cvssMetricV31 && metrics.cvssMetricV31.length > 0) {
-        const cvss = metrics.cvssMetricV31[0].cvssData;
-        cvssData = {
-          score: cvss.baseScore,
-          severity: cvss.baseSeverity,
-          vector: cvss.vectorString,
-          version: '3.1'
-        };
-      } else if (metrics?.cvssMetricV30 && metrics.cvssMetricV30.length > 0) {
-        const cvss = metrics.cvssMetricV30[0].cvssData;
-        cvssData = {
-          score: cvss.baseScore,
-          severity: cvss.baseSeverity,
-          vector: cvss.vectorString,
-          version: '3.0'
-        };
-      } else if (metrics?.cvssMetricV2 && metrics.cvssMetricV2.length > 0) {
-        const cvss = metrics.cvssMetricV2[0].cvssData;
-        cvssData = {
-          score: cvss.baseScore,
-          severity: this.getSeverityFromV2Score(cvss.baseScore),
-          vector: cvss.vectorString,
-          version: '2.0'
-        };
-      }
-      
-      return cvssData;
-    },
-
-    getSeverityFromV2Score(score) {
-      if (score >= 7.0) return 'HIGH';
-      if (score >= 4.0) return 'MEDIUM';
-      return 'LOW';
-    },
-
-    getCVSSClass(score) {
-      if (!score) return 'nvd-cvss-none';
-      if (score >= 9.0) return 'nvd-cvss-critical';
-      if (score >= 7.0) return 'nvd-cvss-high';
-      if (score >= 4.0) return 'nvd-cvss-medium';
-      return 'nvd-cvss-low';
-    },
-
-    showError(message) {
-      const resultsDiv = document.getElementById('nvd-results');
-      resultsDiv.style.display = 'block';
-      resultsDiv.innerHTML = `<div class="nvd-error">⚠ ${message}</div>`;
-    },
-
-    updatePlaceholder() {
-      const searchType = document.getElementById('nvd-searchType').value;
-      const input = document.getElementById('nvd-searchInput');
-      
-      switch(searchType) {
-        case 'cve':
-          input.placeholder = 'CVE-2024-3094';
-          break;
-        case 'keyword':
-          input.placeholder = 'log4j, openssl, apache, etc.';
-          break;
+        const r = await fetch(url, {
+          signal: AbortSignal.timeout(opts.timeout || 20000),
+          headers: opts.accept ? { Accept: opts.accept } : undefined,
+        });
+        const txt = await r.text();
+        let data = null;
+        try { data = txt ? JSON.parse(txt) : null; } catch (e) { data = null; }
+        return { ok: r.ok && data !== null, status: r.status, data, ms: Math.round(performance.now() - t0), headers: r.headers };
+      } catch (e) {
+        return { ok: false, status: 0, data: null, ms: Math.round(performance.now() - t0),
+                 error: e && e.name === 'TimeoutError' ? 'timed out' : 'network / CORS error' };
       }
     }
-  };
+    const routeUrl = (via, url) => via === 'worker'
+      ? `${workerBase()}/?url=${encodeURIComponent(url)}`
+      : `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    // For APIs without CORS: Worker first, then the public proxy as a last resort.
+    async function getProxied(url, opts) {
+      const routes = workerBase() ? ['worker', 'corsproxy'] : ['corsproxy'];
+      let last = null;
+      const errs = [];
+      for (const via of routes) {
+        const r = await getJSON(routeUrl(via, url), opts);
+        r.via = via;
+        if (r.ok || r.status === 404) return r;
+        errs.push(`${via}: ${r.error || 'HTTP ' + r.status}`);
+        last = r;
+      }
+      last.error = errs.join(', ');
+      return last;
+    }
+    const why = r => r.error || (r.status ? `HTTP ${r.status}` : 'failed');
 
-  // CVE Tracker functionality (GHSA)
-  const cveTool = {
-    currentDate: new Date(),
-    advisoriesData: [],
-    advisoriesByDate: {},
-    selectedDate: null,
-    isLoading: false,
+    // =================================================================
+    // LOOKUP
+    // =================================================================
+    const L = {
+      id: null,
+      res: {},          // source key -> { state, ms, data, note }
+      openState: {},
+    };
 
-    toggleYearPicker: function() {
-      const yearPicker = document.getElementById('cve-year-picker');
-      const isVisible = yearPicker.classList.contains('cve-show');
-      
-      if (isVisible) {
-        yearPicker.classList.remove('cve-show');
+    const LOOKUP_SOURCES = ['nvd', 'cveorg', 'cvedb', 'epss', 'osv', 'msrc'];
+
+    const fetchers = {
+      async nvd(id) {
+        const r = await getJSON(`https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${id}`);
+        if (!r.ok) return { state: 'fail', ms: r.ms, note: why(r) + (r.status === 403 ? ' (NVD rate limit: wait 30s)' : '') };
+        const cve = r.data.vulnerabilities && r.data.vulnerabilities[0] && r.data.vulnerabilities[0].cve;
+        return cve ? { state: 'ok', ms: r.ms, data: cve } : { state: 'none', ms: r.ms };
+      },
+      async cveorg(id) {
+        const r = await getJSON(`https://cveawg.mitre.org/api/cve/${id}`);
+        if (r.status === 404) return { state: 'none', ms: r.ms };
+        if (!r.ok) return { state: 'fail', ms: r.ms, note: why(r) };
+        return { state: 'ok', ms: r.ms, data: r.data };
+      },
+      async cvedb(id) {
+        const r = await getProxied(`https://cvedb.shodan.io/cve/${id}`);
+        if (r.status === 404) return { state: 'none', ms: r.ms, note: 'via ' + r.via };
+        if (!r.ok) return { state: 'fail', ms: r.ms, note: why(r) };
+        return { state: 'ok', ms: r.ms, data: r.data, note: 'via ' + r.via };
+      },
+      async epss(id) {
+        const r = await getJSON(`https://api.first.org/data/v1/epss?cve=${id}`);
+        if (!r.ok) return { state: 'fail', ms: r.ms, note: why(r) };
+        const row = r.data.data && r.data.data[0];
+        return row ? { state: 'ok', ms: r.ms, data: row } : { state: 'none', ms: r.ms };
+      },
+      async osv(id) {
+        const r = await getJSON(`https://api.osv.dev/v1/vulns/${id}`);
+        if (r.status === 404) return { state: 'none', ms: r.ms };
+        if (!r.ok) return { state: 'fail', ms: r.ms, note: why(r) };
+        const ghsaIds = [...new Set([...(r.data.aliases || []), ...(r.data.related || [])])]
+          .filter(x => /^GHSA-/i.test(x)).slice(0, 4);
+        const ghsa = (await Promise.all(ghsaIds.map(g => getJSON(`https://api.osv.dev/v1/vulns/${g}`))))
+          .filter(x => x.ok).map(x => x.data);
+        return { state: 'ok', ms: r.ms, data: { cve: r.data, ghsa } };
+      },
+      async msrc(id) {
+        const q = encodeURIComponent(`cveNumber eq '${id}'`);
+        const r = await getProxied(`https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability?$filter=${q}`);
+        if (!r.ok) return { state: 'fail', ms: r.ms, note: why(r) };
+        const v = r.data.value && r.data.value[0];
+        if (!v) return { state: 'none', ms: r.ms, note: 'not a Microsoft CVE' };
+        const ap = await getProxied(`https://api.msrc.microsoft.com/sug/v2.0/en-US/affectedProduct?$filter=${q}`);
+        return { state: 'ok', ms: r.ms, data: { vuln: v, products: ap.ok ? (ap.data.value || []) : null }, note: 'via ' + r.via };
+      },
+    };
+
+    function runSource(key, id) {
+      L.res[key] = { state: 'loading' };
+      renderStatus();
+      fetchers[key](id).then(out => {
+        if (L.id !== id) return; // a newer lookup started
+        L.res[key] = out;
+        renderStatus();
+        renderLookup();
+      }).catch(err => {
+        if (L.id !== id) return;
+        L.res[key] = { state: 'fail', note: String(err && err.message || err) };
+        renderStatus();
+        renderLookup();
+      });
+    }
+
+    function startLookup(rawQuery) {
+      const q = String(rawQuery || '').trim();
+      if (!q) return;
+      $('cvh-q').value = q;
+      if (CVE_RE.test(q)) {
+        const id = q.toUpperCase();
+        L.id = id; L.res = {}; L.openState = {};
+        try { history.replaceState(null, '', '#cve=' + id); } catch (e) {}
+        $('cvh-result').innerHTML = '';
+        LOOKUP_SOURCES.forEach(k => runSource(k, id));
+        renderLookup();
       } else {
-        const currentYear = new Date().getFullYear();
-        const displayedYear = this.currentDate.getFullYear();
-        
-        const startYear = currentYear - 10;
-        const endYear = currentYear + 5;
-        
-        let yearHTML = '';
-        for (let year = endYear; year >= startYear; year--) {
-          const isDisplayedYear = year === displayedYear;
-          yearHTML += `
-            <div class="cve-year-option ${isDisplayedYear ? 'cve-current' : ''}" 
-                 onclick="cveTool.selectYear(${year})">${year}</div>
-          `;
-        }
-        
-        yearPicker.innerHTML = yearHTML;
-        yearPicker.classList.add('cve-show');
+        L.id = null; L.res = {};
+        $('cvh-status').innerHTML = '';
+        keywordSearch(q, 0);
       }
-    },
+    }
 
-    selectYear: function(year) {
-      this.currentDate.setFullYear(year);
-      document.getElementById('cve-year-picker').classList.remove('cve-show');
-      this.loadAdvisoriesForMonth();
-    },
+    function renderStatus() {
+      if (!L.id) return;
+      $('cvh-status').innerHTML = LOOKUP_SOURCES.map(k => {
+        const r = L.res[k] || { state: 'loading' };
+        const icon = { loading: '…', ok: '✓', none: '–', fail: '✗' }[r.state];
+        const detail = r.state === 'loading' ? 'loading'
+          : r.state === 'ok' ? `${r.ms} ms${r.note ? ' · ' + r.note : ''}`
+          : r.state === 'none' ? (r.note || 'no record')
+          : (r.note || 'failed') + ' — click to retry';
+        return `<button type="button" class="cvh-chip cvh-chip-${r.state}" data-src="${k}" title="${esc(SOURCES[k].title)}: ${esc(detail)}"
+                 ${r.state === 'fail' ? '' : 'tabindex="-1"'}>${icon} ${SOURCES[k].label}${r.state === 'fail' ? ' <small>' + esc(r.note || '') + '</small>' : ''}</button>`;
+      }).join('');
+    }
 
-    generateCalendar: function(year, month) {
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      const firstDayOfWeek = firstDay.getDay();
-      const daysInMonth = lastDay.getDate();
-      
-      const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-      ];
-      
-      document.getElementById('cve-current-month').textContent = monthNames[month];
-      document.getElementById('cve-current-year').textContent = year;
+    // Pull the pieces we want out of each source into one model.
+    function buildModel() {
+      const d = k => L.res[k] && L.res[k].state === 'ok' ? L.res[k].data : null;
+      const nvd = d('nvd'), rec = d('cveorg'), db = d('cvedb'), ep = d('epss'), osv = d('osv'), ms = d('msrc');
+      const cna = rec && rec.containers && rec.containers.cna;
+      const adp = rec && rec.containers && (rec.containers.adp || []).find(a => a.providerMetadata && /CISA-ADP/i.test(a.providerMetadata.shortName));
+      const m = { scores: [], cwes: [], refs: [] };
 
-      let calendarHTML = `
-        <div class="cve-calendar-grid">
-          <div class="cve-calendar-header">Sun</div>
-          <div class="cve-calendar-header">Mon</div>
-          <div class="cve-calendar-header">Tue</div>
-          <div class="cve-calendar-header">Wed</div>
-          <div class="cve-calendar-header">Thu</div>
-          <div class="cve-calendar-header">Fri</div>
-          <div class="cve-calendar-header">Sat</div>
-      `;
+      // Title / description
+      const en = arr => (arr || []).find(x => (x.lang || '').startsWith('en'));
+      m.title = (nvd && nvd.cisaVulnerabilityName) || (ms && ms.vuln.cveTitle) || (cna && cna.title) || '';
+      m.titleSrc = nvd && nvd.cisaVulnerabilityName ? 'nvd' : ms && ms.vuln.cveTitle ? 'msrc' : cna && cna.title ? 'cveorg' : null;
+      if (nvd && en(nvd.descriptions)) { m.desc = en(nvd.descriptions).value; m.descSrc = 'nvd'; }
+      else if (cna && en(cna.descriptions)) { m.desc = en(cna.descriptions).value; m.descSrc = 'cveorg'; }
+      else if (db && db.summary) { m.desc = db.summary; m.descSrc = 'cvedb'; }
+      else if (ms && ms.vuln.description) { m.desc = htmlToText(ms.vuln.description); m.descSrc = 'msrc'; }
 
-      // Previous month's trailing days
-      const prevMonth = new Date(year, month - 1, 0);
-      for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-        const day = prevMonth.getDate() - i;
-        calendarHTML += `
-          <div class="cve-calendar-day other-month">
-            <div class="cve-day-number">${day}</div>
+      // Dates / status
+      m.published = (nvd && nvd.published) || (rec && rec.cveMetadata && rec.cveMetadata.datePublished) || (db && db.published_time);
+      m.modified = (nvd && nvd.lastModified) || (rec && rec.cveMetadata && rec.cveMetadata.dateUpdated);
+      m.nvdStatus = nvd && nvd.vulnStatus;
+      m.state = rec && rec.cveMetadata && rec.cveMetadata.state;
+      m.assigner = (rec && rec.cveMetadata && rec.cveMetadata.assignerShortName) || (ms && ms.vuln.issuingCna);
+
+      // CVSS from everywhere
+      if (nvd && nvd.metrics) {
+        [['cvssMetricV40', '4.0'], ['cvssMetricV31', '3.1'], ['cvssMetricV30', '3.0'], ['cvssMetricV2', '2.0']].forEach(([key, ver]) => {
+          (nvd.metrics[key] || []).forEach(x => m.scores.push({
+            src: 'nvd', who: x.source === 'nvd@nist.gov' ? 'NIST' : (x.type === 'Primary' ? 'NVD primary' : 'CNA via NVD'),
+            primary: x.type === 'Primary', version: ver, score: x.cvssData.baseScore,
+            sev: x.cvssData.baseSeverity || x.baseSeverity, vector: x.cvssData.vectorString,
+          }));
+        });
+      }
+      const fromCveJson = (metrics, src, who) => (metrics || []).forEach(x => {
+        [['cvssV4_0', '4.0'], ['cvssV3_1', '3.1'], ['cvssV3_0', '3.0'], ['cvssV2_0', '2.0']].forEach(([key, ver]) => {
+          if (x[key]) m.scores.push({ src, who, version: ver, score: x[key].baseScore, sev: x[key].baseSeverity, vector: x[key].vectorString });
+        });
+      });
+      if (cna) fromCveJson(cna.metrics, 'cveorg', 'CNA' + (m.assigner ? ' (' + m.assigner + ')' : ''));
+      if (adp) fromCveJson(adp.metrics, 'adp', 'CISA-ADP');
+      if (ms && ms.vuln.baseScore) m.scores.push({ src: 'msrc', who: 'Microsoft', version: (String(ms.vuln.vectorString || '').match(/CVSS:([\d.]+)/) || [])[1] || '3.1',
+        score: Number(ms.vuln.baseScore), sev: '', vector: ms.vuln.vectorString });
+      if (db && db.cvss != null) m.scores.push({ src: 'cvedb', who: 'CVEDB', version: String(db.cvss_version || ''), score: db.cvss, sev: '', vector: '' });
+
+      // Headline score: NIST/primary v4 or v3 > CNA > ADP > MSRC > CVEDB > anything v2
+      const rank = s => (s.version.startsWith('2') ? 100 : 0) +
+        ({ nvd: s.primary ? 0 : 3, cveorg: 1, adp: 2, msrc: 4, cvedb: 5 }[s.src]) * 10 + (s.version === '4.0' ? 0 : 1);
+      m.headline = [...m.scores].sort((a, b) => rank(a) - rank(b))[0] || null;
+
+      // EPSS
+      if (ep) m.epss = { p: Number(ep.epss), pct: Number(ep.percentile), date: ep.date, src: 'epss' };
+      else if (db && db.epss != null) m.epss = { p: db.epss, pct: db.ranking_epss, src: 'cvedb' };
+
+      // KEV
+      if (nvd && nvd.cisaExploitAdd) m.kev = { added: nvd.cisaExploitAdd, due: nvd.cisaActionDue, action: nvd.cisaRequiredAction, name: nvd.cisaVulnerabilityName, src: 'nvd' };
+      else if (db && db.kev) m.kev = { src: 'cvedb' };
+      const adpKev = adp && (adp.metrics || []).map(x => x.other).find(o => o && o.type === 'kev');
+      if (!m.kev && adpKev) m.kev = { added: adpKev.content && adpKev.content.dateAdded, src: 'adp' };
+      if (m.kev && db && db.ransomware_campaign) m.kev.ransomware = db.ransomware_campaign;
+      m.kevChecked = Boolean(nvd || db || adp);
+
+      // SSVC (CISA)
+      const ssvc = adp && (adp.metrics || []).map(x => x.other).find(o => o && o.type === 'ssvc');
+      if (ssvc && ssvc.content && ssvc.content.options) {
+        m.ssvc = ssvc.content.options.map(o => Object.entries(o)[0]).filter(Boolean);
+      }
+
+      // Microsoft
+      if (ms) m.ms = ms;
+
+      // CWE
+      const cweSet = new Map();
+      (nvd && nvd.weaknesses || []).forEach(w => (w.description || []).forEach(x => { if (/^CWE-\d+/.test(x.value)) cweSet.set(x.value, 'nvd'); }));
+      (cna && cna.problemTypes || []).forEach(p => (p.descriptions || []).forEach(x => {
+        const id = x.cweId || (String(x.description).match(/CWE-\d+/) || [])[0];
+        if (id && !cweSet.has(id)) cweSet.set(id, 'cveorg');
+      }));
+      m.cwes = [...cweSet.entries()];
+
+      // Packages (GHSA records via OSV)
+      m.packages = [];
+      if (osv) osv.ghsa.forEach(g => (g.affected || []).forEach(a => {
+        const ev = (a.ranges || []).flatMap(r => r.events || []);
+        const intro = ev.filter(e => e.introduced != null).map(e => e.introduced);
+        const fixed = ev.filter(e => e.fixed != null).map(e => e.fixed);
+        const last = ev.filter(e => e.last_affected != null).map(e => e.last_affected);
+        m.packages.push({
+          ghsa: g.id, eco: a.package && a.package.ecosystem, name: a.package && a.package.name,
+          range: intro.map((v, i) => `${v === '0' ? 'all' : '≥ ' + v}${fixed[i] ? ' < ' + fixed[i] : last[i] ? ' ≤ ' + last[i] : ''}`).join(', '),
+          fixed: fixed.join(', '), reviewed: g.database_specific && g.database_specific.github_reviewed,
+        });
+      }));
+      m.ghsaIds = osv ? osv.ghsa.map(g => g.id) : [];
+
+      // Products (CPE) — NVD configurations, else CVEDB
+      const prod = new Map();
+      const addCpe = (c, src) => {
+        const p = String(c).split(':');
+        if (p.length > 4) { const key = `${p[3]}:${p[4]}`; if (!prod.has(key)) prod.set(key, src); }
+      };
+      (nvd && nvd.configurations || []).forEach(cfg => (cfg.nodes || []).forEach(n => (n.cpeMatch || []).forEach(c => c.vulnerable && addCpe(c.criteria, 'nvd'))));
+      if (!prod.size && db && db.cpes) db.cpes.forEach(c => addCpe(c, 'cvedb'));
+      m.products = [...prod.entries()];
+      m.cpeCount = db && db.cpes ? db.cpes.length : null;
+
+      // References
+      if (nvd && nvd.references) m.refs = nvd.references.map(r => ({ url: r.url, tags: r.tags || [], src: 'nvd' }));
+      else if (cna && cna.references) m.refs = cna.references.map(r => ({ url: r.url, tags: r.tags || [], src: 'cveorg' }));
+      else if (db && db.references) m.refs = db.references.map(u => ({ url: u, tags: [], src: 'cvedb' }));
+
+      return m;
+    }
+
+    function section(key, title, tags, body, open = true) {
+      const isOpen = key in L.openState ? L.openState[key] : open;
+      return `<details class="cvh-sec" data-key="${key}" ${isOpen ? 'open' : ''}>
+        <summary><span>${title}</span><span class="cvh-tags">${tags}</span></summary>
+        <div class="cvh-sec-body">${body}</div></details>`;
+    }
+
+    function renderLookup() {
+      const id = L.id;
+      if (!id) return;
+      // remember which sections are open before re-rendering
+      document.querySelectorAll('#cvh-result details.cvh-sec').forEach(el => { L.openState[el.dataset.key] = el.open; });
+
+      const m = buildModel();
+      const pending = LOOKUP_SOURCES.filter(k => !L.res[k] || L.res[k].state === 'loading').length;
+      const anyData = LOOKUP_SOURCES.some(k => L.res[k] && L.res[k].state === 'ok');
+
+      if (!anyData) {
+        $('cvh-result').innerHTML = pending
+          ? `<div class="cvh-empty"><span class="cvh-spin"></span> looking up ${esc(id)}…</div>`
+          : `<div class="cvh-empty">No source has a record for <strong>${esc(id)}</strong>. It may be reserved, rejected or brand new.</div>`;
+        return;
+      }
+
+      const h = m.headline;
+      const tiles = [];
+      tiles.push(`<div class="cvh-tile"><div class="cvh-tile-label">CVSS ${h ? esc(h.version) : ''} ${h ? tag(h.src, h.who) : ''}</div>
+        <div class="cvh-tile-val">${h ? sevBadge(h.sev, h.score) : '<span class="cvh-dim">not scored yet</span>'}</div>
+        <div class="cvh-tile-sub">${h ? esc(h.who) : (m.nvdStatus ? 'NVD: ' + esc(m.nvdStatus) : '')}</div></div>`);
+      tiles.push(`<div class="cvh-tile"><div class="cvh-tile-label">EPSS ${m.epss ? tag(m.epss.src) : ''}</div>
+        <div class="cvh-tile-val ${m.epss && m.epss.p >= 0.1 ? 'cvh-hot' : ''}">${m.epss ? pct(m.epss.p) : '–'}</div>
+        <div class="cvh-tile-sub">${m.epss && m.epss.pct != null ? 'percentile ' + pct(m.epss.pct) : 'exploit probability (30 days)'}</div></div>`);
+      tiles.push(`<div class="cvh-tile"><div class="cvh-tile-label">CISA KEV ${m.kev ? tag(m.kev.src === 'adp' ? 'adp' : m.kev.src) : ''}</div>
+        <div class="cvh-tile-val ${m.kev ? 'cvh-hot' : ''}">${m.kev ? 'listed' : m.kevChecked ? 'not listed' : '–'}</div>
+        <div class="cvh-tile-sub">${m.kev && m.kev.added ? 'added ' + esc(fmtDate(m.kev.added)) : m.kev ? 'known exploited' : ''}${m.kev && m.kev.ransomware === 'Known' ? ' · <span class="cvh-flag">ransomware</span>' : ''}</div></div>`);
+      if (m.ms) tiles.push(`<div class="cvh-tile"><div class="cvh-tile-label">Microsoft ${tag('msrc')}</div>
+        <div class="cvh-tile-val ${m.ms.vuln.exploited === 'Yes' ? 'cvh-hot' : ''}">${m.ms.vuln.exploited === 'Yes' ? 'exploited' : esc((m.ms.vuln.severity || '').toLowerCase() || '–')}</div>
+        <div class="cvh-tile-sub">${[m.ms.vuln.impact, m.ms.vuln.publiclyDisclosed === 'Yes' ? 'publicly disclosed' : ''].filter(Boolean).map(esc).join(' · ')}</div></div>`);
+      else if (m.ssvc) tiles.push(`<div class="cvh-tile"><div class="cvh-tile-label">SSVC ${tag('adp')}</div>
+        <div class="cvh-tile-val">${esc((m.ssvc.find(x => x[0] === 'Exploitation') || [, '–'])[1])}</div>
+        <div class="cvh-tile-sub">exploitation · ${esc(m.ssvc.filter(x => x[0] !== 'Exploitation').map(x => x[0].toLowerCase() + ': ' + x[1]).join(' · '))}</div></div>`);
+
+      let html = `<div class="cvh-card">
+        <div class="cvh-card-head">
+          <div class="cvh-id">${esc(id)}</div>
+          <div class="cvh-quicklinks">
+            ${link('https://nvd.nist.gov/vuln/detail/' + id, 'NVD')}
+            ${link('https://www.cve.org/CVERecord?id=' + id, 'CVE.org')}
+            ${m.ghsaIds.map(g => link('https://github.com/advisories/' + g, g.slice(0, 9) + '…')).join(' ')}
+            ${m.ms ? link('https://msrc.microsoft.com/update-guide/vulnerability/' + id, 'MSRC') : ''}
           </div>
-        `;
+        </div>
+        ${m.title ? `<div class="cvh-title">${esc(m.title)} ${tag(m.titleSrc)}</div>` : ''}
+        <div class="cvh-meta">
+          ${m.published ? `<span>published ${esc(fmtDate(m.published))}</span>` : ''}
+          ${m.modified ? `<span>updated ${esc(fmtDate(m.modified))}</span>` : ''}
+          ${m.assigner ? `<span>CNA: ${esc(m.assigner)}</span>` : ''}
+          ${m.nvdStatus ? `<span title="NVD analysis status">NVD: ${esc(m.nvdStatus)}</span>` : ''}
+          ${m.state && m.state !== 'PUBLISHED' ? `<span class="cvh-flag">${esc(m.state)}</span>` : ''}
+        </div>
+        <div class="cvh-tiles">${tiles.join('')}</div>
+        ${pending ? `<div class="cvh-dim cvh-small"><span class="cvh-spin"></span> waiting on ${pending} more source${pending > 1 ? 's' : ''}…</div>` : ''}
+      </div>`;
+
+      if (m.desc) html += section('desc', 'Description', tag(m.descSrc),
+        `<p class="cvh-desc">${esc(m.desc)}</p>` +
+        (m.cwes.length ? `<div class="cvh-cwes">${m.cwes.map(([c, s]) => link('https://cwe.mitre.org/data/definitions/' + c.replace('CWE-', '') + '.html', c)).join(' ')}</div>` : ''));
+
+      if (m.kev && (m.kev.action || m.kev.due)) html += section('kev', 'CISA KEV entry', tag(m.kev.src),
+        `<dl class="cvh-dl">
+          ${m.kev.name ? `<dt>Name</dt><dd>${esc(m.kev.name)}</dd>` : ''}
+          ${m.kev.added ? `<dt>Added</dt><dd>${esc(fmtDate(m.kev.added))}</dd>` : ''}
+          ${m.kev.due ? `<dt>Fed. due date</dt><dd>${esc(fmtDate(m.kev.due))}</dd>` : ''}
+          ${m.kev.action ? `<dt>Required action</dt><dd>${esc(m.kev.action)}</dd>` : ''}
+          ${m.kev.ransomware ? `<dt>Ransomware use</dt><dd>${esc(m.kev.ransomware)} ${tag('cvedb')}</dd>` : ''}
+        </dl>`);
+
+      if (m.scores.length) html += section('scores', `Scores <span class="cvh-count">${m.scores.length}</span>`,
+        [...new Set(m.scores.map(s => s.src))].map(s => tag(s)).join(''),
+        `<div class="cvh-table-wrap"><table class="cvh-table"><thead><tr><th>source</th><th>ver</th><th>score</th><th>vector</th></tr></thead><tbody>
+          ${m.scores.map(s => `<tr><td>${tag(s.src)} <span class="cvh-dim">${esc(s.who)}</span></td><td>${esc(s.version)}</td>
+            <td>${sevBadge(s.sev, s.score)}</td><td class="cvh-vector">${esc(s.vector || '')}</td></tr>`).join('')}
+        </tbody></table></div>` +
+        (m.ssvc ? `<div class="cvh-small">SSVC ${tag('adp')} ${m.ssvc.map(x => `<span class="cvh-pill">${esc(x[0])}: ${esc(x[1])}</span>`).join(' ')}</div>` : '') +
+        (m.epss ? `<div class="cvh-small">EPSS ${tag(m.epss.src)} ${pct(m.epss.p)} chance of exploitation in the next 30 days${m.epss.pct != null ? ', higher than ' + pct(m.epss.pct) + ' of all CVEs' : ''}${m.epss.date ? ' (model date ' + esc(m.epss.date) + ')' : ''}.</div>` : ''));
+
+      if (m.packages.length) html += section('pkgs', `Affected packages <span class="cvh-count">${m.packages.length}</span>`, tag('ghsa', 'via OSV.dev') + tag('osv'),
+        `<div class="cvh-table-wrap"><table class="cvh-table"><thead><tr><th>package</th><th>affected</th><th>fixed in</th><th>advisory</th></tr></thead><tbody>
+          ${m.packages.slice(0, 40).map(p => `<tr><td><span class="cvh-eco">${esc(p.eco)}</span> ${esc(p.name)}</td><td>${esc(p.range)}</td>
+            <td>${p.fixed ? esc(p.fixed) : '<span class="cvh-flag">no fix</span>'}</td><td>${link('https://github.com/advisories/' + p.ghsa, p.ghsa)}</td></tr>`).join('')}
+        </tbody></table></div>`);
+
+      if (m.ms) {
+        const v = m.ms.vuln, prods = m.ms.products || [];
+        const kbs = new Map();
+        prods.forEach(p => (p.kbArticles || []).forEach(k => { if (k.articleName && !kbs.has(k.articleName)) kbs.set(k.articleName, k.articleUrl || ('https://support.microsoft.com/help/' + k.articleName)); }));
+        const fams = [...new Set(prods.map(p => p.product))];
+        html += section('ms', 'Microsoft', tag('msrc'),
+          `<dl class="cvh-dl">
+            <dt>Title</dt><dd>${esc(v.cveTitle)}</dd>
+            <dt>Severity</dt><dd>${sevBadge(v.severity)} ${esc(v.impact || '')}</dd>
+            <dt>Exploited</dt><dd>${v.exploited === 'Yes' ? '<span class="cvh-flag">yes</span>' : esc(v.exploited || '–')} · publicly disclosed: ${esc(v.publiclyDisclosed || '–')}</dd>
+            <dt>Released</dt><dd>${esc(v.releaseNumber || '')} (${esc(fmtDate(v.releaseDate))})</dd>
+            ${v.tag ? `<dt>Component</dt><dd>${esc(v.tag)}</dd>` : ''}
+            ${fams.length ? `<dt>Products <span class="cvh-count">${fams.length}</span></dt><dd>${fams.slice(0, 12).map(esc).join(' · ')}${fams.length > 12 ? ` <span class="cvh-dim">+${fams.length - 12} more</span>` : ''}</dd>` : ''}
+            ${kbs.size ? `<dt>Updates</dt><dd>${[...kbs.entries()].slice(0, 15).map(([n, u]) => link(u, /^\d+$/.test(n) ? 'KB' + n : n)).join(' · ')}</dd>` : ''}
+          </dl>
+          ${(v.articles || []).filter(a => a.articleType === 'FAQ').slice(0, 3).map(a => `<p class="cvh-small">${esc(htmlToText(a.description)).slice(0, 600)}</p>`).join('')}`,
+          true);
       }
 
-      // Current month days
+      if (m.products.length) html += section('prods', `Affected products (CPE) <span class="cvh-count">${m.products.length}</span>`,
+        [...new Set(m.products.map(p => p[1]))].map(s => tag(s)).join(''),
+        `<div class="cvh-pills">${m.products.slice(0, 30).map(([p]) => `<span class="cvh-pill">${esc(p.replace(':', ' · '))}</span>`).join('')}
+          ${m.products.length > 30 ? `<span class="cvh-dim">+${m.products.length - 30} more</span>` : ''}</div>
+          ${m.cpeCount ? `<div class="cvh-small cvh-dim">${m.cpeCount} CPE strings in CVEDB</div>` : ''}`, false);
+
+      if (m.refs.length) {
+        const pri = r => (r.tags.includes('Patch') || r.tags.includes('Vendor Advisory') ? 0 : r.tags.includes('Exploit') ? 1 : 2);
+        const refs = [...m.refs].sort((a, b) => pri(a) - pri(b));
+        html += section('refs', `References <span class="cvh-count">${refs.length}</span>`, tag(refs[0].src),
+          `<ul class="cvh-refs">${refs.slice(0, 25).map(r => `<li>${r.tags.slice(0, 3).map(t => `<span class="cvh-pill">${esc(t)}</span>`).join('')} ${link(r.url)}</li>`).join('')}</ul>
+           ${refs.length > 25 ? `<div class="cvh-small cvh-dim">+${refs.length - 25} more on ${link('https://nvd.nist.gov/vuln/detail/' + id, 'NVD')}</div>` : ''}`, false);
+      }
+
+      $('cvh-result').innerHTML = html;
+    }
+
+    // ---------- keyword / product search ----------
+    const K = { q: '', mode: 'nvd', start: 0, total: 0, sev: '' };
+
+    async function keywordSearch(q, offset) {
+      K.q = q; K.mode = $('cvh-mode').value;
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+      const out = $('cvh-result');
+      out.innerHTML = `<div class="cvh-empty"><span class="cvh-spin"></span> searching ${K.mode === 'nvd' ? 'NVD' : 'CVEDB'} for “${esc(q)}”…</div>`;
+      let rows = [], note = '', src = K.mode === 'nvd' ? 'nvd' : 'cvedb', more = false, total = 0;
+
+      if (K.mode === 'nvd') {
+        // NVD returns oldest first: read the total, then jump to the newest page.
+        const base = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(q)}${K.sev ? '&cvssV3Severity=' + K.sev : ''}`;
+        if (offset === 0) {
+          const head = await getJSON(base + '&resultsPerPage=1');
+          if (!head.ok) { out.innerHTML = errBox('NVD', head, 'NVD allows ~5 requests per 30 seconds without an API key.'); return; }
+          K.total = head.data.totalResults || 0;
+        }
+        total = K.total;
+        const start = Math.max(0, total - 20 - offset);
+        const count = Math.min(20, total - offset);
+        if (count <= 0) { out.innerHTML = `<div class="cvh-empty">No NVD results for “${esc(q)}”.</div>`; return; }
+        const r = await getJSON(`${base}&resultsPerPage=${count}&startIndex=${start}`);
+        if (!r.ok) { out.innerHTML = errBox('NVD', r, 'NVD allows ~5 requests per 30 seconds without an API key.'); return; }
+        rows = (r.data.vulnerabilities || []).map(v => v.cve).reverse().map(c => {
+          const met = c.metrics || {};
+          const best = (met.cvssMetricV40 || met.cvssMetricV31 || met.cvssMetricV30 || met.cvssMetricV2 || [])[0];
+          return { id: c.id, date: c.published, desc: ((c.descriptions || []).find(x => x.lang === 'en') || {}).value,
+                   score: best && best.cvssData.baseScore, sev: best && (best.cvssData.baseSeverity || best.baseSeverity),
+                   kev: Boolean(c.cisaExploitAdd), status: c.vulnStatus };
+        });
+        more = offset + 20 < total;
+        note = `${total.toLocaleString()} matches · newest first`;
+      } else {
+        const r = await getProxied(`https://cvedb.shodan.io/cves?product=${encodeURIComponent(q.toLowerCase())}&sort_by_epss=true&limit=20&skip=${offset}`);
+        if (!r.ok) { out.innerHTML = errBox('CVEDB', r, 'CVEDB product search needs an exact product name, e.g. "openssl", "exchange_server", "fortios".'); return; }
+        rows = (r.data.cves || []).map(c => ({ id: c.cve_id, date: c.published_time, desc: c.summary, score: c.cvss, sev: '', epss: c.epss, kev: c.kev }));
+        more = rows.length === 20;
+        note = 'sorted by EPSS (most likely to be exploited first)';
+        if (!rows.length) { out.innerHTML = `<div class="cvh-empty">CVEDB has no product called “${esc(q)}”. Try the vendor's product id, e.g. <em>exchange_server</em>, <em>fortios</em>, <em>log4j</em>.</div>`; return; }
+      }
+
+      K.start = offset;
+      out.innerHTML = `<div class="cvh-listhead"><span>${esc(note)} ${tag(src)}</span>
+          ${K.mode === 'nvd' ? `<select id="cvh-sev" title="Filter by CVSS v3 severity">
+            ${['', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map(s => `<option value="${s}" ${K.sev === s ? 'selected' : ''}>${s ? s.toLowerCase() : 'all severities'}</option>`).join('')}
+          </select>` : ''}</div>
+        <div class="cvh-list">${rows.map(r => `<div class="cvh-row">
+            <div class="cvh-row-top">${cveBtn(r.id)} ${sevBadge(r.sev, r.score)}
+              ${r.epss != null ? `<span class="cvh-pill" title="EPSS">EPSS ${pct(r.epss)}</span>` : ''}
+              ${r.kev ? '<span class="cvh-flag">KEV</span>' : ''}
+              <span class="cvh-date">${esc(fmtDate(r.date))}</span></div>
+            <div class="cvh-row-desc">${esc(r.desc || '')}</div>
+          </div>`).join('')}</div>
+        <div class="cvh-pager">
+          <button type="button" data-kw="${offset - 20}" ${offset === 0 ? 'disabled' : ''}>← newer</button>
+          <span class="cvh-dim">${offset + 1}–${offset + rows.length}${total ? ' of ' + total.toLocaleString() : ''}</span>
+          <button type="button" data-kw="${offset + 20}" ${more ? '' : 'disabled'}>older →</button>
+        </div>`;
+      const sevSel = $('cvh-sev');
+      if (sevSel) sevSel.onchange = () => { K.sev = sevSel.value; keywordSearch(K.q, 0); };
+    }
+
+    function errBox(name, r, hint) {
+      return `<div class="cvh-error">${esc(name)} request failed (${esc(why(r))}${r.via ? ', via ' + esc(r.via) : ''}).${hint ? '<br><span class="cvh-small">' + esc(hint) + '</span>' : ''}</div>`;
+    }
+
+    // =================================================================
+    // GHSA FEED
+    // =================================================================
+    const G = { days: 0, items: [], day: null, route: 'direct', remaining: null, capped: false, loading: false };
+    const GHSA_MAX_PAGES = 5;
+
+    async function ghsaFetch(url) {
+      // Try the visitor's own GitHub quota first; fall back to the Worker on rate limits.
+      if (G.route === 'direct') {
+        const r = await getJSON(url, { accept: 'application/vnd.github+json' });
+        if (r.ok) { r.via = 'direct'; return r; }
+        if (!(r.status === 403 || r.status === 429 || r.status === 0) || !workerBase()) { r.via = 'direct'; return r; }
+        G.route = 'worker';
+      }
+      const r = await getJSON(routeUrl('worker', url), { accept: 'application/vnd.github+json' });
+      r.via = 'worker';
+      return r;
+    }
+
+    async function ghsaLoad(days) {
+      if (G.loading) return;
+      G.loading = true; G.days = days; G.day = null; G.items = []; G.capped = false;
+      setActive('cvh-ghsa-range', days);
+      const list = $('cvh-ghsa-list');
+      list.innerHTML = `<div class="cvh-empty"><span class="cvh-spin"></span> fetching advisories…</div>`;
       const today = new Date();
-      for (let day = 1; day <= daysInMonth; day++) {
-        const currentDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const advisoryCount = this.advisoriesByDate[currentDateStr] ? this.advisoriesByDate[currentDateStr].length : 0;
-        
-        const isToday = today.getFullYear() === year && 
-                       today.getMonth() === month && 
-                       today.getDate() === day;
-        
-        const heatLevel = Math.min(Math.floor(advisoryCount / 3) + (advisoryCount > 0 ? 1 : 0), 5);
-        const todayClass = isToday ? 'today' : '';
-        
-        calendarHTML += `
-          <div class="cve-calendar-day cve-day-heat-${heatLevel} ${todayClass}" 
-               onclick="cveTool.selectDate('${currentDateStr}')"
-               data-date="${currentDateStr}">
-            <div class="cve-day-number">${day}</div>
-            ${advisoryCount > 0 ? `<div class="cve-day-count">${advisoryCount}</div>` : ''}
-          </div>
-        `;
+      const since = new Date(today.getTime() - days * 864e5);
+      const sev = $('cvh-ghsa-sev').value, eco = $('cvh-ghsa-eco').value, type = $('cvh-ghsa-type').value;
+      let url = `https://api.github.com/advisories?type=${type}&published=${isoDay(since)}..${isoDay(today)}&sort=published&direction=desc&per_page=100`
+        + (sev ? `&severity=${sev}` : '') + (eco ? `&ecosystem=${eco}` : '');
+      let pages = 0, last = null;
+      while (url && pages < GHSA_MAX_PAGES) {
+        const r = await ghsaFetch(url);
+        last = r; pages++;
+        if (!r.ok) break;
+        G.items.push(...r.data);
+        G.remaining = r.headers && r.headers.get('X-RateLimit-Remaining');
+        const linkHdr = r.headers && r.headers.get('Link');
+        const next = linkHdr && (linkHdr.match(/<([^>]+)>;\s*rel="next"/) || [])[1];
+        url = next || null;
       }
-
-      // Next month's leading days
-      const remainingCells = 42 - (firstDayOfWeek + daysInMonth);
-      for (let day = 1; day <= remainingCells && remainingCells < 7; day++) {
-        calendarHTML += `
-          <div class="cve-calendar-day other-month">
-            <div class="cve-day-number">${day}</div>
-          </div>
-        `;
+      G.capped = Boolean(url);
+      G.loading = false;
+      if (!G.items.length && last && !last.ok) {
+        list.innerHTML = errBox('GitHub', last, last.status === 403
+          ? 'GitHub allows 60 anonymous requests an hour per IP. Add a GITHUB_TOKEN secret to the Worker to lift this.' : '');
+        $('cvh-ghsa-stats').innerHTML = '';
+        return;
       }
-
-      calendarHTML += '</div>';
-      document.getElementById('cve-calendar-content').innerHTML = calendarHTML;
-    },
-
-    changeMonth: function(direction) {
-      if (this.isLoading) return;
-      this.currentDate.setMonth(this.currentDate.getMonth() + direction);
-      this.loadAdvisoriesForMonth();
-    },
-
-    selectDate: function(dateStr) {
-      document.querySelectorAll('.cve-calendar-day.selected').forEach(el => {
-        el.classList.remove('selected');
-      });
-      
-      const dayElement = document.querySelector(`[data-date="${dateStr}"]`);
-      if (dayElement) {
-        dayElement.classList.add('selected');
-      }
-      
-      this.selectedDate = dateStr;
-      this.displayAdvisoriesForDate(dateStr);
-    },
-
-    displayAdvisoriesForDate: function(dateStr) {
-      const advisories = this.advisoriesByDate[dateStr] || [];
-      const formattedDate = new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      let html = `
-        <div class="cve-selected-date-info">
-          <div class="cve-selected-date">${formattedDate}</div>
-          <div class="cve-date-summary">${advisories.length} security advisories</div>
-        </div>
-      `;
-
-      if (advisories.length === 0) {
-        html += '<div class="cve-no-advisories">No security advisories published on this date</div>';
-      } else {
-        html += '<div class="cve-advisory-list" style="flex: 1; overflow-y: auto;">';
-        advisories.forEach((advisory, index) => {
-          const severity = advisory.severity || 'unknown';
-          const severityClass = `cve-severity-${severity.toLowerCase()}`;
-          const cveId = advisory.cve_id || advisory.identifiers?.find(id => id.type === 'CVE')?.value || null;
-          
-          html += `
-            <div class="cve-advisory-item" onclick="cveTool.toggleAdvisoryDetails(${index}, '${dateStr}')">
-              <div class="cve-advisory-header">
-                <div class="cve-advisory-title">
-                  <div class="cve-advisory-id">${advisory.ghsa_id}</div>
-                  ${cveId ? `<div class="cve-id">${cveId}</div>` : ''}
-                </div>
-                <div class="cve-severity-badge ${severityClass}">${severity}</div>
-              </div>
-              
-              <div class="cve-advisory-summary">
-                ${advisory.summary}
-              </div>
-              
-              <div class="cve-advisory-details" id="cve-details-${dateStr}-${index}">
-                ${advisory.cvss?.score ? `
-                  <div class="cve-detail-row">
-                    <div class="cve-detail-label">CVSS:</div>
-                    <div class="cve-detail-value">${advisory.cvss.score}/10</div>
-                  </div>
-                ` : ''}
-                ${advisory.cwes?.length ? `
-                  <div class="cve-detail-row">
-                    <div class="cve-detail-label">CWEs:</div>
-                    <div class="cve-detail-value">${advisory.cwes.slice(0, 2).map(cwe => cwe.name).join(', ')}</div>
-                  </div>
-                ` : ''}
-                ${advisory.vulnerabilities?.length ? `
-                  <div class="cve-detail-row">
-                    <div class="cve-detail-label">Affected:</div>
-                    <div class="cve-detail-value">${advisory.vulnerabilities[0].package?.name} (${advisory.vulnerabilities[0].package?.ecosystem})</div>
-                  </div>
-                ` : ''}
-                ${advisory.html_url ? `
-                  <a href="${advisory.html_url}" target="_blank" class="cve-external-link">
-                    View Full Advisory →
-                  </a>
-                ` : ''}
-              </div>
-            </div>
-          `;
-        });
-        html += '</div>';
-      }
-
-      const advisoryDetailsContainer = document.getElementById('cve-advisory-details');
-      advisoryDetailsContainer.innerHTML = html;
-      advisoryDetailsContainer.style.flex = '1';
-      advisoryDetailsContainer.style.overflowY = 'auto';
-      advisoryDetailsContainer.style.display = 'flex';
-      advisoryDetailsContainer.style.flexDirection = 'column';
-    },
-
-    toggleAdvisoryDetails: function(index, dateStr) {
-      const details = document.getElementById(`cve-details-${dateStr}-${index}`);
-      const item = details.closest('.cve-advisory-item');
-      
-      if (details.classList.contains('cve-show')) {
-        details.classList.remove('cve-show');
-        item.classList.remove('expanded');
-      } else {
-        document.querySelectorAll('.cve-advisory-details.cve-show').forEach(el => {
-          el.classList.remove('cve-show');
-          if (el.closest('.cve-advisory-item')) {
-            el.closest('.cve-advisory-item').classList.remove('expanded');
-          }
-        });
-        
-        details.classList.add('cve-show');
-        item.classList.add('expanded');
-      }
-    },
-
-    loadAdvisoriesForMonth: async function() {
-      if (this.isLoading) return;
-      this.isLoading = true;
-
-      try {
-        const year = this.currentDate.getFullYear();
-        const month = this.currentDate.getMonth();
-        
-        const startDate = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-        const endDate = `${year}-${String(month + 1).padStart(2, '0')}-${new Date(year, month + 1, 0).getDate()}`;
-        
-        const severity = document.getElementById('cve-severity-filter').value;
-        const type = document.getElementById('cve-type-filter').value;
-        
-        console.log('🔍 Fetching CVE advisories for date range:', { startDate, endDate, severity, type });
-        
-        this.advisoriesData = [];
-        this.advisoriesByDate = {};
-        
-        let baseUrl = `https://api.github.com/advisories?published=${startDate}..${endDate}&sort=published&direction=desc`;
-        if (severity) baseUrl += `&severity=${severity}`;
-        if (type) baseUrl += `&type=${type}`;
-        
-        let page = 1;
-        let hasMore = true;
-        const maxPages = 5;
-        
-        while (hasMore && page <= maxPages) {
-          const url = `${baseUrl}&per_page=100&page=${page}`;
-          console.log(`📄 Fetching CVE page ${page}...`);
-          
-          if (page > 1) {
-            await new Promise(resolve => setTimeout(resolve, 200));
-          }
-          
-          const response = await fetch(url);
-          
-          if (!response.ok) {
-            if (response.status === 403) {
-              throw new Error(`Rate limit exceeded. Please wait a moment and try again.`);
-            }
-            throw new Error(`GitHub API returned ${response.status}: ${response.statusText}`);
-          }
-          
-          const data = await response.json();
-          
-          if (data.length === 0) {
-            hasMore = false;
-          } else {
-            this.advisoriesData.push(...data);
-            
-            const linkHeader = response.headers.get('Link');
-            hasMore = linkHeader && linkHeader.includes('rel="next"');
-            page++;
-          }
-        }
-        
-        console.log(`✅ Successfully loaded ${this.advisoriesData.length} CVE advisories from ${page - 1} pages`);
-        
-        this.processAdvisoriesData();
-        
-        document.getElementById('cve-github-status').className = 'cve-api-status cve-api-live';
-        document.getElementById('cve-github-status').textContent = 'Live';
-        
-        this.generateCalendar(year, month);
-        this.updateStats();
-        
-      } catch (error) {
-        console.error('⚠ GitHub CVE API Error:', error);
-        document.getElementById('cve-calendar-content').innerHTML = `
-          <div class="cve-error">
-            <strong>Unable to load security advisories</strong><br>
-            ${error.message}
-          </div>
-        `;
-        document.getElementById('cve-github-status').className = 'cve-api-status cve-api-error';
-        document.getElementById('cve-github-status').textContent = 'Error';
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    processAdvisoriesData: function() {
-      this.advisoriesByDate = {};
-      
-      this.advisoriesData.forEach(advisory => {
-        const publishedDate = new Date(advisory.published_at).toISOString().split('T')[0];
-        
-        if (!this.advisoriesByDate[publishedDate]) {
-          this.advisoriesByDate[publishedDate] = [];
-        }
-        
-        this.advisoriesByDate[publishedDate].push(advisory);
-      });
-    },
-
-    updateStats: function() {
-      const criticalCount = this.advisoriesData.filter(advisory => 
-        (advisory.severity || '').toLowerCase() === 'critical'
-      ).length;
-      
-      const highCount = this.advisoriesData.filter(advisory => 
-        (advisory.severity || '').toLowerCase() === 'high'
-      ).length;
-      
-      document.getElementById('cve-critical-count').textContent = criticalCount;
-      document.getElementById('cve-high-count').textContent = highCount;
-    },
-
-    initDashboard: async function() {
-      console.log('🚀 Initializing CVE tracker dashboard...');
-      
-      document.addEventListener('click', (event) => {
-        const yearPicker = document.getElementById('cve-year-picker');
-        const monthContainer = document.getElementById('cve-current-month-container');
-        
-        if (yearPicker && monthContainer && !monthContainer.contains(event.target)) {
-          yearPicker.classList.remove('cve-show');
-        }
-      });
-      
-      await this.loadAdvisoriesForMonth();
-      
-      console.log('✅ CVE Dashboard initialization complete');
+      ghsaRender();
     }
-  };
 
-  // MSRC Tracker functionality
-  const msrcTool = {
-    apiCallCount: 0,
-    currentCveData: [],
-    filteredCveData: [],
-    currentDate: new Date(),
-    currentPage: 1,
-    pageSize: 20,
+    function ghsaRender() {
+      const q = $('cvh-ghsa-filter').value.trim().toLowerCase();
+      let items = G.items;
+      if (q) items = items.filter(a => [a.ghsa_id, a.cve_id, a.summary, ...(a.vulnerabilities || []).map(v => v.package && v.package.name)]
+        .some(x => String(x || '').toLowerCase().includes(q)));
+      // per-day histogram (UTC days in the window)
+      const byDay = new Map();
+      for (let i = G.days - 1; i >= 0; i--) byDay.set(isoDay(new Date(Date.now() - i * 864e5)), []);
+      items.forEach(a => { const d = (a.published_at || '').slice(0, 10); if (!byDay.has(d)) byDay.set(d, []); byDay.get(d).push(a); });
+      const max = Math.max(1, ...[...byDay.values()].map(v => v.length));
+      const shown = G.day ? (byDay.get(G.day) || []) : items;
+      const count = s => items.filter(a => a.severity === s).length;
 
-    monthNames: ['January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'],
+      $('cvh-ghsa-stats').innerHTML = `
+        <div class="cvh-tiles cvh-tiles-sm">
+          <div class="cvh-tile"><div class="cvh-tile-label">advisories ${tag('ghsa')}</div><div class="cvh-tile-val">${items.length}${G.capped ? '+' : ''}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">critical</div><div class="cvh-tile-val cvh-c-crit">${count('critical')}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">high</div><div class="cvh-tile-val cvh-c-high">${count('high')}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">with CVE</div><div class="cvh-tile-val">${items.filter(a => a.cve_id).length}</div></div>
+        </div>
+        <div class="cvh-hist" title="Advisories per day — tap a bar to filter">
+          ${[...byDay.entries()].sort().map(([d, v]) => `<button type="button" class="cvh-bar ${G.day === d ? 'active' : ''}" data-day="${esc(d)}" title="${esc(d)}: ${v.length}">
+            <span style="height:${Math.round(v.length / max * 100)}%"></span><em>${esc(d.slice(8))}</em></button>`).join('')}
+        </div>
+        <div class="cvh-small cvh-dim">via GitHub API (${esc(G.route === 'worker' ? 'Worker' : 'direct')})${G.remaining != null ? ' · ' + esc(G.remaining) + ' requests left this hour' : ''}${G.capped ? ` · showing the newest ${G.items.length} — narrow with severity / ecosystem for more` : ''}${G.day ? ` · filtered to ${esc(G.day)} <button type="button" class="cvh-link" data-day="">clear</button>` : ''}</div>`;
 
-    showLoading: function(show = true) {
-      document.getElementById('msrc-loading').style.display = show ? 'block' : 'none';
-    },
+      if (!shown.length) { $('cvh-ghsa-list').innerHTML = `<div class="cvh-empty">No advisories match.</div>`; return; }
+      $('cvh-ghsa-list').innerHTML = shown.slice(0, 300).map(a => {
+        const pk = (a.vulnerabilities || []).filter(v => v.package);
+        const cvss = a.cvss_severities ? (a.cvss_severities.cvss_v4 && a.cvss_severities.cvss_v4.score ? a.cvss_severities.cvss_v4 : a.cvss_severities.cvss_v3) : a.cvss;
+        const ep = (a.epss || [])[0];
+        return `<details class="cvh-item">
+          <summary>
+            <div class="cvh-row-top">${sevBadge(a.severity, cvss && cvss.score ? cvss.score : null)} ${cveBtn(a.cve_id)}
+              <span class="cvh-dim cvh-mono-sm">${esc(a.ghsa_id)}</span><span class="cvh-date">${esc(fmtDate(a.published_at))}</span></div>
+            <div class="cvh-row-title">${esc(a.summary)}</div>
+            <div class="cvh-pkgs">${pk.slice(0, 4).map(v => `<span class="cvh-pill"><span class="cvh-eco">${esc(v.package.ecosystem)}</span> ${esc(v.package.name)}</span>`).join('')}${pk.length > 4 ? `<span class="cvh-dim">+${pk.length - 4}</span>` : ''}</div>
+          </summary>
+          <div class="cvh-item-body">
+            ${pk.length ? `<div class="cvh-table-wrap"><table class="cvh-table"><thead><tr><th>package</th><th>vulnerable</th><th>patched</th></tr></thead><tbody>
+              ${pk.map(v => `<tr><td><span class="cvh-eco">${esc(v.package.ecosystem)}</span> ${esc(v.package.name)}</td><td>${esc(v.vulnerable_version_range || '')}</td><td>${v.first_patched_version ? esc(typeof v.first_patched_version === 'string' ? v.first_patched_version : v.first_patched_version.identifier) : '<span class="cvh-flag">none</span>'}</td></tr>`).join('')}
+            </tbody></table></div>` : ''}
+            <div class="cvh-small">
+              ${cvss && cvss.vector_string ? `<span class="cvh-vector">${esc(cvss.vector_string)}</span><br>` : ''}
+              ${ep ? `EPSS ${pct(ep.percentage)} (percentile ${pct(ep.percentile)}) · ` : ''}
+              ${(a.cwes || []).map(c => esc(c.cwe_id)).join(' ')} ${link(a.html_url, 'view on GitHub')}
+            </div>
+          </div>
+        </details>`;
+      }).join('') + (shown.length > 300 ? `<div class="cvh-small cvh-dim">showing 300 of ${shown.length}</div>` : '');
+    }
 
-    updateApiCallCount: function() {
-      document.getElementById('msrc-apiCalls').textContent = this.apiCallCount;
-    },
+    // =================================================================
+    // PATCH TUESDAY (MSRC)
+    // =================================================================
+    const M = { month: '', items: [], src: '', note: '', shown: 60, loading: false };
+    const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    showMessage: function(message, type = 'info') {
-      const messageArea = document.getElementById('msrc-messageArea');
-      if (!messageArea) return;
-      
-      if (!message || message === '') {
-        messageArea.innerHTML = '';
-        messageArea.style.display = 'none';
-        return;
+    function msrcMonthOptions() {
+      const sel = $('cvh-msrc-month');
+      if (sel.options.length) return;
+      const now = new Date();
+      // Patch Tuesday is the 2nd Tuesday; before it, default to last month.
+      const first = new Date(now.getFullYear(), now.getMonth(), 1);
+      const pt = 1 + ((9 - first.getDay()) % 7) + 7;
+      let d = new Date(now.getFullYear(), now.getMonth() - (now.getDate() < pt ? 1 : 0), 1);
+      for (let i = 0; i < 18; i++) {
+        const label = `${d.getFullYear()}-${MONTHS[d.getMonth()]}`;
+        sel.add(new Option(`${MONTHS[d.getMonth()]} ${d.getFullYear()}`, label));
+        d = new Date(d.getFullYear(), d.getMonth() - 1, 1);
       }
-      
-      const className = type === 'error' ? 'msrc-error' : type === 'success' ? 'msrc-success' : 'msrc-api-info';
-      messageArea.innerHTML = `<div class="${className}">${message}</div>`;
-      messageArea.style.display = 'block';
-    },
+    }
 
-    populateMonthSelector: function() {
-      const selector = document.getElementById('msrc-monthSelector');
-      const options = [];
+    function fromSug(v) {
+      return { id: v.cveNumber, title: v.cveTitle, sev: v.severity, impact: v.impact, score: v.baseScore ? Number(v.baseScore) : null,
+        vector: v.vectorString, exploited: v.exploited === 'Yes', disclosed: v.publiclyDisclosed === 'Yes', tag: v.tag,
+        cna: v.issuingCna, date: v.releaseDate, desc: htmlToText(v.description), action: v.customerActionRequired };
+    }
+    function fromCvrf(v) {
+      const note = t => (v.Notes || []).find(n => n.Type === t);
+      const threat = (t) => (v.Threats || []).find(x => x.Type === t);
+      const ex = (threat(1) && threat(1).Description.Value) || '';
+      const sc = (v.CVSSScoreSets || [])[0] || {};
+      const tagNote = note(7);
+      return { id: v.CVE, title: v.Title && v.Title.Value, sev: threat(3) && threat(3).Description.Value, impact: threat(0) && threat(0).Description.Value,
+        score: sc.BaseScore != null ? Number(sc.BaseScore) : null, vector: sc.Vector, exploited: /Exploited:Yes/i.test(ex),
+        disclosed: /Publicly Disclosed:Yes/i.test(ex), tag: tagNote && tagNote.Title, cna: note(8) && note(8).Value,
+        date: v.ReleaseDate || (v.RevisionHistory && v.RevisionHistory[0] && v.RevisionHistory[0].Date),
+        desc: htmlToText(note(2) && note(2).Value), kbs: (v.Remediations || []).filter(r => r.Type === 2 && r.Description && /^\d+$/.test(r.Description.Value)).map(r => r.Description.Value) };
+    }
 
-      for (let i = 0; i < 24; i++) {
-        const date = new Date();
-        date.setMonth(date.getMonth() - i);
-        
-        const year = date.getFullYear();
-        const monthIndex = date.getMonth();
-        const monthName = this.monthNames[monthIndex];
-        
-        const shortMonth = monthName.substring(0, 3);
-        const apiFormat = `${year}-${shortMonth}`;
-        const displayFormat = `${monthName} ${year}`;
-        
-        options.push({
-          value: apiFormat,
-          label: displayFormat,
-          date: new Date(date)
-        });
-      }
-
-      selector.innerHTML = options.map(opt => 
-        `<option value="${opt.value}">${opt.label}</option>`
-      ).join('');
-
-      const currentYear = new Date().getFullYear();
-      const currentMonthName = this.monthNames[new Date().getMonth()];
-      const currentShort = currentMonthName.substring(0, 3);
-      const currentApiFormat = `${currentYear}-${currentShort}`;
-      
-      selector.value = currentApiFormat;
-      this.currentDate = new Date();
-    },
-
-    onMonthSelectorChange: function() {
-      const selector = document.getElementById('msrc-monthSelector');
-      const selectedValue = selector.value;
-      
-      const [year, shortMonth] = selectedValue.split('-');
-      const monthIndex = this.monthNames.findIndex(month => month.startsWith(shortMonth));
-      
-      this.currentDate = new Date(parseInt(year), monthIndex, 1);
-      
-      console.log('Month selector changed:', selectedValue, '-> Date:', this.currentDate);
-    },
-
-    previousMonth: function() {
-      this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-      this.updateMonthSelector();
-    },
-
-    nextMonth: function() {
-      this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-      this.updateMonthSelector();
-    },
-
-    updateMonthSelector: function() {
-      const selector = document.getElementById('msrc-monthSelector');
-      const year = this.currentDate.getFullYear();
-      const monthName = this.monthNames[this.currentDate.getMonth()];
-      const shortMonth = monthName.substring(0, 3);
-      const apiFormat = `${year}-${shortMonth}`;
-      
-      if (!selector.querySelector(`option[value="${apiFormat}"]`)) {
-        const displayFormat = `${monthName} ${year}`;
-        const option = new Option(displayFormat, apiFormat);
-        selector.appendChild(option);
-      }
-      
-      selector.value = apiFormat;
-      console.log('Updated month selector to:', apiFormat);
-    },
-
-    getMSRCUrl: function(cveId) {
-      return `https://msrc.microsoft.com/update-guide/vulnerability/${cveId}`;
-    },
-
-    fetchMonthData: async function() {
-      const monthSelector = document.getElementById('msrc-monthSelector');
-      const selectedMonth = monthSelector.value;
-      
-      if (!selectedMonth) {
-        this.showMessage('Please select a month first.', 'error');
-        return;
-      }
-
-      this.showLoading(true);
-      this.showMessage('Fetching data from MSRC API via CORS proxy...', 'info');
-
-      console.log('Fetching data for:', selectedMonth);
-
-      try {
-        const targetUrl = `https://api.msrc.microsoft.com/cvrf/v3.0/cvrf/${selectedMonth}`;
-        const proxyUrl = proxied(targetUrl);
-
-        console.log('Target URL:', targetUrl);
-
-        const response = await fetch(proxyUrl, {
-          headers: {
-            'Accept': 'application/json',
-            'Origin': window.location.origin
-          },
-          signal: AbortSignal.timeout(30000)
-        });
-
-        this.apiCallCount++;
-        this.updateApiCallCount();
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            this.showMessage(`No security updates found for ${selectedMonth}. This month may not have any published updates yet.`, 'error');
-            this.displayCVEs([]);
-            return;
+    async function msrcLoad() {
+      if (M.loading) return;
+      M.loading = true;
+      const month = $('cvh-msrc-month').value, pref = $('cvh-msrc-src').value, third = $('cvh-msrc-third').checked;
+      M.month = month; M.items = []; M.shown = 60; M.note = '';
+      const list = $('cvh-msrc-list');
+      const tryOrder = pref === 'cvrf' ? ['cvrf', 'sug'] : ['sug', 'cvrf'];
+      let done = false, errors = [];
+      for (const src of tryOrder) {
+        list.innerHTML = `<div class="cvh-empty"><span class="cvh-spin"></span> loading ${month} from the ${src === 'sug' ? 'Security Update Guide API' : 'CVRF document (~20 MB, can take 10s+)'}…</div>`;
+        if (src === 'sug') {
+          let filter = `releaseNumber eq '${month}'`;
+          if (!third) filter += ` and isMariner eq false and issuingCna eq 'Microsoft'`;
+          let url = `https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability?$filter=${encodeURIComponent(filter)}&$top=500`;
+          let pages = 0, ok = true;
+          const items = [];
+          while (url && pages < 8) {
+            const r = await getProxied(url, { timeout: 30000 });
+            pages++;
+            if (!r.ok) { errors.push(`Update Guide API: ${why(r)}`); ok = false; break; }
+            items.push(...(r.data.value || []).map(fromSug));
+            url = r.data['@odata.nextLink'] || null;
           }
-          if (response.status === 429) {
-            this.showMessage('Rate limit exceeded on the CORS proxy. Please wait a few minutes before trying again.', 'error');
-            this.displayCVEs([]);
-            return;
-          }
-          if (response.status >= 500) {
-            this.showMessage('The CORS proxy service appears to be experiencing issues. You can try again later or access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
-            this.displayCVEs([]);
-            return;
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const responseText = await response.text();
-        
-        if (responseText.trim().startsWith('<') || responseText.includes('<!DOCTYPE')) {
-          if (responseText.includes('blocked') || responseText.includes('403') || responseText.includes('access denied')) {
-            this.showMessage('Access blocked by CORS proxy. The service may have restrictions in your region. You can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
-          } else {
-            this.showMessage('The CORS proxy returned an error page instead of data. The service may be temporarily unavailable.', 'error');
-          }
-          this.displayCVEs([]);
-          return;
-        }
-
-        const data = JSON.parse(responseText);
-        console.log('MSRC API Response parsed successfully');
-
-        if (!data.Vulnerability || !Array.isArray(data.Vulnerability)) {
-          throw new Error('No Vulnerability array found in response');
-        }
-
-        console.log(`Found ${data.Vulnerability.length} vulnerabilities in API response`);
-        const cves = this.parseMSRCData(data);
-        this.currentCveData = cves;
-        this.filteredCveData = [...cves];
-        this.currentPage = 1;
-        
-        const filterControls = document.getElementById('msrc-filterControls');
-        if (filterControls) {
-          filterControls.style.display = cves.length > 0 ? 'flex' : 'none';
-        }
-        
-        this.displayCurrentPage();
-        this.updateStats();
-        this.updateResultsSummary();
-
-        this.showMessage('', 'info');
-
-      } catch (error) {
-        console.error('Error fetching CVE data:', error);
-        
-        if (error.name === 'AbortError') {
-          this.showMessage('Request timed out. The CORS proxy service may be slow or unavailable. You can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.', 'error');
-        } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-          this.showMessage('Network error: Unable to reach the CORS proxy service. Please check your internet connection or try again later. Alternatively, visit <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a> directly.', 'error');
-        } else if (error.message.includes('JSON')) {
-          this.showMessage('Invalid response format received from the API. The CORS proxy may be experiencing issues.', 'error');
+          if (ok) { M.items = items; M.src = 'sug'; done = true; }
         } else {
-          this.showMessage(`Failed to fetch data: ${error.message}. If this persists, you can access the data directly at <a href="https://msrc.microsoft.com/update-guide" target="_blank">Microsoft Security Update Guide</a>.`, 'error');
+          const r = await getProxied(`https://api.msrc.microsoft.com/cvrf/v3.0/cvrf/${month}`, { timeout: 60000 });
+          if (r.ok && r.data.Vulnerability) {
+            let items = r.data.Vulnerability.map(fromCvrf);
+            if (!third) items = items.filter(x => x.cna === 'Microsoft' && x.tag !== 'Mariner');
+            M.items = items; M.src = 'cvrf'; done = true;
+          } else if (r.status === 404) {
+            errors.push(`CVRF: no document for ${month} yet`);
+          } else errors.push(`CVRF: ${why(r)}`);
         }
-        
-        this.displayCVEs([]);
-      } finally {
-        this.showLoading(false);
+        if (done) break;
       }
-    },
-
-    parseMSRCData: function(data) {
-      console.log('Parsing MSRC data...');
-      
-      if (!data.Vulnerability || !Array.isArray(data.Vulnerability)) {
-        console.error('No Vulnerability array found');
-        return [];
-      }
-
-      const vulnerabilities = data.Vulnerability;
-      const cves = [];
-      
-      const selectedMonth = document.getElementById('msrc-monthSelector').value;
-      const [selectedYear, selectedShortMonth] = selectedMonth.split('-');
-      const selectedMonthIndex = this.monthNames.findIndex(month => month.startsWith(selectedShortMonth));
-      
-      console.log(`Filtering for month: ${selectedYear}-${selectedShortMonth} (index: ${selectedMonthIndex})`);
-      
-      const defaultReleaseDate = data.DocumentTracking ? 
-        new Date(data.DocumentTracking.CurrentReleaseDate || data.DocumentTracking.InitialReleaseDate) : 
-        new Date();
-
-      vulnerabilities.forEach((vuln, index) => {
-        const cveId = vuln.CVE || '';
-        
-        if (!cveId || !cveId.startsWith('CVE-') || cveId === 'CVE-' || cveId.length < 8) {
-          return;
-        }
-        
-        let title = 'Security Update';
-        if (vuln.Title && vuln.Title.Value) {
-          title = vuln.Title.Value;
-        }
-        
-        if (title === 'Security Update' || title === '' || title === 'Unknown') {
-          return;
-        }
-
-        let cveDate = defaultReleaseDate;
-        if (vuln.RevisionHistory && Array.isArray(vuln.RevisionHistory)) {
-          const initialRevision = vuln.RevisionHistory.find(rev => 
-            rev.Description && rev.Description.Value && 
-            rev.Description.Value.toLowerCase().includes('published')
-          );
-          
-          if (initialRevision && initialRevision.Date) {
-            cveDate = new Date(initialRevision.Date);
-          } else if (vuln.RevisionHistory.length > 0 && vuln.RevisionHistory[0].Date) {
-            cveDate = new Date(vuln.RevisionHistory[0].Date);
-          }
-        }
-
-        const cveYear = cveDate.getFullYear();
-        const cveMonth = cveDate.getMonth();
-        
-        if (cveYear != selectedYear || cveMonth != selectedMonthIndex) {
-          console.log(`Filtering out CVE ${cveId}: published ${cveDate.toLocaleDateString()} (not in ${selectedYear}-${selectedShortMonth})`);
-          return;
-        }
-
-        let maxScore = null;
-        if (vuln.CVSSScoreSets && Array.isArray(vuln.CVSSScoreSets)) {
-          vuln.CVSSScoreSets.forEach(scoreSet => {
-            if (scoreSet.BaseScore && (!maxScore || scoreSet.BaseScore > maxScore)) {
-              maxScore = scoreSet.BaseScore;
-            }
-          });
-        }
-
-        let severityText = 'Unknown';
-        if (vuln.Threats && Array.isArray(vuln.Threats)) {
-          const severityThreat = vuln.Threats.find(threat => 
-            threat.Type === 3 || 
-            (threat.Description && threat.Description.Value && 
-             (threat.Description.Value.includes('Critical') || 
-              threat.Description.Value.includes('Important') ||
-              threat.Description.Value.includes('Moderate') ||
-              threat.Description.Value.includes('Low')))
-          );
-          if (severityThreat && severityThreat.Description && severityThreat.Description.Value) {
-            severityText = severityThreat.Description.Value;
-          }
-        }
-
-        let description = '';
-        if (vuln.Notes && Array.isArray(vuln.Notes)) {
-          const descNote = vuln.Notes.find(note => note.Type === 1);
-          if (descNote && descNote.Value) {
-            description = descNote.Value;
-          }
-        }
-
-        cves.push({
-          id: cveId,
-          title: title,
-          date: cveDate,
-          severity: maxScore,
-          severityText: severityText,
-          description: description
-        });
-      });
-
-      cves.sort((a, b) => b.date - a.date);
-
-      console.log(`Successfully parsed ${cves.length} CVEs for ${selectedYear}-${selectedShortMonth} (filtered out ${vulnerabilities.length - cves.length} from other months)`);
-      return cves;
-    },
-
-    updateResultsSummary: function() {
-      const summaryDiv = document.getElementById('msrc-resultsSummary');
-      if (!summaryDiv) return;
-      
-      const total = this.currentCveData.length;
-      const filtered = this.filteredCveData.length;
-      const severityFilterSelect = document.getElementById('msrc-severityFilter');
-      const severityFilter = severityFilterSelect ? severityFilterSelect.value : 'all';
-      
-      let message = `Showing ${filtered} of ${total} CVEs`;
-      if (severityFilter !== 'all') {
-        message += ` (filtered by ${severityFilter} severity)`;
-      }
-      
-      summaryDiv.innerHTML = `<div class="msrc-results-summary">${message}</div>`;
-      summaryDiv.style.display = total > 0 ? 'block' : 'none';
-    },
-
-    applyFilters: function() {
-      const severityFilterSelect = document.getElementById('msrc-severityFilter');
-      const pageSizeSelect = document.getElementById('msrc-pageSize');
-      
-      if (!severityFilterSelect || !pageSizeSelect) return;
-      
-      const severityFilter = severityFilterSelect.value;
-      const pageSizeValue = pageSizeSelect.value;
-      
-      this.pageSize = pageSizeValue === 'all' ? this.currentCveData.length : parseInt(pageSizeValue);
-      
-      this.filteredCveData = this.currentCveData.filter(cve => {
-        if (severityFilter === 'all') return true;
-        
-        const category = this.getSeverityCategory(cve.severity);
-        return category === severityFilter;
-      });
-      
-      this.currentPage = 1;
-      this.displayCurrentPage();
-      this.updateResultsSummary();
-    },
-
-    resetFilters: function() {
-      const severityFilterSelect = document.getElementById('msrc-severityFilter');
-      const pageSizeSelect = document.getElementById('msrc-pageSize');
-      
-      if (severityFilterSelect) severityFilterSelect.value = 'all';
-      if (pageSizeSelect) pageSizeSelect.value = '20';
-      
-      this.pageSize = 20;
-      this.filteredCveData = [...this.currentCveData];
-      this.currentPage = 1;
-      this.displayCurrentPage();
-      this.updateResultsSummary();
-    },
-
-    changePage: function(delta) {
-      const totalPages = Math.ceil(this.filteredCveData.length / this.pageSize);
-      const newPage = this.currentPage + delta;
-      
-      if (newPage >= 1 && newPage <= totalPages) {
-        this.currentPage = newPage;
-        this.displayCurrentPage();
-      }
-    },
-
-    displayCurrentPage: function() {
-      const totalPages = Math.ceil(this.filteredCveData.length / this.pageSize);
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      const endIndex = Math.min(startIndex + this.pageSize, this.filteredCveData.length);
-      const currentPageData = this.filteredCveData.slice(startIndex, endIndex);
-      
-      this.displayCVEs(currentPageData);
-      this.updatePaginationControls(totalPages);
-    },
-
-    updatePaginationControls: function(totalPages) {
-      const paginationDiv = document.getElementById('msrc-pagination');
-      const prevBtn = document.getElementById('msrc-prevPage');
-      const nextBtn = document.getElementById('msrc-nextPage');
-      const infoDiv = document.getElementById('msrc-paginationInfo');
-      
-      if (!paginationDiv || !prevBtn || !nextBtn || !infoDiv) return;
-      
-      if (totalPages <= 1) {
-        paginationDiv.style.display = 'none';
-      } else {
-        paginationDiv.style.display = 'flex';
-        prevBtn.disabled = this.currentPage <= 1;
-        nextBtn.disabled = this.currentPage >= totalPages;
-        infoDiv.textContent = `Page ${this.currentPage} of ${totalPages}`;
-      }
-    },
-
-    displayCVEs: function(cves) {
-      const grid = document.getElementById('msrc-cveGrid');
-      
-      if (cves.length === 0) {
-        grid.innerHTML = '<div class="msrc-no-data">No security updates found for the selected period.</div>';
+      M.loading = false;
+      if (!done) {
+        $('cvh-msrc-stats').innerHTML = '';
+        list.innerHTML = `<div class="cvh-error">Couldn't load ${esc(month)}.<br><span class="cvh-small">${errors.map(esc).join('<br>')}</span></div>`;
         return;
       }
-
-      let html = '';
-      cves.forEach(cve => {
-        const severity = this.getSeverityCategory(cve.severity);
-        const severityDisplay = cve.severity ? 
-          `${cve.severityText} (CVSS: ${cve.severity})` : 
-          cve.severityText;
-
-        const msrcUrl = this.getMSRCUrl(cve.id);
-
-        html += `
-          <div class="msrc-cve-item" onclick="window.open('${msrcUrl}', '_blank')">
-            <div class="msrc-cve-header">
-              <div class="msrc-cve-id">
-                ${cve.id}
-                <span class="msrc-external-link-icon">🔗</span>
-              </div>
-              <div class="msrc-cve-date">${cve.date.toLocaleDateString()}</div>
-            </div>
-            <div class="msrc-cve-title">${cve.title}</div>
-            <div class="msrc-cve-severity msrc-severity-${severity}">${severityDisplay}</div>
-            ${cve.description ? `
-              <div class="msrc-cve-description">
-                ${cve.description.substring(0, 300)}${cve.description.length > 300 ? '...' : ''}
-              </div>
-            ` : ''}
-          </div>
-        `;
-      });
-
-      grid.innerHTML = html;
-    },
-
-    getSeverityCategory: function(score) {
-      if (!score) return 'unknown';
-      if (score >= 9.0) return 'critical';
-      if (score >= 7.0) return 'important';
-      if (score >= 4.0) return 'moderate';
-      return 'low';
-    },
-
-    updateStats: function() {
-      const criticalCves = this.currentCveData.filter(cve => this.getSeverityCategory(cve.severity) === 'critical');
-      
-      document.getElementById('msrc-totalCves').textContent = this.currentCveData.length;
-      document.getElementById('msrc-criticalCount').textContent = criticalCves.length;
-    },
-
-    init: function() {
-      console.log('Initializing MSRC CVE Dashboard...');
-      this.updateApiCallCount();
-      this.populateMonthSelector();
+      if (errors.length) M.note = `fell back to ${M.src === 'sug' ? 'the Update Guide API' : 'the CVRF document'} (${errors.join('; ')})`;
+      msrcRender();
     }
-  };
 
-  // Shodan CVEDB Tool functionality
-  const shodanTool = {
-    allResults: [],
-
-    init: function() {
-      console.log('Initializing Shodan CVEDB Tool...');
-      
-      // Add event listener for Enter key
-      document.getElementById('shodan-searchQuery').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          this.performSearch();
-        }
-      });
-    },
-
-    async performSearch() {
-      const query = document.getElementById('shodan-searchQuery').value.trim();
-      
-      if (!query) {
-        alert('Please enter a CVE ID');
-        return;
-      }
-
-      const resultsDiv = document.getElementById('shodan-results');
-      resultsDiv.innerHTML = '<div class="shodan-loading">Searching CVEDB...</div>';
-
-      try {
-        // Remove CVE- prefix if present for cleaner lookup
-        const cveId = query.toUpperCase().replace(/^CVE-/, '');
-        const targetUrl = `https://cvedb.shodan.io/cve/CVE-${cveId}`;
-
-        // Use CORS proxy (Worker if configured, else CorsProxy.io)
-        const url = proxied(targetUrl);
-
-        console.log('Fetching URL:', url); // Debug log
-        
-        const response = await fetch(url);
-        
-        console.log('Response status:', response.status); // Debug log
-        console.log('Response headers:', response.headers); // Debug log
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.log('Error response:', errorText); // Debug log
-          throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
-        }
-
-        const responseText = await response.text();
-        console.log('Raw response:', responseText); // Debug log
-        
-        const data = JSON.parse(responseText);
-        
-        // Handle single CVE result
-        if (data.cve_id || data.cve) {
-          this.allResults = [data];
-          this.displayResults();
-        } else {
-          throw new Error('CVE not found in database');
-        }
-        
-      } catch (error) {
-        console.error('Search error:', error);
-        resultsDiv.innerHTML = `
-          <div class="shodan-error">
-            <h4>CVE Search Error</h4>
-            <p>${error.message}</p>
-            <p><strong>Common issues:</strong></p>
-            <ul>
-              <li>CVE might not exist in CVEDB (try a well-known CVE like CVE-2024-21413)</li>
-              <li>Check that CVE format is correct (CVE-YYYY-NNNNN)</li>
-              <li>CORS proxy might be temporarily unavailable</li>
-            </ul>
-            <p><strong>Examples:</strong> CVE-2024-21413, CVE-2021-44228, CVE-2023-23397</p>
-          </div>
-        `;
-      }
-    },
-
-    displayResults() {
-      const resultsDiv = document.getElementById('shodan-results');
-      
-      if (this.allResults.length === 0) {
-        resultsDiv.innerHTML = `
-          <div class="shodan-no-results">
-            <h3>No Results Found</h3>
-            <p>CVE not found in the CVEDB database.</p>
-          </div>
-        `;
-        return;
-      }
-
-      // Since we only have one result, show detailed view
-      let html = this.renderDetailedCard(this.allResults[0]);
-      resultsDiv.innerHTML = html;
-    },
-
-    renderDetailedCard(item) {
-      const epssLevel = this.getEPSSLevel(item.epss);
-      const publishedDate = item.published_time ? new Date(item.published_time).toLocaleDateString() : 'Unknown';
-
-      return `
-        <div class="shodan-vulnerability-card">
-          <div class="shodan-cve-header">
-            <div class="shodan-cve-id">${item.cve_id || item.cve || 'Unknown CVE'}</div>
-            <div class="shodan-badges">
-              ${item.kev ? '<span class="shodan-badge kev">🚨 KEV</span>' : ''}
-              ${item.epss ? `<span class="shodan-badge epss-${epssLevel}">EPSS ${(item.epss * 100).toFixed(1)}%</span>` : ''}
-              ${item.cvss ? `<span class="shodan-badge cvss">CVSS ${item.cvss}</span>` : ''}
-            </div>
-          </div>
-
-          <div class="shodan-vulnerability-summary">
-            ${item.summary || 'No summary available'}
-          </div>
-
-          <div class="shodan-metrics">
-            <div class="shodan-metric">
-              <span class="shodan-metric-value">${item.cvss || 'N/A'}</span>
-              <div class="shodan-metric-label">CVSS Score</div>
-            </div>
-            <div class="shodan-metric">
-              <span class="shodan-metric-value">${item.epss ? (item.epss * 100).toFixed(2) + '%' : 'N/A'}</span>
-              <div class="shodan-metric-label">EPSS (Exploit Probability)</div>
-            </div>
-            <div class="shodan-metric">
-              <span class="shodan-metric-value">${item.ranking_epss ? (item.ranking_epss * 100).toFixed(1) + '%' : 'N/A'}</span>
-              <div class="shodan-metric-label">EPSS Percentile</div>
-            </div>
-            <div class="shodan-metric">
-              <span class="shodan-metric-value">${item.kev ? 'YES' : 'NO'}</span>
-              <div class="shodan-metric-label">CISA KEV Listed</div>
-            </div>
-          </div>
-
-          ${item.propose_action ? `
-            <div class="shodan-proposed-action">
-              <h4>🔧 Recommended Action</h4>
-              <p>${item.propose_action}</p>
-            </div>
-          ` : ''}
-
-          <div class="shodan-additional-info">
-            <button class="shodan-expand-btn" onclick="shodanTool.toggleDetails('${item.cve_id || item.cve}')">
-              <span id="shodan-toggle-text-${(item.cve_id || item.cve).replace(/[^a-zA-Z0-9]/g, '')}">Show More Details</span>
-            </button>
-            
-            <div class="shodan-details-section" id="shodan-details-${(item.cve_id || item.cve).replace(/[^a-zA-Z0-9]/g, '')}" style="display: none;">
-              
-              ${item.cpes && item.cpes.length > 0 ? `
-                <div class="shodan-detail-block">
-                  <h4>📦 Affected Products (CPEs)</h4>
-                  <div class="shodan-cpe-list">
-                    ${item.cpes.slice(0, 10).map(cpe => `<span class="shodan-cpe-tag">${cpe}</span>`).join('')}
-                    ${item.cpes.length > 10 ? `<span class="shodan-cpe-more">... and ${item.cpes.length - 10} more</span>` : ''}
-                  </div>
-                </div>
-              ` : ''}
-
-              ${item.references && item.references.length > 0 ? `
-                <div class="shodan-detail-block">
-                  <h4>🔗 References & Advisories</h4>
-                  <div class="shodan-references-list">
-                    ${item.references.slice(0, 5).map(ref => `
-                      <a href="${ref}" target="_blank" class="shodan-reference-link">
-                        ${ref.length > 60 ? ref.substring(0, 60) + '...' : ref}
-                      </a>
-                    `).join('')}
-                    ${item.references.length > 5 ? `<p class="shodan-ref-more">... and ${item.references.length - 5} more references</p>` : ''}
-                  </div>
-                </div>
-              ` : ''}
-
-              ${item.cvss_v2 ? `
-                <div class="shodan-detail-block">
-                  <h4>📊 Additional CVSS Scores</h4>
-                  <div class="shodan-cvss-versions">
-                    <span class="shodan-cvss-tag">CVSS v2: ${item.cvss_v2}</span>
-                    ${item.cvss_v3 ? `<span class="shodan-cvss-tag">CVSS v3: ${item.cvss_v3}</span>` : ''}
-                  </div>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-
-          <div class="shodan-external-links">
-            <a href="https://cvedb.shodan.io/cve/${item.cve_id || item.cve}" target="_blank" class="shodan-external-link">
-              🌐 View on CVEDB Shodan
-            </a>
-            <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=${item.cve_id || item.cve}" target="_blank" class="shodan-external-link">
-              📋 View on CVE MITRE
-            </a>
-          </div>
-
-          <div class="shodan-published-date">
-            📅 Published: ${publishedDate}
-            ${item.ransomware_campaign && item.ransomware_campaign !== 'Unknown' ? 
-              `| 🦠 Ransomware: ${item.ransomware_campaign}` : ''}
-          </div>
+    function msrcRender() {
+      const sev = $('cvh-msrc-sev').value, onlyEx = $('cvh-msrc-ex').checked, q = $('cvh-msrc-filter').value.trim().toLowerCase();
+      const all = M.items;
+      let items = all.filter(x => (!sev || String(x.sev).toLowerCase() === sev) && (!onlyEx || x.exploited || x.disclosed)
+        && (!q || [x.id, x.title, x.tag].some(s => String(s || '').toLowerCase().includes(q))));
+      items.sort((a, b) => (b.exploited - a.exploited) || (b.disclosed - a.disclosed) || ((b.score || 0) - (a.score || 0)));
+      const srcLabel = M.src === 'sug' ? 'Security Update Guide API' : 'CVRF document';
+      const n = f => all.filter(f).length;
+      $('cvh-msrc-stats').innerHTML = `
+        <div class="cvh-tiles cvh-tiles-sm">
+          <div class="cvh-tile"><div class="cvh-tile-label">CVEs ${tag('msrc', srcLabel)}</div><div class="cvh-tile-val">${all.length}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">critical</div><div class="cvh-tile-val cvh-c-crit">${n(x => x.sev === 'Critical')}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">exploited</div><div class="cvh-tile-val ${n(x => x.exploited) ? 'cvh-hot' : ''}">${n(x => x.exploited)}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">disclosed</div><div class="cvh-tile-val">${n(x => x.disclosed)}</div></div>
         </div>
-      `;
-    },
+        <div class="cvh-small cvh-dim">${esc(M.month)} · ${esc(srcLabel)} · ${items.length} shown${M.note ? ' · ' + esc(M.note) : ''}</div>`;
 
-    renderListItem(item) {
-      const epssLevel = this.getEPSSLevel(item.epss);
-      const publishedDate = item.published_time ? new Date(item.published_time).toLocaleDateString() : 'Unknown';
-
-      return `
-        <div class="shodan-list-item">
-          <div class="shodan-list-item-header">
-            <div class="shodan-list-item-cve">${item.cve_id || item.cve || 'Unknown CVE'}</div>
-            <div class="shodan-badges">
-              ${item.kev ? '<span class="shodan-badge kev">KEV</span>' : ''}
-              ${item.epss ? `<span class="shodan-badge epss-${epssLevel}">EPSS ${(item.epss * 100).toFixed(1)}%</span>` : ''}
-            </div>
+      if (!items.length) { $('cvh-msrc-list').innerHTML = `<div class="cvh-empty">Nothing matches those filters.</div>`; return; }
+      $('cvh-msrc-list').innerHTML = items.slice(0, M.shown).map(x => `<details class="cvh-item ${x.exploited ? 'cvh-item-hot' : ''}" data-msrc="${esc(x.id)}">
+          <summary>
+            <div class="cvh-row-top">${sevBadge(x.sev, x.score)} ${cveBtn(x.id)}
+              ${x.exploited ? '<span class="cvh-flag">exploited</span>' : ''}${x.disclosed ? '<span class="cvh-flag cvh-flag-soft">disclosed</span>' : ''}
+              <span class="cvh-date">${esc(x.impact || '')}</span></div>
+            <div class="cvh-row-title">${esc(x.title)}</div>
+            ${x.tag ? `<div class="cvh-pkgs"><span class="cvh-pill">${esc(x.tag)}</span>${x.cna && x.cna !== 'Microsoft' ? `<span class="cvh-pill">CNA: ${esc(x.cna)}</span>` : ''}</div>` : ''}
+          </summary>
+          <div class="cvh-item-body">
+            ${x.desc ? `<p class="cvh-small">${esc(x.desc)}</p>` : ''}
+            ${x.vector ? `<div class="cvh-vector cvh-small">${esc(x.vector)}</div>` : ''}
+            <div class="cvh-small cvh-msrc-kbs">${x.kbs && x.kbs.length ? 'Updates: ' + x.kbs.slice(0, 12).map(k => link('https://support.microsoft.com/help/' + k, 'KB' + k)).join(' ') : ''}</div>
+            <div class="cvh-small">${link('https://msrc.microsoft.com/update-guide/vulnerability/' + x.id, 'open in Update Guide')}</div>
           </div>
-          <div class="shodan-list-item-summary">
-            ${item.summary ? item.summary.substring(0, 200) + (item.summary.length > 200 ? '...' : '') : 'No summary available'}
-          </div>
-          <div class="shodan-list-item-metrics">
-            <span class="shodan-list-metric">CVSS: ${item.cvss || 'N/A'}</span>
-            <span class="shodan-list-metric">EPSS: ${item.epss ? (item.epss * 100).toFixed(2) + '%' : 'N/A'}</span>
-            <span class="shodan-list-metric">Published: ${publishedDate}</span>
-          </div>
-        </div>
-      `;
-    },
-
-    getEPSSLevel(epss) {
-      if (!epss) return 'low';
-      if (epss >= 0.7) return 'high';
-      if (epss >= 0.3) return 'medium';
-      return 'low';
-    },
-
-    toggleDetails(cveId) {
-      const cleanId = cveId.replace(/[^a-zA-Z0-9]/g, '');
-      const detailsSection = document.getElementById(`shodan-details-${cleanId}`);
-      const toggleText = document.getElementById(`shodan-toggle-text-${cleanId}`);
-      
-      if (detailsSection.style.display === 'none') {
-        detailsSection.style.display = 'block';
-        toggleText.textContent = 'Hide Details';
-      } else {
-        detailsSection.style.display = 'none';
-        toggleText.textContent = 'Show More Details';
-      }
+        </details>`).join('') +
+        (items.length > M.shown ? `<div class="cvh-pager"><button type="button" id="cvh-msrc-more">show ${Math.min(60, items.length - M.shown)} more (${items.length - M.shown} left)</button></div>` : '');
+      const more = $('cvh-msrc-more');
+      if (more) more.onclick = () => { M.shown += 60; msrcRender(); };
     }
-  };
+
+    // Lazy: fetch products + KB articles when a Patch Tuesday item is opened (Update Guide only).
+    async function msrcExpand(el) {
+      const id = el.dataset.msrc, box = el.querySelector('.cvh-msrc-kbs');
+      if (!box || box.dataset.loaded || M.src !== 'sug') return;
+      box.dataset.loaded = '1';
+      box.innerHTML = '<span class="cvh-spin"></span> loading affected products…';
+      const r = await getProxied(`https://api.msrc.microsoft.com/sug/v2.0/en-US/affectedProduct?$filter=${encodeURIComponent(`cveNumber eq '${id}'`)}`);
+      if (!r.ok) { box.innerHTML = `<span class="cvh-dim">products unavailable (${esc(why(r))})</span>`; return; }
+      const prods = r.data.value || [];
+      const kbs = new Map();
+      prods.forEach(p => (p.kbArticles || []).forEach(k => { if (k.articleName && !kbs.has(k.articleName)) kbs.set(k.articleName, k.articleUrl || ('https://support.microsoft.com/help/' + k.articleName)); }));
+      const names = [...new Set(prods.map(p => p.product))];
+      box.innerHTML = `${names.length ? `<strong>${names.length} product${names.length > 1 ? 's' : ''}:</strong> ${names.slice(0, 10).map(esc).join(' · ')}${names.length > 10 ? ` <span class="cvh-dim">+${names.length - 10}</span>` : ''}<br>` : ''}
+        ${kbs.size ? 'Updates: ' + [...kbs.entries()].slice(0, 12).map(([k, u]) => link(u, /^\d+$/.test(k) ? 'KB' + k : k)).join(' · ') : ''}`;
+    }
+
+    // =================================================================
+    // CISA KEV
+    // =================================================================
+    const V = { data: null, src: '', days: 0, loading: false };
+
+    async function kevEnsure() {
+      if (V.data) return true;
+      const tries = [
+        ['GitHub mirror (cisagov/kev-data)', () => getJSON('https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json', { timeout: 30000 })],
+        ['cisa.gov via proxy', () => getProxied('https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json', { timeout: 30000 })],
+      ];
+      const errs = [];
+      for (const [label, fn] of tries) {
+        const r = await fn();
+        if (r.ok && r.data && r.data.vulnerabilities) { V.data = r.data; V.src = label + (errs.length ? ` (after: ${errs.join('; ')})` : ''); return true; }
+        errs.push(`${label}: ${why(r)}`);
+      }
+      $('cvh-kev-list').innerHTML = `<div class="cvh-error">Couldn't load the KEV catalogue.<br><span class="cvh-small">${errs.map(esc).join('<br>')}</span></div>`;
+      return false;
+    }
+
+    async function kevLoad(days) {
+      if (V.loading) return;
+      V.loading = true; V.days = days;
+      setActive('cvh-kev-range', days);
+      if (!V.data) $('cvh-kev-list').innerHTML = `<div class="cvh-empty"><span class="cvh-spin"></span> loading the KEV catalogue…</div>`;
+      const ok = await kevEnsure();
+      V.loading = false;
+      if (ok) kevRender();
+    }
+
+    function kevRender() {
+      const q = $('cvh-kev-filter').value.trim().toLowerCase(), ransom = $('cvh-kev-ransom').checked;
+      const cutoff = V.days ? isoDay(new Date(Date.now() - V.days * 864e5)) : '';
+      const today = isoDay(new Date());
+      let items = V.data.vulnerabilities.filter(v => (!cutoff || v.dateAdded >= cutoff)
+        && (!ransom || v.knownRansomwareCampaignUse === 'Known')
+        && (!q || [v.cveID, v.vendorProject, v.product, v.vulnerabilityName].some(s => String(s || '').toLowerCase().includes(q))));
+      items.sort((a, b) => b.dateAdded.localeCompare(a.dateAdded) || b.cveID.localeCompare(a.cveID));
+      const vendors = new Map();
+      items.forEach(v => vendors.set(v.vendorProject, (vendors.get(v.vendorProject) || 0) + 1));
+      const topV = [...vendors.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+      $('cvh-kev-stats').innerHTML = `
+        <div class="cvh-tiles cvh-tiles-sm">
+          <div class="cvh-tile"><div class="cvh-tile-label">${V.days ? 'added' : 'entries'} ${tag('kev')}</div><div class="cvh-tile-val">${items.length}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">ransomware</div><div class="cvh-tile-val cvh-c-crit">${items.filter(v => v.knownRansomwareCampaignUse === 'Known').length}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">top vendor</div><div class="cvh-tile-val cvh-tile-text">${topV[0] ? esc(topV[0][0]) : '–'}</div></div>
+          <div class="cvh-tile"><div class="cvh-tile-label">catalogue</div><div class="cvh-tile-val cvh-tile-text">v${esc(V.data.catalogVersion)}</div></div>
+        </div>
+        <div class="cvh-small cvh-dim">${V.data.count} entries total · source: ${esc(V.src)}${topV.length > 1 ? ' · most listed: ' + topV.map(([v, c]) => esc(v) + ' (' + c + ')').join(', ') : ''}</div>`;
+      if (!items.length) { $('cvh-kev-list').innerHTML = `<div class="cvh-empty">Nothing added in that window matches.</div>`; return; }
+      $('cvh-kev-list').innerHTML = items.slice(0, 200).map(v => `<details class="cvh-item">
+          <summary>
+            <div class="cvh-row-top">${cveBtn(v.cveID)}
+              ${v.knownRansomwareCampaignUse === 'Known' ? '<span class="cvh-flag">ransomware</span>' : ''}
+              <span class="cvh-date">added ${esc(fmtDate(v.dateAdded))}</span></div>
+            <div class="cvh-row-title">${esc(v.vulnerabilityName)}</div>
+            <div class="cvh-pkgs"><span class="cvh-pill">${esc(v.vendorProject)} · ${esc(v.product)}</span>
+              <span class="cvh-pill ${v.dueDate < today ? '' : 'cvh-pill-warn'}" title="US federal agencies' remediation deadline">due ${esc(fmtDate(v.dueDate))}</span></div>
+          </summary>
+          <div class="cvh-item-body">
+            <p class="cvh-small">${esc(v.shortDescription)}</p>
+            <p class="cvh-small"><strong>Required action:</strong> ${esc(v.requiredAction)}</p>
+            ${(v.cwes || []).length ? `<div class="cvh-small">${v.cwes.map(esc).join(' ')}</div>` : ''}
+            ${v.notes ? `<div class="cvh-small cvh-refs-inline">${String(v.notes).split(/\s*;\s*/).filter(u => /^https?:/.test(u)).slice(0, 5).map(u => link(u)).join('<br>')}</div>` : ''}
+          </div>
+        </details>`).join('') + (items.length > 200 ? `<div class="cvh-small cvh-dim">showing newest 200 of ${items.length} — use the filter to narrow</div>` : '');
+    }
+
+    // =================================================================
+    // wiring
+    // =================================================================
+    function setActive(groupId, val) {
+      document.querySelectorAll(`#${groupId} [data-range]`).forEach(b => b.classList.toggle('active', Number(b.dataset.range) === val));
+    }
+
+    function openLookup(id) {
+      const tabLink = document.querySelector('.cve-secondary-nav a[data-cve-tab="cve-lookup"]');
+      if (tabLink && !tabLink.classList.contains('active')) tabLink.click();
+      startLookup(id);
+      const box = $('cve-lookup');
+      if (box) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    let inited = false;
+    function init() {
+      if (inited) return;
+      inited = true;
+      msrcMonthOptions();
+
+      $('cvh-lookup-form').addEventListener('submit', e => { e.preventDefault(); startLookup($('cvh-q').value); });
+      document.querySelectorAll('.cvh-examples [data-q]').forEach(b => b.addEventListener('click', () => {
+        if (b.dataset.mode) $('cvh-mode').value = b.dataset.mode;
+        startLookup(b.dataset.q);
+      }));
+
+      // Delegated clicks inside the CVE section
+      $('cve').addEventListener('click', e => {
+        const cve = e.target.closest('.cvh-cvebtn');
+        if (cve) { e.preventDefault(); e.stopPropagation(); openLookup(cve.dataset.cve); return; }
+        const chip = e.target.closest('.cvh-chip-fail');
+        if (chip && L.id) { runSource(chip.dataset.src, L.id); return; }
+        const kw = e.target.closest('[data-kw]');
+        if (kw && !kw.disabled) { keywordSearch(K.q, Number(kw.dataset.kw)); $('cve-lookup').scrollIntoView({ block: 'start' }); return; }
+        const g = e.target.closest('#cvh-ghsa-range [data-range]');
+        if (g) { ghsaLoad(Number(g.dataset.range)); return; }
+        const day = e.target.closest('[data-day]');
+        if (day && G.items.length) { G.day = day.dataset.day && G.day !== day.dataset.day ? day.dataset.day : null; ghsaRender(); return; }
+        const k = e.target.closest('#cvh-kev-range [data-range]');
+        if (k) { kevLoad(Number(k.dataset.range)); return; }
+      });
+
+      // Lazy KB lookup when a Patch Tuesday item opens
+      $('cvh-msrc-list').addEventListener('toggle', e => { if (e.target.open && e.target.dataset.msrc) msrcExpand(e.target); }, true);
+
+      $('cvh-msrc-load').addEventListener('click', msrcLoad);
+      ['cvh-msrc-sev', 'cvh-msrc-ex'].forEach(id => $(id).addEventListener('change', () => { M.shown = 60; if (M.items.length) msrcRender(); }));
+      $('cvh-msrc-filter').addEventListener('input', () => { M.shown = 60; if (M.items.length) msrcRender(); });
+      $('cvh-msrc-third').addEventListener('change', () => { if (M.items.length) msrcLoad(); });
+
+      ['cvh-ghsa-sev', 'cvh-ghsa-eco', 'cvh-ghsa-type'].forEach(id => $(id).addEventListener('change', () => { if (G.days) ghsaLoad(G.days); }));
+      $('cvh-ghsa-filter').addEventListener('input', () => { if (G.items.length) ghsaRender(); });
+
+      $('cvh-kev-filter').addEventListener('input', () => { if (V.data) kevRender(); });
+      $('cvh-kev-ransom').addEventListener('change', () => { if (V.data) kevRender(); });
+    }
+
+    // Deep link: /dashboard/#cve=CVE-2024-3094 opens the CVE tab and runs the lookup
+    function fromHash() {
+      const m = location.hash.match(/^#cve=(CVE-\d{4}-\d{4,})$/i);
+      if (!m) return;
+      const tabLink = document.querySelector('.dashboard-tabs a[data-tab="cve"]');
+      if (tabLink && !tabLink.classList.contains('active')) tabLink.click();
+      init();
+      openLookup(m[1].toUpperCase());
+    }
+
+    return { init, openLookup, fromHash };
+  })();
+
+  window.addEventListener('hashchange', cveHub.fromHash);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cveHub.fromHash);
+  else cveHub.fromHash();
 
   // Initialize flags
   window.cveToolsInitialized = false;
